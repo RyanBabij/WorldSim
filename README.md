@@ -9,11 +9,11 @@ The "game" is divided into 3 parts: World Generator, World Simulator, and the ga
 
 ### World Generator
 
-Generates a world using a fractal algorithm. The world has land, water, and biomes. Then it populates the world with tribes of Humans, Dwarves and Elves. There is a GUI which lets you adjust various settings and see what has been generated. This part currently generates world tiles, but I also need to add local map generation.
+Generates a world using a fractal algorithm. The world has land, water, and biomes. Then it populates the world with tribes of Humans, Dwarves and Elves. There is a GUI which lets you adjust various settings and see what has been generated.
 
 ### World Simulator
 
-The world will simulate the development of the three races and basically will dynamically generate a history for the world. The plan is to be able to simulate roughly 1,000 years of history in a reasonable amount of time (with a very flexible definition of "reasonable").
+The world will simulate the development of the three races and basically will dynamically generate a history for the world.
 
 ### The Game Bit
 
@@ -23,19 +23,15 @@ The plan is to allow you to create a character (or control an existing one), and
 
 It's mostly just an experiment in procedurally generated worlds. I don't have plans to commercialise this project, but I would like to make a release at some point.
 
-## Sample Output
+### Sample Output
 
 Todo
 
-## Dependencies
+### Dependencies
 
 This program, like all of my programs, depends on the [Wildcat](https://github.com/RyanBabij/Wildcat) code library. You must include that if you want to compile my program. I haven't done much deployment testing so it will probably not compile on your rig. I intend to fix that at some point.
 
-## Compilation
-
-Todo
-
-## More info
+### Compile instructions
 
 Todo
 
