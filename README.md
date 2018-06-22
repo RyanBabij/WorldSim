@@ -33,6 +33,10 @@ This program, like all of my programs, depends on the [Wildcat](https://github.c
 
 ### Compile instructions
 
+<<<<<<< HEAD
 Todo
 
 ##Test4
+=======
+Todo
+>>>>>>> parent of f951650... Update readme
