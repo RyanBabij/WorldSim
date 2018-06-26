@@ -25,7 +25,9 @@ It's mostly just an experiment in procedurally generated worlds. I don't have pl
 
 ### Sample Output
 
-Todo
+Here's the world generator GUI right now:
+
+![Screenshot of WorldGen](https://raw.githubusercontent.com/RyanBabij/WorldSim/master/doc/2018-06-26-Example01.png)
 
 ### Dependencies
 
