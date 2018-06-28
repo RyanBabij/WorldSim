@@ -1,5 +1,5 @@
 # WorldSim
-Takes WorldGen data and uses it to simulate civilisations. This can be used to create a consistent history within which a game may take place. Basically it uses the same approach as [Dwarf Fortress](http://www.bay12games.com/dwarves/).
+Generates a fantasy world and uses it to simulate civilizations. This can be used to create a consistent history within which a game may take place. Basically it uses the same approach as [Dwarf Fortress](http://www.bay12games.com/dwarves/).
 
 This project is currently in development, there is no release at the moment. Also it won't compile without some DLLs. More information can be found on the [wiki](https://github.com/RyanBabij/WorldSim/wiki).
 
