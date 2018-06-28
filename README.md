@@ -1,7 +1,7 @@
 # WorldSim
 Takes WorldGen data and uses it to simulate civilisations. This can be used to create a consistent history within which a game may take place. Basically it uses the same approach as [Dwarf Fortress](http://www.bay12games.com/dwarves/).
 
-This project is currently in development, there is no release at the moment. More information can be found on the [wiki](https://github.com/RyanBabij/WorldSim/wiki).
+This project is currently in development, there is no release at the moment. Also it won't compile without some DLLs. More information can be found on the [wiki](https://github.com/RyanBabij/WorldSim/wiki).
 
 ## How does it work?
 
@@ -33,6 +33,10 @@ Here's the world generator GUI right now:
 
 This program, like all of my programs, depends on the [Wildcat](https://github.com/RyanBabij/Wildcat) code library. You must include that if you want to compile my program. I haven't done much deployment testing so it will probably not compile on your rig. I intend to fix that at some point.
 
-### Compile instructions
+### Compilation
 
-Todo
+You will need some DLLs in order to compile this. I will supply them later.
+
+### Releases
+
+There is no release yet. I will make an alpha release when I get around to testing my program on different computers.
