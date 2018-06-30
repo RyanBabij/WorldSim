@@ -566,7 +566,10 @@ void Tribe::develop()
 	
 	if (vCharacter.size() > 200 && random.oneIn(50) && world->getSurroundingFertility(worldX,worldY) > 100)
 	{
-		vConsoleMessage.push("SETTLEMENT FOUNDED");
+    //std::string cMessage = "Settlement founded: "+name;
+		//vConsoleMessage.push(cMessage);
+		consoleMessage(Stream() << "Settlement founded: " << name);
+
 		foundSettlement=true;
 	}
 }

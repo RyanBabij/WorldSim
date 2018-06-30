@@ -26,6 +26,35 @@
 	// VECTOR OF MESSAGES FOR THE PLAYER TO READ.
 Vector <std::string> vConsoleMessage;
 
+void consoleMessage(std::string s)
+{
+  vConsoleMessage.push(s);
+}
+
+#include <cstdlib>
+#include <string>
+#include <sstream>
+
+//Stolen from https://codereview.stackexchange.com/questions/226/formatter-class
+class Stream
+{
+  public:
+    std::stringstream ss_;
+    // Build a string by chaining << operators.
+    template<class Field> Stream& operator<<(Field f)
+    {
+      ss_ << f;
+      return *this;
+    }
+    
+    // This is a custom typecast to std::string. (C++11)
+    operator std::string() const { return ss_.str(); }
+    
+};
+
+// This allows you to pass multiple datatypes as an std::string.
+// Use like this: function( Stream() << "Error Recieved" << 42 << " " << some_code << " '" << some_msg << "'");
+
 #include <GL/GLee.h> // THIS CURRENTLY FIXES LINKER CRAP. Also allows RGBA_COMPRESSED, it would seem.
 #include <GL/freeglut.h> //
 
