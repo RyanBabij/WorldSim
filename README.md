@@ -37,6 +37,12 @@ This program, like all of my programs, depends on the [Wildcat](https://github.c
 
 You will need some DLLs in order to compile this. I will supply them later.
 
+I make builds with:
+
+g++ Driver.cpp  -o a.exe -Wall -Wshadow -Wpointer-arith -Wcast-qual -Wextra -Wno-unused-variable -Wno-unused-parameter -Wno-unused-but-set-variable -I G:\c\lib\ -L G:\c\lib\zzzlibs\ -std=c++17 -m32 -O0 -lopengl32 -lfreeglut -lglu32 -s -Wl,--stack,16777216 -pipe -Wl,--large-address-aware -lstdc++fs -fshort-enums 2>ccOutput.txt
+
+-ffast-math seems to cause instability when I run my builds on other computers. Clearly they can't handle my quick maths.
+
 ### Releases
 
 There is no release yet. I will make an alpha release when I get around to testing my program on different computers.
