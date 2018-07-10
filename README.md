@@ -17,7 +17,7 @@ The world will simulate the development of the three races and basically will dy
 
 ### The Game Bit
 
-The plan is to allow you to create a character (or control an existing one), and then basically do whatever you want in this procedurally generated world. I guess I'll put some plot stuff in at some point. But the main purpose is mostly just an experiment in procedural generation.
+The plan is to allow you to create a character (or control an existing one), and then basically do whatever you want in this procedurally generated world. I guess I'll put some plot stuff in at some point.
 
 ## What's the goal of this project?
 
