@@ -29,19 +29,19 @@ Here's the world generator GUI right now:
 
 ![Screenshot of WorldGen](https://raw.githubusercontent.com/RyanBabij/WorldSim/master/doc/2018-06-26-Example01.png)
 
+It that doesn't look amazing to you then go play CoD or something.
+
 ### Dependencies
 
 This program, like all of my programs, depends on the [Wildcat](https://github.com/RyanBabij/Wildcat) code library. You must include that if you want to compile my program. I haven't done much deployment testing so it will probably not compile on your rig. I intend to fix that at some point.
 
 ### Compilation
 
-You will need some DLLs in order to compile this. I will supply them later.
+You can't. I think you need dlls or something to compile this properly. I'll figure it out later.
 
 I make builds with:
 
 g++ Driver.cpp  -o a.exe -Wall -Wshadow -Wpointer-arith -Wcast-qual -Wextra -Wno-unused-variable -Wno-unused-parameter -Wno-unused-but-set-variable -I G:\c\lib\ -L G:\c\lib\zzzlibs\ -std=c++17 -m32 -O0 -lopengl32 -lfreeglut -lglu32 -s -Wl,--stack,16777216 -pipe -Wl,--large-address-aware -lstdc++fs -fshort-enums 2>ccOutput.txt
-
-I'm not sure if you actually need the included freeglut.dll but too bad cos you're getting it anyway.
 
 -ffast-math seems to cause instability when I run my builds on other computers. Clearly they can't handle my quick maths.
 
