@@ -189,6 +189,7 @@ World_Local * worldLocal;
 
 #include "Tribe.cpp"
 #include "Tribe_Dwarven.cpp"
+#include "Tribe_Human.cpp"
 	
 #include "WorldObjectGlobal.cpp"
 
@@ -256,11 +257,11 @@ void shutDown()
 int main(int nArgs, char ** arg)
 {
 	//std::cout<<"\nGarosoft: TheGuild WIP.\n\n";
-
 	GL_init(nArgs, arg);
 	
 	/* Initialise game. Load textures, fonts etc. */
 	init();
+  
 	/* Reshape is called here. */
 	glutMainLoop();
 	

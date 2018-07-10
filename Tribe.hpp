@@ -31,6 +31,8 @@ class Tribe: public WorldObjectGlobal, public TableInterface
 {
 	private:
 		Vector <std::string> familyNamePool;
+    
+  protected:
 		RandomNonStatic random;
 
 	public:
@@ -76,7 +78,7 @@ class Tribe: public WorldObjectGlobal, public TableInterface
 			If there's a food surplus, explore nearby.
 			If there's a food shortage, travel to a fertile tile or raid a tribe.
 		*/
-		void wander();
+		virtual void wander();
 		
 			// All available characters will go out hunting/gathering for food.
 		void hunt();
@@ -93,7 +95,7 @@ class Tribe: public WorldObjectGlobal, public TableInterface
 		
 		
 			/* SIMULATE X TURNS OF THE CIV. */
-		void incrementTicks ( int /* nTicks */ );
+		virtual void incrementTicks ( int /* nTicks */ );
 		
 		Texture* currentTexture();
 		

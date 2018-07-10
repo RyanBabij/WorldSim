@@ -139,6 +139,7 @@ class Menu_WorldGenerator: public GUI_Interface
 	{
 		font = _font;
 		guiManager.setFont(_font);
+    menuWorldSimulator.setFont(font);
 	}
 	
 	void logicTick()
@@ -194,8 +195,8 @@ class Menu_WorldGenerator: public GUI_Interface
 		/* WORLD SIZE */
 		worldSize.currentOption=DEFAULT_WORLD_SIZE_SLOT;
 		//worldSize.addOption("17");
-		//worldSize.addOption("33");
-		//worldSize.addOption("65");
+		worldSize.addOption("33");
+		worldSize.addOption("65");
 		worldSize.addOption("129");
 		worldSize.addOption("257");
 		worldSize.addOption("513");
@@ -266,7 +267,7 @@ class Menu_WorldGenerator: public GUI_Interface
 		textOceanPercent.centeredY=true;
 		
 		/* N TRIBE */
-		nTribe.setNumbers(0,100,DEFAULT_NUMBER_TRIBES);
+		nTribe.setNumbers(0,100,DEFAULT_NUMBER_TRIBES_HUMAN);
 		nTribe.setColours(&cNormal,&cHighlight,0);
 		nTribe.texIncrement = &TEX_GUI_INCREMENT;
 		nTribe.texDecrement = &TEX_GUI_DECREMENT;
@@ -275,7 +276,7 @@ class Menu_WorldGenerator: public GUI_Interface
 		guiCaptionNTribe.centeredY=true;
 		
 		/* N TRIBE DWARVEN */
-		nTribeDwarven.setNumbers(0,100,0);
+		nTribeDwarven.setNumbers(0,100,DEFAULT_NUMBER_TRIBES_DWARVEN);
 		nTribeDwarven.setColours(&cNormal,&cHighlight,0);
 		nTribeDwarven.texIncrement = &TEX_GUI_INCREMENT;
 		nTribeDwarven.texDecrement = &TEX_GUI_DECREMENT;
@@ -284,7 +285,7 @@ class Menu_WorldGenerator: public GUI_Interface
 		guiCaptionNTribeDwarven.centeredY=true;
 		
 		/* N TRIBE ELVEN */
-		nTribeElven.setNumbers(0,100,0);
+		nTribeElven.setNumbers(0,100,DEFAULT_NUMBER_TRIBES_ELVEN);
 		nTribeElven.setColours(&cNormal,&cHighlight,0);
 		nTribeElven.texIncrement = &TEX_GUI_INCREMENT;
 		nTribeElven.texDecrement = &TEX_GUI_DECREMENT;
@@ -379,16 +380,26 @@ class Menu_WorldGenerator: public GUI_Interface
 		//guiManager.add(&buttonExpandPreviewWindow);
 		
 		guiManager.setFont(font);
+		menuWorldSimulator.init();
 		
-		
+      // This is a debug option to quickly make a default world for faster testing.
 		if ( QUICKSTART )
 		{
-			world.generateWorld("test",33,33);
-			world.generateTribes(2);
+			world.generateWorld("quickstart",QUICKSTART_WORLD_SIZE,QUICKSTART_WORLD_SIZE);
+			world.generateTribes(); //Generate default tribe settings.
 			
+      // Simulate a decade immediately.
 			for (int i=0;i<INITIAL_YEARS_SIMULATE;++i)
 			{world.ticksBacklog+=311040000;
 			}
+      
+      if (QUICKSTART_SIMULATOR)
+      {
+        menuWorldSimulator.init();
+        menuWorldSimulator.setFont(font);
+        menuWorldSimulator.active=true;
+        world.active=true;
+      }
 
 			worldViewer.active=true;
 			active=true;
@@ -660,7 +671,6 @@ class Menu_WorldGenerator: public GUI_Interface
 				}
 				if(buttonGenerate.clicked==true)
 				{
-					std::cout<<"Generate()\n";
 					buttonGenerate.unclick();
 					
 					// First check to ensure the world has a name. Important because it's also the name of the savefile.

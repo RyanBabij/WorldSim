@@ -172,35 +172,30 @@ bool World::isSafe(int _x, int _y)
 
 
 
-void World::generateTribes( int nTribes = 1, int nTribesDwarven = 0, int nTribesElven = 0)
+void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int nTribesDwarven = DEFAULT_NUMBER_TRIBES_DWARVEN, int nTribesElven = DEFAULT_NUMBER_TRIBES_ELVEN)
 {	
 	std::cout<<"Generate tribes\n";
 
-	if (nTribes < 1 || nTribes > 999)
+	if (nTribesHuman < 1 || nTribesHuman > 999)
 	{
 		std::cout<<"WARNING: Excessive tribes.\n";
 	}
 
-	for (int i=0;i<nTribes;++i)
+	for (int i=0;i<nTribesHuman;++i)
 	{
-		//std::cout<<"Generating tribe "<<i<<".\n";
-		Tribe * t = new Tribe;
+		Tribe_Human * t = new Tribe_Human;
 		t->init(this);
-		//std::cout<<"Spawning\n";
 		if (t->spawn() == false)
 		{
 			delete t;
 			continue;
 		}
 
-		//std::cout<<"Generating couples.\n";
 		t->generateCouples(7);
-		//t->generateCouples(50000);
 	}
 	
 	for (int i=0;i<nTribesDwarven;++i)
 	{
-		//std::cout<<"Generating Dwarven tribe "<<i<<".\n";
 		Tribe_Dwarven * t = new Tribe_Dwarven;
 		t->init(this);
 		t->spawn();
@@ -210,7 +205,6 @@ void World::generateTribes( int nTribes = 1, int nTribesDwarven = 0, int nTribes
 	
 	std::cout<<"END Generate tribes\n";
 	
-	//exit(0);
 	
 }
 

@@ -5,16 +5,8 @@
 /* Tribe.cpp
 	#include "Tribe.cpp"
 
-	Project: WorldSim
-	Created: 14/10/2017. 0272065251.
-	Updated: 14/10/2017. 0272065251.
-
 	Description:
 	Tribes are nomadic groups. They wander the map trying to survive until they develop enough to become a civilization.
-
-	Notes:
-
-	0272065251 - Created.
 
 */
 
@@ -549,29 +541,34 @@ void Tribe::updateTerritory()
 	
 }
 
+// This function is called when a Tribe is ready to develop into a Civilisation.
+// Tribe object will be deleted and replaced with Civilisation object.
 void Tribe::develop()
 {
-	//std::cout<<"tribe develp\n";
-	
-	
-	//if ( vTerritory.findSlot(this) != -1 )
-	//{
-	//}
-	
-	//Update territory array
+  if (foundSettlement == false)
+  {
+    //std::cout<<"tribe develp\n";
+    
+    
+    //if ( vTerritory.findSlot(this) != -1 )
+    //{
+    //}
+    
+    //Update territory array
 
-	//updateInfluence();
-	
-	// When a tribe gets big, it has a chance of splitting into smaller tribes.
-	
-	if (vCharacter.size() > 200 && random.oneIn(50) && world->getSurroundingFertility(worldX,worldY) > 100)
-	{
-    //std::string cMessage = "Settlement founded: "+name;
-		//vConsoleMessage.push(cMessage);
-		consoleMessage(Stream() << "Settlement founded: " << name);
+    //updateInfluence();
+    
+    // When a tribe gets big, it has a chance of splitting into smaller tribes. (only if there is space, otherwise there will be conflict instead.)
+    
+    if (vCharacter.size() > 200 && random.oneIn(50) && world->getSurroundingFertility(worldX,worldY) > 100)
+    {
+      //std::string cMessage = "Settlement founded: "+name;
+      //vConsoleMessage.push(cMessage);
+      consoleMessage(Stream() << "Settlement founded: " << name);
 
-		foundSettlement=true;
-	}
+      foundSettlement=true;
+    }
+  }
 }
 
 void Tribe::setColour( const unsigned char r, const unsigned char g, const unsigned char b)
@@ -719,7 +716,6 @@ Texture* Tribe::currentTexture()
 		return &TEX_WORLD_SETTLEMENT_TOWN_URBAN01;
 	}
 	return &TEX_WORLD_UNIT_NOMAD_01;
-	//return 0;
 }
 
 

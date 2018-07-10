@@ -31,6 +31,8 @@ Texture TEX_GUI_EXPAND;
 
 Texture TEX_NPC;
 
+Texture TEX_TEST_404;
+const std::string PATH_TEX_TEST_404 = "Textures/Test/404.png";
 
 // WORLD UNIT TEXTURES
 Texture TEX_WORLD_UNIT_NOMAD_01;
@@ -115,6 +117,7 @@ void loadTextureVerbose(const std::string _path, Texture* _texture)
 
 void loadTextures()
 {
+  
 		// LOAD MENU TEXTURES
 	loadTextureVerbose("Textures/Menu/TitleImage-CR.png",&TEX_TITLE);
 	loadTextureVerbose("Textures/Menu/Black.png",&TEX_OPTIONS_BACKGROUND);
@@ -168,6 +171,8 @@ void loadTextures()
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_DESERT_01,&TEX_WORLD_TERRAIN_DESERT_01);
 	
 	loadTextureVerbose(PATH_TEX_WORLD_TEST_00,&TEX_WORLD_TEST_00);
+  
+  loadTextureVerbose(PATH_TEX_TEST_404,&TEX_TEST_404);
 }
 
 #endif

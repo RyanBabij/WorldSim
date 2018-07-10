@@ -36,6 +36,7 @@ NameGen globalNameGen;
 #include "Character.hpp"
 #include "Tribe.hpp"
 #include "Tribe_Dwarven.hpp"
+#include "Tribe_Human.hpp"
 
 #include "WorldTile.cpp"
 

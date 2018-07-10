@@ -5,18 +5,8 @@
 /* Tribe_Dwarven.hpp
 	#include "Tribe_Dwarven.hpp"
 
-	Project: WorldSim
-	Created: 14/11/2017. 0272374355.
-	Updated: 14/11/2017. 0272374355.
-
 	Description:
-	Tribes are nomadic groups. They wander the map trying to survive until they develop enough to become a civilization.
-	
-	Dwarven tribes build fortresses into mountains, and typically stay there growing crops and manufacturing items.
-
-	Notes:
-
-	0272374355 - Created.
+	Tribes are nomadic groups. They wander the map trying to survive until they develop enough to become a civilization. Dwarven tribes build fortresses into mountains, and typically stay there growing crops and manufacturing items.
 
 */
 
@@ -33,12 +23,19 @@ class World;
 class Tribe_Dwarven: public Tribe
 {
 	public:
+  
+  //RandomNonStatic random;
 	
 	Tribe_Dwarven()
 	{
 	}
 	
 	bool spawn();
+  
+    /* SIMULATE X TURNS OF THE CIV. */
+  void incrementTicks ( int /* nTicks */ );
+  
+  void wander();
 	
 	Texture* currentTexture();
 };
