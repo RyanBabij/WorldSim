@@ -47,4 +47,4 @@ I'm not sure if you actually need the included freeglut.dll but too bad cos you'
 
 ### Releases
 
-I have a very early dev release on the releases page.
+I have a very early dev [release](https://github.com/RyanBabij/WorldSim/releases) you can play around with. Hey it's better than most of the other stuff on github.
