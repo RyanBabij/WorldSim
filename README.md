@@ -41,8 +41,10 @@ I make builds with:
 
 g++ Driver.cpp  -o a.exe -Wall -Wshadow -Wpointer-arith -Wcast-qual -Wextra -Wno-unused-variable -Wno-unused-parameter -Wno-unused-but-set-variable -I G:\c\lib\ -L G:\c\lib\zzzlibs\ -std=c++17 -m32 -O0 -lopengl32 -lfreeglut -lglu32 -s -Wl,--stack,16777216 -pipe -Wl,--large-address-aware -lstdc++fs -fshort-enums 2>ccOutput.txt
 
+I'm not sure if you actually need the included freeglut.dll but too bad cos you're getting it anyway.
+
 -ffast-math seems to cause instability when I run my builds on other computers. Clearly they can't handle my quick maths.
 
 ### Releases
 
-There is no release yet. I will make an alpha release when I get around to testing my program on different computers.
+I have a very early dev release on the releases page.
