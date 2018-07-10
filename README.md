@@ -17,7 +17,7 @@ The world will simulate the development of the three races and basically will dy
 
 ### The Game Bit
 
-The plan is to allow you to create a character (or control an existing one), and then basically do whatever you want in this procedurally generated world. I guess I'll put some plot stuff in at some point. But the main purpose is mostly just an experiment in procedural generation.
+The plan is to allow you to create a character (or control an existing one), and then basically do whatever you want in this procedurally generated world. I guess I'll put some plot stuff in at some point.
 
 ## What's the goal of this project?
 
@@ -29,14 +29,22 @@ Here's the world generator GUI right now:
 
 ![Screenshot of WorldGen](https://raw.githubusercontent.com/RyanBabij/WorldSim/master/doc/2018-06-26-Example01.png)
 
+It that doesn't look amazing to you then go play CoD or something.
+
 ### Dependencies
 
 This program, like all of my programs, depends on the [Wildcat](https://github.com/RyanBabij/Wildcat) code library. You must include that if you want to compile my program. I haven't done much deployment testing so it will probably not compile on your rig. I intend to fix that at some point.
 
 ### Compilation
 
-You will need some DLLs in order to compile this. I will supply them later.
+You can't. I think you need dlls or something to compile this properly. I'll figure it out later.
+
+I make builds with:
+
+g++ Driver.cpp  -o a.exe -Wall -Wshadow -Wpointer-arith -Wcast-qual -Wextra -Wno-unused-variable -Wno-unused-parameter -Wno-unused-but-set-variable -I G:\c\lib\ -L G:\c\lib\zzzlibs\ -std=c++17 -m32 -O0 -lopengl32 -lfreeglut -lglu32 -s -Wl,--stack,16777216 -pipe -Wl,--large-address-aware -lstdc++fs -fshort-enums 2>ccOutput.txt
+
+-ffast-math seems to cause instability when I run my builds on other computers. Clearly they can't handle my quick maths.
 
 ### Releases
 
-There is no release yet. I will make an alpha release when I get around to testing my program on different computers.
+I have a very early dev [release](https://github.com/RyanBabij/WorldSim/releases) you can play around with. Hey it's better than most of the other stuff on github.
