@@ -26,7 +26,12 @@
 	// VECTOR OF MESSAGES FOR THE PLAYER TO READ.
 Vector <std::string> vConsoleMessage;
 
-void consoleMessage(std::string s)
+inline void consoleMessage(std::string s)
+{
+  vConsoleMessage.push(s);
+}
+
+inline void Console (std::string s)
 {
   vConsoleMessage.push(s);
 }
@@ -157,6 +162,8 @@ QuitChecker quitChecker;
 #include <Math/Random/GlobalRandom.hpp>
 /* No need for a globalRandom object. Just use Random:: */
 #include <Graphics/Font/Font.hpp>
+
+// This is the global font for now.
 Wildcat::Font font8x8;
 
 #include <Device/Mouse/Mouse.hpp>
@@ -191,6 +198,8 @@ World_Local * worldLocal;
 #include "Tribe_Dwarven.cpp"
 #include "Tribe_Human.cpp"
 	
+#include "Civ.cpp"
+  
 #include "WorldObjectGlobal.cpp"
 
 

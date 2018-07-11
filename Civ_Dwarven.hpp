@@ -2,10 +2,10 @@
 #ifndef GUILD_CIV_HPP
 #define GUILD_CIV_HPP
 
-//class Character;
-//class World;
+class Character;
+class World;
 
-//#include "GuildCalendar.hpp"
+#include "GuildCalendar.hpp"
 
 
 	// CIVMANAGER STORES DATA SHARED ACROSS ALL CIVS.
@@ -52,14 +52,14 @@ class Civ
 		//static ArrayS2 <Civ*> aOwnership;
 	
 		/* ABSTRACT TEST STUFF */
-    int nFood;
+			int nFood;
 		
 	
-		Vector <Character*> vCharacter;
-		//Vector <City*> vCity;
+		Vector <Citizen*> vCitizen;
+		Vector <City*> vCity;
 		
-		//Vector <Army*> vArmy;
-		//Vector <Navy*> vNavy;
+		Vector <Army*> vArmy;
+		Vector <Navy*> vNavy;
 	
 		std::string name;
 		int money;
@@ -84,7 +84,7 @@ class Civ
 		
 		
 			// Place a city near the civ, in an 'optimal' location.
-		//City* foundCity();
+		City* foundCity();
 		
 		void setColour (const int,const int,const int);
 		

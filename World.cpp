@@ -208,6 +208,13 @@ void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int 
 	
 }
 
+void World::evolveToCiv( Tribe * _tribe )
+{
+  if ( _tribe == 0 ) { return; }
+  
+  Console (Stream() << "Tribe: " << _tribe->name << " has evolved to a Civilisation."); 
+}
+
 	/* DEPRECATED */
 // void World::incrementDay()
 // {

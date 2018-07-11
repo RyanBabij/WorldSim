@@ -2,12 +2,8 @@
 #ifndef WORLDSIM_TRIBE_DWARVEN_CPP
 #define WORLDSIM_TRIBE_DWARVEN_CPP
 
-/* Tribe_Dwarven.hpp
+/* WorldSim: Tribe_Dwarven.hpp
 	#include "Tribe_Dwarven.hpp"
-
-	Project: WorldSim
-	Created: 14/11/2017. 0272374355.
-	Updated: 14/11/2017. 0272374355.
 
 	Description:
 	Tribes are nomadic groups. They wander the map trying to survive until they develop enough to become a civilization. Dwarven tribes build fortresses into mountains, and typically stay there growing crops and manufacturing items.
@@ -73,6 +69,7 @@ void Tribe_Dwarven::incrementTicks ( int nTicks )
         if ( world->getTileType(worldX,worldY) == "mountain"  && random.oneIn(10) )
         {
           foundSettlement = true;
+          world->evolveToCiv(this);
           break;
         }
         else

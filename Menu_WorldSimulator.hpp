@@ -228,17 +228,19 @@ class Menu_WorldSimulator: public GUI_Interface
 		// MESSAGE CONSOLE		
 		const int nY = panelY2-panelY1;
 		Renderer::placeColour4a(200,200,250,125,panelX1,panelY1,panelX1+220,panelY2);
-		int currentY = panelY2;
+		int currentY = panelY2-2;
 		int iMessage = vConsoleMessage.size()-1;
-		
+    
+    int linesDrawn = 0;
+    
 		while (currentY>panelY1 && iMessage>=0 && iMessage<vConsoleMessage.size() )
 		{
-			font8x8.drawText(vConsoleMessage(iMessage),panelX1,currentY,panelX1+220,currentY-10,false,true);
+			linesDrawn = font8x8.drawText(vConsoleMessage(iMessage),panelX1,currentY,panelX1+220,currentY-38,false,false);
 			--iMessage;
-			currentY-=10;
+			currentY-=linesDrawn*9;
+      currentY-=2;
 		}
-		//font8x8.drawText("TEST",panelX1,panelY2,panelX1+220,panelY2-10,false,true);
-		
+
 		buttonExpandMap.render();
 
 		// DATE
@@ -252,7 +254,10 @@ class Menu_WorldSimulator: public GUI_Interface
 			worldPop+=world.vTribe(i)->vCharacter.size();
 		}
 		
-font8x8.drawText("Pop: "+DataTools::toString(worldPop),panelX2-400,panelY2-20,panelX2-208,panelY2-10, false, true);
+    //Population
+    Renderer::placeColour4a(150,150,150,255,panelX2-380,panelY2-20,panelX2-208,panelY2-10);
+    font8x8.drawText("Pop: "+DataTools::toString(worldPop),panelX2-380,panelY2-20,panelX2-208,panelY2-10, false, true);
+    
 		guiManager.render();
 			
 	}

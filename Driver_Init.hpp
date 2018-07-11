@@ -20,15 +20,13 @@ void init()
 		std::cin.tie(NULL);
 	}
 	
-	vConsoleMessage.push("CONSOLE MESSAGE TEST 1");
-	vConsoleMessage.push("CONSOLE MESSAGE TEST 2");
-	vConsoleMessage.push("CONSOLE MESSAGE TEST 3");
+	consoleMessage("CONSOLE MESSAGE TEST 1");
+	consoleMessage("CONSOLE MESSAGE TEST 2");
+	consoleMessage("CONSOLE MESSAGE TEST 3");
 	
-
 	globalKeyboard.init(); 
 
 	/* Load textures (Tex pointers from Driver_TextureList.hpp). */
-	std::cout<<"Loading textures.\n";
 	loadTextures();
 	
 	/* Load font */
@@ -42,17 +40,9 @@ void init()
 	
 	logicTickManager.add(&menuTitle);
 	idleManager.add(&world);
-	
-	/* WORLD SHITS */
-	//world.generateTestWorld();
-	//world.loadWorld("World1/09.png");
-	//world.loadHeightMap("World1/08.png");
-	//world.loadWorldData("World1/WorldData.txt");
-
 	logicTickManager.add(&world);
 
 
-	
 	/* Start timers. */
 	frameRateTimer.init();
 	frameRateTimer.start();
@@ -65,7 +55,7 @@ void init()
 	debugTimer.init();
 	debugTimer.start();
 
-	
+	/* Initialise the main menu */
 	menuTitle.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
 	menuTitle.init();
 	menuTitle.setFont(&font8x8);

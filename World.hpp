@@ -2,19 +2,11 @@
 #ifndef WORLDSIM_WORLD_HPP
 #define WORLDSIM_WORLD_HPP
 
-/* World.hpp
+/* WorldSim: World.hpp
 	#include "World.hpp"
-
-	Project: WorldSim
-	Created: Unknown.
-	Updated: 7/10/2017, 0271994297.
 
 	Description:
 	The World stores global-level data, such as the position of global units.
-
-	Notes:
-
-	0271994297 - Added basic documentation.
 
 */
 
@@ -46,6 +38,8 @@ NameGen globalNameGen;
 
 #include "World_Landmass.hpp"
 #include "World_Biome.hpp"
+
+#include "Civ.hpp"
 
 // class TribalTerritory
 // {
@@ -206,7 +200,7 @@ class World: public LogicTickInterface, public IdleTickInterface
 	void idleTick();
 	
 	void logicTick();
-	//void fuckWorld();
+  
 	//int nCities();
 	//bool putRandomCity();
 	//bool putCity(City*);
@@ -252,6 +246,8 @@ class World: public LogicTickInterface, public IdleTickInterface
 	//bool addElvenTribe(int nTribes);
 	//bool addHumanTribe(int nTribes);
 	
+  
+  // TRIBE FUNCTIONS
 	
 	void addInfluence(Tribe* tribe, int amount);
 		// Subtract an influence point from every tile this tribe has.
@@ -260,6 +256,12 @@ class World: public LogicTickInterface, public IdleTickInterface
 	Tribe* getDominantInfluence (const int, const int);
 	Tribe* getDominantInfluence (HasXY*);
 	
+  void evolveToCiv( Tribe * );
+  
+  
+  
+  
+  
 	int getHighestInfluence(const int, const int);
 		int getHighestInfluence(HasXY*);
 	

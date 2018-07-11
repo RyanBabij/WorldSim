@@ -26,9 +26,9 @@ volatile const std::string devmessage = "HEY THIS IS GARO WADDUP.";
 /* DEBUG MENU SHORTCUTS */
 //bool AUTO_GENERATE_WORLD = false;
 //bool AUTO_NEW_SIMULATION = true;
-bool QUICKSTART = false; // Skip menu stuff and jump right into the game. (Will use defaults).
+bool QUICKSTART = true; // Skip menu stuff and jump right into the game. (Will use defaults).
   //Quickly go straight into the simulator.
-bool QUICKSTART_SIMULATOR = false; // Skip menu stuff and jump right into the game. (Will use defaults).
+bool QUICKSTART_SIMULATOR = true; // Skip menu stuff and jump right into the game. (Will use defaults).
   // DEFAULT WORLD WHICH IS AUTO-GENERATED.
 int QUICKSTART_WORLD_SIZE = 129; /* Please set to (power of 2)+1. */
 
@@ -38,14 +38,15 @@ long long int INITIAL_YEARS_SIMULATE = 1;
   // Default setting on the GUI
 int DEFAULT_WORLD_SIZE_SLOT = 1; /* 0 = 129, 1 = 257, 513, 1025, 2049, 4097. You can set it lower for easier debugging. */
 
-int DEFAULT_NUMBER_TRIBES_DWARVEN = 3;
+int DEFAULT_NUMBER_TRIBES_DWARVEN = 6;
 int DEFAULT_NUMBER_TRIBES_HUMAN = 6;
-int DEFAULT_NUMBER_TRIBES_ELVEN = 3;
+int DEFAULT_NUMBER_TRIBES_ELVEN = 0;
 int DEFAULT_NUMBER_CIVS = 0;
 
 bool FOG_OF_WAR = true;
 
-const int LOCAL_MAP_SIZE = 2049; /* Size of each city in tiles. Size is CITY_SIZE * CITY_SIZE. */
+const int LOCAL_MAP_SIZE = 64; /* Size of each city in tiles. Size is CITY_SIZE * CITY_SIZE. */
+//const int LOCAL_MAP_SIZE = 2000; /* Size of each city in tiles. Size is CITY_SIZE * CITY_SIZE. */
 
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 
