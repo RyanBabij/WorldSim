@@ -21,6 +21,11 @@ class World;
 
 #include <Container/Table/TableInterface.hpp>
 
+Tribe_Dwarven::Tribe_Dwarven()
+{
+  race = DWARVEN;
+}
+
 
 bool Tribe_Dwarven::spawn()
 {
@@ -91,6 +96,7 @@ void Tribe_Dwarven::incrementTicks ( int nTicks )
       if ( world->getTileType(worldX,worldY) == "mountain"  && random.oneIn(10) )
       {
         foundSettlement = true;
+        world->evolveToCiv(this);
         break;
       }
       else
@@ -106,7 +112,7 @@ void Tribe_Dwarven::incrementTicks ( int nTicks )
 
 void Tribe_Dwarven::wander()
 {
-	if (world==0) { return; }
+	if (world==0 || foundSettlement) { return; }
 	
 	int destinationX = worldX + random.randomIntRange(-1,1);
 	int destinationY = worldY + random.randomIntRange(-1,1);

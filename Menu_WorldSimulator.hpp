@@ -381,28 +381,28 @@ class Menu_WorldSimulator: public GUI_Interface
 
 		if  (buttonIncrementDay.clicked==true)
 		{
-			std::cout<<"Increment day.\n";
+			//std::cout<<"Increment day.\n";
 			buttonIncrementDay.unclick();
 			
 			world.incrementTicks(86400);
 		}
 		if  (buttonIncrementMonth.clicked==true)
 		{
-			std::cout<<"Increment month.\n";
+			//std::cout<<"Increment month.\n";
 			buttonIncrementMonth.unclick();
 			
 			world.incrementTicks(2592000);
 		}
 		if  (buttonIncrementYear.clicked==true)
 		{
-			std::cout<<"Increment year.\n";
+			//std::cout<<"Increment year.\n";
 			buttonIncrementYear.unclick();
 			//world.incrementTicks(31104000);
 			world.ticksBacklog+=31104000;
 		}
 		if  (buttonIncrementDecade.clicked==true)
 		{
-			std::cout<<"Increment decade.\n";
+			//std::cout<<"Increment decade.\n";
 			buttonIncrementDecade.unclick();
 			// world.incrementTicks(31104000);
 			// //render();

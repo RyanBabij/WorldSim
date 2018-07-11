@@ -33,13 +33,13 @@ bool QUICKSTART_SIMULATOR = true; // Skip menu stuff and jump right into the gam
 int QUICKSTART_WORLD_SIZE = 129; /* Please set to (power of 2)+1. */
 
 
-long long int INITIAL_YEARS_SIMULATE = 1;
+long long int INITIAL_YEARS_SIMULATE = 0;
 
   // Default setting on the GUI
 int DEFAULT_WORLD_SIZE_SLOT = 1; /* 0 = 129, 1 = 257, 513, 1025, 2049, 4097. You can set it lower for easier debugging. */
 
-int DEFAULT_NUMBER_TRIBES_DWARVEN = 6;
-int DEFAULT_NUMBER_TRIBES_HUMAN = 6;
+int DEFAULT_NUMBER_TRIBES_DWARVEN = 10;
+int DEFAULT_NUMBER_TRIBES_HUMAN = 0;
 int DEFAULT_NUMBER_TRIBES_ELVEN = 0;
 int DEFAULT_NUMBER_CIVS = 0;
 

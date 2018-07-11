@@ -124,7 +124,7 @@ class Menu_WorldGenerator: public GUI_Interface
 	
 	Menu_WorldGenerator()
 	{
-		std::cout<<"menu world gen construct()\n";
+		//std::cout<<"menu world gen construct()\n";
 		fullScreenPreview=false;
 		menuWorldSimulator.active=false;
 		
@@ -152,7 +152,7 @@ class Menu_WorldGenerator: public GUI_Interface
 	
 	void init()
 	{
-		std::cout<<"menu world gen init()\n";
+		//std::cout<<"menu world gen init()\n";
 		backgroundTexture=&TEX_NEW_GAME_BACKGROUND;
 		active=false;
 		fullScreenPreview=true;
@@ -390,7 +390,7 @@ class Menu_WorldGenerator: public GUI_Interface
 			
       // Simulate a decade immediately.
 			for (int i=0;i<INITIAL_YEARS_SIMULATE;++i)
-			{world.ticksBacklog+=311040000;
+			{world.ticksBacklog+=31104000;
 			}
       
       if (QUICKSTART_SIMULATOR)

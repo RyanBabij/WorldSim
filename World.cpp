@@ -16,6 +16,11 @@
 
 #include <thread>
 
+#include "Civ.cpp"
+#include "Civ_Dwarven.cpp"
+
+#include "Settlement.cpp"
+
 World::World(): seaLevel(0), mountainLevel(0)
 {
 	// aHeightMap.init(1,1,0);
@@ -84,13 +89,15 @@ bool World::putObject(WorldObjectGlobal* _object, int x=-1, int y=-1)
 		}
 	}
 	
-	
 	std::cout<<"ERROR: Error placing worldobject.\n";
 
-	
-
-	
 	return false;
+}
+
+bool World::removeObject(WorldObjectGlobal* _object)
+{
+  vWorldObjectGlobal.remove(_object);
+  return false;
 }
 
 #include <Time\RyanTime.hpp>
@@ -208,11 +215,42 @@ void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int 
 	
 }
 
+
+  // Remove tribe object and replace it with a Civ and Settlement (whereever the Tribe is standing.
 void World::evolveToCiv( Tribe * _tribe )
 {
   if ( _tribe == 0 ) { return; }
   
-  Console (Stream() << "Tribe: " << _tribe->name << " has evolved to a Civilisation."); 
+  Console (Stream() << "Tribe: " << _tribe->name << " became a Civ.");
+  
+  if ( _tribe->race == Tribe::DWARVEN)
+  {
+    std::cout<<"AYYY DWARVEN\n";
+    Civ_Dwarven * civ = new Civ_Dwarven;
+    
+    civ->name = _tribe->name;
+    
+    std::cout<<"Civ name is: "<<civ->name<<".\n";
+    
+    civ->setColour(_tribe->colourRed,_tribe->colourGreen,_tribe->colourBlue);
+    
+    civ->vCharacter.copy(&_tribe->vCharacter);
+    
+    std::cout<<"Copied: "<<civ->vCharacter.size() <<" characters.\n";
+    
+    Settlement * s = new Settlement;
+    putObject(s, _tribe->worldX, _tribe->worldY);
+    removeObject(_tribe);
+    vTribe.remove(_tribe);
+
+      // Give the Civ a Settlement
+    civ->addSettlement(s);
+    
+      // Move all characters into the first Settlement
+    s->vCharacter.copy(&_tribe->vCharacter);
+  }
+  
+  //Civ * civ = new Civ;
 }
 
 	/* DEPRECATED */

@@ -2,10 +2,8 @@
 #ifndef GUILD_CIV_HPP
 #define GUILD_CIV_HPP
 
-//class Character;
-//class World;
-
-//#include "GuildCalendar.hpp"
+class Character;
+class Settlement;
 
 
 	// CIVMANAGER STORES DATA SHARED ACROSS ALL CIVS.
@@ -22,15 +20,7 @@ CivManager civManager;
 class Civ
 {
 	private:
-		Vector <std::string> familyNamePool;
-		
 
-		
-		
-		//GuildCalendar* calendar; /* Use world pointer. */
-		
-
-		
 
 	public:
 	
@@ -48,18 +38,15 @@ class Civ
 			// TRUE IF A CIV CAN SEE THIS TILE, FALSE OTHERWISE.
 		ArrayS2 <bool> aVisible;
 		
-			// EACH TILE MAY ONLY BE OWNED BY ONE CIV, THEREFORE THIS ARRAY IS SHARED BETWEEN ALL CIVS.
-		//static ArrayS2 <Civ*> aOwnership;
-	
-		/* ABSTRACT TEST STUFF */
-    int nFood;
-		
-	
+
+      // A list of all characters owned by this Civ. Each Character is owned by exactly one Civ.
 		Vector <Character*> vCharacter;
-		//Vector <City*> vCity;
+    
+      // A list of all settlements owned by this Civ. Each Settlement is owned by exactly one Civ.
+		Vector <Settlement*> vSettlement;
+    
 		
-		//Vector <Army*> vArmy;
-		//Vector <Navy*> vNavy;
+		//Vector <Unit*> vUnit;
 	
 		std::string name;
 		int money;
@@ -70,10 +57,18 @@ class Civ
 		int colourGreen;
 		int colourBlue;
 		
+    enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
+    int race;
+    
 		Civ();
 		
 			// MAKE THE CIV AWARE OF THE EXISTENCE OF THE PASSED CIV.
 		void addContact(Civ*);
+    
+    // SETTLEMENT FUNCTIONS
+    
+    void addSettlement( Settlement * );
+    
 		
 		void manageArmy();
 		

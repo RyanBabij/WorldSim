@@ -26,10 +26,8 @@ class Tribe_Dwarven: public Tribe
   
   //RandomNonStatic random;
 	
-	Tribe_Dwarven()
-	{
-	}
-	
+	Tribe_Dwarven();
+
 	bool spawn();
   
     /* SIMULATE X TURNS OF THE CIV. */

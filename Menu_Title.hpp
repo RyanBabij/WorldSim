@@ -115,7 +115,7 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 	
 	void init()
 	{
-		std::cout<<"Menu title init\n";
+		//std::cout<<"Menu title init\n";
 		cNormal.set(200,200,200);
 		cSelected.set(180,180,180);
 		cDropPanel.set(170,170,170);

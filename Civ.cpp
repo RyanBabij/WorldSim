@@ -2,6 +2,8 @@
 #ifndef GUILD_CIV_CPP
 #define GUILD_CIV_CPP
 
+class Settlement;
+
 #include "Civ.hpp"
 
 Civ::Civ()
@@ -10,7 +12,7 @@ Civ::Civ()
 	money=100;
 	world=0;
 
-	nFood=0;
+	//nFood=0;
 }
 
 void Civ::init(World* _world)
@@ -28,6 +30,11 @@ void Civ::init(World* _world)
 		// //std::cout<<"Name: "<<familyNamePool(i)<<".\n";
 	// }
 
+}
+
+void Civ::addSettlement(Settlement * _settlement)
+{
+  vSettlement.push(_settlement);
 }
 
 			// // RETURN THE NUMBER OF NEIGHBORING FOG TILES. (0-8).

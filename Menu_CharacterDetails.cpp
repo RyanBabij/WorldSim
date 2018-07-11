@@ -66,14 +66,14 @@ class Menu_CharacterDetails: public GUI_Interface
 		textMotherLink.text = "Test";
 		textSpouseLink.text = "Test";
 		
-		std::cout<<"Clearing children vector\n";
+		//std::cout<<"Clearing children vector\n";
 		for (int i=0;i<textChildLink.size();++i)
 		{
 			delete textChildLink(i);
 		}
 		textChildLink.clear();
 		
-		std::cout<<"Clearing children vector2\n";
+		//std::cout<<"Clearing children vector2\n";
 		
 		guiManager.clear();
 		if ( selectedCharacter != 0)
@@ -86,7 +86,7 @@ class Menu_CharacterDetails: public GUI_Interface
 				guiManager.add(childLink);
 			}
 		}
-std::cout<<"Clearing children vector 3\n";
+//std::cout<<"Clearing children vector 3\n";
 
 		guiManager.add(&buttonClose);
 		guiManager.add(&textFatherLink);

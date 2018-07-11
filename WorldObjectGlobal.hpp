@@ -2,19 +2,12 @@
 #ifndef GUILD_WORLDOBJECTGLOBAL_HPP
 #define GUILD_WORLDOBJECTGLOBAL_HPP
 
-/* WorldObjectGlobal.hpp
+/* WorldSim: WorldObjectGlobal.hpp
 	#include "WorldObjectGlobal.hpp"
-
-	Project: WorldSim
-	Created: Unknown.
-	Updated: 7/10/2017, 0271994297.
 
 	Description:
 	Interface for objects which have a presence on the world map.
 
-	Notes:
-
-	0271994297 - Updated basic documentation.
 */
 
 #include <Interface/HasTexture.hpp>

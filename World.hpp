@@ -39,7 +39,10 @@ NameGen globalNameGen;
 #include "World_Landmass.hpp"
 #include "World_Biome.hpp"
 
-#include "Civ.hpp"
+
+
+class Civ;
+class Civ_Dwarven;
 
 // class TribalTerritory
 // {
@@ -240,6 +243,8 @@ class World: public LogicTickInterface, public IdleTickInterface
 	
 		// Put a worldobject anywhere in the world.
 	bool putObject(WorldObjectGlobal* _object, int x, int y);
+    // Remove object from world.
+  bool removeObject(WorldObjectGlobal* _object);
 	
 		//Put down some Dwarven civs.
 	bool addRace (int nTribes, std::string name);

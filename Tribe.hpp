@@ -41,6 +41,12 @@ class Tribe: public WorldObjectGlobal, public TableInterface
 		unsigned char colourRed;
 		unsigned char colourGreen;
 		unsigned char colourBlue;
+    
+    /* Race */
+    enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
+    
+      // Race can be Human, Dwarven or Elven.
+    int race;
 		
 		void setColour (const unsigned char, const unsigned char, const unsigned char);
 

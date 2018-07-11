@@ -36,6 +36,8 @@ Tribe::Tribe()
 	
 	worldX=-1;
 	worldY=-1;
+  
+  race = NONE;
 
 }
 
@@ -711,11 +713,7 @@ bool Tribe::spawn()
 
 Texture* Tribe::currentTexture()
 {
-	if ( foundSettlement )
-	{
-		return &TEX_WORLD_SETTLEMENT_TOWN_URBAN01;
-	}
-	return &TEX_WORLD_UNIT_NOMAD_01;
+	return &TEX_TEST_404;
 }
 
 

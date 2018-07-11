@@ -199,6 +199,9 @@ World_Local * worldLocal;
 #include "Tribe_Human.cpp"
 	
 #include "Civ.cpp"
+#include "Civ_Dwarven.cpp"
+
+#include "Settlement.cpp"
   
 #include "WorldObjectGlobal.cpp"
 
