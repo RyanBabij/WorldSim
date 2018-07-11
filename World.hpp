@@ -25,16 +25,20 @@ NameGen globalNameGen;
 #include <LogicTick/LogicTickInterface.hpp>
 #include <Time/Calendar.hpp>
 
-#include "Character.hpp"
-#include "Tribe.hpp"
-#include "Tribe_Dwarven.hpp"
-#include "Tribe_Human.hpp"
+class Character;
+class Tribe;
+class Tribe_Human;
+class Tribe_Dwarven;
+class Tribe_Elf;
 
 #include "WorldTile.cpp"
 
 #include "GuildCalendar.hpp"
 
 #include "World_Local.hpp"
+
+#include "WorldObjectGlobal.hpp"
+
 
 #include "World_Landmass.hpp"
 #include "World_Biome.hpp"

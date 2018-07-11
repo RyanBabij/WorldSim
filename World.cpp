@@ -19,7 +19,14 @@
 #include "Civ.cpp"
 #include "Civ_Dwarven.cpp"
 
+#include "Tribe.cpp"
+#include "Tribe_Human.cpp"
+#include "Tribe_Dwarven.cpp"
+#include "Tribe_Elf.cpp"
+
 #include "Settlement.cpp"
+
+#include "WorldObjectGlobal.hpp"
 
 World::World(): seaLevel(0), mountainLevel(0)
 {
@@ -183,10 +190,17 @@ void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int 
 {	
 	std::cout<<"Generate tribes\n";
 
-	if (nTribesHuman < 1 || nTribesHuman > 999)
-	{
-		std::cout<<"WARNING: Excessive tribes.\n";
-	}
+  if (nTribesHuman < 0 ) { nTribesHuman = 0; }
+  if (nTribesDwarven < 0 ) { nTribesDwarven = 0; }
+  if (nTribesElven < 0 ) { nTribesElven = 0; }
+  
+	if (nTribesHuman < 0 || nTribesHuman > 999)
+	{ std::cout<<"WARNING: Unexpected number of human tribes.\n"; }
+	if (nTribesDwarven < 0 || nTribesDwarven > 999)
+	{ std::cout<<"WARNING: Unexpected number of human tribes.\n"; }
+  if (nTribesElven < 0 || nTribesElven > 999)
+	{ std::cout<<"WARNING: Unexpected number of human tribes.\n"; }
+
 
 	for (int i=0;i<nTribesHuman;++i)
 	{
@@ -204,6 +218,14 @@ void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int 
 	for (int i=0;i<nTribesDwarven;++i)
 	{
 		Tribe_Dwarven * t = new Tribe_Dwarven;
+		t->init(this);
+		t->spawn();
+		t->generateCouples(7);
+	}
+  
+	for (int i=0;i<nTribesElven;++i)
+	{
+		Tribe_Elf * t = new Tribe_Elf;
 		t->init(this);
 		t->spawn();
 		t->generateCouples(7);

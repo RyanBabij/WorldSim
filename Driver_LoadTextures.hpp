@@ -41,6 +41,9 @@ const std::string PATH_TEX_WORLD_UNIT_NOMAD_01 = "Textures/World/Unit/Nomad/00.p
 Texture TEX_WORLD_UNIT_DWARF_01;
 const std::string PATH_TEX_WORLD_UNIT_DWARF_01 = "Textures/World/Unit/Dwarf/00.png";
 
+Texture TEX_WORLD_UNIT_ELF_01;
+const std::string PATH_TEX_WORLD_UNIT_ELF_01 = "Textures/World/Unit/Elf/00.png";
+
 Texture TEX_WORLD_SETTLEMENT_DWARFFORT_01;
 const std::string PATH_TEX_WORLD_SETTLEMENT_DWARFFORT_01 = "Textures/World/Settlement/DwarfFort/01.png";
 
@@ -135,6 +138,8 @@ void loadTextures()
 		// LOAD WORLD OBJECT TEXTURES
 	loadTextureVerbose(PATH_TEX_WORLD_UNIT_NOMAD_01,&TEX_WORLD_UNIT_NOMAD_01);
 	loadTextureVerbose(PATH_TEX_WORLD_UNIT_DWARF_01,&TEX_WORLD_UNIT_DWARF_01);
+	loadTextureVerbose(PATH_TEX_WORLD_UNIT_ELF_01,&TEX_WORLD_UNIT_ELF_01);
+  
 	loadTextureVerbose(PATH_TEX_WORLD_SETTLEMENT_DWARFFORT_01,&TEX_WORLD_SETTLEMENT_DWARFFORT_01);
 	loadTextureVerbose(PATH_TEX_WORLD_SETTLEMENT_TOWN_URBAN01,&TEX_WORLD_SETTLEMENT_TOWN_URBAN01);
 	

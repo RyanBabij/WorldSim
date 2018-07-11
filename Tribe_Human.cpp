@@ -32,11 +32,11 @@ bool Tribe_Human::spawn()
 		return false;
 	}
 	
-	HasXY* spawnTile = world->getRandomTileOfType(World::MOUNTAIN);
+	HasXY* spawnTile = world->getRandomTileOfType(World::GRASSLAND);
 	
 	if ( spawnTile == 0 )
 	{
-		std::cout<<"ABORT: Couldn't find mountain tile.\n";
+		std::cout<<"ABORT: Human couldn't find tile to spawn into.\n";
 		return false;
 	}
 
@@ -46,7 +46,7 @@ bool Tribe_Human::spawn()
 	worldX=spawnTile->x;
 	worldY=spawnTile->y;
 
-	world->putObject(this);
+	world->putObject(this,worldX,worldY);
 	world->vTribe.push(this);
 	
 	return true;

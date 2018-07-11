@@ -1,16 +1,16 @@
 #pragma once
-#ifndef WORLDSIM_TRIBE_DWARVEN_CPP
-#define WORLDSIM_TRIBE_DWARVEN_CPP
+#ifndef WORLDSIM_TRIBE_ELF_CPP
+#define WORLDSIM_TRIBE_ELF_CPP
 
-/* WorldSim: Tribe_Dwarven.hpp
-	#include "Tribe_Dwarven.hpp"
+/* WorldSim: Tribe_Elf.hpp
+	#include "Tribe_Elf.hpp"
 
 	Description:
-	Tribes are nomadic groups. They wander the map trying to survive until they develop enough to become a civilization. Dwarven tribes build fortresses into mountains, and typically stay there growing crops and manufacturing items.
+	Tribes are nomadic groups. They wander the map trying to survive until they develop enough to become a civilization. Elven tribes live in forests and jungles. They know a lot about the magic arts.
 
 */
 
-#include "Tribe_Dwarven.hpp"
+#include "Tribe_Elf.hpp"
 
 #include "Character.hpp"
 
@@ -21,20 +21,29 @@ class World;
 
 #include <Container/Table/TableInterface.hpp>
 
-Tribe_Dwarven::Tribe_Dwarven()
+Tribe_Elf::Tribe_Elf()
 {
-  race = DWARVEN;
+  race = ELVEN;
 }
 
 
-bool Tribe_Dwarven::spawn()
+bool Tribe_Elf::spawn()
 {
 	
 	if ( world == 0 )
-	{ return false; }
-	
-  HasXY* spawnTile = world->getRandomTileOfType(World::MOUNTAIN);
-
+	{
+		return false;
+	}
+  
+  HasXY* spawnTile = 0;
+  if (Random::oneIn(3) )
+  {
+    spawnTile = world->getRandomTileOfType(World::FOREST);
+  }
+  else
+  {
+    spawnTile = world->getRandomTileOfType(World::JUNGLE);
+  }
 	if ( spawnTile == 0 )
 	{
     spawnTile = world->getRandomTileOfType(World::GRASSLAND);
@@ -42,7 +51,7 @@ bool Tribe_Dwarven::spawn()
   
 	if ( spawnTile == 0 )
 	{
-		std::cout<<"ABORT: Dwarf couldn't find tile to spawn into.\n";
+		std::cout<<"ABORT: Elf couldn't find tile to spawn into.\n";
 		return false;
 	}
 
@@ -60,7 +69,7 @@ bool Tribe_Dwarven::spawn()
 }
 
 			/* SIMULATE X TURNS OF THE CIV. */
-void Tribe_Dwarven::incrementTicks ( int nTicks )
+void Tribe_Elf::incrementTicks ( int nTicks )
 {
   actionPoints+=nTicks;
 	dailyCounter+=nTicks;
@@ -74,10 +83,10 @@ void Tribe_Dwarven::incrementTicks ( int nTicks )
       
       if ( foundSettlement == false )
       {
-        if ( world->getTileType(worldX,worldY) == "mountain"  && random.oneIn(10) )
+        if ( world->getTileType(worldX,worldY) == "forest"  && random.oneIn(10) )
         {
-          foundSettlement = true;
-          world->evolveToCiv(this);
+          //foundSettlement = true;
+          //world->evolveToCiv(this);
           break;
         }
         else
@@ -96,10 +105,10 @@ void Tribe_Dwarven::incrementTicks ( int nTicks )
 	{
     if ( foundSettlement == false )
     {
-      if ( world->getTileType(worldX,worldY) == "mountain"  && random.oneIn(10) )
+      if ( world->getTileType(worldX,worldY) == "forest"  && random.oneIn(10) )
       {
-        foundSettlement = true;
-        world->evolveToCiv(this);
+        //foundSettlement = true;
+        //world->evolveToCiv(this);
         break;
       }
       else
@@ -113,7 +122,7 @@ void Tribe_Dwarven::incrementTicks ( int nTicks )
 
 }
 
-void Tribe_Dwarven::wander()
+void Tribe_Elf::wander()
 {
 	if (world==0 || foundSettlement) { return; }
 	
@@ -140,13 +149,13 @@ void Tribe_Dwarven::wander()
 }
 
 
-Texture* Tribe_Dwarven::currentTexture()
+Texture* Tribe_Elf::currentTexture()
 {
   if (foundSettlement)
   {
     return &TEX_WORLD_SETTLEMENT_DWARFFORT_01;
   }
-	return &TEX_WORLD_UNIT_DWARF_01;
+	return &TEX_WORLD_UNIT_ELF_01;
 }
 
 #endif

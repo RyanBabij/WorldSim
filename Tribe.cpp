@@ -601,7 +601,7 @@ bool Tribe::spawn()
 	worldX=spawnTile->x;
 	worldY=spawnTile->y;
 
-	world->putObject(this);
+	world->putObject(this,worldX, worldY);
 	world->vTribe.push(this);
 	
 	return true;
