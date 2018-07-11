@@ -269,7 +269,8 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 					}
 					if (buttonTestSomething.clicked == true)
 					{
-						std::cout<<"Nothing to test right now.\n";
+						std::cout<<"Uh... 1+1=2. Yep it works.\n";
+            buttonTestSomething.unclick();
 					}
 				}
 			}

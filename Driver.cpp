@@ -268,7 +268,8 @@ void shutDown()
 
 int main(int nArgs, char ** arg)
 {
-	//std::cout<<"\nGarosoft: TheGuild WIP.\n\n";
+	std::cout<<"\nWorldSim by Garosoft (garosoft.org) "<<VERSION<<". Warning: This is not a stable release.\n";
+
 	GL_init(nArgs, arg);
 	
 	/* Initialise game. Load textures, fonts etc. */
