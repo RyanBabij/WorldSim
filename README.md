@@ -43,7 +43,11 @@ I make builds with:
 
 g++ Driver.cpp  -o a.exe -Wall -Wshadow -Wpointer-arith -Wcast-qual -Wextra -Wno-unused-variable -Wno-unused-parameter -Wno-unused-but-set-variable -I G:\c\lib\ -L G:\c\lib\zzzlibs\ -std=c++17 -m32 -O0 -lopengl32 -lfreeglut -lglu32 -s -Wl,--stack,16777216 -pipe -Wl,--large-address-aware -lstdc++fs -fshort-enums 2>ccOutput.txt
 
--ffast-math seems to cause instability when I run my builds on other computers. Clearly they can't handle my quick maths.
+-ffast-math seems to cause instability when I run my builds on other computers. Clearly they can't handle my quick maths. Just as a side-note, -mtune=native -march=native -ffast-math together only seem to increase performance by about 3%, so it's not a big deal.
+
+I also tried the following crazy-ass flags: -fassociative-math -freciprocal-math -fno-signed-zeros -fno-trapping-math -frename-registers -fopenmp -D_GLIBCXX_PARALLEL -fgraphite-identity -floop-interchange -floop-block -floop-parallelize-all -ftree-loop-distribution -ftree-parallelize-loops=4 and got absolutely no gain in performance so whatevs.
+
+-Os is causing some kind of linker issue with GUI/GUI.hpp. I noticed there is a lot of dependency problems in that code so I will need to first resolve that.
 
 ### Releases
 
