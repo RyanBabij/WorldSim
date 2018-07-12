@@ -95,9 +95,9 @@ class World: public LogicTickInterface, public IdleTickInterface
 		/* This array stores the base terrain data. */
 	//enum enumType { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6 };
 		//UPDATED FOR NEW WORLDGEN
-	enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13, RIVER=14};
-	const std::string biomeName [15] = { "nothing", "ocean", "grassland", "forest", "desert", "mountain", "snow", "hilly", "jungle", "wetland", "steppes", "cave", "ruin", "ice", "river" };
-	ArrayS2 <unsigned char> aTerrain;
+	//enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13, RIVER=14};
+	//const std::string biomeName [15] = { "nothing", "ocean", "grassland", "forest", "desert", "mountain", "snow", "hilly", "jungle", "wetland", "steppes", "cave", "ruin", "ice", "river" };
+	ArrayS2 <enumBiome> aTerrain;
 	
 		/* Overlays on top of base terrain. Each tile may have a 'point of interest' on it. */
 		/* Points of interest:

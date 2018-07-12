@@ -883,22 +883,22 @@ void switchTarget(World_Local* _worldLocal)
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
 						}
 						
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == World::FOREST)
+						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == FOREST)
 						{
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_FOREST_TREE, false);
 						}
 						
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == World::MOUNTAIN)
+						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == MOUNTAIN)
 						{
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_MOUNTAIN_00, false);
 						}
 
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == World::DESERT)
+						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == DESERT)
 						{
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_00, false);
 						}
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == World::DESERT)
+						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == DESERT)
 						{
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_01, false);
 						}

@@ -490,6 +490,9 @@ void World::buildArrays()
 			aSeed(_x,_y) = random.randInt(INT_MAX-1);
 			aWorldTile(_x,_y).biome = aTerrain(_x,_y);
 			aWorldTile(_x,_y).seed = aSeed(_x,_y);
+      
+        //Initialise the WorldTile with biome enum.
+      aWorldTile(_x,_y).init(aTerrain(_x,_y));
 			
 			int _red;
 			int _green;
@@ -685,14 +688,14 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	
 	// Multithreading this segment runs 23% faster. Saves about 0.1 seconds or something.
 
-#define THREADED
+  #define THREADED
 //#undef THREADED
 	
 	#ifndef THREADED
 		//aHeightMap.init(x,y,0);
 		aWorldObject.init(x,y,0);
 		aTopoMap.init(x,y,3,0);
-		aTerrain.init(x,y,0);
+		aTerrain.init(x,y,NOTHING);
 		aInfluence.init(x,y,0);
 		aSeed.init(x,y,0);
 		
@@ -703,7 +706,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 //		std::thread t1 (&ArrayS2 <unsigned char>::init, &this->aHeightMap, x,y,0);
 		WorldObject* const woNull = 0;
 		std::thread t2 (&ArrayS2 <WorldObject*>::init, &this->aWorldObject, x,y,woNull);
-		std::thread t3 (ArrayS2 <unsigned char>::init, &this->aTerrain, x,y,0);
+		std::thread t3 (ArrayS2 <enumBiome>::init, &this->aTerrain, x,y,NOTHING);
 		std::thread t4 (&ArrayS3 <unsigned char>::init, &this->aTopoMap, x,y,3,0);
 		
 		std::map<Tribe*,int> * const influenceNull = 0;
@@ -1044,7 +1047,7 @@ int World::getHuntingYield(const int _x, const int _y)
 {
 	int totalYield = 0;
 
-	Vector <unsigned char> vTerrain;
+	Vector <enumBiome> vTerrain;
 	aTerrain.getNeighborVector(_x,_y,&vTerrain,true /* INCLUDE SELF */);
 	
 	for ( int i=0;i<vTerrain.size();++i)

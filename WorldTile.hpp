@@ -21,12 +21,13 @@ class WorldTile: public HasTexture
 	WorldTile();
 	
 	int seed; /* Seed to feed into RNG to deconstruct into a map. */
-	
-	enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13};
+  
+    // How many metals may be mined from this tile.
+  int baseMetal;
 	
 	// texture pointer
 	
-	int biome; /* Determines what it looks like and is called */
+	enumBiome biome; /* Determines what it looks like and is called */
 	int baseMoveCost; /* how many ap to move onto the tile. */
 	bool canHaveSettlement;
 	int baseFertility;
@@ -37,7 +38,9 @@ class WorldTile: public HasTexture
 		// The id of the landmass.
 	int landID;
 		// The id of the biome.
-	int biomeID;
+  int biomeID;
+  
+  void init(enumBiome _biomeID);
 	
 		// This returns the base texture.
 	virtual Texture* currentTexture();

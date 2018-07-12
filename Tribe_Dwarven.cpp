@@ -33,11 +33,11 @@ bool Tribe_Dwarven::spawn()
 	if ( world == 0 )
 	{ return false; }
 	
-  HasXY* spawnTile = world->getRandomTileOfType(World::MOUNTAIN);
+  HasXY* spawnTile = world->getRandomTileOfType(MOUNTAIN);
 
 	if ( spawnTile == 0 )
 	{
-    spawnTile = world->getRandomTileOfType(World::GRASSLAND);
+    spawnTile = world->getRandomTileOfType(GRASSLAND);
 	}
   
 	if ( spawnTile == 0 )
