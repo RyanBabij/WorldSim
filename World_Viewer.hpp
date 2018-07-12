@@ -7,6 +7,8 @@
 #include <Device/Mouse/MouseInterface.hpp>
 #include <Render/Renderer.hpp>
 
+#include <WorldGenerator/Biome.hpp> // For rendering biomes.
+
 /* #include "World_Viewer.hpp"
 	Code for rendering the player's view of the world. There's no class here, just functions and vars.
 	

@@ -4,6 +4,8 @@
 
 #include "WorldTile.hpp"
 
+#include <WorldGenerator/Biome.hpp>
+
 /*
 	Local tile data gets stored here. Render stuff can't go here because that depends on neighboring tiles.
 */

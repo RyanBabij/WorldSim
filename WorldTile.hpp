@@ -14,6 +14,8 @@ A tile is 5km by 5km, ie, 5,000 * 5000 tiles. */
 
 #include <Interface/HasTexture.hpp>
 
+#include <WorldGenerator/Biome.hpp>
+
 class WorldTile: public HasTexture
 {
 	public:

@@ -27,6 +27,7 @@
 #include "Settlement.cpp"
 
 #include "WorldObjectGlobal.hpp"
+#include <WorldGenerator/Biome.hpp>
 
 World::World(): seaLevel(0), mountainLevel(0)
 {
