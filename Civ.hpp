@@ -17,7 +17,7 @@ class CivManager
 };
 CivManager civManager;
 
-class Civ
+class Civ: public TableInterface
 {
 	private:
 
@@ -115,6 +115,10 @@ class Civ
 		
 			// RETURN TRUE IF THE TILE IS NOT FOGGY.
 		bool canSee(const int _x, const int _y);
+    
+		/* TABLE INTERFACE */
+		std::string getColumn(std::string _column);
+		std::string getColumnType(std::string _column);
 	
 };
 

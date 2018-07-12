@@ -21,6 +21,12 @@ class World;
 
 #include <Container/Table/TableInterface.hpp>
 
+Tribe_Human::Tribe_Human()
+{
+  race = HUMAN;
+}
+
+
 
 bool Tribe_Human::spawn()
 {

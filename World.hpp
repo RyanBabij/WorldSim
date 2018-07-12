@@ -144,6 +144,7 @@ class World: public LogicTickInterface, public IdleTickInterface
 
 
 	Vector <Tribe*> vTribe;
+	Vector <Civ*> vCiv;
 	
 	//ArrayS2 <TribalTerritory> vTribeTerritory;
 	

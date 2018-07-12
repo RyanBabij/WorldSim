@@ -23,9 +23,7 @@ class Tribe_Human: public Tribe
 {
 	public:
 	
-	Tribe_Human()
-	{
-	}
+	Tribe_Human();
 	
 	bool spawn();
 	

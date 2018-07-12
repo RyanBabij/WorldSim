@@ -264,10 +264,12 @@ void World::evolveToCiv( Tribe * _tribe )
     Settlement * s = new Settlement;
     putObject(s, _tribe->worldX, _tribe->worldY);
     removeObject(_tribe);
-    vTribe.remove(_tribe);
+    vTribe.remove(_tribe);  
 
       // Give the Civ a Settlement
     civ->addSettlement(s);
+    
+    vCiv.push(civ);
     
       // Move all characters into the first Settlement
     s->vCharacter.copy(&_tribe->vCharacter);

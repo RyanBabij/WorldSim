@@ -79,6 +79,7 @@ class Menu_Tribes: public GUI_Interface
 		guiTableTribes.alpha=0;
 		guiTableTribes.active=true;
 		guiTableTribes.addColumn("Name","name",120);
+		guiTableTribes.addColumn("Race","race",120);
 		guiTableTribes.addColumn("Food","food",120);
 		guiTableTribes.addColumn("Population","population",120);
 		guiTableTribes.addColumn("Coordinates","coordinates",120);

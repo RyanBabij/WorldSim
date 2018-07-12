@@ -5,6 +5,7 @@
 #include "World_Viewer.hpp"
 
 #include "Menu_Tribes.hpp"
+#include "Menu_Civs.hpp"
 #include "Menu_World.hpp"
 #include "Menu_Character.hpp"
 #include "Menu_Biome.hpp"
@@ -75,6 +76,7 @@ class Menu_WorldSimulator: public GUI_Interface
 	
 	/* Submenus */
 	Menu_Tribes menuTribes;
+	Menu_Civs menuCivs;
 	Menu_World menuWorld;
 	Menu_Characters menuCharacter;
 	Menu_Biome menuBiome;
@@ -181,9 +183,11 @@ class Menu_WorldSimulator: public GUI_Interface
 		
 		/* Submenus */
 		guiManager.add(&menuTribes);
+		guiManager.add(&menuCivs);
 		guiManager.add(&menuWorld);
 		guiManager.add(&menuCharacter);
 		guiManager.add(&menuBiome);
+
 
 		textSimulationSpeed.active=true;
 		cycleSimulationSpeed.active=true;
@@ -205,6 +209,7 @@ class Menu_WorldSimulator: public GUI_Interface
 		buttonPauseSimulation.active = false;
 		
 		menuTribes.init();
+		menuCivs.init();
 		menuWorld.init();
 		menuCharacter.init();
 		menuBiome.init();
@@ -347,6 +352,7 @@ class Menu_WorldSimulator: public GUI_Interface
 		{
 
 			menuTribes.active = false;
+			menuCivs.active = false;
 			menuWorld.active = false;
 			menuCharacter.active = false;
 			menuBiome.active = false;
@@ -412,19 +418,6 @@ class Menu_WorldSimulator: public GUI_Interface
 		{
 			//std::cout<<"Increment decade.\n";
 			buttonIncrementDecade.unclick();
-			// world.incrementTicks(31104000);
-			// //render();
-			// //GL_idle();
-			// world.incrementTicks(31104000);
-			// world.incrementTicks(31104000);
-			// world.incrementTicks(31104000);
-			// world.incrementTicks(31104000);
-			// world.incrementTicks(31104000);
-			// world.incrementTicks(31104000);
-			// world.incrementTicks(31104000);
-			// world.incrementTicks(31104000);
-			// world.incrementTicks(31104000);
-			
 			world.ticksBacklog+=311040000;
 		}
 		
@@ -453,8 +446,8 @@ class Menu_WorldSimulator: public GUI_Interface
 		if (buttonCivMenu.clicked==true)
 		{
 			std::cout<<"Civ menu\n";
-			//menuCharacter.init();
-			//menuCharacter.active=true;
+			menuCivs.init();
+			menuCivs.active=true;
 			buttonCivMenu.unclick();
 		}
 
@@ -542,6 +535,7 @@ class Menu_WorldSimulator: public GUI_Interface
 		buttonCivMenu.setPanel(panelX2-340, panelY2-40, panelX2-300, panelY2-30);
 
 		menuTribes.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
+		menuCivs.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuWorld.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuCharacter.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuBiome.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
