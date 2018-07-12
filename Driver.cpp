@@ -5,6 +5,10 @@
 	This project takes a world generated using worldgen and simulates the rise of civilisations on it.
 */
 
+#include <string>
+
+enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13, RIVER=14};
+const std::string biomeName [15] = { "nothing", "ocean", "grassland", "forest", "desert", "mountain", "snow", "hilly", "jungle", "wetland", "steppes", "cave", "ruin", "ice", "river" };
 
 #define WILDCAT_USE_OPENGL
 //#define WILDCAT_USE_DIRECT3D
@@ -100,35 +104,20 @@ class Stream
 
 void printHelp()
 {
-	std::cout<<"\nWorldSim by Garosoft (garosoft.org)\n";
-	std::cout<<"  Worldgen is a command line tool that generates a world map and exports it as an uncompressed PNG.\n";
+  std::cout<<"\nWorldSim by Garosoft (garosoft.org) "<<VERSION<<".\n";
+  std::cout<<"  Warning: This is not a stable release.\n";
+	std::cout<<"  WorldSim is a 2D tile-based sandbox RPG with procedurally generated fantasy world.\n";
 	std::cout<<"  License: Public domain. This program uses a modified version of LodePNG.\n";
-	std::cout<<"  This is an alpha release, and is not fully functional.\n";
+	std::cout<<"  This is a pre-alpha release, and is not fully functional.\n";
 
 	std::cout<<"Options:\n";
-	std::cout<<"  -o \"x\". Required. Output the world data as: x.png. Must be alphanumeric. Default value is \"world\".\n";
-	std::cout<<"  -s x. Create world of size (x,x). x should be (2^x)+1. Default value: 1025. Large values may crash the program due to memory limitations.\n";
-	std::cout<<"  -n x. Generate x number of worlds. Output files will have numbers appended. Default value: 1.\n";
-	std::cout<<"  -ocean x. Approximate percentage of the world that will be ocean. Default value: 66. Value of x must be between 0-100.\n";
-	std::cout<<"  -seed x. Seed used to generate world. Default value is random. Value will be saved to the text file in case you get a world you want to generate again later. The maximum value for seed is "<<INT_MAX<<" (INT_MAX).\n";
-	std::cout<<"  -seedland x.\n";
-	std::cout<<"  -i. Enables island mode. The map will have water around the border. Disabled by default.\n";
-	std::cout<<"  -c. Compress PNG. Disabled by default.\n";
-	std::cout<<"  -wrapX. Wrap the X-axis.\n";
-	std::cout<<"  -wrapY. Wrap the Y-axis.\n";
-	std::cout<<"  -caves. Optional. Number of caves to spawn into the world. Default value: 64.\n";
-	std::cout<<"  -load \"path\". Optional. Instead of generating a world, will load this world data file.";
-	//std::cout<<"  NOT IMPLEMENTED: -id x. Each world has a unique id, if you want to generate a particular world, you can enter its id.\n";
-
-	std::cout<<"\nExample:\n<example>\n";
+  std::cout<<"None.\n";
 
 	std::cout<<"\n";
 	std::cout<<"Version "<<VERSION<<".\n";
 	std::cout<<"Compiled: "<<__DATE__<<". "<<__TIME__<<".\n";
 	std::cout<<"Compile count: "<<COMPILE_COUNT<<".\n";
 	std::cout<<"\n";
-	
-	std::cout<<"Testing Github commits.\n";
 }
 
 void pauseGame()
@@ -151,9 +140,12 @@ class QuitChecker
 	}
 	~QuitChecker()
 	{
-		std::cout<<"Thankyou for playing. ^_^\n";
-		gameTime.update();
-		std::cout<<"Time played: "<<gameTime.seconds/60/60<<" hours, "<<gameTime.seconds/60<<" minutes, "<<gameTime.seconds<<" seconds.\n";
+    gameTime.update();
+    if (gameTime.seconds > 10 )
+    {
+      std::cout<<"Thankyou for playing. ^_^\n";
+      std::cout<<"Time played: "<<gameTime.seconds/60/60<<" hours, "<<gameTime.seconds/60<<" minutes, "<<gameTime.seconds<<" seconds.\n";
+    }
 	}
 };
 QuitChecker quitChecker;
@@ -265,9 +257,20 @@ void shutDown()
 /* OpenGL function hooks go here. */
 #include "Driver_GLHooks.hpp"
 
+#include <Misc/ArgReader.hpp>
+
 
 int main(int nArgs, char ** arg)
 {
+	ArgReader argReader;
+	argReader.feed(nArgs,arg);
+  
+	if (argReader.hasTag("-help") || argReader.hasTag("--help") || argReader.hasTag("-h"))
+	{
+		printHelp();
+		return 0;
+	}
+  
 	std::cout<<"\nWorldSim by Garosoft (garosoft.org) "<<VERSION<<". Warning: This is not a stable release.\n";
 
 	GL_init(nArgs, arg);

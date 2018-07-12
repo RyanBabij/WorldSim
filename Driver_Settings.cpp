@@ -26,7 +26,7 @@ volatile const std::string devmessage = "HEY THIS IS GARO WADDUP.";
 /* DEBUG MENU SHORTCUTS */
 //bool AUTO_GENERATE_WORLD = false;
 //bool AUTO_NEW_SIMULATION = true;
-bool QUICKSTART = false; // Skip menu stuff and jump right into the game. (Will use defaults).
+bool QUICKSTART = true; // Skip menu stuff and jump right into the game. (Will use defaults).
   //Quickly go straight into the simulator.
 bool QUICKSTART_SIMULATOR = false; // Skip menu stuff and jump right into the game. (Will use defaults).
   // DEFAULT WORLD WHICH IS AUTO-GENERATED.
@@ -54,7 +54,8 @@ int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 const int PLANTING_TIME = 100; /* Testing. */
 const int HARVESTING_TIME = 100; /* Testing. */
 
-
+//enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13, RIVER=14};
+//const std::string biomeName [15] = { "nothing", "ocean", "grassland", "forest", "desert", "mountain", "snow", "hilly", "jungle", "wetland", "steppes", "cave", "ruin", "ice", "river" };
 
 unsigned int RESOLUTIONX=1200, RESOLUTIONY=1000;
 bool RESET=false;

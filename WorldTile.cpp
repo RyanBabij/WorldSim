@@ -18,7 +18,25 @@ WorldTile::WorldTile()
 	canMove = 0;
 	baseLogisticsCost = 0;
 	defensiveBonus = 0;
+  
+  baseMetal=0;
 	
+}
+
+void WorldTile::init(enumBiome _biomeID)
+{
+    biome = _biomeID;
+    
+    if ( biome == MOUNTAIN )
+    {
+      //std::cout<<"Adding resources to mountain.\n";
+      baseMetal=100;
+    }
+    else
+    {
+      baseMetal=0;
+    }
+
 }
 
 Texture* WorldTile::currentTexture()

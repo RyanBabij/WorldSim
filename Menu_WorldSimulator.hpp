@@ -58,6 +58,9 @@ class Menu_WorldSimulator: public GUI_Interface
 	
 		/* Toggle tribal territory visibility */
 	GUI_Button buttonTerritoryView;
+  
+		/* List of all Civs in the game */
+	GUI_Button buttonCivMenu;
 	
 	/* Button: Switch between 1/4 or fullscreen view of world map. */
 	GUI_Button buttonExpandMap;
@@ -155,6 +158,9 @@ class Menu_WorldSimulator: public GUI_Interface
 		
 		buttonCharacterMenu.text="C";
 		buttonCharacterMenu.setColours(&cNormal,&cHighlight,0);
+    
+		buttonCivMenu.text="Civ";
+		buttonCivMenu.setColours(&cNormal,&cHighlight,0);
 		
 		buttonTerritoryView.text="T2";
 		buttonTerritoryView.setColours(&cNormal,&cHighlight,0);
@@ -170,6 +176,7 @@ class Menu_WorldSimulator: public GUI_Interface
 		guiManager.add(&buttonWorldMenu);
 		guiManager.add(&buttonBiomeMenu);
 		guiManager.add(&buttonCharacterMenu);
+		guiManager.add(&buttonCivMenu);
 		guiManager.add(&buttonTerritoryView);
 		
 		/* Submenus */
@@ -190,6 +197,7 @@ class Menu_WorldSimulator: public GUI_Interface
 		buttonWorldMenu.active=true;
 		buttonBiomeMenu.active=true;
 		buttonCharacterMenu.active=true;
+		buttonCivMenu.active=true;
 		buttonTerritoryView.active=true;
 		
 		buttonExpandMap.active = false;
@@ -441,6 +449,14 @@ class Menu_WorldSimulator: public GUI_Interface
 			menuCharacter.active=true;
 			buttonCharacterMenu.unclick();
 		}
+    
+		if (buttonCivMenu.clicked==true)
+		{
+			std::cout<<"Civ menu\n";
+			//menuCharacter.init();
+			//menuCharacter.active=true;
+			buttonCivMenu.unclick();
+		}
 
 		if  (buttonTerritoryView.clicked==true)
 		{
@@ -523,6 +539,7 @@ class Menu_WorldSimulator: public GUI_Interface
 		buttonCharacterMenu.setPanel(panelX2-240, panelY2-40, panelX2-210, panelY2-30);
 		buttonBiomeMenu.setPanel(panelX2-270, panelY2-40, panelX2-240, panelY2-30);
 		buttonTerritoryView.setPanel(panelX2-300, panelY2-40, panelX2-270, panelY2-30);
+		buttonCivMenu.setPanel(panelX2-340, panelY2-40, panelX2-300, panelY2-30);
 
 		menuTribes.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuWorld.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);

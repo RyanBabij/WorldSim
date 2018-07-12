@@ -38,15 +38,15 @@ bool Tribe_Elf::spawn()
   HasXY* spawnTile = 0;
   if (Random::oneIn(3) )
   {
-    spawnTile = world->getRandomTileOfType(World::FOREST);
+    spawnTile = world->getRandomTileOfType(FOREST);
   }
   else
   {
-    spawnTile = world->getRandomTileOfType(World::JUNGLE);
+    spawnTile = world->getRandomTileOfType(JUNGLE);
   }
 	if ( spawnTile == 0 )
 	{
-    spawnTile = world->getRandomTileOfType(World::GRASSLAND);
+    spawnTile = world->getRandomTileOfType(GRASSLAND);
 	}
   
 	if ( spawnTile == 0 )

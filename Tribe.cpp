@@ -587,7 +587,7 @@ bool Tribe::spawn()
 		return false;
 	}
 	
-	HasXY* spawnTile = world->getRandomTileOfType(World::GRASSLAND);
+	HasXY* spawnTile = world->getRandomTileOfType(GRASSLAND);
 	
 	if ( spawnTile == 0 )
 	{
