@@ -21,11 +21,17 @@ class World;
 
 class Tribe_Human: public Tribe
 {
+  private:
+    int nArtifactsDropped;
+  
 	public:
+  
+  
 	
 	Tribe_Human();
 	
 	bool spawn();
+  virtual void wander();
 	
 	Texture* currentTexture();
 };

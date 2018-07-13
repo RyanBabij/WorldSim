@@ -195,6 +195,7 @@ World_Local * worldLocal;
 #include "Settlement.cpp"
   
 #include "WorldObjectGlobal.cpp"
+#include "WorldObjectGlobal_TribalArtifact.cpp"
 
 
 #include <Math/Geometry/Geometry.hpp>

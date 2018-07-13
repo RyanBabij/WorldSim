@@ -2,19 +2,10 @@
 #ifndef WORLDSIM_TRIBE_HPP
 #define WORLDSIM_TRIBE_HPP
 
-/* Tribe.hpp
+/* WorldSim: Tribe.hpp
 	#include "Tribe.hpp"
 
-	Project: WorldSim
-	Created: 14/10/2017. 0272065192.
-	Updated: 14/10/2017. 0272065192.
-
-	Description:
 	Tribes are nomadic groups. They wander the map trying to survive until they develop enough to become a civilization.
-
-	Notes:
-
-	0272065192 - Created.
 
 */
 
@@ -103,12 +94,16 @@ class Tribe: public WorldObjectGlobal, public TableInterface
 			/* SIMULATE X TURNS OF THE CIV. */
 		virtual void incrementTicks ( int /* nTicks */ );
 		
-		Texture* currentTexture();
+
 		
 		void generateCouples(int /* amount */ = 1 );
 		
 			//getPopulation returns living population of tribe.
 		int getPopulation();
+    
+    
+    /* WORLD OBJECT GLOBAL */
+		Texture* currentTexture();
 		
 		/* TABLE INTERFACE */
 		std::string getColumn(std::string _column);

@@ -16,7 +16,7 @@ int lastline = 0;
 
 bool FAST_COUT = false;
 
-const std::string VERSION = "0.0.008 Win32 dev";
+const std::string VERSION = "0.0.011 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 
 const std::string SAVE_FOLDER_PATH = "savedata";

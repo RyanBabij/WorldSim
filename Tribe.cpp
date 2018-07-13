@@ -2,10 +2,9 @@
 #ifndef WORLDSIM_TRIBE_CPP
 #define WORLDSIM_TRIBE_CPP
 
-/* Tribe.cpp
+/* WorldSim: Tribe.cpp
 	#include "Tribe.cpp"
 
-	Description:
 	Tribes are nomadic groups. They wander the map trying to survive until they develop enough to become a civilization.
 
 */

@@ -27,7 +27,7 @@ class WorldObjectGlobal: public HasTexture
 	WorldObjectGlobal();
 	
 	
-	enum enumType { NOTHING=0, URBAN=1, ARMY=2, FLEET=3, NOMADIC_TRIBE=4 };
+	enum enumType { NOTHING=0, URBAN=1, ARMY=2, FLEET=3, NOMADIC_TRIBE=4, TRIBAL_ARTIFACT=5 };
 	int type;
 	
 	//std::string name;

@@ -34,6 +34,10 @@ Texture TEX_NPC;
 Texture TEX_TEST_404;
 const std::string PATH_TEX_TEST_404 = "Textures/Test/404.png";
 
+Texture TEX_WORLD_ARTIFACT_GEMS;
+const std::string PATH_TEX_WORLD_ARTIFACT_GEMS = "Textures/World/Artifact/Gems2.png";
+
+
 // WORLD UNIT TEXTURES
 Texture TEX_WORLD_UNIT_NOMAD_01;
 const std::string PATH_TEX_WORLD_UNIT_NOMAD_01 = "Textures/World/Unit/Nomad/00.png";
@@ -178,6 +182,7 @@ void loadTextures()
 	loadTextureVerbose(PATH_TEX_WORLD_TEST_00,&TEX_WORLD_TEST_00);
   
   loadTextureVerbose(PATH_TEX_TEST_404,&TEX_TEST_404);
+  loadTextureVerbose(PATH_TEX_WORLD_ARTIFACT_GEMS,&TEX_WORLD_ARTIFACT_GEMS);
 }
 
 #endif

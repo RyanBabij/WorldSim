@@ -66,7 +66,7 @@ void World::nameRegions()
 {
 }
 
-bool World::putObject(WorldObjectGlobal* _object, int x=-1, int y=-1)
+bool World::putObject(WorldObjectGlobal* _object, int x /* =-1 */, int y /* =-1 */)
 {
 	//return false;
 	if ( x != -1 && y != -1 )
@@ -248,18 +248,18 @@ void World::evolveToCiv( Tribe * _tribe )
   
   if ( _tribe->race == Tribe::DWARVEN)
   {
-    std::cout<<"AYYY DWARVEN\n";
+    //std::cout<<"AYYY DWARVEN\n";
     Civ_Dwarven * civ = new Civ_Dwarven;
     
     civ->name = _tribe->name;
     
-    std::cout<<"Civ name is: "<<civ->name<<".\n";
+    //std::cout<<"Civ name is: "<<civ->name<<".\n";
     
     civ->setColour(_tribe->colourRed,_tribe->colourGreen,_tribe->colourBlue);
     
     civ->vCharacter.copy(&_tribe->vCharacter);
     
-    std::cout<<"Copied: "<<civ->vCharacter.size() <<" characters.\n";
+    //std::cout<<"Copied: "<<civ->vCharacter.size() <<" characters.\n";
     
     Settlement * s = new Settlement;
     putObject(s, _tribe->worldX, _tribe->worldY);

@@ -246,8 +246,9 @@ class World: public LogicTickInterface, public IdleTickInterface
 		// RETURN ANY OBJECTS WHICH ARE NEXT TO THE PASSED OBJECT.
 	Vector <WorldObjectGlobal*>* getNeighboringObjects(WorldObjectGlobal*);
 	
-		// Put a worldobject anywhere in the world.
-	bool putObject(WorldObjectGlobal* _object, int x, int y);
+		// Put a worldobject anywhere in the world. If x,y are not provided
+    // It will use the object's own coordinates.
+	bool putObject(WorldObjectGlobal* _object, int x = -1, int y = -1);
     // Remove object from world.
   bool removeObject(WorldObjectGlobal* _object);
 	
