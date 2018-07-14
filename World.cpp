@@ -266,6 +266,7 @@ void World::evolveToCiv( Tribe * _tribe )
     
     Settlement_Dwarven * s = new Settlement_Dwarven;
     s->world = this;
+    s->vCharacter.copy(&_tribe->vCharacter);
     putObject(s, _tribe->worldX, _tribe->worldY);
     removeObject(_tribe);
     vTribe.remove(_tribe);  

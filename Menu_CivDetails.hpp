@@ -1,18 +1,17 @@
 #pragma once
-#ifndef WORLDSIM_MENU_CIVS_HPP
-#define WORLDSIM_MENU_CIVS_HPP
+#ifndef WORLDSIM_MENU_CIVDETAILS_HPP
+#define WORLDSIM_MENU_CIVDETAILS_HPP
 
-/* WorldSim: Menu_Civs.cpp
+/* WorldSim: Menu_CivDetails.cpp
+#include "Menu_CivDetails.hpp"
 
-	This menu shows a database of all civs in the world. The player can click a civ to get a detailed view of the civ.
+	This menu shows details of a specific civ.
 */
 
 #include <GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
 
-#include "Menu_CivDetails.hpp"
-
-class Menu_Civs: public GUI_Interface
+class Menu_CivDetails: public GUI_Interface
 {
 	public:
 	GUI_Manager guiManager;
@@ -31,15 +30,15 @@ class Menu_Civs: public GUI_Interface
 	GUI_Button buttonCivDetails;
 	
 		// TABLE FOR CIVS
-	Table2 tCivs;
+	Table2 tSettlements;
 	GUI_Table guiTableCivs;
 	
 	int lastRowClicked;
 	Civ* selectedCiv;
 	
-	Menu_CivDetails menuCivDetails;
+	//Menu_TribeDetails menuTribeDetails;
 	
-	Menu_Civs()
+	Menu_CivDetails()
 	{	
 		lastRowClicked=-1;
 		selectedCiv=0;
@@ -49,13 +48,15 @@ class Menu_Civs: public GUI_Interface
 	{
 		font = _font;
 		guiManager.setFont(_font);
-		menuCivDetails.setFont(_font);
+		//menuTribeDetails.setFont(_font);
 	}
 	
-	void init()
+	void init(Civ* _selectedCiv=0)
 	{
+    selectedCiv = _selectedCiv;
+    
 		lastRowClicked=-1;
-		selectedCiv=0;
+		//selectedCiv=0;
     active = false;
 		
 		/* Initialise theme. */
@@ -73,54 +74,59 @@ class Menu_Civs: public GUI_Interface
 		buttonCivDetails.active=true;
 		
 		guiTableCivs.clear();
-		guiTableCivs.table = &tCivs;
+		guiTableCivs.table = &tSettlements;
 		guiTableCivs.alpha=0;
 		guiTableCivs.active=true;
-		guiTableCivs.addColumn("Name","name",120);
+		guiTableCivs.addColumn("Name","name",180);
 		guiTableCivs.addColumn("Race","race",120);
 		guiTableCivs.addColumn("Population","population",120);
+		guiTableCivs.addColumn("Metal","metal",120);
 		//guiTableCivs.addColumn("Coordinates","coordinates",120);
 		//guiTableCivs.addColumn("Territory","territory",120);
 		
-		tCivs.clear();
-		for (int i=0;i<world.vCiv.size();++i)
-		{
-			tCivs.addRow(world.vCiv(i));
+		tSettlements.clear();
+    if ( selectedCiv != 0 )
+    {
+      for (int i=0;i<selectedCiv->vSettlement.size();++i)
+      {
+        tSettlements.addRow(selectedCiv->vSettlement(i));
+      }
 		}
-		
 		
 		guiManager.add(&buttonClose);
 		guiManager.add(&buttonCivDetails);
 		guiManager.add(&guiTableCivs);
 		
-		menuCivDetails.init();
-		menuCivDetails.active=false;
+		//menuCivDetails.init();
+		//menuCivDetails.active=false;
 		
 		eventResize();
-		menuCivDetails.eventResize();
+		//menuCivDetails.eventResize();
 	}
 	
 	void render()
 	{
-		if ( menuCivDetails.active )
-		{
-			menuCivDetails.render();
-		}
-		else if ( active )
+		// if ( menuCivDetails.active )
+		// {
+			// menuCivDetails.render();
+		// }
+		//else if ( active )
+    if ( active )
 		{
 			Renderer::placeColour4a(150,150,150,200,panelX1,panelY1,panelX2,panelY2);
-			font8x8.drawText("CIV LIST MENU",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
+			font8x8.drawText("CIV DETAILS MENU",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
 			guiManager.render();
 		}
 	}
 
 	bool keyboardEvent (Keyboard* _keyboard)
 	{
-		if ( menuCivDetails.active )
-		{
-			return menuCivDetails.keyboardEvent(_keyboard);
-		}
-		else if ( active )
+		// if ( menuCivDetails.active )
+		// {
+			// return menuCivDetails.keyboardEvent(_keyboard);
+		// }
+    if ( active )
+		//else if ( active )
 		{
 			return guiManager.keyboardEvent(_keyboard);
 		}
@@ -131,11 +137,12 @@ class Menu_Civs: public GUI_Interface
 
 	bool mouseEvent (Mouse* _mouse)
 	{
-		if ( menuCivDetails.active )
-		{
-			menuCivDetails.mouseEvent(_mouse);
-		}
-		else if ( active )
+		// if ( menuCivDetails.active )
+		// {
+			// menuCivDetails.mouseEvent(_mouse);
+		// }
+		//else if ( active )
+		if ( active )
 		{
 				/* If the guiManager did something with the mouse event. */
 			if(guiManager.mouseEvent(_mouse)==true)
@@ -145,6 +152,7 @@ class Menu_Civs: public GUI_Interface
 
 			if  (buttonClose.clicked==true)
 			{
+				std::cout<<"CLOSE\n";
 				active=false;
 				buttonClose.unclick();
 			}
@@ -153,15 +161,16 @@ class Menu_Civs: public GUI_Interface
 			{
 				if ( selectedCiv != 0 )
 				{
-					active=false;
-          //menuCivDetails.selectedCiv=selectedCiv;
-          menuCivDetails.init(selectedCiv);
-          menuCivDetails.active=true;
-					guiTableCivs.active=false;
+					std::cout<<"Civ details\n";
+					//active=false;
+            //menuCivDetails.selectedTribe=selectedTribe;
+            //menuCivDetails.init();
+            //menuCivDetails.active=true;
+					//guiTableTribes.active=false;
 				}
 				else
 				{
-					std::cout<<"Select a civ first.\n";
+					std::cout<<"Select a tribe first.\n";
 				}
 
 				buttonCivDetails.unclick();
@@ -193,8 +202,8 @@ class Menu_Civs: public GUI_Interface
 		guiTableCivs.setPanel(panelX1,panelY1,panelX2,panelY2-30);
 		buttonClose.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
 		buttonCivDetails.setPanel(panelX2-100, panelY1+40, panelX2-20, panelY1+20);
-		menuCivDetails.setPanel(panelX1,panelY1,panelX2,panelY2);
-		menuCivDetails.eventResize();
+		//menuTribeDetails.setPanel(panelX1,panelY1,panelX2,panelY2);
+		//menuTribeDetails.eventResize();
 	}
 	
 };

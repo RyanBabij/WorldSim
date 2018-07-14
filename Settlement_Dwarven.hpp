@@ -11,7 +11,7 @@ class Settlement_Dwarven: public Settlement
 
 	public:
 	
-		Vector <Character*> vCharacter;
+		//Vector <Character*> vCharacter;
 
 		// //std::string name;
 

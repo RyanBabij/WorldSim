@@ -15,6 +15,10 @@ Settlement_Dwarven::Settlement_Dwarven()
   
   race = DWARVEN;
   
+  nMetalStockpile=0;
+  monthlyCounter=0;
+  dailyCounter=0;
+  
 }
 
 Texture* Settlement_Dwarven::currentTexture()
@@ -23,14 +27,33 @@ Texture* Settlement_Dwarven::currentTexture()
 }
 
   /* SIMULATE X TURNS OF THE SETTLEMENT. */
-void Settlement_Dwarven::incrementTicks ( int /* nTicks */ )
+void Settlement_Dwarven::incrementTicks ( int nTicks )
 {
- // std::cout<<"Dwarven set increment.\n";
+	dailyCounter+=nTicks;
+	monthlyCounter+=nTicks;
 
-  if ( world->aWorldTile(worldX,worldY).baseMetal > 0 )
+
+
+  
+	while (monthlyCounter >= 2592000)
+	{
+    if ( world->aWorldTile(worldX,worldY).baseMetal > 0 )
+    {
+      nMetalStockpile+=30;
+    }
+
+		monthlyCounter-=2592000;
+	}
+  
+	while ( dailyCounter >= 86400 )
   {
-   // std::cout<<"Mining\n";
-  }
+    if ( world->aWorldTile(worldX,worldY).baseMetal > 0 )
+    {
+      ++nMetalStockpile;
+    }
+		dailyCounter-=86400;
+	}
+  
   return;
 }
 

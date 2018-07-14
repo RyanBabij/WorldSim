@@ -3,7 +3,7 @@
 #define GUILD_SETTLEMENT_HPP
 
 
-class Settlement: public WorldObjectGlobal
+class Settlement: public WorldObjectGlobal, public TableInterface
 {
 	private:
 
@@ -20,8 +20,15 @@ class Settlement: public WorldObjectGlobal
 		int colourGreen;
 		int colourBlue;
 		
+		/* Counters to regulate logic ticks */
+		int dailyCounter;
+		int monthlyCounter;
+		
+    
     //enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
     int race;
+    
+    int nMetalStockpile;
     
 		Settlement();
 		
@@ -30,6 +37,10 @@ class Settlement: public WorldObjectGlobal
 
     // WorldObjectGlobal virtual.
   Texture* currentTexture();
+  
+		/* TABLE INTERFACE */
+		std::string getColumn(std::string _column);
+		std::string getColumnType(std::string _column);
 };
 
 #endif

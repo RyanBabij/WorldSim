@@ -901,13 +901,33 @@ std::string Civ::getColumn(std::string _column)
 	{
 		return name;
 	}
+	if ( _column=="race" )
+	{
+		if (race == NONE)
+    {
+      return "None";
+    }
+		if (race == HUMAN)
+    {
+      return "Human";
+    }
+		if (race == DWARVEN)
+    {
+      return "Dwarven";
+    }
+		if (race == ELVEN)
+    {
+      return "Elven";
+    }
+    
+	}
 	if ( _column=="food" )
 	{
 		//return DataTools::toString(nFood);
 	}
 	if ( _column=="population" )
 	{
-		//return DataTools::toString(vCharacter.size());
+		return DataTools::toString(vCharacter.size());
 	}
 	if ( _column=="coordinates" )
 	{

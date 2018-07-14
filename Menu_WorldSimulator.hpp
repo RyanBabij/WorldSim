@@ -240,13 +240,13 @@ class Menu_WorldSimulator: public GUI_Interface
 		
 		// MESSAGE CONSOLE		
 		const int nY = panelY2-panelY1;
-		Renderer::placeColour4a(200,200,250,125,panelX1,panelY1,panelX1+220,panelY2);
+		Renderer::placeColour4a(200,200,250,125,panelX1,panelY1+120,panelX1+220,panelY2);
 		int currentY = panelY2-2;
 		int iMessage = vConsoleMessage.size()-1;
     
     int linesDrawn = 0;
     
-		while (currentY>panelY1 && iMessage>=0 && iMessage<vConsoleMessage.size() )
+		while (currentY>panelY1+120 && iMessage>=0 && iMessage<vConsoleMessage.size() )
 		{
 			linesDrawn = font8x8.drawText(vConsoleMessage(iMessage),panelX1,currentY,panelX1+220,currentY-38,false,false);
 			--iMessage;
@@ -254,6 +254,8 @@ class Menu_WorldSimulator: public GUI_Interface
       currentY-=2;
 		}
 
+    Renderer::placeColour4a(200,200,250,250,panelX1,panelY1,panelX1+220,panelY1+120);
+    
 		buttonExpandMap.render();
 
 		// DATE
