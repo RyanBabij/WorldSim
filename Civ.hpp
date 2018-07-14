@@ -57,7 +57,7 @@ class Civ: public TableInterface
 		int colourGreen;
 		int colourBlue;
 		
-    enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
+    //enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
     int race;
     
 		Civ();

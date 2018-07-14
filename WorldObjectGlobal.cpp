@@ -24,6 +24,7 @@ WorldObjectGlobal::WorldObjectGlobal()
 	world=0;
 	type=NOTHING;
 	name="?";
+  nameType="?";
 }
 
 #endif

@@ -18,12 +18,13 @@ class WorldObjectGlobal: public HasTexture
 {
 	private:
 	
-	std::string name;
-	
 	public:
 	int worldX, worldY; /* Coordinates on the world map. */
 	World* world; /* Link with the world. */
-	
+  
+  std::string name;
+  std::string nameType; /* The category of this object */
+  
 	WorldObjectGlobal();
 	
 	

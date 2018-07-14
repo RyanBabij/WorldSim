@@ -149,7 +149,7 @@ class Menu_Tribes: public GUI_Interface
 
 			if  (buttonClose.clicked==true)
 			{
-				std::cout<<"CLOSE\n";
+				//std::cout<<"CLOSE\n";
 				active=false;
 				buttonClose.unclick();
 			}
@@ -158,7 +158,7 @@ class Menu_Tribes: public GUI_Interface
 			{
 				if ( selectedTribe != 0 )
 				{
-					std::cout<<"Tribe details\n";
+					//std::cout<<"Tribe details\n";
 					//active=false;
 					menuTribeDetails.selectedTribe=selectedTribe;
 					menuTribeDetails.init();

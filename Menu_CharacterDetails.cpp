@@ -252,7 +252,6 @@ class Menu_CharacterDetails: public GUI_Interface
 
 			if  (buttonClose.clicked==true)
 			{
-				std::cout<<"CLOSE\n";
 				active=false;
 				buttonClose.unclick();
 			}

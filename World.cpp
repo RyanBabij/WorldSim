@@ -25,6 +25,7 @@
 #include "Tribe_Elf.cpp"
 
 #include "Settlement.cpp"
+#include "Settlement_Dwarven.cpp"
 
 #include "WorldObjectGlobal.hpp"
 #include <WorldGenerator/Biome.hpp>
@@ -246,12 +247,14 @@ void World::evolveToCiv( Tribe * _tribe )
   
   Console (Stream() << "Tribe: " << _tribe->name << " became a Civ.");
   
-  if ( _tribe->race == Tribe::DWARVEN)
+  if ( _tribe->race == DWARVEN)
   {
     //std::cout<<"AYYY DWARVEN\n";
     Civ_Dwarven * civ = new Civ_Dwarven;
     
+    
     civ->name = _tribe->name;
+    civ->world = this;
     
     //std::cout<<"Civ name is: "<<civ->name<<".\n";
     
@@ -261,7 +264,8 @@ void World::evolveToCiv( Tribe * _tribe )
     
     //std::cout<<"Copied: "<<civ->vCharacter.size() <<" characters.\n";
     
-    Settlement * s = new Settlement;
+    Settlement_Dwarven * s = new Settlement_Dwarven;
+    s->world = this;
     putObject(s, _tribe->worldX, _tribe->worldY);
     removeObject(_tribe);
     vTribe.remove(_tribe);  
@@ -319,6 +323,11 @@ void World::incrementTicks(int nTicks)
 	for ( int i=0;i<vTribe.size();++i)
 	{
 		vTribe(i)->incrementTicks(nTicks);
+	}
+  
+	for ( int i=0;i<vCiv.size();++i)
+	{
+		vCiv(i)->incrementTicks(nTicks);
 	}
 	
 	//updateCivContacts();
@@ -1200,22 +1209,41 @@ void World::queryTile( int hoveredXTile, int hoveredYTile)
 		return;
 	}
 
-	std::cout<<"Printing info for: "<<hoveredXTile<<", "<<hoveredYTile<<".\n";
+  std::cout<<"\n*** QUERY WORLD INFO ("<<hoveredXTile<<", "<<hoveredYTile<<") ***\n";
 	int terrain = aTerrain(hoveredXTile,hoveredYTile);
-	std::cout<<"Terrain value: "<<terrain<<".\n";
+	std::cout<<"Terrain value: "<<terrain<<" ("<<biomeName[terrain]<<").\n";
+  
+  std::cout<<"Metal: "<<aWorldTile(hoveredXTile,hoveredYTile).baseMetal<<".\n";
 	
 	
 	for (int i=0;i<vTribe.size();++i)
 	{
 		if ( vTribe(i)->worldX == hoveredXTile && vTribe(i)->worldY == hoveredYTile)
 		{
-			std::cout<<"Tribe: "<<vTribe(i)->name<<".\n";
+			//std::cout<<"Tribe: "<<vTribe(i)->name<<".\n";
 		}
 	}
 	
+	for (int i=0;i<vWorldObjectGlobal.size();++i)
+	{
+		if ( vWorldObjectGlobal(i)->worldX == hoveredXTile && vWorldObjectGlobal(i)->worldY == hoveredYTile)
+		{
+			std::cout<<vWorldObjectGlobal(i)->nameType<<": "<<vWorldObjectGlobal(i)->name<<".\n";
+      Console (Stream() <<vWorldObjectGlobal(i)->nameType<<": "<<vWorldObjectGlobal(i)->name);
+		}
+	}
+  Console (Stream() <<"Objects:");
+  
 	std::cout<<"Landmass name: "<<getLandmassName(hoveredXTile,hoveredYTile)<<".\n";
 	
 	std::cout<<"Local seed: "<<aSeed(hoveredXTile,hoveredYTile)<<".\n";
+  
+  std::cout<<"************\n";
+  
+  Console (Stream() <<"Landmass name: "<<getLandmassName(hoveredXTile,hoveredYTile));
+  Console(Stream() <<"Metal: "<<aWorldTile(hoveredXTile,hoveredYTile).baseMetal);
+  Console (Stream() <<"Terrain: "<<biomeName[terrain]);
+  Console (Stream() <<"("<<hoveredXTile<<", "<<hoveredYTile<<")");
 }
 
 void World::addInfluence(Tribe* tribe, int amount)

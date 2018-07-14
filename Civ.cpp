@@ -2,9 +2,8 @@
 #ifndef GUILD_CIV_CPP
 #define GUILD_CIV_CPP
 
-class Settlement;
-
 #include "Civ.hpp"
+#include "Settlement.hpp"
 
 Civ::Civ()
 {
@@ -34,6 +33,7 @@ void Civ::init(World* _world)
 
 void Civ::addSettlement(Settlement * _settlement)
 {
+  _settlement->world = world;
   vSettlement.push(_settlement);
 }
 
@@ -260,6 +260,7 @@ void Civ::addSettlement(Settlement * _settlement)
 
 void Civ::incrementTicks ( int nTicks )
 {
+ // std::cout<<"Civ is incrementing.\n";
 	//std::cout<<"Incrementing "<<nTicks<<" ticks.\n";
 	// for (int i=0;i<nTicks;++i)
 	// {
@@ -276,10 +277,10 @@ void Civ::incrementTicks ( int nTicks )
 	
 	/* Update each city. */
 	
-	// for ( int i=0;i<vCity.size();++i)
-	// {
-		// vCity(i)->incrementTicks(nTicks);
-	// }
+	for ( int i=0;i<vSettlement.size();++i)
+	{
+		vSettlement(i)->incrementTicks(nTicks);
+	}
 	
 	//nFood = 0;
 	//for ( int i=0;i<vCity.size();++i)

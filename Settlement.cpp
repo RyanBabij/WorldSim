@@ -7,7 +7,7 @@
 Settlement::Settlement()
 {
   
-  name = "";
+  name = "Settlement";
   world = 0;
   colourRed = 0;
   colourGreen = 0;
@@ -19,7 +19,13 @@ Settlement::Settlement()
 
 Texture* Settlement::currentTexture()
 {
-	return &TEX_WORLD_SETTLEMENT_DWARFFORT_01;
+	return &TEX_TEST_404;
+}
+
+  /* SIMULATE X TURNS OF THE SETTLEMENT. */
+void Settlement::incrementTicks ( int /* nTicks */ )
+{
+  return;
 }
 
 #endif

@@ -20,6 +20,7 @@
 Tribe::Tribe()
 {
 	name="N/A";
+  nameType = "Tribe";
 	world=0;
 	nFood=0;
 	actionPoints=0;

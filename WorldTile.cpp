@@ -32,7 +32,7 @@ void WorldTile::init(enumBiome _biomeID)
     if ( biome == MOUNTAIN )
     {
       //std::cout<<"Adding resources to mountain.\n";
-      baseMetal=100;
+      baseMetal=1000;
     }
     else
     {

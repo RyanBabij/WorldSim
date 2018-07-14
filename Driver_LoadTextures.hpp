@@ -49,7 +49,7 @@ Texture TEX_WORLD_UNIT_ELF_01;
 const std::string PATH_TEX_WORLD_UNIT_ELF_01 = "Textures/World/Unit/Elf/00.png";
 
 Texture TEX_WORLD_SETTLEMENT_DWARFFORT_01;
-const std::string PATH_TEX_WORLD_SETTLEMENT_DWARFFORT_01 = "Textures/World/Settlement/DwarfFort/01.png";
+const std::string PATH_TEX_WORLD_SETTLEMENT_DWARFFORT_01 = "Textures/World/Settlement/DwarfFort/03.png";
 
 Texture TEX_WORLD_SETTLEMENT_TOWN_URBAN01;
 const std::string PATH_TEX_WORLD_SETTLEMENT_TOWN_URBAN01 = "Textures/World/Settlement/Town/01.png";

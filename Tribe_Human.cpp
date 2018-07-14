@@ -27,6 +27,8 @@ Tribe_Human::Tribe_Human()
 {
   race = HUMAN;
   nArtifactsDropped = 0;
+  nameType = "Human Tribe";
+  name = "HUM";
 }
 
 

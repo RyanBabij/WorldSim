@@ -11,6 +11,9 @@
 
 std::mutex render_mutex;
 
+  /* Race */
+enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
+
 int worldPop = 0;
 int lastline = 0;
 

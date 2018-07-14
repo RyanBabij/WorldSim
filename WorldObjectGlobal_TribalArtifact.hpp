@@ -14,6 +14,7 @@
 
 class World;
 class Tribe;
+class Character;
 
 //#include "GuildCalendar.hpp"
 #include "WorldObjectGlobal.hpp"
@@ -25,14 +26,35 @@ class TribalArtifact: public WorldObjectGlobal, public TableInterface
   
 	public:
   
-		std::string name;
+		//std::string name; (WorldObjectGlobal)
 		World* world;
-    Tribe* owner;
+    Tribe* ownerTribe;
 
 
 		
 		TribalArtifact();
 		~TribalArtifact();
+
+    
+    /* WORLD OBJECT GLOBAL */
+		Texture* currentTexture();
+		
+		/* TABLE INTERFACE */
+		std::string getColumn(std::string _column);
+		std::string getColumnType(std::string _column);
+};
+
+class TribalArtifact_Jewellery: public TribalArtifact
+{
+  private:
+  
+	public:
+    Character* ownerCharacter;
+
+
+		
+		TribalArtifact_Jewellery();
+		~TribalArtifact_Jewellery();
 
     
     /* WORLD OBJECT GLOBAL */

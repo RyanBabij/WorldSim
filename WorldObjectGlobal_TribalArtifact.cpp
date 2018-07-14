@@ -24,9 +24,9 @@ class World;
 
 TribalArtifact::TribalArtifact()
 {
-  name = "?";
+  name = "Ancient Jewellery";
   world = 0;
-  owner = 0;
+  ownerTribe = 0;
 }
 
 TribalArtifact::~TribalArtifact()
@@ -44,6 +44,33 @@ std::string TribalArtifact::getColumn(std::string _column)
 }
 
 std::string TribalArtifact::getColumnType(std::string _column)
+{
+  return "?";
+}
+
+
+TribalArtifact_Jewellery::TribalArtifact_Jewellery()
+{
+  name = "Ancient Jewellery";
+  world = 0;
+  ownerTribe = 0;
+}
+
+TribalArtifact_Jewellery::~TribalArtifact_Jewellery()
+{
+}
+
+Texture* TribalArtifact_Jewellery::currentTexture()
+{
+  return &TEX_WORLD_ARTIFACT_GEMS;
+}
+
+std::string TribalArtifact_Jewellery::getColumn(std::string _column)
+{
+  return "?";
+}
+
+std::string TribalArtifact_Jewellery::getColumnType(std::string _column)
 {
   return "?";
 }
