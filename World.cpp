@@ -320,15 +320,31 @@ void World::incrementTicks(int nTicks)
 	//{
 		//vCiv(i)->incrementTicks(nTicks);
 	//}
-	
+  
 	for ( int i=0;i<vTribe.size();++i)
 	{
-		vTribe(i)->incrementTicks(nTicks);
+    if ( vTribe(i)->isAlive == false )
+    {
+      destroyInfluence(vTribe(i));
+      vTribe(i) = 0;
+    }
+    else if (vTribe(i) != 0)
+    {
+      vTribe(i)->incrementTicks(nTicks);
+    }
+
 	}
+  
+  vTribe.removeNulls();
+	
+	// for ( int i=0;i<vTribe.size();++i)
+	// {
+		// vTribe(i)->incrementTicks(nTicks);
+	// }
   
 	for ( int i=0;i<vCiv.size();++i)
 	{
-		vCiv(i)->incrementTicks(nTicks);
+		//vCiv(i)->incrementTicks(nTicks);
 	}
 	
 	//updateCivContacts();
@@ -938,8 +954,23 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	{
 		delete vAllTiles(i);
 	}
-	
 	vAllTiles.clear();
+	
+	for (int i=0;i<vAllTiles2.size();++i)
+	{
+		delete vAllTiles2(i);
+	}
+	vAllTiles2.clear();
+  
+  
+	for (int _y=0;_y<nY;++_y)
+	{
+    for (int _x=0;_x<nX;++_x)
+    {
+      vAllTiles2.push( new HasXY (_x,_y) );
+    }
+	}
+  vAllTiles2.shuffle();
 	
 	for (int i=0;i<nY;++i)
 	{
@@ -1169,30 +1200,40 @@ bool World::getRandomLandTile(int* x, int* y)
 	return false;
 }
 
-HasXY* World::getRandomTileOfType(int _type)
+// UPDATE: This now actually returns a random distribution.
+HasXY* World::getRandomTileOfType(enumBiome _type)
 {
-	int randomRow = random.randomInt(nY-1);
-	int nRowsSearched = 0;
+  vAllTiles2.shuffle();
+  for (auto xy : vAllTiles2)
+  {
+    if ( aTerrain(xy->x,xy->y) == _type )
+    {
+      return xy;
+    }
+  }
+  
+	// int randomRow = random.randomInt(nY-1);
+	// int nRowsSearched = 0;
 	
-	while ( nRowsSearched < nY )
-	{
-		for (int _x=0;_x<nX;++_x)
-		{
-			int randomX = (*vAllTiles(randomRow))(_x);
+	// while ( nRowsSearched < nY )
+	// {
+		// for (int _x=0;_x<nX;++_x)
+		// {
+			// int randomX = (*vAllTiles(randomRow))(_x);
 			
-			if ( aTerrain(randomX,randomRow) == _type )
-			{
-				return new HasXY (randomX,randomRow);
-			}
+			// if ( aTerrain(randomX,randomRow) == _type )
+			// {
+				// return new HasXY (randomX,randomRow);
+			// }
 
-		}
+		// }
 		
-		vAllTiles(randomRow)->shuffle();
+		// vAllTiles(randomRow)->shuffle();
 		
-		++randomRow;
-		if (randomRow >= nY) { randomRow=0; }
-		++nRowsSearched;
-	}
+		// ++randomRow;
+		// if (randomRow >= nY) { randomRow=0; }
+		// ++nRowsSearched;
+	// }
 	
 	
 
@@ -1288,9 +1329,9 @@ void World::addInfluence(Tribe* tribe, int amount)
 	//std::cout<<"Addinfluence4\n";
 }
 
+// THIS IS A BIT DODGY. THERE SHOULD BE A SINGLE PASS FOR EVERYONE AT ONCE.
 void World::degradeInfluence(Tribe* tribe)
 {
-	//std::cout<<"Degrading influence.\n";
 	if ( tribe==0 )
 	{
 		return;
@@ -1298,21 +1339,20 @@ void World::degradeInfluence(Tribe* tribe)
 	
 	for (std::map <Tribe*,int>* mInfluence : aInfluence )
 	{
-		//std::cout<<"Address is: "<<mInfluence<<".\n";
 		if ( mInfluence != 0)
 		{
 			// Search for existing influence from this tribe.
 			auto search = mInfluence->find(tribe);
 			if(search != mInfluence->end())
 			{
-				//std::cout<<"Influence is now: "<<search->second<<".\n";
 				// Decrement influence if this tribe has been here.
 				if(search->second > 0)
 				{ search->second--;
 				}
-				
-				//std::cout<<"Influence is now: "<<search->second<<".\n";
-				
+        
+        //When influence is 0, it should be deleted.
+
+
 			}
 		}
 	}
@@ -1345,6 +1385,34 @@ void World::degradeInfluence(Tribe* tribe)
 
 	// }
 	// std::cout<<"Addinfluence4\n";
+}
+
+void World::destroyInfluence (Tribe* _tribe)
+{
+	if ( _tribe==0 )
+	{
+		return;
+	}
+	
+	for (std::map <Tribe*,int>* mInfluence : aInfluence )
+	{
+		if ( mInfluence != 0)
+		{
+			// Search for existing influence from this tribe.
+			auto search = mInfluence->find(_tribe);
+			if(search != mInfluence->end())
+			{
+				// Decrement influence if this tribe has been here.
+				if(search->second > 0)
+				{ search->second=0;
+				}
+        
+        //When influence is 0, it should be deleted.
+
+
+			}
+		}
+	}
 }
 
 	// Note that 0 influence doesn't count as influence. In this case it will return 0.
@@ -1418,6 +1486,74 @@ int World::getHighestInfluence(const int _x, const int _y)
 	}
 		std::string World::getLandmassName (HasXY* _xy)
 		{ return getLandmassName(_xy->x,_xy->y); }
+    
+
+  bool World::hasFreeTerritory(int landmassID)
+  {
+    Vector <HasXY*>* vLandmassTiles = 0;
+    
+    for ( int _y=0;_y<nY;++_y)
+    {
+      for ( int _x=0;_x<nX;++_x)
+      {
+        if (aLandmassID(_x,_y) == landmassID && aIsLand(_x,_y) == true )
+        {
+          // GET ALL COORDINATES OF THIS 
+          vLandmassTiles = aIsLand.floodFillVector(_x,_y,false);
+          
+          for (int i=0;i<vLandmassTiles->size();++i)
+          {
+            if ( getHighestInfluence( (*vLandmassTiles)(i) ) == 0)
+            {
+              delete vLandmassTiles;
+              return true;
+            }
+          }
+          delete vLandmassTiles;
+          return false;
+
+        }
+        
+      }
+    }
+    delete vLandmassTiles;
+    return false;
+  }
+  
+  int World::nFreeTerritory(int landmassID)
+  {
+    Vector <HasXY*>* vLandmassTiles = 0;
+    
+    int nUnclaimed = 0;
+    
+    for ( int _y=0;_y<nY;++_y)
+    {
+      for ( int _x=0;_x<nX;++_x)
+      {
+        if (aLandmassID(_x,_y) == landmassID && aIsLand(_x,_y) == true )
+        {
+          // GET ALL COORDINATES OF THIS LANDMASS
+          vLandmassTiles = aIsLand.floodFillVector(_x,_y,false);
+          
+          for (int i=0;i<vLandmassTiles->size();++i)
+          {
+            if ( getHighestInfluence( (*vLandmassTiles)(i) ) == 0)
+            {
+              ++nUnclaimed;
+              //delete vLandmassTiles;
+              //return true;
+            }
+          }
+          delete vLandmassTiles;
+          return nUnclaimed;
+
+        }
+        
+      }
+    }
+    delete vLandmassTiles;
+    return 0;
+  }
 	
 	
 #endif

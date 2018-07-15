@@ -38,6 +38,8 @@ Tribe::Tribe()
 	worldY=-1;
   
   race = NONE;
+  
+  isAlive = true;
 
 }
 
@@ -78,6 +80,7 @@ void Tribe::init(World* _world)
 	
 	worldX=-1;
 	worldY=-1;
+  isAlive = true;
 	
 	
 	for (int i=0;i<vCharacter.size();++i)
@@ -131,219 +134,7 @@ void Tribe::degradeInfluence()
 
 void Tribe::incrementTicks ( int nTicks )
 {
-	//std::cout<<"tribe increment ticks\n";
-	//std::cout<<"Increment ticks: "<<nTicks<<".\n";
-	actionPoints+=nTicks;
-	dailyCounter+=nTicks;
-	monthlyCounter+=nTicks;
-	
-	for (auto & v: vCharacter)
-	{
-		if(v->isAlive==false)
-		{
-			vCharacter.erase(v);
-		}
-	}
-	vCharacter.shrinkToFit();
-	
-	
-	for (int i=0;i<vCharacter.size();++i)
-	{
-		Character* c = vCharacter(i);
-		c->incrementTicks(nTicks);
-	}
-	
-	while (monthlyCounter >= 2592000)
-	{
-		lastline=1;	
-		//if ( vCharacter.size
-		//std::cout<<"begin monthly counter.\n";
-		
-		degradeInfluence();
-		//std::cout<<"influence degraded\n";
-		//std::cout<<"Monthly\n";
-		//Do monthly stuff here.
-		//for (int i=0;i<vCharacter.size();++i)
-			
-		// if ( random.oneIn(100) )
-		// {
-			// Character * c = new Character;
-			// c = 0;
-			// c->die();
-		// }
-		
-		//for (auto & c: vCharacter)
-		for (int i=0;i<vCharacter.size();++i)
-		{
-			//lastline=2;
-			//std::cout<<"char\n";
-			//break;
-			//std::cout<<"Character\n";
-			Character* const c = vCharacter(i);
-			
-			
-			if (c->isMale == false && c->isMarried == true && c->age >= 18 && c->isAlive && c->spouse!=0 && c->spouse->isAlive)
-			{
-				if (c->isPregnant==false)
-				{
-					if (c->vChildren.size() < 4 && c->age < 35)
-					{
-						if(random.oneIn(26))
-						{
-							c->isPregnant = true;
-							c->pregnantCounter = 0;
-						}	
-					}
-					else if (c->age < 55)
-					{
-						if(random.oneIn(c->age*3))
-						{
-							c->isPregnant = true;
-							c->pregnantCounter = 0;
-						}
-					}
-					else
-					{
-
-					}
-				}
-				
-				else if (c->isPregnant == true && c->pregnantCounter >= 10)
-				{
-						Character* babby = c->giveBirth();
-						if ( babby!= 0) { vCharacter.push(babby); }
-						c->isPregnant=false;
-						c->pregnantCounter = 0;
-						babby->tribe=this;
-				}
-				else if ( c->isPregnant == true)
-				{
-					c->pregnantCounter++;
-				}
-			}
-
-			// Marriage searching. 18+. 10% chance per month.
-			if (c->isMale == true && c->age >= 18 && c->isMarried == false && random.oneIn(48))
-			{
-				//std::cout<<"marriage\n";
-				
-				// build vector of unmarried women
-				Vector <Character*> vEligibleWomen;
-				
-				
-				// std::cout<<"Relatives of: "<<*c<<".\n";
-				
-				// for(auto v: *vRelatives)
-				// {
-					// std::cout<<"  "<<*v<<"\n";
-				// }
-				
-					// People that c can't marry
-				auto vRelatives = c->getRelatives();
-				
-				//Select 1000 random candidates from the vector.
-				int maxRandoms = 200;
-				while ( vEligibleWomen.size() < 100 && maxRandoms-- > 0)
-				{
-					Character* c2 = vCharacter(random.randomInt(vCharacter.size()-1));
-					
-					if ( c2!=c && c->canMarry(c2) && vRelatives->contains(c2)==false )
-					{
-						vEligibleWomen.push(c2);
-					}
-				}
-				
-				// for (int i2=0;i2<vCharacter.size();++i2)
-				// {
-					// Character* c2 = vCharacter(i2);
-					// if (c->canMarry(c2) && vRelatives->contains(c2)==false)
-					// {
-						// vEligibleWomen.push(c2);
-					// }
-				// }
-				//std::cout<<"There are "<<vEligibleWomen.size()<<" eligible women.\n";
-			
-
-				
-				if(vEligibleWomen.size()>0)
-				{
-					const int randomWoman = random.randomInt(vEligibleWomen.size()-1);
-					//std::cout<<"Marriage: "<<c->getFullName()<<" and "<<vEligibleWomen(randomWoman)->getFullName()<<".\n";
-					c->marry(vEligibleWomen(randomWoman));
-				}
-				//std::cout<<"end marriage\n";
-			}
-			//lastline=5;
-			
-			
-				//Death calculations
-			if ( c->age < 50 && random.oneIn(2400))
-			{
-				//std::cout<<"Death: "<<*c<<".\n";
-				c->die();
-			}
-			else if (c->age > 70 && random.oneIn(50))
-			{
-				//std::cout<<"Death: "<<*c<<".\n";
-				c->die();
-			}
-			else if (c->age > 65 && random.oneIn(180))
-			{
-				//std::cout<<"Death: "<<*c<<".\n";
-				c->die();
-			}
-			else if (c->age >= 50 && random.oneIn(600))
-			{
-				//std::cout<<"Death: "<<*c<<".\n";
-				c->die();
-			}
-//std::cout<<"end char\n";
-//lastline=6;	
-		}
-		//lastline=7;	
-		monthlyCounter-=2592000;
-		//std::cout<<"end monthly counter.\n";
-	}
-	///lastline=8;	
-	
-	while ( dailyCounter >= 86400 )
-	{
-		//std::cout<<"Dayloop for tribe: "<<name<<".\n";
-		//Do daily stuff here.
-		
-		// Get food for the day.
-		// Get resources for the day
-		// Get tech for the day
-		// 
-		
-		if ( foundSettlement == false )
-		{
-			wander();
-		}
-		
-		updateTerritory();
-		
-		//hunt();
-		
-	//	eat();
-		
-		develop();
-		
-		
-		
-		dailyCounter-=86400;
-	}
-	
-	//if ( actionPoints
-	
-	// Hourly
-	while( actionPoints >= 3600 )
-	{
-		
-		
-		actionPoints-=3600;
-	}
-//std::cout<<"end tribe increment ticks\n";
+  return;
 }
 
 void Tribe::wander()
@@ -737,6 +528,12 @@ void Tribe::generateCouples(int amount)
 		vCharacter.push(cMan);
 		vCharacter.push(cWoman);
 	}
+}
+
+
+bool Tribe::removeCharacter( Character* _character)
+{
+  return vCharacter.erase(_character);
 }
 
 

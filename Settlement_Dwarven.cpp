@@ -37,10 +37,10 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
   
 	while (monthlyCounter >= 2592000)
 	{
-    if ( world->aWorldTile(worldX,worldY).baseMetal > 0 )
-    {
-      nMetalStockpile+=30;
-    }
+    // if ( world->aWorldTile(worldX,worldY).baseMetal > 0 )
+    // {
+      // //nMetalStockpile+=30;
+    // }
 
 		monthlyCounter-=2592000;
 	}

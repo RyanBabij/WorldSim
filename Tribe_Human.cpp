@@ -100,20 +100,20 @@ void Tribe_Human::wander()
 	//  Move to unexplored territory
 	
 	//aTerrain.getNeighborVector(_x,_y,&vTerrain,false /* DON'T INCLUDE SELF */);
-	Vector <HasXY*> * vXY  = world->aTerrain.getNeighbors(worldX, worldY, false);
-	vXY->shuffle();
+	Vector <HasXY*> * vXY  = world->aTerrain.getNeighbors(worldX, worldY, false /* includeself */, true /* shuffle */);
 	
 	HasXY* xyDestination = 0;
-	
-	// Explore new territory
-	if (random.oneIn(4))
-	{
-		//std::cout<<"1\n";
+  
+  
+  // IF THE TRIBE IS NOT IN ITS OWN TERRITORY, BUT ADJACENT TO IT, MOVE BACK.
+  if ( world->getDominantInfluence(worldX,worldY) != this)
+  {
 		for (auto xy : *vXY)
 		{
 			if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
 			{
-				if ( world->getHighestInfluence(xy) == 0 )
+        // If we own this tile, move to it.
+				if ( world->getDominantInfluence(xy) == this )
 				{
 					xyDestination=xy;
 					
@@ -123,77 +123,413 @@ void Tribe_Human::wander()
 				}
 			}
 		}
+  }
+  // If the tribe is in its own territory.
+  else
+  {
+    // OCCASIONALLY MOVE RANDOMLY (INCLUDING INTO ENEMY TERRITORY)
+    if (random.oneIn(12))
+    {
+      for (auto xy : *vXY)
+      {
+        if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+        {
+          worldX=xy->x;
+          worldY=xy->y;
+          return;
+        }
+      }
+    }
+    
+    // Explore unclaimed territory.
+    if (random.oneIn(2))
+    {
+      for (auto xy : *vXY)
+      {
+        if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+        {
+          if ( world->getHighestInfluence(xy) == 0 )
+          {
+            xyDestination=xy;
+            
+            worldX=xy->x;
+            worldY=xy->y;
+            return;
+          }
+        }
+      }
+    }
+    
+    
+    // MOVE AROUND WITHIN OWNED TERRITORY
+    for (auto xy : *vXY)
+    {
+      if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+      {
+        if ( world->getDominantInfluence(xy)==this)
+        {
+          
+          worldX=xy->x;
+          worldY=xy->y;
+          return;
+        }
+      }
+    }
+
+    
+    
+      /* Otherwise move to a weak territory to reinforce/capture it */
+   // if ( random.oneIn(2) )
+   // {
+      /* Move to weakest territory */
+      // int weakestInfluence = -1;
+      // HasXY * weakestTile = 0;
+        
+      // for (auto xy : *vXY)
+      // {
+        // if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+        // {
+          // if ( world->getHighestInfluence(xy)>0 && world->getHighestInfluence(xy) < weakestInfluence)
+          // {
+            // xyDestination=xy;
+            // weakestInfluence = world->getHighestInfluence(xy);
+          // }
+        // }
+      // }
+      // if ( xyDestination != 0)
+      // {
+        // worldX=xyDestination->x;
+        // worldY=xyDestination->y;
+        // return;
+      // }
+    //}
+    
+
+    
+    
+  }
+	
+
+  
+
+	
+
+    /* If there is no unowned territory. Prefer own territory. Prefer weakest influence tiles to promote holding on to territory */
+  // for (auto xy : *vXY)
+  // {
+    
+    // int weakestInfluence = -1;
+    // HasXY * weakestTile = 0;
+    
+    // if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+    // {
+      // if ( world->getDominantInfluence(xy) == this)
+      // {
+        // if ( weakestInfluence == -1 || weakestTile == 0 || world->getHighestInfluence(xy) < weakestInfluence)
+        // {
+          // xyDestination=xy;
+          // weakestInfluence = world->getHighestInfluence(xy);
+        // }
+      // }
+    // }
+  // }
+  // if ( xyDestination != 0)
+  // {
+    // worldX=xyDestination->x;
+    // worldY=xyDestination->y;
+    // return;
+  // }
+  
+  // IF ALL ELSE FAILS, MOVE RANDOMLY (INCLUDING INTO ENEMY TERRITORY
+  for (auto xy : *vXY)
+  {
+    if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+    {
+      worldX=xy->x;
+      worldY=xy->y;
+    }
+  }
+
+
+		/* If all else fails, move randomly. */
+	// if (world->isSafe(destinationX,destinationY) && world->isLand(destinationX,destinationY))
+	// {
+		// // MOVE THE TRIBE TO THE LOCATION.
+		// worldX=destinationX;
+		// worldY=destinationY;
+	// }
+}
+
+void Tribe_Human::incrementTicks ( int nTicks )
+{
+
+	for (auto & v: vCharacter)
+	{
+		if(v->isAlive==false)
+		{
+			vCharacter.erase(v);
+		}
+	}
+	vCharacter.shrinkToFit();
+
+  if ( vCharacter.size() == 0 )
+  {
+    isAlive = false;
+    return;
+    
+  }
+  
+	//actionPoints+=nTicks;
+	dailyCounter+=nTicks;
+	monthlyCounter+=nTicks;
+	
+
+  
+
+  
+  
+	
+	
+	for (int i=0;i<vCharacter.size();++i)
+	{
+		Character* c = vCharacter(i);
+		c->incrementTicks(nTicks);
 	}
 	
-	//if ( random.oneIn(2) )
+	while (monthlyCounter >= 2592000)
 	{
-			/* If there is no unowned territory. Prefer own territory. Prefer weakest influence tiles to promote holding on to territory */
-		for (auto xy : *vXY)
+
+		degradeInfluence();
+    
+    // TRIBE SPLIT CALCULATIONS
+    // OCCURS IF: TOO MANY PEOPLE IN TRIBE, THERE IS A VIABLE AMOUNT OF FREE SPACE, RANDOM ELEMENT.
+    // ONLY SPLIT INTO EMPTY TERRITORY.
+    int landmassID = world->aLandmassID(worldX,worldY);
+    // WHAT LANDMASS ARE WE ON?
+    // DOES THE LANDMASS HAVE A SPARE TILE?
+    Vector <HasXY*> * vXY  = world->aTerrain.getNeighbors(worldX, worldY, false, true /* shuffle */);
+    bool canExpand = false;
+    for (auto xy : *vXY)
+    {
+      if (world->aTerrain.isSafe(xy) && world->isLand(xy) && world->getHighestInfluence(xy) == 0)
+      {
+        canExpand=true;
+        break;
+      }
+    }
+
+    if (canExpand && landmassID >=0 && vCharacter.size() > 200 && random.oneIn(12) && world->nFreeTerritory(landmassID) > 12 )
+    {
+      //std::cout<<"TRIBAL SPLIT\n";
+
+
+
+      // CHECK TO SEE IF THERE'S A TILE TO SPLIT INTO.
+      for (auto xy : *vXY)
+      {
+        if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+        {
+          if ( world->getHighestInfluence(xy) == 0 )
+          {
+            //xyDestination=xy;
+            
+
+            // WHO WILL LEAVE THE TRIBE? FOR NOW LET'S RANDOMLY PICK UNMARRIED INDIVIDUALS.
+            // ONLY FORM NEW TRIBE IF THERE ARE 12 CANDIDATES.
+            // NOTE THAT WE MUST SHUFFLE VECTOR FOR NOW. THE VECTOR SHOULD BE SHUFFLED EXTERNALLY AT A SET TIME PERIOD.
+            vCharacter.shuffle();
+            
+            Vector <Character*> vNewTribeCharacter;
+            
+            for (int i=0;i<vCharacter.size();++i)
+            {
+              if ( vCharacter(i)->isMarried == false )
+              {
+                vNewTribeCharacter.push(vCharacter(i));
+                
+                if (vNewTribeCharacter.size() >= 12)
+                {
+                  // FORM THE NEW TRIBE AND BREAK.
+                  Tribe_Human* splitTribe = new Tribe_Human;
+                  splitTribe->world = world;
+                  splitTribe->name = globalNameGen.generateName();
+                  splitTribe->nFood = 10;
+                  splitTribe->worldX = xy->x;
+                  splitTribe->worldY = xy->y;
+                  splitTribe->setColour(random.randomInt(255),random.randomInt(255),random.randomInt(255));
+                  world->putObject(splitTribe);
+                  world->vTribe.push(splitTribe);
+                  
+                  for (int i2=0;i2<vNewTribeCharacter.size();++i2)
+                  {
+                    splitTribe->vCharacter.push(vNewTribeCharacter(i2));
+                    removeCharacter(vNewTribeCharacter(i2));
+                  }
+                  
+                  
+                  std::cout<<"New tribe formed.\n";
+                  break;
+                }
+              }
+              
+            }
+            break;
+          }
+        }
+      }
+
+      
+
+      
+      //civ->vCharacter.copy(&_tribe->vCharacter);
+    }
+    
+    vXY->clearData();
+    delete vXY;
+    
+		//std::cout<<"influence degraded\n";
+		//std::cout<<"Monthly\n";
+		//Do monthly stuff here.
+		//for (int i=0;i<vCharacter.size();++i)
+			
+		// if ( random.oneIn(100) )
+		// {
+			// Character * c = new Character;
+			// c = 0;
+			// c->die();
+		// }
+		
+		//for (auto & c: vCharacter)
+		for (int i=0;i<vCharacter.size();++i)
 		{
+			Character* const c = vCharacter(i);
 			
-			int weakestInfluence = -1;
-			HasXY * weakestTile = 0;
 			
-			if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+			if (c->isMale == false && c->isMarried == true && c->age >= 18 && c->isAlive && c->spouse!=0 && c->spouse->isAlive)
 			{
-				if ( world->getDominantInfluence(xy) == this)
+				if (c->isPregnant==false && vCharacter.size() < 10000) /* TEMP LIMIT TRIBE POP */
 				{
-					if ( weakestInfluence == -1 || weakestTile == 0 || world->getHighestInfluence(xy) < weakestInfluence)
+					if (c->vChildren.size() < 4 && c->age < 35)
 					{
-						xyDestination=xy;
-						weakestInfluence = world->getHighestInfluence(xy);
+						if(random.oneIn(26))
+						{
+							c->isPregnant = true;
+							c->pregnantCounter = 0;
+						}	
+					}
+					else if (c->age < 55)
+					{
+						if(random.oneIn(c->age*3))
+						{
+							c->isPregnant = true;
+							c->pregnantCounter = 0;
+						}
+					}
+					else
+					{
+
 					}
 				}
-			}
-		}
-		if ( xyDestination != 0)
-		{
-			worldX=xyDestination->x;
-			worldY=xyDestination->y;
-			return;
-		}
-	}
-	
-		/* Sometimes move to a weak territory to reinforce/capture it */
-	if ( random.oneIn(3) )
-	{
-		//std::cout<<"2\n";
-			/* Move to weakest territory */
-		int weakestInfluence = -1;
-		HasXY * weakestTile = 0;
-			
-		for (auto xy : *vXY)
-		{
-			if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
-			{
-				if ( world->getHighestInfluence(xy)>0 && world->getHighestInfluence(xy) < weakestInfluence)
+				
+				else if (c->isPregnant == true && c->pregnantCounter >= 10)
 				{
-					xyDestination=xy;
-					weakestInfluence = world->getHighestInfluence(xy);
+						Character* babby = c->giveBirth();
+						if ( babby!= 0) { vCharacter.push(babby); }
+						c->isPregnant=false;
+						c->pregnantCounter = 0;
+						babby->tribe=this;
+				}
+				else if ( c->isPregnant == true)
+				{
+					c->pregnantCounter++;
 				}
 			}
+
+			// Marriage searching. 18+. 10% chance per month.
+			if (c->isMale == true && c->age >= 18 && c->isMarried == false && random.oneIn(48))
+			{
+				
+				// build vector of unmarried women
+				Vector <Character*> vEligibleWomen;
+				
+					// People that c can't marry
+				auto vRelatives = c->getRelatives();
+				
+				//Select maxRandoms random candidates from the vector.
+				int maxRandoms = 100;
+				while ( vEligibleWomen.size() < 100 && maxRandoms-- > 0)
+				{
+					Character* c2 = vCharacter(random.randomInt(vCharacter.size()-1));
+					
+					if ( c2!=c && c->canMarry(c2) && vRelatives->contains(c2)==false )
+					{
+						vEligibleWomen.push(c2);
+					}
+				}
+        
+				if(vEligibleWomen.size()>0)
+				{
+					const int randomWoman = random.randomInt(vEligibleWomen.size()-1);
+					c->marry(vEligibleWomen(randomWoman));
+				}
+			}
+			
+				//Death calculations
+			if ( c->age < 50 && random.oneIn(2400))
+			{
+				c->die();
+			}
+			else if (c->age > 70 && random.oneIn(50))
+			{
+				c->die();
+			}
+			else if (c->age > 65 && random.oneIn(180))
+			{
+				c->die();
+			}
+			else if (c->age >= 50 && random.oneIn(600))
+			{
+				c->die();
+			}
 		}
-		if ( xyDestination != 0)
-		{
-			worldX=xyDestination->x;
-			worldY=xyDestination->y;
-			return;
-		}
+    
+    //develop();
+		monthlyCounter-=2592000;
 	}
+	///lastline=8;	
 	
-	
-
-		
-
-
-	//std::cout<<"4\n";
-		/* If all else fails, move randomly. */
-	if (world->isSafe(destinationX,destinationY) && world->isLand(destinationX,destinationY))
+	while ( dailyCounter >= 86400 )
 	{
-		// MOVE THE TRIBE TO THE LOCATION.
-		worldX=destinationX;
-		worldY=destinationY;
+		
+		if ( foundSettlement == false )
+		{
+			wander();
+		}
+		
+		updateTerritory();
+		
+		//hunt();
+		
+	//	eat();
+		
+		
+		
+		
+		
+		dailyCounter-=86400;
 	}
+	
+	//if ( actionPoints
+	
+	// Hourly
+	// while( actionPoints >= 3600 )
+	// {
+		
+		
+		// actionPoints-=3600;
+	// }
+//std::cout<<"end tribe increment ticks\n";
 }
+
 
 #endif

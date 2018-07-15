@@ -136,7 +136,11 @@ class World: public LogicTickInterface, public IdleTickInterface
 	Vector <World_Biome*> vBiome;
 	
 		// A vector of vectors used to get a random tile. Vector index represents the row. Vector value represents column. Shuffle row after use.
-	Vector < Vector <int> * > vAllTiles;
+    // NOTE: UNFORTUNATELY THIS DOES NOT PRODUCE A RANDOM DISTRIBUTION.
+  Vector < Vector <int> * > vAllTiles;
+  // New approach, just a single vector. Unfortunately will take longer to shuffle.
+  // Can be optimised by shifting begin and end pointers.
+	Vector <HasXY*> vAllTiles2;
 
 	
 	unsigned char seaLevel;
@@ -241,7 +245,7 @@ class World: public LogicTickInterface, public IdleTickInterface
 		/* Set the pointers to a coordinate of a random land tile in the world. May fail, in which case returns false and sets coords to (0,0). */
 	bool getRandomLandTile(int* x, int* y);
 	
-	HasXY* getRandomTileOfType(int _type);
+	HasXY* getRandomTileOfType(enumBiome _type);
 	
 		// RETURN ANY OBJECTS WHICH ARE NEXT TO THE PASSED OBJECT.
 	Vector <WorldObjectGlobal*>* getNeighboringObjects(WorldObjectGlobal*);
@@ -263,9 +267,16 @@ class World: public LogicTickInterface, public IdleTickInterface
 	void addInfluence(Tribe* tribe, int amount);
 		// Subtract an influence point from every tile this tribe has.
 	void degradeInfluence(Tribe* tribe);
+    //Set influence to 0.
+	void destroyInfluence(Tribe* tribe);
 		/* Return pointer to tribe with most influence here. Return null pointer if no tribe */
 	Tribe* getDominantInfluence (const int, const int);
 	Tribe* getDominantInfluence (HasXY*);
+  
+  //Returns true if this landmass has an unclaimed tile.
+  bool hasFreeTerritory(int landmassID);
+    // Return number of unclaimed tiles on this landmass.
+  int nFreeTerritory (int landmassID);
 	
   void evolveToCiv( Tribe * );
   

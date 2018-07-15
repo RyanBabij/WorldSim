@@ -55,6 +55,7 @@ class Tribe: public WorldObjectGlobal, public TableInterface
 		Vector <HasXY*> vTerritory;
 		
 		bool foundSettlement;
+    bool isAlive;
 		
 		Tribe();
 		~Tribe();
@@ -97,6 +98,9 @@ class Tribe: public WorldObjectGlobal, public TableInterface
 		
 			//getPopulation returns living population of tribe.
 		int getPopulation();
+    
+      // REMOVE THE CHARACTER FROM THE VECTOR.
+    bool removeCharacter( Character* );
     
     
     /* WORLD OBJECT GLOBAL */
