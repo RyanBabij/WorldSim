@@ -37,6 +37,8 @@ const std::string PATH_TEX_TEST_404 = "Textures/Test/404.png";
 Texture TEX_WORLD_ARTIFACT_GEMS;
 const std::string PATH_TEX_WORLD_ARTIFACT_GEMS = "Textures/World/Artifact/Gems2.png";
 
+Texture TEX_WORLD_ARTIFACT_BATTLE;
+const std::string PATH_TEX_WORLD_ARTIFACT_BATTLE = "Textures/World/Artifact/BattleSite.png";
 
 // WORLD UNIT TEXTURES
 Texture TEX_WORLD_UNIT_NOMAD_01;
@@ -183,6 +185,7 @@ void loadTextures()
   
   loadTextureVerbose(PATH_TEX_TEST_404,&TEX_TEST_404);
   loadTextureVerbose(PATH_TEX_WORLD_ARTIFACT_GEMS,&TEX_WORLD_ARTIFACT_GEMS);
+  loadTextureVerbose(PATH_TEX_WORLD_ARTIFACT_BATTLE,&TEX_WORLD_ARTIFACT_BATTLE);
 }
 
 #endif

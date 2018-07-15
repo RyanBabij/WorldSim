@@ -65,4 +65,25 @@ class TribalArtifact_Jewellery: public TribalArtifact
 		std::string getColumnType(std::string _column);
 };
 
+class TribalArtifact_BattleSite: public TribalArtifact
+{
+  private:
+  
+	public:
+    //Character* ownerCharacter;
+
+
+		
+		TribalArtifact_BattleSite();
+		//~TribalArtifact_BattleSite();
+
+    
+    /* WORLD OBJECT GLOBAL */
+		Texture* currentTexture();
+		
+		/* TABLE INTERFACE */
+		std::string getColumn(std::string _column);
+		std::string getColumnType(std::string _column);
+};
+
 #endif

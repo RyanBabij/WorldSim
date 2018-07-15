@@ -168,6 +168,7 @@ void Tribe::wander()
 					
 					worldX=xy->x;
 					worldY=xy->y;
+          world->combatCheck(this);
 					return;
 				}
 			}
@@ -199,6 +200,7 @@ void Tribe::wander()
 		{
 			worldX=xyDestination->x;
 			worldY=xyDestination->y;
+      world->combatCheck(this);
 			return;
 		}
 	}
@@ -226,6 +228,7 @@ void Tribe::wander()
 		{
 			worldX=xyDestination->x;
 			worldY=xyDestination->y;
+      world->combatCheck(this);
 			return;
 		}
 	}
@@ -242,7 +245,13 @@ void Tribe::wander()
 		// MOVE THE TRIBE TO THE LOCATION.
 		worldX=destinationX;
 		worldY=destinationY;
+    world->combatCheck(this);
 	}
+}
+
+void Tribe::combat (Tribe* _t)
+{
+  return;
 }
 
 void Tribe::hunt()
@@ -280,7 +289,7 @@ void Tribe::eat()
 		{
 			if ( random.oneIn(10) )
 			{
-				character->starve();
+				//character->starve();
 			}
 			
 		}

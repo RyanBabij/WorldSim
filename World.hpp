@@ -273,6 +273,10 @@ class World: public LogicTickInterface, public IdleTickInterface
 	Tribe* getDominantInfluence (const int, const int);
 	Tribe* getDominantInfluence (HasXY*);
   
+  // Check if tribe is in engagement range of another tribe.
+  // If yes, return pointer to Tribe, otherwise return 0.
+  Tribe* combatCheck (Tribe* );
+  
   //Returns true if this landmass has an unclaimed tile.
   bool hasFreeTerritory(int landmassID);
     // Return number of unclaimed tiles on this landmass.

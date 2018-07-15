@@ -102,6 +102,9 @@ class Tribe: public WorldObjectGlobal, public TableInterface
       // REMOVE THE CHARACTER FROM THE VECTOR.
     bool removeCharacter( Character* );
     
+    //Called if tribe wants to attack another tribe.
+    virtual void combat (Tribe* );
+    
     
     /* WORLD OBJECT GLOBAL */
 		Texture* currentTexture();

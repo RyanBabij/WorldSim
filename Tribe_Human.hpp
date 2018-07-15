@@ -33,6 +33,8 @@ class Tribe_Human: public Tribe
 	bool spawn();
   virtual void wander();
   virtual void incrementTicks ( int /* nTicks */ );
+  
+  void combat (Tribe* /* target */);
 	
 	Texture* currentTexture();
 };

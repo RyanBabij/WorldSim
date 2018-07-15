@@ -1554,6 +1554,24 @@ int World::getHighestInfluence(const int _x, const int _y)
     delete vLandmassTiles;
     return 0;
   }
+    
+  Tribe* World::combatCheck (Tribe* _tribe)
+  {
+    for ( int i=0;i<vTribe.size();++i)
+    {
+      if ( vTribe(i) != _tribe )
+      {
+        const int distX = abs(_tribe->worldX - vTribe(i)->worldX);
+        const int distY = abs(_tribe->worldY - vTribe(i)->worldY);
+
+        if ( distX < 2 && distY < 2 )
+        {
+          return vTribe(i);
+        }
+      }
+    }
+    return 0;
+  }
 	
 	
 #endif

@@ -119,6 +119,7 @@ void Tribe_Human::wander()
 					
 					worldX=xy->x;
 					worldY=xy->y;
+          combat(world->combatCheck(this));
 					return;
 				}
 			}
@@ -128,7 +129,7 @@ void Tribe_Human::wander()
   else
   {
     // OCCASIONALLY MOVE RANDOMLY (INCLUDING INTO ENEMY TERRITORY)
-    if (random.oneIn(12))
+    if (random.oneIn(6))
     {
       for (auto xy : *vXY)
       {
@@ -136,6 +137,7 @@ void Tribe_Human::wander()
         {
           worldX=xy->x;
           worldY=xy->y;
+          combat(world->combatCheck(this));
           return;
         }
       }
@@ -154,6 +156,7 @@ void Tribe_Human::wander()
             
             worldX=xy->x;
             worldY=xy->y;
+            combat(world->combatCheck(this));
             return;
           }
         }
@@ -171,6 +174,7 @@ void Tribe_Human::wander()
           
           worldX=xy->x;
           worldY=xy->y;
+          combat(world->combatCheck(this));
           return;
         }
       }
@@ -249,7 +253,7 @@ void Tribe_Human::wander()
       worldY=xy->y;
     }
   }
-
+  combat(world->combatCheck(this));
 
 		/* If all else fails, move randomly. */
 	// if (world->isSafe(destinationX,destinationY) && world->isLand(destinationX,destinationY))
@@ -258,6 +262,62 @@ void Tribe_Human::wander()
 		// worldX=destinationX;
 		// worldY=destinationY;
 	// }
+}
+
+void Tribe_Human::combat (Tribe* _target)
+{
+  if (_target == 0) { return; }
+
+  std::cout<<"Combat initiated.\n";
+  std::cout<<"Attacker: "<<name<<". ("<<vCharacter.size()<<").\n";
+  std::cout<<"Defender: "<<_target->name<<". ("<<_target->vCharacter.size()<<").\n";
+  
+  if ( vCharacter.size() > _target->vCharacter.size() )
+  {
+    std::cout<<"Picking force.\n";
+    
+    Vector <Character*> vAttackingForce;
+    
+    vCharacter.shuffle();
+    for (int i=0; i<vCharacter.size();++i)
+    {
+      if (vCharacter(i)->isMale && vCharacter(i)->age >= 16 && vCharacter(i)->age < 50)
+      {
+        vAttackingForce.push(vCharacter(i));
+      }
+    }
+    std::cout<<"Attacking with a force of "<<vAttackingForce.size()<<".\n";
+    
+    if ( vAttackingForce.size() > _target->vCharacter.size() )
+    {
+      // DIRECT ATTACK ON TARGET CAMP.
+      std::cout<<"The target was annihilated.\n";
+      _target->isAlive = false;
+    }
+    else
+    {
+      // SKIRMISH / RAID / AMBUSH
+      std::cout<<"The target was ambushed.\n";
+      
+      //Each attacker will pick a target.
+      
+
+      
+    }
+    
+    TribalArtifact_BattleSite * testArtifact = new TribalArtifact_BattleSite;
+    testArtifact->worldX = worldX;
+    testArtifact->worldY = worldY;
+    world->putObject(testArtifact);
+    
+    
+  }
+  else
+  {
+    std::cout<<"Declined.\n";
+  }
+  
+  return;
 }
 
 void Tribe_Human::incrementTicks ( int nTicks )
@@ -335,7 +395,7 @@ void Tribe_Human::incrementTicks ( int nTicks )
             
 
             // WHO WILL LEAVE THE TRIBE? FOR NOW LET'S RANDOMLY PICK UNMARRIED INDIVIDUALS.
-            // ONLY FORM NEW TRIBE IF THERE ARE 12 CANDIDATES.
+            // ONLY FORM NEW TRIBE IF THERE ARE 20 CANDIDATES.
             // NOTE THAT WE MUST SHUFFLE VECTOR FOR NOW. THE VECTOR SHOULD BE SHUFFLED EXTERNALLY AT A SET TIME PERIOD.
             vCharacter.shuffle();
             
@@ -347,7 +407,7 @@ void Tribe_Human::incrementTicks ( int nTicks )
               {
                 vNewTribeCharacter.push(vCharacter(i));
                 
-                if (vNewTribeCharacter.size() >= 12)
+                if (vNewTribeCharacter.size() >= 20)
                 {
                   // FORM THE NEW TRIBE AND BREAK.
                   Tribe_Human* splitTribe = new Tribe_Human;
@@ -407,11 +467,11 @@ void Tribe_Human::incrementTicks ( int nTicks )
 			
 			if (c->isMale == false && c->isMarried == true && c->age >= 18 && c->isAlive && c->spouse!=0 && c->spouse->isAlive)
 			{
-				if (c->isPregnant==false && vCharacter.size() < 10000) /* TEMP LIMIT TRIBE POP */
+				if (c->isPregnant==false)
 				{
 					if (c->vChildren.size() < 4 && c->age < 35)
 					{
-						if(random.oneIn(26))
+						if(random.oneIn(24))
 						{
 							c->isPregnant = true;
 							c->pregnantCounter = 0;

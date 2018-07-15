@@ -75,5 +75,27 @@ std::string TribalArtifact_Jewellery::getColumnType(std::string _column)
   return "?";
 }
 
+TribalArtifact_BattleSite::TribalArtifact_BattleSite()
+{
+  name = "Ancient Battleground";
+  world = 0;
+  ownerTribe = 0;
+}
+
+Texture* TribalArtifact_BattleSite::currentTexture()
+{
+  return &TEX_WORLD_ARTIFACT_BATTLE;
+}
+
+std::string TribalArtifact_BattleSite::getColumn(std::string _column)
+{
+  return "?";
+}
+
+std::string TribalArtifact_BattleSite::getColumnType(std::string _column)
+{
+  return "?";
+}
+
 
 #endif
