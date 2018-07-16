@@ -603,23 +603,16 @@ void switchTarget(World_Local* _worldLocal)
 							// Territory view
 						if (territoryView)
 						{
-							if ( world->aInfluence(tileX,tileY) != 0 )
-							{
-								Tribe* dominantTribe = world->getDominantInfluence(tileX,tileY);
-								if (dominantTribe!=0)
-								{
-									glColor3ub(dominantTribe->colourRed,dominantTribe->colourGreen,dominantTribe->colourBlue);
-								}
-								else
-								{
-									glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
-								}
-							}
-							else
-							{
-								glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
-							}
-						}
+              const Tribe* dominantTribe = world->aWorldTile(tileX,tileY).getDominantInfluence();
+              if (dominantTribe!=0)
+              {
+                glColor3ub(dominantTribe->colourRed,dominantTribe->colourGreen,dominantTribe->colourBlue);
+              }
+              else
+              {
+                glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
+              }
+            }
 						else
 						{
 							if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==false)

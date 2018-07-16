@@ -114,21 +114,22 @@ int Tribe::getPopulation()
 	return population;
 }
 
+  // NEED TO REWORK TERRITORY VECTOR.
 void Tribe::degradeInfluence()
 {
-	world->degradeInfluence(this);
+	// world->degradeInfluence(this);
 	
-	if (world->getDominantInfluence(this->worldX,this->worldY) != this)
-	{
-		for ( int i=0; i<vTerritory.size();++i)
-		{
-			if ( vTerritory(i)->x == this->worldX && vTerritory(i)->y == this->worldY)
-			{
-				vTerritory.removeSlot(i);
-				--i;
-			}
-		} 	
-	}
+	// if (world->getDominantInfluence(this->worldX,this->worldY) != this)
+	// {
+		// for ( int i=0; i<vTerritory.size();++i)
+		// {
+			// if ( vTerritory(i)->x == this->worldX && vTerritory(i)->y == this->worldY)
+			// {
+				// vTerritory.removeSlot(i);
+				// --i;
+			// }
+		// } 	
+	// }
 	
 }
 
@@ -256,6 +257,7 @@ void Tribe::combat (Tribe* _t)
 
 void Tribe::hunt()
 {
+  return;
 	int huntingYield = world->getHuntingYield(worldX,worldY);
 	int huntedFood = random.randomInt(huntingYield);
 	

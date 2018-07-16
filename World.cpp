@@ -61,6 +61,9 @@ World::World(): seaLevel(0), mountainLevel(0)
 	relinquishTimer.init();
 	
 	name="";
+  
+	dailyCounter=0;
+	monthlyCounter=0;
 }
 
 void World::nameRegions()
@@ -310,16 +313,11 @@ void World::incrementTicksBacklog(long long unsigned int nTicks)
 void World::incrementTicks(int nTicks)
 {
 	//ticksBacklog+=nTicks;
-	
-	
-	//std::cout<<"Incrementing the world by "<<nTicks<<" ticks.\n";
-	//std::cout<<"Date: "<<calendar.toString()<<".\n";
+	dailyCounter+=nTicks;
+	monthlyCounter+=nTicks;
+  
 	calendar.advanceSecond(nTicks);
-	
-	//for ( int i=0;i<vCiv.size();++i)
-	//{
-		//vCiv(i)->incrementTicks(nTicks);
-	//}
+  
   
 	for ( int i=0;i<vTribe.size();++i)
 	{
@@ -346,6 +344,32 @@ void World::incrementTicks(int nTicks)
 	{
 		//vCiv(i)->incrementTicks(nTicks);
 	}
+  
+  
+
+	while (monthlyCounter >= 2592000)
+	{
+    degradeInfluence();
+		monthlyCounter-=2592000;
+	}
+  
+	while ( dailyCounter >= 86400 )
+  {
+
+		dailyCounter-=86400;
+	}
+	
+	
+	//std::cout<<"Incrementing the world by "<<nTicks<<" ticks.\n";
+	//std::cout<<"Date: "<<calendar.toString()<<".\n";
+
+	
+	//for ( int i=0;i<vCiv.size();++i)
+	//{
+		//vCiv(i)->incrementTicks(nTicks);
+	//}
+  
+
 	
 	//updateCivContacts();
 
@@ -412,7 +436,7 @@ bool World::loadWorld(std::string filePath)
 	//aHeightMap.init(png.nX,png.nY,0);
 	aWorldObject.init(png.nX,png.nY,0);
 	aTopoMap.init(png.nX,png.nY,3,0);
-	aInfluence.init(png.nX,png.nY,0);
+	//aInfluence.init(png.nX,png.nY,0);
 
 
 	//std::cout<<"PNG size: "<<png.nX<<","<<png.nY<<".\n";
@@ -517,11 +541,9 @@ void World::buildArrays()
 			//const int lightModifier = 0;
 			
 			aSeed(_x,_y) = random.randInt(INT_MAX-1);
-			aWorldTile(_x,_y).biome = aTerrain(_x,_y);
-			aWorldTile(_x,_y).seed = aSeed(_x,_y);
-      
+
         //Initialise the WorldTile with biome enum.
-      aWorldTile(_x,_y).init(aTerrain(_x,_y));
+      aWorldTile(_x,_y).init(aTerrain(_x,_y), aSeed(_x,_y));
 			
 			int _red;
 			int _green;
@@ -541,9 +563,6 @@ void World::buildArrays()
 				 _red=100;
 				 _green=100;
 				 _blue=240;
-				// _red=255;
-				// _green=0;
-				// _blue=0;
 			}
 			else if ( aTerrain(_x,_y) == MOUNTAIN )
 			{
@@ -725,7 +744,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 		aWorldObject.init(x,y,0);
 		aTopoMap.init(x,y,3,0);
 		aTerrain.init(x,y,NOTHING);
-		aInfluence.init(x,y,0);
+		//aInfluence.init(x,y,0);
 		aSeed.init(x,y,0);
 		
 		aLandmassID.init(x,y,-1);
@@ -740,7 +759,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 		
 		std::map<Tribe*,int> * const influenceNull = 0;
 		
-		std::thread t5 (&ArrayS2 <std::map<Tribe*,int> *>::init, &this->aInfluence, x,y,influenceNull);
+		//std::thread t5 (&ArrayS2 <std::map<Tribe*,int> *>::init, &this->aInfluence, x,y,influenceNull);
 		std::thread t6 (&ArrayS2 <int>::init, &this->aSeed, x,y,0);
 		std::thread t7 (&ArrayS2 <int>::init, &this->aLandmassID, x,y,-1);
 		
@@ -750,6 +769,9 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	#endif
 	
 	aWorldTile.initClass(x,y);
+  
+	dailyCounter=0;
+	monthlyCounter=0;
 
 	
 	//std::cout<<"World seed is: "<<seed<<".\n";
@@ -816,7 +838,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 		t2.join();
 		t3.join();
 		t4.join();
-		t5.join();
+		//t5.join();
 		t6.join();
 		t7.join();
 		t8.join();
@@ -999,58 +1021,12 @@ void World::generateLocal(const int _x, const int _y)
 
 int World::getTileFertility(const int _x, const int _y)
 {
-	int fertility = 0;
 	if ( aTerrain.isSafe(_x,_y) )
 	{
-		int terrainType = aTerrain(_x,_y);
-		
-		if ( terrainType == OCEAN )
-		{
-			fertility = 2;
-		}
-		else if (terrainType == GRASSLAND )
-		{
-			fertility = 20;
-		}
-		else if (terrainType == FOREST )
-		{
-			fertility = 20;
-		}
-		else if (terrainType == DESERT )
-		{
-			fertility = 10;
-		}
-		else if (terrainType == JUNGLE )
-		{
-			fertility = 20;
-		}
-		else if (terrainType == SNOW )
-		{
-			fertility = 10;
-		}
-		else if (terrainType == HILLY )
-		{
-			fertility = 15;
-		}
-		else if (terrainType == WETLAND )
-		{
-			fertility = 25;
-		}
-		else if (terrainType == STEPPES )
-		{
-			fertility = 10;
-		}
-		else if (terrainType == ICE )
-		{
-			fertility = 0;
-		}
-		else if (terrainType == RIVER )
-		{
-			fertility = 30;
-		}
+    return aWorldTile(_x,_y).baseFertility;
 	}
 
-	return fertility;
+	return 0;
 }
 	inline int World::getTileFertility(const HasXY* xy)
 	{ return getTileFertility(xy->x, xy->y); }
@@ -1290,72 +1266,74 @@ void World::queryTile( int hoveredXTile, int hoveredYTile)
 
 void World::addInfluence(Tribe* tribe, int amount)
 {
-	if ( tribe==0 )
-	{
-		return;
-	}
-	int tribeX = tribe->worldX;
-	int tribeY = tribe->worldY;
+	if ( tribe==0 || isSafe (tribe->worldX,tribe->worldY) == false )
+	{ return; }
 	
-	if ( aInfluence.isSafe(tribeX,tribeY))
-	{
-		// Create a map for this tile if there isn't one already.
-		if ( aInfluence(tribeX,tribeY) == 0 )
-		{
-			aInfluence(tribeX, tribeY) = new std::map <Tribe*, int>;
-		}
+  aWorldTile(tribe->worldX,tribe->worldY).addInfluence(tribe,amount);
+  
+	// if ( aInfluence.isSafe(tribeX,tribeY))
+	// {
+		// // Create a map for this tile if there isn't one already.
+		// if ( aInfluence(tribeX,tribeY) == 0 )
+		// {
+			// aInfluence(tribeX, tribeY) = new std::map <Tribe*, int>;
+		// }
 
-		// Search for existing influence from this tribe.
-		auto search = aInfluence(tribeX,tribeY)->find(tribe);
-		if(search != aInfluence(tribeX,tribeY)->end())
-		{
-			// Increment influence if this tribe has been here.
-			search->second+=amount;
+		// // Search for existing influence from this tribe.
+		// auto search = aInfluence(tribeX,tribeY)->find(tribe);
+		// if(search != aInfluence(tribeX,tribeY)->end())
+		// {
+			// // Increment influence if this tribe has been here.
+			// search->second+=amount;
 			
-				// Prevent excessive influence on a tile.
-			if (search->second > 500)
-			{
-				search->second = 500;
-			}
-		}
-		else
-		{
-			// Create new map entry if this tribe has never been here before.
-			aInfluence(tribeX,tribeY)->insert(std::make_pair(tribe, amount));
-		}
+				// // Prevent excessive influence on a tile.
+			// if (search->second > 500)
+			// {
+				// search->second = 500;
+			// }
+		// }
+		// else
+		// {
+			// // Create new map entry if this tribe has never been here before.
+			// aInfluence(tribeX,tribeY)->insert(std::make_pair(tribe, amount));
+		// }
 		
 
-	}
+	// }
 	//std::cout<<"Addinfluence4\n";
 }
 
 // THIS IS A BIT DODGY. THERE SHOULD BE A SINGLE PASS FOR EVERYONE AT ONCE.
-void World::degradeInfluence(Tribe* tribe)
+void World::degradeInfluence(int value /* =1 */)
 {
-	if ( tribe==0 )
+  for ( int _y=0;_y<nY;++_y)
 	{
-		return;
-	}
-	
-	for (std::map <Tribe*,int>* mInfluence : aInfluence )
-	{
-		if ( mInfluence != 0)
+		for ( int _x=0;_x<nX;++_x)
 		{
-			// Search for existing influence from this tribe.
-			auto search = mInfluence->find(tribe);
-			if(search != mInfluence->end())
-			{
-				// Decrement influence if this tribe has been here.
-				if(search->second > 0)
-				{ search->second--;
-				}
-        
-        //When influence is 0, it should be deleted.
-
-
-			}
-		}
+      aWorldTile(_x,_y).degradeInfluence(1);
+    }
 	}
+  
+	
+	// for (std::map <Tribe*,int>* mInfluence : aInfluence )
+	// {
+		// if ( mInfluence != 0)
+		// {
+			// // Search for existing influence from this tribe.
+			// auto search = mInfluence->find(tribe);
+			// if(search != mInfluence->end())
+			// {
+				// // Decrement influence if this tribe has been here.
+				// if(search->second > 0)
+				// { search->second--;
+				// }
+        
+        // //When influence is 0, it should be deleted.
+
+
+			// }
+		// }
+	// }
 	//std::cout<<"\nEND\n";
 	
 	// int tribeX = tribe->worldX;
@@ -1390,52 +1368,63 @@ void World::degradeInfluence(Tribe* tribe)
 void World::destroyInfluence (Tribe* _tribe)
 {
 	if ( _tribe==0 )
+	{ return; }
+
+  
+	for ( int _y=0;_y<nY;++_y)
 	{
-		return;
+		for ( int _x=0;_x<nX;++_x)
+		{
+      aWorldTile(_x,_y).destroyInfluence(_tribe);
+    }
 	}
 	
-	for (std::map <Tribe*,int>* mInfluence : aInfluence )
-	{
-		if ( mInfluence != 0)
-		{
-			// Search for existing influence from this tribe.
-			auto search = mInfluence->find(_tribe);
-			if(search != mInfluence->end())
-			{
-				// Decrement influence if this tribe has been here.
-				if(search->second > 0)
-				{ search->second=0;
-				}
+	// for (std::map <Tribe*,int>* mInfluence : aInfluence )
+	// {
+		// if ( mInfluence != 0)
+		// {
+			// // Search for existing influence from this tribe.
+			// auto search = mInfluence->find(_tribe);
+			// if(search != mInfluence->end())
+			// {
+				// // Decrement influence if this tribe has been here.
+				// if(search->second > 0)
+				// { search->second=0;
+				// }
         
-        //When influence is 0, it should be deleted.
+        // //When influence is 0, it should be deleted.
 
 
-			}
-		}
-	}
+			// }
+		// }
+	// }
 }
 
 	// Note that 0 influence doesn't count as influence. In this case it will return 0.
 Tribe* World::getDominantInfluence (const int _x, const int _y)
 {
-	if ( aInfluence.isSafe(_x,_y) && aInfluence(_x,_y) != 0)
-	{
-		std::map<Tribe* , int>::iterator it;
+  if ( isSafe(_x,_y) == false ) { return 0; }
+  
+  return aWorldTile(_x,_y).getDominantInfluence();
+  
+	// if ( aInfluence.isSafe(_x,_y) && aInfluence(_x,_y) != 0)
+	// {
+		// std::map<Tribe* , int>::iterator it;
 		
-		int largestInfluence = 0;
-		Tribe * dominantTribe = 0;
+		// int largestInfluence = 0;
+		// Tribe * dominantTribe = 0;
 		
-		for ( it = aInfluence(_x,_y)->begin(); it != aInfluence(_x,_y)->end(); it++ )
-		{
-			if ( it->second > largestInfluence )
-			{
-				dominantTribe = it->first;
-				largestInfluence = it->second;
-			}
-		}
-		return dominantTribe;
-	}
-	return 0;
+		// for ( it = aInfluence(_x,_y)->begin(); it != aInfluence(_x,_y)->end(); it++ )
+		// {
+			// if ( it->second > largestInfluence )
+			// {
+				// dominantTribe = it->first;
+				// largestInfluence = it->second;
+			// }
+		// }
+		// return dominantTribe;
+	// }
+	// return 0;
 }
 
 Tribe* World::getDominantInfluence (HasXY* _xy)
@@ -1446,25 +1435,30 @@ Tribe* World::getDominantInfluence (HasXY* _xy)
 	
 int World::getHighestInfluence(const int _x, const int _y)
 {
-	if ( aInfluence.isSafe(_x,_y) && aInfluence(_x,_y) != 0)
-	{
+  if ( isSafe(_x,_y) == false ) { return 0; }
+  
+  return aWorldTile(_x,_y).getDominantInfluenceValue();
+  
+  
+	// if ( aInfluence.isSafe(_x,_y) && aInfluence(_x,_y) != 0)
+	// {
 		
-		std::map<Tribe* , int>::iterator it;
+		// std::map<Tribe* , int>::iterator it;
 		
-		int largestInfluence = 0;
-		Tribe * dominantTribe = 0;
+		// int largestInfluence = 0;
+		// Tribe * dominantTribe = 0;
 		
-		for ( it = aInfluence(_x,_y)->begin(); it != aInfluence(_x,_y)->end(); it++ )
-		{
-			if ( dominantTribe == 0 || it->second > largestInfluence )
-			{
-				dominantTribe = it->first;
-				largestInfluence = it->second;
-			}
-		}
-		return largestInfluence;
-	}
-	return 0;
+		// for ( it = aInfluence(_x,_y)->begin(); it != aInfluence(_x,_y)->end(); it++ )
+		// {
+			// if ( dominantTribe == 0 || it->second > largestInfluence )
+			// {
+				// dominantTribe = it->first;
+				// largestInfluence = it->second;
+			// }
+		// }
+		// return largestInfluence;
+	// }
+	// return 0;
 }
 
 	int World::getHighestInfluence(HasXY* _xy)
@@ -1557,6 +1551,7 @@ int World::getHighestInfluence(const int _x, const int _y)
     
   Tribe* World::combatCheck (Tribe* _tribe)
   {
+    return 0;
     for ( int i=0;i<vTribe.size();++i)
     {
       if ( vTribe(i) != _tribe )

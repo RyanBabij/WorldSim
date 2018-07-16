@@ -292,7 +292,7 @@ void Tribe_Human::combat (Tribe* _target)
     {
       // DIRECT ATTACK ON TARGET CAMP.
       std::cout<<"The target was annihilated.\n";
-      _target->isAlive = false;
+      //_target->isAlive = false;
     }
     else
     {
@@ -359,7 +359,7 @@ void Tribe_Human::incrementTicks ( int nTicks )
 	while (monthlyCounter >= 2592000)
 	{
 
-		degradeInfluence();
+		//degradeInfluence();
     
     // TRIBE SPLIT CALCULATIONS
     // OCCURS IF: TOO MANY PEOPLE IN TRIBE, THERE IS A VIABLE AMOUNT OF FREE SPACE, RANDOM ELEMENT.

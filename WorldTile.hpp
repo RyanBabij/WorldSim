@@ -1,6 +1,6 @@
 #pragma once
-#ifndef GUILD_WORLDTILE_HPP
-#define GUILD_WORLDTILE_HPP
+#ifndef WORLDSIM_WORLDTILE_HPP
+#define WORLDSIM_WORLDTILE_HPP
 
 /*
 	WorldTile is how tile data is stored on the strategic level. Stuff like fertility, move penalty, etc.
@@ -16,11 +16,15 @@ A tile is 5km by 5km, ie, 5,000 * 5000 tiles. */
 
 #include <WorldGenerator/Biome.hpp>
 
+class Tribe;
+#include "Tribe.hpp"
+
 class WorldTile: public HasTexture
 {
 	public:
 	
 	WorldTile();
+	~WorldTile();
 	
 	int seed; /* Seed to feed into RNG to deconstruct into a map. */
   
@@ -42,7 +46,24 @@ class WorldTile: public HasTexture
 		// The id of the biome.
   int biomeID;
   
-  void init(enumBiome _biomeID);
+  // Keeps track of influence values for each tribe.
+  std::map<Tribe*,int> mInfluence;
+  
+    //Add influence from the particular tribe for this tile. 
+  void addInfluence (Tribe* tribe, int amount);
+    //Remove influence from the particular tribe for this tile. 
+  void removeInfluence (Tribe* tribe, int amount);
+    //Lower all influence by a certain amount.
+  void degradeInfluence (int amount);
+    //Erase the influence entry of this tribe.
+  void destroyInfluence (Tribe* tribe);
+  
+    // Return the tribe with the greatest influence on the tile.
+  Tribe* getDominantInfluence ();
+    // Return the value of the greatest influence on the tile.
+  int getDominantInfluenceValue ();
+  
+  void init(enumBiome _biomeID, int /* seed */);
 	
 		// This returns the base texture.
 	virtual Texture* currentTexture();

@@ -111,6 +111,12 @@ class World: public LogicTickInterface, public IdleTickInterface
 		
 	std::string name; /* The name of the world */
 	std::string strSavePath; /* The path to the world's save data. Typically something like: "savedata/<world name>". */
+  
+  
+  
+  /* Counters to regulate logic */
+  int dailyCounter;
+  int monthlyCounter;
 	
 	
 	//ArrayS2 <unsigned char> aHeightMap;
@@ -152,7 +158,7 @@ class World: public LogicTickInterface, public IdleTickInterface
 	
 	//ArrayS2 <TribalTerritory> vTribeTerritory;
 	
-	ArrayS2 < std::map<Tribe*,int> * > aInfluence;
+	//ArrayS2 < std::map<Tribe*,int> * > aInfluence;
 	
 	ArrayS2 <unsigned char> aGoodEvil;
 
@@ -266,7 +272,7 @@ class World: public LogicTickInterface, public IdleTickInterface
 	
 	void addInfluence(Tribe* tribe, int amount);
 		// Subtract an influence point from every tile this tribe has.
-	void degradeInfluence(Tribe* tribe);
+	void degradeInfluence(int amount=1);
     //Set influence to 0.
 	void destroyInfluence(Tribe* tribe);
 		/* Return pointer to tribe with most influence here. Return null pointer if no tribe */

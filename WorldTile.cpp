@@ -20,14 +20,237 @@ WorldTile::WorldTile()
 	canMove = 0;
 	baseLogisticsCost = 0;
 	defensiveBonus = 0;
-  
   baseMetal=0;
-	
 }
 
-void WorldTile::init(enumBiome _biomeID)
+WorldTile::~WorldTile()
 {
-    biome = _biomeID;
+}
+
+void WorldTile::addInfluence (Tribe* tribe, int amount)
+{
+  if ( tribe == 0 ) { return; }
+  
+  // Note that std::map will automatically initialise new entries.
+  mInfluence[tribe] += amount;
+  
+  
+  //Prevent influence from being excessively high.
+  if ( mInfluence[tribe] > 200 )
+  {
+    mInfluence[tribe] = 200;
+  }
+  
+  // std::cout<<"Adding influence.\n";
+  
+  // for(auto elem : mInfluence)
+  // {
+     // std::cout << elem.first->name   << " " << elem.second <<".\n";
+  // }
+}
+
+void WorldTile::removeInfluence (Tribe* tribe, int amount)
+{
+  if ( tribe == 0 ) { return; }
+  
+  // Note that std::map will automatically initialise new entries.
+  mInfluence[tribe] -= amount;
+  
+  if ( mInfluence[tribe] < 0 ) { mInfluence[tribe] = 0; }
+  
+  // std::cout<<"Removing influence.\n";
+  
+  // for(auto elem : mInfluence)
+  // {
+     // std::cout << elem.first->name   << " " << elem.second <<".\n";
+  // }
+}
+
+void WorldTile::degradeInfluence (int amount /* =1 */)
+{
+  //std::cout<<"Degrading influence.\n";
+  
+  for(auto elem : mInfluence)
+  {
+    elem.second -= amount;
+    if (elem.second < 0) { elem.second = 0; }
+     //std::cout << elem.first->name   << " " << elem.second <<".\n";
+  }
+}
+
+void WorldTile::destroyInfluence (Tribe* tribe)
+{
+  if ( tribe == 0 ) { return; }
+
+  mInfluence.erase(tribe);
+}
+
+Tribe* WorldTile::getDominantInfluence ()
+{
+  if ( mInfluence.empty() ) { return 0; }
+  // Maps are sorted from smallest to largest, so we simply need to return the last key.
+  return (--mInfluence.end())->first;
+}
+
+int WorldTile::getDominantInfluenceValue ()
+{
+  if ( mInfluence.empty() ) { return 0; }
+  // Maps are sorted from smallest to largest, so we simply need to return the last key.
+  return (--mInfluence.end())->second;
+}
+
+
+void WorldTile::init(enumBiome _biomeID, int _seed = 0)
+{
+  biome = _biomeID;
+  seed = _seed;
+    
+  switch(_biomeID) {
+    case NOTHING:
+    {
+      baseMoveCost = 0;
+      canHaveSettlement = false;
+      baseFertility = 0;
+      canMove = 0;
+      baseLogisticsCost = 0;
+      defensiveBonus = 0;
+      baseMetal = 0;
+      break;
+    }
+    case OCEAN:
+    {
+      baseMoveCost = 0;
+      canHaveSettlement = false;
+      baseFertility = 2;
+      canMove = 0;
+      baseLogisticsCost = 0;
+      defensiveBonus = 0;
+      baseMetal = 0;
+      break;
+    }
+    case GRASSLAND:
+    {
+      baseMoveCost = 0;
+      canHaveSettlement = false;
+      baseFertility = 4;
+      canMove = 0;
+      baseLogisticsCost = 0;
+      defensiveBonus = 0;
+      baseMetal = 0;
+      break;
+    }
+    case FOREST:
+    {
+      baseMoveCost = 0;
+      canHaveSettlement = false;
+      baseFertility = 2;
+      canMove = 0;
+      baseLogisticsCost = 0;
+      defensiveBonus = 0;
+      baseMetal = 0;
+      break;
+    }
+    case DESERT:
+    {
+      baseMoveCost = 0;
+      canHaveSettlement = false;
+      baseFertility = 1;
+      canMove = 0;
+      baseLogisticsCost = 0;
+      defensiveBonus = 0;
+      baseMetal = 0;
+      break;
+    }
+    case MOUNTAIN:
+    {
+      baseMoveCost = 0;
+      canHaveSettlement = false;
+      baseFertility = 1;
+      canMove = 0;
+      baseLogisticsCost = 0;
+      defensiveBonus = 0;
+      baseMetal = 0;
+      break;
+    }
+    case SNOW:
+    {
+      baseMoveCost = 0;
+      canHaveSettlement = false;
+      baseFertility = 1;
+      canMove = 0;
+      baseLogisticsCost = 0;
+      defensiveBonus = 0;
+      baseMetal = 0;
+      break;
+    }
+    case HILLY:
+    {
+      baseMoveCost = 0;
+      canHaveSettlement = false;
+      baseFertility = 2;
+      canMove = 0;
+      baseLogisticsCost = 0;
+      defensiveBonus = 0;
+      baseMetal = 0;
+      break;
+    }
+    case JUNGLE:
+    {
+      baseMoveCost = 0;
+      canHaveSettlement = false;
+      baseFertility = 2;
+      canMove = 0;
+      baseLogisticsCost = 0;
+      defensiveBonus = 0;
+      baseMetal = 0;
+      break;
+    }
+    case WETLAND:
+    {
+      baseMoveCost = 0;
+      canHaveSettlement = false;
+      baseFertility = 2;
+      canMove = 0;
+      baseLogisticsCost = 0;
+      defensiveBonus = 0;
+      baseMetal = 0;
+      break;
+    }
+    case STEPPES:
+    {
+      baseMoveCost = 0;
+      canHaveSettlement = false;
+      baseFertility = 2;
+      canMove = 0;
+      baseLogisticsCost = 0;
+      defensiveBonus = 0;
+      baseMetal = 0;
+      break;
+    }
+    case RIVER:
+    {
+      baseMoveCost = 0;
+      canHaveSettlement = false;
+      baseFertility = 2;
+      canMove = 0;
+      baseLogisticsCost = 0;
+      defensiveBonus = 0;
+      baseMetal = 0;
+      break;
+    }
+    default:
+    {
+      baseMoveCost = 0;
+      canHaveSettlement = false;
+      baseFertility = 0;
+      canMove = 0;
+      baseLogisticsCost = 0;
+      defensiveBonus = 0;
+      baseMetal = 0;
+      break;
+    }
+    break;
+}
     
     if ( biome == MOUNTAIN )
     {

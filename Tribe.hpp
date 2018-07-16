@@ -39,7 +39,7 @@ class Tribe: public WorldObjectGlobal, public TableInterface
 		void setColour (const unsigned char, const unsigned char, const unsigned char);
 
 		/* ABSTRACT TEST STUFF */
-		int nFood;
+		int nFood; /* 1 food can support 10 people. */
 		
 		int actionPoints;
 		
