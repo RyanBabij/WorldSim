@@ -268,13 +268,13 @@ void Tribe_Human::combat (Tribe* _target)
 {
   if (_target == 0) { return; }
 
-  std::cout<<"Combat initiated.\n";
-  std::cout<<"Attacker: "<<name<<". ("<<vCharacter.size()<<").\n";
-  std::cout<<"Defender: "<<_target->name<<". ("<<_target->vCharacter.size()<<").\n";
+  //std::cout<<"Combat initiated.\n";
+  //std::cout<<"Attacker: "<<name<<". ("<<vCharacter.size()<<").\n";
+  //std::cout<<"Defender: "<<_target->name<<". ("<<_target->vCharacter.size()<<").\n";
   
   if ( vCharacter.size() > _target->vCharacter.size() )
   {
-    std::cout<<"Picking force.\n";
+    //std::cout<<"Picking force.\n";
     
     Vector <Character*> vAttackingForce;
     
@@ -286,25 +286,25 @@ void Tribe_Human::combat (Tribe* _target)
         vAttackingForce.push(vCharacter(i));
       }
     }
-    std::cout<<"Attacking with a force of "<<vAttackingForce.size()<<".\n";
+   // std::cout<<"Attacking with a force of "<<vAttackingForce.size()<<".\n";
     
     if ( vAttackingForce.size() > _target->vCharacter.size() )
     {
       // DIRECT ATTACK ON TARGET CAMP.
-      std::cout<<"The target was annihilated.\n";
+      //std::cout<<"The target was annihilated.\n";
       //_target->isAlive = false;
     }
     else
     {
       // SKIRMISH / RAID / AMBUSH
-      std::cout<<"The target was ambushed.\n";
+     // std::cout<<"The target was ambushed.\n";
       
       //Each attacker will pick a target.
       
 
       
     }
-    
+
     TribalArtifact_BattleSite * testArtifact = new TribalArtifact_BattleSite;
     testArtifact->worldX = worldX;
     testArtifact->worldY = worldY;
@@ -314,7 +314,7 @@ void Tribe_Human::combat (Tribe* _target)
   }
   else
   {
-    std::cout<<"Declined.\n";
+    //std::cout<<"Declined.\n";
   }
   
   return;

@@ -324,7 +324,7 @@ void World::incrementTicks(int nTicks)
     if ( vTribe(i)->isAlive == false )
     {
       destroyInfluence(vTribe(i));
-      vTribe(i) = 0;
+      //vTribe(i) = 0;
     }
     else if (vTribe(i) != 0)
     {
@@ -345,7 +345,6 @@ void World::incrementTicks(int nTicks)
 		//vCiv(i)->incrementTicks(nTicks);
 	}
   
-  
 
 	while (monthlyCounter >= 2592000)
 	{
@@ -359,7 +358,6 @@ void World::incrementTicks(int nTicks)
 
 		dailyCounter-=86400;
 	}
-	
 	
 	//std::cout<<"Incrementing the world by "<<nTicks<<" ticks.\n";
 	//std::cout<<"Date: "<<calendar.toString()<<".\n";
