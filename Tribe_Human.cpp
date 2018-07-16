@@ -129,7 +129,7 @@ void Tribe_Human::wander()
   else
   {
     // OCCASIONALLY MOVE RANDOMLY (INCLUDING INTO ENEMY TERRITORY)
-    if (random.oneIn(6))
+    if (random.oneIn(12))
     {
       for (auto xy : *vXY)
       {
@@ -144,7 +144,7 @@ void Tribe_Human::wander()
     }
     
     // Explore unclaimed territory.
-    if (random.oneIn(2))
+    if (random.oneIn(5))
     {
       for (auto xy : *vXY)
       {
@@ -367,20 +367,26 @@ void Tribe_Human::incrementTicks ( int nTicks )
     int landmassID = world->aLandmassID(worldX,worldY);
     // WHAT LANDMASS ARE WE ON?
     // DOES THE LANDMASS HAVE A SPARE TILE?
+    // NEW IDEA: Only split if there are at least 3 free tiles. This will reduce requirement
+    // To check entire landmass. And prevent tribes from splitting into single free tiles.
+    int nFreeTiles = 0;
+    
     Vector <HasXY*> * vXY  = world->aTerrain.getNeighbors(worldX, worldY, false, true /* shuffle */);
     bool canExpand = false;
     for (auto xy : *vXY)
     {
       if (world->aTerrain.isSafe(xy) && world->isLand(xy) && world->getHighestInfluence(xy) == 0)
       {
-        canExpand=true;
-        break;
+        //canExpand=true;
+        nFreeTiles++;
+        //break;
       }
     }
 
-    if (canExpand && landmassID >=0 && vCharacter.size() > 200 && random.oneIn(12) && world->nFreeTerritory(landmassID) > 12 )
+    if (nFreeTiles >= 3 && landmassID >=0 && vCharacter.size() > 150 && random.oneIn(8) ) //&& world->nFreeTerritory(landmassID) > 12 
     {
       //std::cout<<"TRIBAL SPLIT\n";
+      Console ("TRIBAL SPLIT");
 
 
 
@@ -427,7 +433,7 @@ void Tribe_Human::incrementTicks ( int nTicks )
                   }
                   
                   
-                  std::cout<<"New tribe formed.\n";
+                  //std::cout<<"New tribe formed.\n";
                   break;
                 }
               }

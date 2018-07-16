@@ -150,9 +150,8 @@ void Tribe::wander()
 	//  Move to unexplored territory
 	
 	//aTerrain.getNeighborVector(_x,_y,&vTerrain,false /* DON'T INCLUDE SELF */);
-	Vector <HasXY*> * vXY  = world->aTerrain.getNeighbors(worldX, worldY, false);
-	vXY->shuffle();
-	
+	Vector <HasXY*> * vXY  = world->aTerrain.getNeighbors(worldX, worldY, false, true);
+
 	HasXY* xyDestination = 0;
 	
 	// Explore new territory
@@ -305,43 +304,44 @@ void Tribe::updateTerritory()
 	// Remove territory no longer owned.
 	// Add current tile if necessary.
 	
-	world->addInfluence(this, 100);
+	//world->addInfluence(this, getPopulation());
+  world->aWorldTile(this->worldX,this->worldY).addInfluence(this, getPopulation());
 	
-	if ( random.oneIn(10) == false )
-	{
-		return;
-	}
+	// if ( random.oneIn(10) == false )
+	// {
+		// return;
+	// }
 	
-	bool currentTileChecked = false;
-	nFood = 0; /* Update food capacity */
+	// bool currentTileChecked = false;
+	// nFood = 0; /* Update food capacity */
 	
-	for ( int i=0; i<vTerritory.size();++i)
-	{
-		if ( vTerritory(i)->x == this->worldX && vTerritory(i)->y == this->worldY )
-		{
-			currentTileChecked=true;
-		}
+	// for ( int i=0; i<vTerritory.size();++i)
+	// {
+		// if ( vTerritory(i)->x == this->worldX && vTerritory(i)->y == this->worldY )
+		// {
+			// currentTileChecked=true;
+		// }
 		
-		if ( world->getDominantInfluence(vTerritory(i)) != this)
-		{
-			delete vTerritory(i);
-			vTerritory.removeSlot(i);
-			--i;
-		}
-		else
-		{
-			nFood+= world->getTileFertility(vTerritory(i));
-		}
-	}
+		// if ( world->getDominantInfluence(vTerritory(i)) != this)
+		// {
+			// delete vTerritory(i);
+			// vTerritory.removeSlot(i);
+			// --i;
+		// }
+		// else
+		// {
+			// nFood+= world->getTileFertility(vTerritory(i));
+		// }
+	// }
 	
-	if (currentTileChecked == false)
-	{
-		if ( world->getDominantInfluence(worldX,worldY) == this)
-		{
-			vTerritory.add(new HasXY (worldX,worldY));
-			nFood+= world->getTileFertility(worldX,worldY);
-		}	
-	}
+	// if (currentTileChecked == false)
+	// {
+		// if ( world->getDominantInfluence(worldX,worldY) == this)
+		// {
+			// vTerritory.add(new HasXY (worldX,worldY));
+			// nFood+= world->getTileFertility(worldX,worldY);
+		// }	
+	// }
 	
 }
 

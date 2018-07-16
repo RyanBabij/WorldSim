@@ -349,6 +349,7 @@ void World::incrementTicks(int nTicks)
 
 	while (monthlyCounter >= 2592000)
 	{
+    //std::cout<<"Degrade influence.\n";
     degradeInfluence();
 		monthlyCounter-=2592000;
 	}
@@ -1551,10 +1552,9 @@ int World::getHighestInfluence(const int _x, const int _y)
     
   Tribe* World::combatCheck (Tribe* _tribe)
   {
-    return 0;
     for ( int i=0;i<vTribe.size();++i)
     {
-      if ( vTribe(i) != _tribe )
+      if ( vTribe(i) != _tribe && vTribe(i)->race == _tribe->race && vTribe(i)->isAlive && _tribe->isAlive) /* Temp limit combat between same race */
       {
         const int distX = abs(_tribe->worldX - vTribe(i)->worldX);
         const int distY = abs(_tribe->worldY - vTribe(i)->worldY);

@@ -70,11 +70,10 @@ void WorldTile::degradeInfluence (int amount /* =1 */)
 {
   //std::cout<<"Degrading influence.\n";
   
-  for(auto elem : mInfluence)
+  for(auto &elem : mInfluence)
   {
     elem.second -= amount;
     if (elem.second < 0) { elem.second = 0; }
-     //std::cout << elem.first->name   << " " << elem.second <<".\n";
   }
 }
 
@@ -87,8 +86,12 @@ void WorldTile::destroyInfluence (Tribe* tribe)
 
 Tribe* WorldTile::getDominantInfluence ()
 {
-  if ( mInfluence.empty() ) { return 0; }
+  if ( mInfluence.empty() || (--mInfluence.end())->second<=0 ) { return 0; }
   // Maps are sorted from smallest to largest, so we simply need to return the last key.
+  
+  //std::cout<<"Val is :"<<(--mInfluence.end())->second<<".\n";
+  //return 0;
+  
   return (--mInfluence.end())->first;
 }
 
