@@ -129,7 +129,9 @@ void Tribe_Human::wander()
   else
   {
     // OCCASIONALLY MOVE RANDOMLY (INCLUDING INTO ENEMY TERRITORY)
-    if (random.oneIn(12))
+    // UPDATE: LESS LIKELY TO DO THIS IF SMALL TRIBE.
+    if ((vCharacter.size() > 100 && random.oneIn(12)) || random.oneIn(20) )
+    //if (random.oneIn(12))
     {
       for (auto xy : *vXY)
       {
@@ -272,6 +274,9 @@ void Tribe_Human::combat (Tribe* _target)
   std::cout<<"Attacker: "<<name<<". ("<<vCharacter.size()<<").\n";
   std::cout<<"Defender: "<<_target->name<<". ("<<_target->vCharacter.size()<<").\n";
   
+  // Only Characters that want to fight will join the attack.
+  // Some factors to consider are marriage, children, age, strength, starvation, etc.
+  
   if ( vCharacter.size() > _target->vCharacter.size() )
   {
     //std::cout<<"Picking force.\n";
@@ -279,42 +284,72 @@ void Tribe_Human::combat (Tribe* _target)
     Vector <Character*> vAttackingForce;
     
     vCharacter.shuffle();
+    
     for (int i=0; i<vCharacter.size();++i)
     {
-      if (vCharacter(i)->isMale && vCharacter(i)->age >= 15 )
+      Character* c = vCharacter(i);
+      //if (vCharacter(i)->isMale && vCharacter(i)->age >= 15 )
+      //if ( vCharacter(i)->age >= 15 )
+      //{
+        // Weak/pregnant/young people will be less likely to fight.
+        // But they will also not get the spoils.
+      if ( c->age == 15 || c-> age == 16 || c->age == 17 || c->isPregnant || c->strength < 50)
       {
-        vAttackingForce.push(vCharacter(i));
+        if ( random.oneIn(10) )
+        {
+          vAttackingForce.push(c);
+        }
+      }
+        // Strong people will always fight, because they want the spoils.
+      else if ( c->age > 17 && c->strength >= 50 )
+      {
+        vAttackingForce.push(c);
       }
     }
+    
    // std::cout<<"Attacking with a force of "<<vAttackingForce.size()<<".\n";
    
     if ( vAttackingForce.size() <= 0 )
     {
       std::cout<<"Declined: No eligible attackers.\n";
     }
-    
-    if ( vAttackingForce.size() > _target->vCharacter.size() )
-    {
-      // DIRECT ATTACK ON TARGET CAMP.
-      std::cout<<"The target was annihilated.\n";
-      _target->isAlive = false;
-    }
     else
     {
-      // SKIRMISH / RAID / AMBUSH
-      std::cout<<"The target was ambushed.\n";
-      
-      //Each attacker will pick a target.
       for ( int i=0; i<vAttackingForce.size(); ++i )
       {
-        Character* _targetCharacter = _target->vCharacter.getRandom(random);
-        std::cout<<"Attacking: "<<_targetCharacter->firstName<<".\n";
+        //Character* _targetCharacter = _target->vCharacter.getRandom(random);
+        Character* _targetCharacter = _target->getDefender();
         
-        vAttackingForce(i)->attack(_targetCharacter);
+        if ( _targetCharacter != 0 )
+        {
+          std::cout<<"Attacking: "<<_targetCharacter->firstName<<".\n";
+          vAttackingForce(i)->attack(_targetCharacter);
+        }
+        else
+        {
+          std::cout<<"Tribe has been annihilated.\n";
+          _target->kill();
+        }
+
       }
+    }
+    
+    // if ( vAttackingForce.size() > _target->vCharacter.size() )
+    // {
+      // // DIRECT ATTACK ON TARGET CAMP.
+      // std::cout<<"The target was annihilated.\n";
+      // _target->isAlive = false;
+    // }
+    // else
+    // {
+      // // SKIRMISH / RAID / AMBUSH
+      // std::cout<<"The target was ambushed.\n";
+      
+      // //Each attacker will pick a target.
+
 
       
-    }
+    // }
 
     TribalArtifact_BattleSite * testArtifact = new TribalArtifact_BattleSite;
     testArtifact->worldX = worldX;

@@ -33,6 +33,8 @@ class Menu_CharacterDetails: public GUI_Interface
 	GUI_Link textMotherLink;
 	GUI_Link textSpouseLink;
 	Vector <GUI_Link*> textChildLink;
+  
+	Vector <GUI_Link*> textKillLink;
 	
 	Menu_CharacterDetails()
 	{	
@@ -230,11 +232,19 @@ class Menu_CharacterDetails: public GUI_Interface
       }
       else
       {
-        strKillList = "Has Killed.";
+        strKillList = "Kills: "+DataTools::toString(selectedCharacter->vKills.size())+"\n";
+        
+        for ( int i=0;i<selectedCharacter->vKills.size(); ++i)
+        {
+          strKillList += "   "+selectedCharacter->vKills(i)->getFullName();
+          strKillList+="\n";
+          
+        }
+        
       }
 			
 			//father
-			font8x8.drawText("Biography:\n"+sentence1+" was born in BIOME, in the land of LAND. "+strMarriageBio + " " + strDeathLocation + "\n\n" + strKillList,panelX1,panelY2-yOffset,panelX2,panelY1, false, false);
+			font8x8.drawText("Biography:\n"+sentence1+" was born in BIOME, in the land of LAND. "+strMarriageBio + " " + strDeathLocation + "\n\n" + strKillList,panelX1+5,panelY2-yOffset,panelX2,panelY1, false, false);
 
 			
 			guiManager.render();

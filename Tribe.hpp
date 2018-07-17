@@ -108,6 +108,8 @@ class Tribe: public WorldObjectGlobal, public TableInterface
     //Called if tribe wants to attack another tribe.
     virtual void combat (Tribe* );
     
+      // Return a Character capable of combat. If there is none, return 0.
+    Character* getDefender ();
     
     /* WORLD OBJECT GLOBAL */
 		Texture* currentTexture();

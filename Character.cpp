@@ -60,21 +60,45 @@ Character::Character()
 	
 }
 
-void Character::init()
+  //_sex: 0 - Roll, 1 - Male, 2 - Female.
+void Character::init(const int _sex /* =0 */)
 {
+  if (_sex == 1) { isMale = true; }
+  else if (_sex == 2) { isMale = false; }
+  else { isMale = Random::flip(); }
+  
 	firstName = globalNameGen.generateName();
 	lastName = globalNameGen.generateName();
 	age=0;
 	
-	isMale = Random::flip();
-	
-	strength=Random::multiRoll(10,10,true);
-	agility=Random::multiRoll(10,10,true);
-	charisma=Random::multiRoll(10,10,true);
-	intelligence=Random::multiRoll(10,10,true);
-	perception=Random::multiRoll(10,10,true);
-	endurance=Random::multiRoll(10,10,true);
-	courage=Random::multiRoll(10,10,true);
+  // There will be some differences in stats between genders, but
+  // both genders will be able to potentially obtain 100 on every stat.
+  // This is done to affect high-level gameplay, for example gender
+  // distribution in battles.
+  // TODO: Stats should be affected by age. However that will be calculated
+  // by using age as a modifier. Not by modifying the base stat.
+  
+  if ( isMale )
+  {
+    strength=Random::multiRoll(8,10,true)+20;
+    agility=Random::multiRoll(10,10,true);
+    charisma=Random::multiRoll(10,10,true);
+    intelligence=Random::multiRoll(10,10,true);
+    perception=Random::multiRoll(10,10,true);
+    endurance=Random::multiRoll(10,10,true);
+    courage=Random::multiRoll(10,10,true);
+  }
+  else
+  {
+    strength=Random::multiRoll(10,10,true);
+    agility=Random::multiRoll(8,10,true)+20;
+    charisma=Random::multiRoll(10,10,true);
+    intelligence=Random::multiRoll(10,10,true);
+    perception=Random::multiRoll(10,10,true);
+    endurance=Random::multiRoll(10,10,true);
+    courage=Random::multiRoll(10,10,true);
+  }
+
 	
 	health=10;
 	hunger=0;
@@ -344,11 +368,21 @@ void Character::attack(Character* target)
   if ( strength > target->strength )
   {
     std::cout<<firstName<<" killed "<<target->firstName<<".\n";
-    target->die();
+    target->die(COMBAT);
     vKills.add(target);
     return;
   }
-  std::cout<<"Attack missed.\n";
+  else
+  {
+    if ( Random::flip() )
+    {
+    std::cout<<target->firstName<<" killed "<<firstName<<" in self-defence.\n";
+      target->vKills.add(this);
+      die(COMBAT);
+    }
+    
+  }
+  //std::cout<<"Attack missed.\n";
   
   
 }
@@ -395,6 +429,16 @@ std::string Character::getColumn(std::string _column)
 	{
 		return DataTools::toString(age);
 	}
+	if ( _column=="sex" )
+	{
+		if (isMale) { return "Male"; }
+    return "Female";
+	}
+  
+	if ( _column=="strength" )
+	{
+		return DataTools::toString(strength);
+	}
 	// if ( _column=="coordinates" )
 	// {
 		// return DataTools::toString(worldX)+","+DataTools::toString(worldY);
@@ -412,7 +456,7 @@ std::string Character::getColumn(std::string _column)
 }
 std::string Character::getColumnType(std::string _column)
 {
-	if ( _column == "age" || _column == "territory" || _column == "food" )
+	if ( _column == "age" || _column == "territory" || _column == "food" || _column == "strength")
 	{
 		return "number";
 	}

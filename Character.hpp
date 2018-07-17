@@ -80,7 +80,8 @@ class Character: public WorldObject, public TableInterface
 	
 		/* INITIALIZATION */
 	Character();
-	void init();
+    // Initialise, including roll for stats. 0 - Roll gender. 1 - Male. 2 - Female.
+	void init( int _sex = 0);
 	
 		/* AI FUNCTIONS
 		

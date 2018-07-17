@@ -524,13 +524,13 @@ void Tribe::generateCouples(int amount)
 	while (amount-- > 0)
 	{
 		Character * cMan = new Character;
-		cMan->init();
-		cMan->isMale = true;
+		cMan->init(1); //Roll a male.
+		//cMan->isMale = true;
 		cMan->age = 18+random.randomInt(18);
 		cMan->tribe = this;
 		Character * cWoman = new Character;
-		cWoman->init();
-		cWoman->isMale = false;
+		cWoman->init(2); //Roll a female.
+		//cWoman->isMale = false;
 		cWoman->age = 16+random.randomInt(12);
 		cWoman->tribe=this;
 	
@@ -554,6 +554,18 @@ void Tribe::kill()
     vCharacter(i)->die();
   }
   
+}
+
+Character* Tribe::getDefender()
+{
+  for ( int i=0;i<vCharacter.size();++i)
+  {
+    if (vCharacter(i)->isAlive && vCharacter(i)->age >= 12)
+    {
+      return vCharacter(i);
+    }
+  }
+  return 0;
 }
 
 /* TABLE INTERFACE */
