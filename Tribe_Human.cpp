@@ -268,14 +268,19 @@ void Tribe_Human::wander()
 
 void Tribe_Human::combat (Tribe* _target)
 {
-  if (_target == 0) { return; }
+  if (_target == 0 || _target->isAlive == false) { return; }
 
-  std::cout<<"Combat initiated.\n";
-  std::cout<<"Attacker: "<<name<<". ("<<vCharacter.size()<<").\n";
-  std::cout<<"Defender: "<<_target->name<<". ("<<_target->vCharacter.size()<<").\n";
+  //std::cout<<"Combat initiated.\n";
+  //std::cout<<"Attacker: "<<name<<". ("<<vCharacter.size()<<").\n";
+  //std::cout<<"Defender: "<<_target->name<<". ("<<_target->vCharacter.size()<<").\n";
   
   // Only Characters that want to fight will join the attack.
   // Some factors to consider are marriage, children, age, strength, starvation, etc.
+  
+  
+    // Temporary workaround to reduce combat.
+  if ( random.flip() ) { return; }
+  if ( random.flip() ) { return; }
   
   if ( vCharacter.size() > _target->vCharacter.size() )
   {
@@ -311,7 +316,7 @@ void Tribe_Human::combat (Tribe* _target)
    
     if ( vAttackingForce.size() <= 0 )
     {
-      std::cout<<"Declined: No eligible attackers.\n";
+      //std::cout<<"Declined: No eligible attackers.\n";
     }
     else
     {
@@ -322,12 +327,12 @@ void Tribe_Human::combat (Tribe* _target)
         
         if ( _targetCharacter != 0 )
         {
-          std::cout<<"Attacking: "<<_targetCharacter->firstName<<".\n";
+          //std::cout<<"Attacking: "<<_targetCharacter->firstName<<".\n";
           vAttackingForce(i)->attack(_targetCharacter);
         }
         else
         {
-          std::cout<<"Tribe has been annihilated.\n";
+          //std::cout<<"Tribe has been annihilated.\n";
           _target->kill();
         }
 
@@ -360,7 +365,7 @@ void Tribe_Human::combat (Tribe* _target)
   }
   else
   {
-    std::cout<<"Declined.\n";
+    //std::cout<<"Declined.\n";
   }
   
   return;
@@ -429,7 +434,7 @@ void Tribe_Human::incrementTicks ( int nTicks )
       }
     }
 
-    if (nFreeTiles >= 3 && landmassID >=0 && vCharacter.size() > 150 && random.oneIn(8) ) //&& world->nFreeTerritory(landmassID) > 12 
+    if (nFreeTiles >= 3 && landmassID >=0 && vCharacter.size() > 150 && random.oneIn(6) ) //&& world->nFreeTerritory(landmassID) > 12 
     {
       //std::cout<<"TRIBAL SPLIT\n";
       Console ("TRIBAL SPLIT");
@@ -447,43 +452,45 @@ void Tribe_Human::incrementTicks ( int nTicks )
             
 
             // WHO WILL LEAVE THE TRIBE? FOR NOW LET'S RANDOMLY PICK UNMARRIED INDIVIDUALS.
-            // ONLY FORM NEW TRIBE IF THERE ARE 20 CANDIDATES.
+            // ONLY FORM NEW TRIBE IF THERE ARE AT LEAST 20 CANDIDATES.
             // NOTE THAT WE MUST SHUFFLE VECTOR FOR NOW. THE VECTOR SHOULD BE SHUFFLED EXTERNALLY AT A SET TIME PERIOD.
+            
+            // UPDATE. THERE IS NO LIMIT TO HOW MANY PEOPLE MAY LEAVE THE ORIGINAL TRIBE.
             vCharacter.shuffle();
             
             Vector <Character*> vNewTribeCharacter;
             
             for (int i=0;i<vCharacter.size();++i)
             {
-              if ( vCharacter(i)->isMarried == false )
+              if ( vCharacter(i)->isMarried == false && Random::oneIn(3))
               {
                 vNewTribeCharacter.push(vCharacter(i));
-                
-                if (vNewTribeCharacter.size() >= 20)
-                {
-                  // FORM THE NEW TRIBE AND BREAK.
-                  Tribe_Human* splitTribe = new Tribe_Human;
-                  splitTribe->world = world;
-                  splitTribe->name = globalNameGen.generateName();
-                  splitTribe->nFood = 10;
-                  splitTribe->worldX = xy->x;
-                  splitTribe->worldY = xy->y;
-                  splitTribe->setColour(random.randomInt(255),random.randomInt(255),random.randomInt(255));
-                  world->putObject(splitTribe);
-                  world->vTribe.push(splitTribe);
-                  
-                  for (int i2=0;i2<vNewTribeCharacter.size();++i2)
-                  {
-                    splitTribe->vCharacter.push(vNewTribeCharacter(i2));
-                    removeCharacter(vNewTribeCharacter(i2));
-                  }
-                  
-                  
-                  //std::cout<<"New tribe formed.\n";
-                  break;
-                }
+              
               }
               
+            }
+            if (vNewTribeCharacter.size() >= 20)
+            {
+              // FORM THE NEW TRIBE AND BREAK.
+              Tribe_Human* splitTribe = new Tribe_Human;
+              splitTribe->world = world;
+              splitTribe->name = globalNameGen.generateName();
+              splitTribe->nFood = 10;
+              splitTribe->worldX = xy->x;
+              splitTribe->worldY = xy->y;
+              splitTribe->setColour(random.randomInt(255),random.randomInt(255),random.randomInt(255));
+              world->putObject(splitTribe);
+              world->vTribe.push(splitTribe);
+              
+              for (int i2=0;i2<vNewTribeCharacter.size();++i2)
+              {
+                splitTribe->vCharacter.push(vNewTribeCharacter(i2));
+                removeCharacter(vNewTribeCharacter(i2));
+              }
+              
+              
+              //std::cout<<"New tribe formed.\n";
+              break;
             }
             break;
           }
@@ -521,7 +528,7 @@ void Tribe_Human::incrementTicks ( int nTicks )
 			{
 				if (c->isPregnant==false)
 				{
-					if (c->vChildren.size() < 4 && c->age < 35)
+					if (c->vChildren.size() < 6 && c->age < 35)
 					{
 						if(random.oneIn(24))
 						{
@@ -543,7 +550,7 @@ void Tribe_Human::incrementTicks ( int nTicks )
 					}
 				}
 				
-				else if (c->isPregnant == true && c->pregnantCounter >= 10)
+				else if (c->isPregnant == true && c->pregnantCounter >= 9)
 				{
 						Character* babby = c->giveBirth();
 						if ( babby!= 0) { vCharacter.push(babby); }
@@ -558,7 +565,7 @@ void Tribe_Human::incrementTicks ( int nTicks )
 			}
 
 			// Marriage searching. 18+. 10% chance per month.
-			if (c->isMale == true && c->age >= 18 && c->isMarried == false && random.oneIn(48))
+			if (c->isMale == true && c->age >= 16 && c->isMarried == false && random.oneIn(38))
 			{
 				
 				// build vector of unmarried women
@@ -568,8 +575,8 @@ void Tribe_Human::incrementTicks ( int nTicks )
 				auto vRelatives = c->getRelatives();
 				
 				//Select maxRandoms random candidates from the vector.
-				int maxRandoms = 100;
-				while ( vEligibleWomen.size() < 100 && maxRandoms-- > 0)
+				int maxRandoms = 20;
+				while ( vEligibleWomen.size() < 3 && maxRandoms-- > 0)
 				{
 					Character* c2 = vCharacter(random.randomInt(vCharacter.size()-1));
 					
@@ -578,11 +585,42 @@ void Tribe_Human::incrementTicks ( int nTicks )
 						vEligibleWomen.push(c2);
 					}
 				}
+
+        // If the character can't find an eligible woman in the tribe.
+        // Look through a neighboring tribe. (Sometimes check anyway.)
+        Tribe* neighboringTribe = world->getNearestConnectedTribe(this,true /* samerace */);
+        
+        if ( (vEligibleWomen.size() == 0 || random.oneIn(20) ) && neighboringTribe != 0 && neighboringTribe->vCharacter.size() > 0)
+        {
+          //std::cout<<"Checking nearest tribe.\n";
+          //Select maxRandoms random candidates from the vector.
+          int maxRandoms2 = 20;
+          while ( vEligibleWomen.size() < 3 && maxRandoms2-- > 0)
+          {
+            Character* c2 = neighboringTribe->vCharacter(random.randomInt(neighboringTribe->vCharacter.size()-1));
+            
+            if ( c2!=c && c->canMarry(c2) && vRelatives->contains(c2)==false )
+            {
+              vEligibleWomen.push(c2);
+              //std::cout<<"Success\n";
+              //Console("SUCC");
+            }
+          }
+        }
         
 				if(vEligibleWomen.size()>0)
 				{
 					const int randomWoman = random.randomInt(vEligibleWomen.size()-1);
-					c->marry(vEligibleWomen(randomWoman));
+          
+          // Order of marriage is randomised mostly to deal with movement between tribes.
+          if ( random.flip() )
+          { vEligibleWomen(randomWoman)->marry(c);
+          }
+          else
+          { c->marry(vEligibleWomen(randomWoman));
+          }
+          
+					
 				}
 			}
 			

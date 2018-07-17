@@ -1547,6 +1547,34 @@ int World::getHighestInfluence(const int _x, const int _y)
     delete vLandmassTiles;
     return 0;
   }
+  
+  
+  Tribe * World::getNearestConnectedTribe (Tribe * _tribe, bool sameRace /* =true */ )
+  {
+    // STEP 1: FIND TRIBE ON SAME LANDMASS
+    int distance = -1;
+    Tribe* closestTribe = 0;
+    int landmass = aLandmassID(_tribe->worldX, _tribe->worldY);
+    
+    for (int i=0;i<vTribe.size();++i)
+    {
+      if ( vTribe(i) != _tribe && vTribe(i)->isAlive && (sameRace==false || _tribe->race == vTribe(i)->race ) )
+      {
+        if ( aLandmassID(vTribe(i)->worldX,vTribe(i)->worldY) == landmass )
+        {
+          int distance2 = _tribe->distanceTo(vTribe(i));
+          if ( closestTribe == 0 || distance2 < distance )
+          {
+            closestTribe = vTribe(i);
+            distance = distance2;
+          }
+        }
+      }
+    }
+    
+    
+    return closestTribe;
+  }
     
   Tribe* World::combatCheck (Tribe* _tribe)
   {

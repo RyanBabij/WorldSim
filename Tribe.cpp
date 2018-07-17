@@ -535,6 +535,9 @@ void Tribe::generateCouples(int amount)
 		cWoman->tribe=this;
 	
 		cMan->marry(cWoman);
+    
+    cMan->lastName = name;
+    cWoman->lastName = name;
 		
 		vCharacter.push(cMan);
 		vCharacter.push(cWoman);
@@ -545,6 +548,10 @@ void Tribe::generateCouples(int amount)
 bool Tribe::removeCharacter( Character* _character)
 {
   return vCharacter.erase(_character);
+}
+void Tribe::addCharacter( Character* _character)
+{
+  vCharacter.add(_character);
 }
 
 void Tribe::kill()

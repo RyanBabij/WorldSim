@@ -101,6 +101,8 @@ class Tribe: public WorldObjectGlobal, public TableInterface
     
       // REMOVE THE CHARACTER FROM THE VECTOR.
     bool removeCharacter( Character* );
+      // ADD THE CHARACTER TO THE VECTOR.
+    void addCharacter (Character * );
     
       // Everybody dies
     void kill ();

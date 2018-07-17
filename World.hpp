@@ -290,6 +290,10 @@ class World: public LogicTickInterface, public IdleTickInterface
 	
   void evolveToCiv( Tribe * );
   
+    // Return the nearest tribe to the passed tribe which is on the same landmass.
+    // Return 0 if none. Only check same race by default.
+  Tribe * getNearestConnectedTribe (Tribe *, bool sameRace = true);
+  
   
   
   

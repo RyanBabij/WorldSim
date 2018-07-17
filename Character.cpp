@@ -202,6 +202,13 @@ bool Character::marry(Character* c)
 
 	dateOfMarriage.set(world.calendar);
 	c->dateOfMarriage.set(world.calendar);
+  
+  // If the spouse is from a different tribe, move them to the new one.
+  if ( tribe != c->tribe )
+  {
+    c->tribe->removeCharacter(c);
+    tribe->addCharacter(c);
+  }
 	
 	return true;
 }
@@ -363,22 +370,28 @@ Character* Character::giveBirth()
 
 void Character::attack(Character* target)
 {
+  if (target == 0 || target->isAlive == false ) { return; }
   //For now we will just use strength to calculate outcome.
   
-  if ( strength > target->strength )
+  if ( strength >= target->strength && Random::flip() )
   {
-    std::cout<<firstName<<" killed "<<target->firstName<<".\n";
+    
+    
+    //std::cout<<firstName<<" killed "<<target->firstName<<".\n";
     target->die(COMBAT);
     vKills.add(target);
     return;
   }
-  else
+  else if ( strength < target->strength )
   {
     if ( Random::flip() )
     {
-    std::cout<<target->firstName<<" killed "<<firstName<<" in self-defence.\n";
+      //std::cout<<target->firstName<<" killed "<<firstName<<" in self-defence.\n";
       target->vKills.add(this);
       die(COMBAT);
+    }
+    else
+    {
     }
     
   }
@@ -439,6 +452,11 @@ std::string Character::getColumn(std::string _column)
 	{
 		return DataTools::toString(strength);
 	}
+  
+	if ( _column=="kills" )
+	{
+		return DataTools::toString(vKills.size());
+	}
 	// if ( _column=="coordinates" )
 	// {
 		// return DataTools::toString(worldX)+","+DataTools::toString(worldY);
@@ -456,7 +474,7 @@ std::string Character::getColumn(std::string _column)
 }
 std::string Character::getColumnType(std::string _column)
 {
-	if ( _column == "age" || _column == "territory" || _column == "food" || _column == "strength")
+	if ( _column == "age" || _column == "territory" || _column == "food" || _column == "strength" || _column == "kills" )
 	{
 		return "number";
 	}
