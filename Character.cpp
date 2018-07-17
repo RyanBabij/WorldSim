@@ -53,8 +53,10 @@ Character::Character()
 	deathLocation.setXY(0,0);
 	
 	tribe = 0;
+  
+  causeOfDeath = UNKNOWN;
 	
-	enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, OLD_AGE=2 };
+	//enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, OLD_AGE=2 };
 	
 }
 
@@ -126,24 +128,25 @@ void Character::incrementTicks(int nTicks)
 		age++;
 		daysCounter-=360;
 		
-		if ( hunger > 0 )
-		{
-			// Chance of dying at 100 hunger = 1 in 100.
-			// Chance of dying at 1 hunger = 1 in 5000
-			int starvationChance = (101-hunger)*10;
+		// if ( hunger > 0 )
+		// {
+			// // Chance of dying at 100 hunger = 1 in 100.
+			// // Chance of dying at 1 hunger = 1 in 5000
+			// int starvationChance = (101-hunger)*10;
 			
-			if ( Random::oneIn(starvationChance) )
-			{
-				die();
-			}
-		}
+			// if ( Random::oneIn(starvationChance) )
+			// {
+				// //die();
+			// }
+		// }
 	}
 }
 
-void Character::die()
+void Character::die(enumCauseOfDeath _causeOfDeath /* =UNKNOWN */)
 {
 	isAlive = false;
 	dateOfDeath.set(world.calendar);
+  causeOfDeath = _causeOfDeath;
 	
 	if ( tribe != 0 )
 	{
@@ -333,6 +336,34 @@ Character* Character::giveBirth()
 	
 	return babby;
 }
+
+void Character::attack(Character* target)
+{
+  //For now we will just use strength to calculate outcome.
+  
+  if ( strength > target->strength )
+  {
+    std::cout<<firstName<<" killed "<<target->firstName<<".\n";
+    target->die();
+    vKills.add(target);
+    return;
+  }
+  std::cout<<"Attack missed.\n";
+  
+  
+}
+
+
+
+
+
+
+
+
+
+
+// INHERITED FUNCTIONS
+
 
 Texture* Character::currentTexture ()
 {	

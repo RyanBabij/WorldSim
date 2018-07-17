@@ -547,6 +547,14 @@ bool Tribe::removeCharacter( Character* _character)
   return vCharacter.erase(_character);
 }
 
+void Tribe::kill()
+{
+  for (int i=0;i<vCharacter.size();++i)
+  {
+    vCharacter(i)->die();
+  }
+  
+}
 
 /* TABLE INTERFACE */
 

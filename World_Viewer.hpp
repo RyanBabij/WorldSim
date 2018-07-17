@@ -54,6 +54,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 	int tilesToSkip;
 	
 	bool territoryView;
+  bool tilesetMode;
 	
 		// Temp: Local tile to render.
 	int localX, localY;
@@ -85,6 +86,8 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 		
 		localX=-1;
 		localY=-1;
+    
+    tilesetMode = false;
 	}
 	
 		// Center the view on the middle of the world. Good for initializing.
@@ -572,7 +575,7 @@ void switchTarget(World_Local* _worldLocal)
 			hoveredYTile=-1;
 		}
 		
-		if ( tileSize <= 16 )
+		if ( tilesetMode == false )
 		{
 
 			/* Pixel coords for leftmost tile. */

@@ -222,9 +222,19 @@ class Menu_CharacterDetails: public GUI_Interface
 			{
 				strDeathLocation = gender1 + " currently lives in " + world.getLandmassName(selectedCharacter->tribe->worldX,selectedCharacter->tribe->worldY) + ".";
 			}
+      
+      std::string strKillList = "";
+      if ( selectedCharacter->vKills.size() == 0 )
+      {
+        strKillList = "Kills: 0.";
+      }
+      else
+      {
+        strKillList = "Has Killed.";
+      }
 			
 			//father
-			font8x8.drawText("Biography:\n"+sentence1+" was born in BIOME, in the land of LAND. "+strMarriageBio + " " + strDeathLocation,panelX1,panelY2-yOffset,panelX2,panelY1, false, false);
+			font8x8.drawText("Biography:\n"+sentence1+" was born in BIOME, in the land of LAND. "+strMarriageBio + " " + strDeathLocation + "\n\n" + strKillList,panelX1,panelY2-yOffset,panelX2,panelY1, false, false);
 
 			
 			guiManager.render();

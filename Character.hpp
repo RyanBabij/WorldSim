@@ -17,6 +17,9 @@
 
 class Tribe;
 
+enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, MASSACRE=2, COMBAT=3, OLD_AGE=4 };
+const std::string enumCauseOfDeathStr [5] = { "unknown", "starvation", "massacre", "combat", "old age" };
+
 class Character: public WorldObject, public TableInterface
 {
 	public:
@@ -60,6 +63,9 @@ class Character: public WorldObject, public TableInterface
 	Vector <Character*> vChildren;
 	Vector <Character*> vSiblings;
 	
+    //People this character has killed.
+  Vector <Character*> vKills;
+  
 	GuildDate dateOfBirth;
 	GuildDate dateOfMarriage;
 	GuildDate dateOfDeath;
@@ -68,6 +74,8 @@ class Character: public WorldObject, public TableInterface
 	HasXY deathLocation;
 	
 	Tribe* tribe;
+  
+  enumCauseOfDeath causeOfDeath;
 	
 	
 		/* INITIALIZATION */
@@ -106,7 +114,7 @@ class Character: public WorldObject, public TableInterface
 	Vector <Character*> * getRelatives();
 	
 	
-	void die();
+	void die(enumCauseOfDeath = UNKNOWN);
 	
 	void starve();
 	
@@ -124,6 +132,12 @@ class Character: public WorldObject, public TableInterface
 	/* TABLE INTERFACE */
 	std::string getColumn(std::string _column);
 	std::string getColumnType(std::string _column);
+  
+  
+  /* COMBAT FUNCTIONS */
+  
+    //Attack a character once.
+  void attack (Character*);
 	
 	//bool hasJob;
 	

@@ -268,9 +268,9 @@ void Tribe_Human::combat (Tribe* _target)
 {
   if (_target == 0) { return; }
 
-  //std::cout<<"Combat initiated.\n";
-  //std::cout<<"Attacker: "<<name<<". ("<<vCharacter.size()<<").\n";
-  //std::cout<<"Defender: "<<_target->name<<". ("<<_target->vCharacter.size()<<").\n";
+  std::cout<<"Combat initiated.\n";
+  std::cout<<"Attacker: "<<name<<". ("<<vCharacter.size()<<").\n";
+  std::cout<<"Defender: "<<_target->name<<". ("<<_target->vCharacter.size()<<").\n";
   
   if ( vCharacter.size() > _target->vCharacter.size() )
   {
@@ -281,26 +281,37 @@ void Tribe_Human::combat (Tribe* _target)
     vCharacter.shuffle();
     for (int i=0; i<vCharacter.size();++i)
     {
-      if (vCharacter(i)->isMale && vCharacter(i)->age >= 16 && vCharacter(i)->age < 50)
+      if (vCharacter(i)->isMale && vCharacter(i)->age >= 15 )
       {
         vAttackingForce.push(vCharacter(i));
       }
     }
    // std::cout<<"Attacking with a force of "<<vAttackingForce.size()<<".\n";
+   
+    if ( vAttackingForce.size() <= 0 )
+    {
+      std::cout<<"Declined: No eligible attackers.\n";
+    }
     
     if ( vAttackingForce.size() > _target->vCharacter.size() )
     {
       // DIRECT ATTACK ON TARGET CAMP.
-      //std::cout<<"The target was annihilated.\n";
-      //_target->isAlive = false;
+      std::cout<<"The target was annihilated.\n";
+      _target->isAlive = false;
     }
     else
     {
       // SKIRMISH / RAID / AMBUSH
-     // std::cout<<"The target was ambushed.\n";
+      std::cout<<"The target was ambushed.\n";
       
       //Each attacker will pick a target.
-      
+      for ( int i=0; i<vAttackingForce.size(); ++i )
+      {
+        Character* _targetCharacter = _target->vCharacter.getRandom(random);
+        std::cout<<"Attacking: "<<_targetCharacter->firstName<<".\n";
+        
+        vAttackingForce(i)->attack(_targetCharacter);
+      }
 
       
     }
@@ -314,7 +325,7 @@ void Tribe_Human::combat (Tribe* _target)
   }
   else
   {
-    //std::cout<<"Declined.\n";
+    std::cout<<"Declined.\n";
   }
   
   return;
@@ -596,6 +607,14 @@ void Tribe_Human::incrementTicks ( int nTicks )
 	// }
 //std::cout<<"end tribe increment ticks\n";
 }
+
+// void Tribe_Human::kill ()
+// {
+  // for (int i=0; i<vCharacter.size(); ++i)
+  // {
+    // //vCharacter(i)
+  // }
+// }
 
 
 #endif

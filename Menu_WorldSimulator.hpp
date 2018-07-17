@@ -62,6 +62,9 @@ class Menu_WorldSimulator: public GUI_Interface
   
 		/* List of all Civs in the game */
 	GUI_Button buttonCivMenu;
+  
+		/* List of all Civs in the game */
+	GUI_Button buttonToggleTileset;
 	
 	/* Button: Switch between 1/4 or fullscreen view of world map. */
 	GUI_Button buttonExpandMap;
@@ -163,6 +166,11 @@ class Menu_WorldSimulator: public GUI_Interface
     
 		buttonCivMenu.text="Civ";
 		buttonCivMenu.setColours(&cNormal,&cHighlight,0);
+    
+		buttonToggleTileset.text="V";
+		buttonToggleTileset.setColours(&cNormal,&cHighlight,0);
+    
+    
 		
 		buttonTerritoryView.text="T2";
 		buttonTerritoryView.setColours(&cNormal,&cHighlight,0);
@@ -180,6 +188,7 @@ class Menu_WorldSimulator: public GUI_Interface
 		guiManager.add(&buttonCharacterMenu);
 		guiManager.add(&buttonCivMenu);
 		guiManager.add(&buttonTerritoryView);
+		guiManager.add(&buttonToggleTileset);
 		
 		/* Submenus */
 		guiManager.add(&menuTribes);
@@ -203,6 +212,7 @@ class Menu_WorldSimulator: public GUI_Interface
 		buttonCharacterMenu.active=true;
 		buttonCivMenu.active=true;
 		buttonTerritoryView.active=true;
+		buttonToggleTileset.active=true;
 		
 		buttonExpandMap.active = false;
 		buttonStartSimulation.active = false;
@@ -468,6 +478,13 @@ class Menu_WorldSimulator: public GUI_Interface
 			buttonBiomeMenu.unclick();
 		}
 		
+		if  (buttonToggleTileset.clicked==true)
+		{
+			std::cout<<"Toggle tileset view\n";
+      worldViewer.tilesetMode = !worldViewer.tilesetMode;
+			buttonToggleTileset.unclick();
+		}
+		
 		
 		
 		
@@ -535,6 +552,7 @@ class Menu_WorldSimulator: public GUI_Interface
 		buttonBiomeMenu.setPanel(panelX2-270, panelY2-40, panelX2-240, panelY2-30);
 		buttonTerritoryView.setPanel(panelX2-300, panelY2-40, panelX2-270, panelY2-30);
 		buttonCivMenu.setPanel(panelX2-340, panelY2-40, panelX2-300, panelY2-30);
+		buttonToggleTileset.setPanel(panelX2-370, panelY2-40, panelX2-340, panelY2-30);
 
 		menuTribes.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuCivs.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
