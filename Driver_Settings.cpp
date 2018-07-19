@@ -19,7 +19,7 @@ int lastline = 0;
 
 bool FAST_COUT = false;
 
-const std::string VERSION = "0.0.017 Win32 dev";
+const std::string VERSION = "0.0.021 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 
 const std::string SAVE_FOLDER_PATH = "savedata";
@@ -29,7 +29,7 @@ volatile const std::string devmessage = "HEY THIS IS GARO WADDUP.";
 /* DEBUG MENU SHORTCUTS */
 //bool AUTO_GENERATE_WORLD = false;
 //bool AUTO_NEW_SIMULATION = true;
-bool QUICKSTART = true; // Skip menu stuff and jump right into the game. (Will use defaults).
+bool QUICKSTART = false; // Skip menu stuff and jump right into the game. (Will use defaults).
   //Quickly go straight into the simulator.
 bool QUICKSTART_SIMULATOR = false; // Skip menu stuff and jump right into the game. (Will use defaults).
   // DEFAULT WORLD WHICH IS AUTO-GENERATED.
@@ -48,7 +48,7 @@ int DEFAULT_NUMBER_CIVS = 0;
 
 bool FOG_OF_WAR = true;
 
-const int LOCAL_MAP_SIZE = 64; /* Size of each city in tiles. Size is CITY_SIZE * CITY_SIZE. */
+const int LOCAL_MAP_SIZE = 100; /* Size of each city in tiles. Size is CITY_SIZE * CITY_SIZE. */
 //const int LOCAL_MAP_SIZE = 2000; /* Size of each city in tiles. Size is CITY_SIZE * CITY_SIZE. */
 
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */

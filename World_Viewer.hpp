@@ -340,7 +340,7 @@ void switchTarget(World_Local* _worldLocal)
 		
 		if (mouse->isRightClick)
 		{
-			std::cout<<"Adding tile: "<<hoveredXTile<<", "<<hoveredYTile<<" to render.\n";
+			//std::cout<<"Adding tile: "<<hoveredXTile<<", "<<hoveredYTile<<" to render.\n";
 			world->generateLocal(hoveredXTile,hoveredYTile);
 			localX=hoveredXTile;
 			localY=hoveredYTile;
@@ -717,8 +717,11 @@ void switchTarget(World_Local* _worldLocal)
 						int subTileSize = pixelsPerLocalTile;
 						if (subTileSize < 1) { subTileSize = 1; }
 						
+            // First we must seed the RNG with the seed for this local tile.
 						Random r1;
-						r1.seed (42);
+						r1.seed (world->aSeed(localX,localY));
+            
+            const enumBiome localBaseBiome = world->aTerrain(localX,localY);
 						
 						for (int localYTile = 0; localYTile<LOCAL_MAP_SIZE;++localYTile)
 						{
@@ -732,17 +735,33 @@ void switchTarget(World_Local* _worldLocal)
 								{
 									if ( nextPixel>=mainViewX1 && currentPixel <= mainViewX2 && floor(currentPixel) != floor(nextPixel) )
 									{
+                    
+                    if ( localBaseBiome == OCEAN )
+                    {
+                      Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_WORLD_TERRAIN_OCEAN_00, false);
+                    }
+                    else
+                    {
+                      Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_WORLD_TERRAIN_GRASS_00, false);
+                      
+                      if ( r1.oneIn(10) )
+                      {
+                        Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_ALCHEMY, false);
+                      }
+                    }
+                    
 										//std::cout<<".";
-										Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_WORLD_TERRAIN_GRASS_00, false);
 										
-										if ( r1.oneIn(10) )
-										{
-											Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_ALCHEMY, false);
-										}
+                    
+                    
+										//Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_WORLD_TERRAIN_OCEAN_00, false);
+
+										
+
 									}
 									else
 									{
-										r1.oneIn(10);
+										//r1.oneIn(10);
 									}
 									
 									currentPixel=nextPixel;
@@ -753,7 +772,7 @@ void switchTarget(World_Local* _worldLocal)
 							{
 								for (int localXTile = 0; localXTile<LOCAL_MAP_SIZE;++localXTile)
 								{
-								r1.oneIn(10);
+                  //r1.oneIn(10);
 								}
 							}
 							currentSubY=nextSubY;
@@ -770,6 +789,8 @@ void switchTarget(World_Local* _worldLocal)
 						// {
 							// //Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, world->aWorldTile(tileX,tileY).currentTexture(), false);
 						// }
+            
+            
 				
 						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY))
 						{

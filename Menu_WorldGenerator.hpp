@@ -233,7 +233,7 @@ class Menu_WorldGenerator: public GUI_Interface
 		guiWrapX.wrap=true;
 		
 		/* WrapY */
-		guiWrapY.currentOption=0;
+		guiWrapY.currentOption=1;
 		guiWrapY.addOption("Yes");
 		guiWrapY.addOption("No");
 		guiWrapY.texCycleButton=&TEX_GUI_DECREMENT;

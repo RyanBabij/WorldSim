@@ -379,9 +379,10 @@ void Tribe_Human::incrementTicks ( int nTicks )
 		if(v->isAlive==false)
 		{
 			vCharacter.erase(v);
+      vDeceased.add(v);
 		}
 	}
-	vCharacter.shrinkToFit();
+	//vCharacter.shrinkToFit();
 
   if ( vCharacter.size() == 0 )
   {

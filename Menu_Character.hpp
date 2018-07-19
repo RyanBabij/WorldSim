@@ -213,7 +213,6 @@ class Menu_Characters: public GUI_Interface
 	
 	void eventResize()
 	{
-	
 		guiTableCharacters.setPanel(panelX1,panelY1,panelX2,panelY2-30);
 		buttonClose.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
 		buttonCharacterDetails.setPanel(panelX2-150, panelY1+40, panelX2-20, panelY1+20);

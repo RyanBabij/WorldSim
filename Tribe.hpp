@@ -51,6 +51,9 @@ class Tribe: public WorldObjectGlobal, public TableInterface
 		Vector <Character*> vCharacter;
 		//std::string name;
 		//World* world;
+    
+      // Any Character that dies gets moved here */
+    Vector <Character*> vDeceased;
 		
 		Vector <HasXY*> vTerritory;
 		
