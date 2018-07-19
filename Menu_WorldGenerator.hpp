@@ -378,6 +378,12 @@ class Menu_WorldGenerator: public GUI_Interface
 		guiManager.add(&buttonExportData);
 		guiManager.add(&buttonLoadWorld);
 		//guiManager.add(&buttonExpandPreviewWindow);
+    
+    // A TEMPORARY FIX TO STOP ACCIDENTALLY HITTING
+    // HOTKEYS WHILE TYPING.
+    globalGuiManager.add(&textEntryWorldName);
+    globalGuiManager.add(&textEntryFullSeed);
+    globalGuiManager.add(&textEntryFullBiome);
 		
 		guiManager.setFont(font);
 		menuWorldSimulator.init();
@@ -551,10 +557,10 @@ class Menu_WorldGenerator: public GUI_Interface
 		
 		else if(active)
 		{
-			if ( textEntryWorldName.selected == true )
-			{ HOTKEYS_ENABLED=false; }
-			else
-			{ HOTKEYS_ENABLED=true; }
+			// if ( textEntryWorldName.selected == true )
+			// { HOTKEYS_ENABLED=false; }
+			// else
+			// { HOTKEYS_ENABLED=true; }
 			
 
 			/* World preview takes top-right quarter of screen. */

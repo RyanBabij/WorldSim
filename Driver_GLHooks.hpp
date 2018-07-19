@@ -190,13 +190,19 @@ static void GL_keyboardUpEvent(const unsigned char key, const int x, const int y
 static void GL_keyboardEvent(const unsigned char key, const int x, const int y)
 {
 	globalKeyboard.keyDown(key);
+  
+  // NOTE:
+  // It seems globalGUIManager is not active for anything except preventing accidental
+  // Hotkey input. In future all gui controls should pass through globalGUIManager.
+  // It should be possible to add guiManagers to globalGUIManager.
 		
 	//if ( keyboardInterfaceManager.keyboardEventAll(&globalKeyboard) )
 	if ( globalGuiManager.keyboardEvent(&globalKeyboard) )
+	//if ( globalGuiManager.stealKeyboard() )
 	{
-		
+		//std::cout<<"GL steal\n";
 	}
-	else if ( HOTKEYS_ENABLED == true )
+	else if ( HOTKEYS_ENABLED == true && globalGuiManager.stealKeyboard() == false  )
 	{
 		//std::cout<<"Key:"<<key<<".\n";
 		if(key==Keyboard::EQUALS)
