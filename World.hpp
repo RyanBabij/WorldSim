@@ -32,6 +32,7 @@ class Tribe_Dwarven;
 class Tribe_Elf;
 
 #include "WorldTile.cpp"
+#include "LocalTile.cpp"
 
 #include "GuildCalendar.hpp"
 
@@ -86,6 +87,8 @@ class World: public LogicTickInterface, public IdleTickInterface
 	
 	bool active; /* Whether or not the world should be simulated. */
 	bool generated; /* False until a world has been generated. Prevents trying to simulate a non-existent world. */
+  
+  int localX, localY; /* The current local map viewed by player */
 	
 	long long unsigned int ticksBacklog; /* World will simulate these ticks whenever it can, while still relinquishing for input etc. */
 	Timer relinquishTimer;
@@ -111,8 +114,10 @@ class World: public LogicTickInterface, public IdleTickInterface
 		
 	std::string name; /* The name of the world */
 	std::string strSavePath; /* The path to the world's save data. Typically something like: "savedata/<world name>". */
+  std::string worldFilePath;
   
-  
+  /* SEED */
+  int landmassSeed;
   
   /* Counters to regulate logic */
   int dailyCounter;
@@ -129,13 +134,13 @@ class World: public LogicTickInterface, public IdleTickInterface
 	
 		// All tile-specific info is to go here. Data access with array syntax eg world(x,y).biomeID;
 	ArrayS2 <WorldTile> aWorldTile;
-	
 	ArrayS2 <int> aSeed;
-	
 	ArrayS2 <int> aLandmassID;
 	ArrayS2 <bool> aIsLand;
-	
 	ArrayS2 <int> aBiomeID;
+  
+    /* LOCAL MAP ARRAYS */
+  ArrayS2 <LocalTile> aLocalTile;
 	
 	//Vector <std::string> vLandmassName;
 	Vector <World_Landmass*> vLandmass;

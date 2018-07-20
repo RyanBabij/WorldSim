@@ -64,6 +64,11 @@ World::World(): seaLevel(0), mountainLevel(0)
   
 	dailyCounter=0;
 	monthlyCounter=0;
+  
+  localX = -1;
+  localY = -1;
+  
+  worldFilePath = "";
 }
 
 void World::nameRegions()
@@ -699,6 +704,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	nY = y;
 
 	mX=x;
+  landmassSeed = seed;
 	
 	strSavePath = "savedata/"+name;
 	
@@ -768,6 +774,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	#endif
 	
 	aWorldTile.initClass(x,y);
+	aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
   
 	dailyCounter=0;
 	monthlyCounter=0;
@@ -830,8 +837,12 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	// }
 	
 	// Create master file.
-	FileManager::createFile(strSavePath+"/master.dat");
+  worldFilePath = strSavePath+"/main.dat";
+  
+	FileManager::createFile(worldFilePath);
+  FileManager::writeString(DataTools::toString(landmassSeed)+"\n"+name+"\n"+DataTools::toString(nX)+"\n"+DataTools::toString(nY),worldFilePath);
 	
+  
 	#ifdef THREADED
 	//	t1.join();   // thread waits for the thread t to finish
 		t2.join();
@@ -1014,8 +1025,53 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	std::cout<<"world generated in: "<<worldGenTimer.fullSeconds<<" seconds.\n";
 }
 
-void World::generateLocal(const int _x, const int _y)
+void World::generateLocal(const int _localX, const int _localY)
 {
+  if ( isSafe(_localX,_localY) == false )
+  { return; }
+  
+  localX = _localX;
+  localY = _localY;
+  
+  for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+  {
+    for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+    {
+      aLocalTile(_x,_y).baseTerrain = 0;
+    }
+  }
+  
+	std::cout<<"Checking map data in path: "<<strSavePath<<"\n";
+  
+	// strSavePath = "savedata/"+name;
+	
+		// // For now, we will just delete any worlds with the same name.
+	// //std::string systemCommmand = "exec rm -r "+strSavePath;
+	// //system(systemCommmand.c_str());
+	// FileManager::DeleteDirectory(strSavePath,true);
+	
+
+  std::string localMapPath = strSavePath + "/" + DataTools::toString(_localX) + "-" + DataTools::toString(_localY) + ".dat";
+	
+  std::cout<<"Savefile for this map is: "<<localMapPath<<"\n";
+	// FileManager::createDirectory(strSavePath);
+	
+	if ( FileManager::directoryExists(strSavePath) )
+  {
+    if ( FileManager::fileExists(localMapPath) )
+    {
+    }
+    else
+    {
+      //WRITE A FILE
+      FileManager::createFile(localMapPath);
+    }
+	}
+  else
+  {
+    std::cout<<"Error: Unable to access directory.\n";
+  }
+  
 }
 
 int World::getTileFertility(const int _x, const int _y)

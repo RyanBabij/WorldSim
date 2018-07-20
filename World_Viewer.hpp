@@ -341,9 +341,9 @@ void switchTarget(World_Local* _worldLocal)
 		if (mouse->isRightClick)
 		{
 			//std::cout<<"Adding tile: "<<hoveredXTile<<", "<<hoveredYTile<<" to render.\n";
-			world->generateLocal(hoveredXTile,hoveredYTile);
 			localX=hoveredXTile;
 			localY=hoveredYTile;
+      world->generateLocal(hoveredXTile,hoveredYTile);
 		}
 		
 		return false;
@@ -740,6 +740,7 @@ void switchTarget(World_Local* _worldLocal)
                     {
                       Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_WORLD_TERRAIN_OCEAN_00, false);
                     }
+                    //else if ( localBaseBio
                     else
                     {
                       Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_WORLD_TERRAIN_GRASS_00, false);

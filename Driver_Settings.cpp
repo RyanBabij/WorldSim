@@ -14,6 +14,9 @@ std::mutex render_mutex;
   /* Race */
 enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
 
+  /* BASE TERRAIN ON LOCAL MAP */
+enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
+
 int worldPop = 0;
 int lastline = 0;
 
@@ -48,8 +51,9 @@ int DEFAULT_NUMBER_CIVS = 0;
 
 bool FOG_OF_WAR = true;
 
-const int LOCAL_MAP_SIZE = 100; /* Size of each city in tiles. Size is CITY_SIZE * CITY_SIZE. */
-//const int LOCAL_MAP_SIZE = 2000; /* Size of each city in tiles. Size is CITY_SIZE * CITY_SIZE. */
+/* Size of each city in tiles. Size is CITY_SIZE * CITY_SIZE.
+  Realistically it should be 5000, however I might need to reduce it. */
+const int LOCAL_MAP_SIZE = 400; 
 
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 
