@@ -310,9 +310,7 @@ Texture* WorldTile::currentTexture()
 		return &TEX_WORLD_TERRAIN_GRASS_03;
 
 	}
-	
-	return &TEX_WORLD_TERRAIN_GRASS_00;
-	
+
 	return &TEX_WORLD_TEST_00;
 }
 

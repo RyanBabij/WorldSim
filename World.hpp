@@ -232,7 +232,7 @@ class World: public LogicTickInterface, public IdleTickInterface
 	/* World_Viewer.hpp is code related to rendering the world. */
 	//#include "World_Viewer.hpp"
 	//void loadHeightMap(std::string /* filepath */);
-	bool loadWorldData(std::string /* filepath */);
+	//bool loadWorldData(std::string /* filepath */);
 	void generateWorld(const std::string /* _name */, const int /* x */, const int /* y */, int /* seed */, int /* fragmentation */, const bool /* islandMode */, const bool /* wrapX */, const bool /* wrapY */, const double /* landPercent */);
 	
 		// Generate a local map so it can be viewed and interacted with.

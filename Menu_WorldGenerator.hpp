@@ -868,6 +868,7 @@ class Menu_WorldGenerator: public GUI_Interface
 				{
 					buttonLoadWorld.unclick();
 					std::cout<<"Load world data.\n";
+          world.loadWorld("test");
 				}
 				
 			}

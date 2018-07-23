@@ -736,20 +736,22 @@ void switchTarget(World_Local* _worldLocal)
 									if ( nextPixel>=mainViewX1 && currentPixel <= mainViewX2 && floor(currentPixel) != floor(nextPixel) )
 									{
                     
-                    if ( localBaseBiome == OCEAN )
-                    {
-                      Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_WORLD_TERRAIN_OCEAN_00, false);
-                    }
-                    //else if ( localBaseBio
-                    else
-                    {
-                      Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_WORLD_TERRAIN_GRASS_00, false);
+                    Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), world->aLocalTile(localXTile,localYTile).currentTexture(), false);
+                    
+                    // if ( localBaseBiome == OCEAN )
+                    // {
+                      // Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_WORLD_TERRAIN_OCEAN_00, false);
+                    // }
+                    // //else if ( localBaseBio
+                    // else
+                    // {
+                      // Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_WORLD_TERRAIN_GRASS_00, false);
                       
-                      if ( r1.oneIn(10) )
-                      {
-                        Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_ALCHEMY, false);
-                      }
-                    }
+                      // if ( r1.oneIn(10) )
+                      // {
+                        // Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_ALCHEMY, false);
+                      // }
+                    // }
                     
 										//std::cout<<".";
 										

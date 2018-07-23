@@ -26,53 +26,19 @@ class LocalTile: public HasTexture
 	LocalTile();
 	~LocalTile();
   
-  int baseTerrain;
+  /* Every local tile must have a seed to help determine random things,
+    for example which variant of texture to draw. */
+  int seed;
+  enumBiome baseTerrain;
   
-	
-	//int seed; /* Seed to feed into RNG to deconstruct into a map. */
   
-    // How many metals may be mined from this tile.
-  //int baseMetal;
-	
-	// texture pointer
-	
-	// enumBiome biome; /* Determines what it looks like and is called */
-	// int baseMoveCost; /* how many ap to move onto the tile. */
-	// bool canHaveSettlement;
-	// int baseFertility;
-	// bool canMove; /* True if units can walk over it. */
-	// int baseLogisticsCost; /* Will consume logistics from armies and navies. Used to prevent armies from travelling through desert, and early navies from travelling through ocean. */
-	// int defensiveBonus;
-	
-		// // The id of the landmass.
-	// int landID;
-		// // The id of the biome.
-  // int biomeID;
-  
-  // // Keeps track of influence values for each tribe.
-  // std::map<Tribe*,int> mInfluence;
-  
-    // //Add influence from the particular tribe for this tile. 
-  // void addInfluence (Tribe* tribe, int amount);
-    // //Remove influence from the particular tribe for this tile. 
-  // void removeInfluence (Tribe* tribe, int amount);
-    // //Lower all influence by a certain amount.
-  // void degradeInfluence (int amount);
-    // //Erase the influence entry of this tribe.
-  // void destroyInfluence (Tribe* tribe);
-  
-    // // Return the tribe with the greatest influence on the tile.
-  // Tribe* getDominantInfluence ();
-    // // Return the value of the greatest influence on the tile.
-  // int getDominantInfluenceValue ();
-  
-  // void init(enumBiome _biomeID, int /* seed */);
-	
-		// // This returns the base texture.
+
+    // This returns the base texture.
 	virtual Texture* currentTexture();
-	
-		// // This returns an additional texture to overlay on the base texture.
-	// Texture* getImprovementTexture();
+  
+    // Return vector of all textures to be drawn, to be drawn from index 0 to n-1.
+  virtual Vector <HasTexture*> * currentTextures();
+
 	
 };
 

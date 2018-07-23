@@ -432,35 +432,37 @@ bool World::loadWorld(std::string filePath)
 {
 
 	std::cout<<"Loading world png.\n";
+  
+  return false;
 	
-	int fileSize;
-	unsigned char* data = FileManager::getFile(filePath,&fileSize);
-	Png png;
-	png.load(data,fileSize);
-	//aHeightMap.init(png.nX,png.nY,0);
-	aWorldObject.init(png.nX,png.nY,0);
-	aTopoMap.init(png.nX,png.nY,3,0);
-	//aInfluence.init(png.nX,png.nY,0);
+	// int fileSize;
+	// unsigned char* data = FileManager::getFile(filePath,&fileSize);
+	// Png png;
+	// png.load(data,fileSize);
+	// //aHeightMap.init(png.nX,png.nY,0);
+	// aWorldObject.init(png.nX,png.nY,0);
+	// aTopoMap.init(png.nX,png.nY,3,0);
+	// //aInfluence.init(png.nX,png.nY,0);
 
 
-	//std::cout<<"PNG size: "<<png.nX<<","<<png.nY<<".\n";
+	// //std::cout<<"PNG size: "<<png.nX<<","<<png.nY<<".\n";
 
-	for(int x=0;x<png.nX;++x)
-	{
-		//std::cout<<"Loading in x: "<<x<<".\n";
-		for(int y=0;y<png.nY;++y)
-		{ /* for some reason, the map needs to loaded upside-down */
-			//aHeightMap(x,png.nY-y-1)=png.getPixel3D(x,y,0);
+	// for(int x=0;x<png.nX;++x)
+	// {
+		// //std::cout<<"Loading in x: "<<x<<".\n";
+		// for(int y=0;y<png.nY;++y)
+		// { /* for some reason, the map needs to loaded upside-down */
+			// //aHeightMap(x,png.nY-y-1)=png.getPixel3D(x,y,0);
 			
-			aTopoMap(x,png.nY-y-1,0)=png.getPixel3D(x,y,0);
-			aTopoMap(x,png.nY-y-1,1)=png.getPixel3D(x,y,1);
-			aTopoMap(x,png.nY-y-1,2)=png.getPixel3D(x,y,2);
-		}
-	}
-	delete [] data;
-	delete [] png.data;
+			// aTopoMap(x,png.nY-y-1,0)=png.getPixel3D(x,y,0);
+			// aTopoMap(x,png.nY-y-1,1)=png.getPixel3D(x,y,1);
+			// aTopoMap(x,png.nY-y-1,2)=png.getPixel3D(x,y,2);
+		// }
+	// }
+	// delete [] data;
+	// delete [] png.data;
 
-	return false;
+	// return false;
 }
 
 // void World::loadHeightMap(std::string filePath)
@@ -508,16 +510,16 @@ inline bool World::isLand(HasXY* _xy)
 	return isLand(_xy->x, _xy->y);
 }
 
-bool World::loadWorldData(std::string filePath)
-{
-	std::cout<<"Getting world data.\n";
-	int fileSize;
-	unsigned char* data = FileManager::getFile(filePath,&fileSize);
-	seaLevel = data[0];
-	mountainLevel = data[1];
-	std::cout<<"Data read: " << (int)seaLevel << ","<<(int)mountainLevel<<"\n";
-	return true;
-}
+// bool World::loadWorldData(std::string filePath)
+// {
+	// std::cout<<"Getting world data.\n";
+	// int fileSize;
+	// unsigned char* data = FileManager::getFile(filePath,&fileSize);
+	// seaLevel = data[0];
+	// mountainLevel = data[1];
+	// std::cout<<"Data read: " << (int)seaLevel << ","<<(int)mountainLevel<<"\n";
+	// return true;
+// }
 
 int mX;
 
@@ -544,7 +546,7 @@ void World::buildArrays()
 			const int lightModifier = aLightModifier2(_x,_y);
 			//const int lightModifier = 0;
 			
-			aSeed(_x,_y) = random.randInt(INT_MAX-1);
+			aSeed(_x,_y) = random.randInt(PORTABLE_INT_MAX-1);
 
         //Initialise the WorldTile with biome enum.
       aWorldTile(_x,_y).init(aTerrain(_x,_y), aSeed(_x,_y));
@@ -670,7 +672,7 @@ void World::buildArrays()
 		}
 	}
 	Png png;
-	png.encodeS3("world.png",&aTopoMap);
+	png.encodeS3(strSavePath+"/worldmap.png",&aTopoMap);
 }
 
 void World::generateWorld(const std::string _worldName, const int x=127, const int y=127, const int seed=0, const int fragmentation=2, const bool islandMode = true, const bool wrapX=true, const bool wrapY=false, const double landPercent = 0.66)
@@ -839,8 +841,10 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	// Create master file.
   worldFilePath = strSavePath+"/main.dat";
   
+
+  
 	FileManager::createFile(worldFilePath);
-  FileManager::writeString(DataTools::toString(landmassSeed)+"\n"+name+"\n"+DataTools::toString(nX)+"\n"+DataTools::toString(nY),worldFilePath);
+  FileManager::writeString(DataTools::toString(landmassSeed)+"\n"+name+"\n"+DataTools::toString(nX)+"\n"+DataTools::toString(nY)+"\n",worldFilePath);
 	
   
 	#ifdef THREADED
@@ -1018,6 +1022,20 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	
 	
 	//Vector < Vector <HasXY* >* > vAllTiles;
+  
+  
+  // SAVE WORLD DATA HERE (LATER PUT INTO FUNCTION)
+  std::string tileData = "[BIOME]";
+	for (int _y=0;_y<nY;++_y)
+	{
+		for (int _x=0;_x<nX;++_x)
+		{
+      tileData+=",";
+      tileData+=DataTools::toString(aWorldTile(_x,_y).biome);
+    }
+  }
+  tileData+="[/BIOME]";
+  FileManager::writeString(tileData,worldFilePath);
 	
 	
 	worldGenTimer.update();
@@ -1025,6 +1043,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	std::cout<<"world generated in: "<<worldGenTimer.fullSeconds<<" seconds.\n";
 }
 
+  // This will likely need to be moved into a local map class.
+  // It's too unwieldy trying to manage it here.
 void World::generateLocal(const int _localX, const int _localY)
 {
   if ( isSafe(_localX,_localY) == false )
@@ -1033,11 +1053,20 @@ void World::generateLocal(const int _localX, const int _localY)
   localX = _localX;
   localY = _localY;
   
+  enumBiome globalBaseTerrain = aWorldTile(localX,localY).biome;
+  
+  
+  
+  
+  // Take the seed for this world tile and expand it into a subseed for every local tile */
+  random.seed(aSeed(localX,localY));
+  
   for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
   {
     for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
-      aLocalTile(_x,_y).baseTerrain = 0;
+      aLocalTile(_x,_y).baseTerrain = globalBaseTerrain;
+      aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
     }
   }
   

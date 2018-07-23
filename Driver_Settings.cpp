@@ -11,6 +11,11 @@
 
 std::mutex render_mutex;
 
+// This is a guaranteed valid value for int for all implementations of C++.
+// Generally I think the actual maximum is much higher, but we'll figure
+// that out later.
+#define PORTABLE_INT_MAX 32767
+
   /* Race */
 enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
 
@@ -52,7 +57,8 @@ int DEFAULT_NUMBER_CIVS = 0;
 bool FOG_OF_WAR = true;
 
 /* Size of each city in tiles. Size is CITY_SIZE * CITY_SIZE.
-  Realistically it should be 5000, however I might need to reduce it. */
+  Realistically it should be 3000, however I might need to reduce it
+  depending on scaling and performance considerations. */
 const int LOCAL_MAP_SIZE = 400; 
 
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
@@ -64,7 +70,7 @@ const int HARVESTING_TIME = 100; /* Testing. */
 //enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13, RIVER=14};
 //const std::string biomeName [15] = { "nothing", "ocean", "grassland", "forest", "desert", "mountain", "snow", "hilly", "jungle", "wetland", "steppes", "cave", "ruin", "ice", "river" };
 
-unsigned int RESOLUTIONX=1200, RESOLUTIONY=1000;
+unsigned int RESOLUTIONX=1280, RESOLUTIONY=720;
 bool RESET=false;
 
 bool HOTKEYS_ENABLED = true;
@@ -76,8 +82,7 @@ const int OUTPUT_FRAMERATE_SAMPLE_SIZE = 50;
 const bool LIMIT_FRAMERATE = true;
 const double FRAMERATE = 60;
 const double POLLSPERSECOND = 30;
-//const double LOGIC_PER_SECOND = 30;
-//const double LOGIC_PER_SECOND = 100; /* For debugging. TODO: Need a secret switch to disable timing/Toggle rendering/etc. */
+
 double LOGIC_PER_SECOND = 1;
 const double PHYSICS_PER_SECOND = 10;
 

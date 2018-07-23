@@ -143,7 +143,7 @@ class QuitChecker
     if (gameTime.seconds > 10 )
     {
       std::cout<<"Thankyou for playing. ^_^\n";
-      std::cout<<"Time played: "<<gameTime.seconds/60/60<<" hours, "<<gameTime.seconds/60<<" minutes, "<<gameTime.seconds<<" seconds.\n";
+      std::cout<<"Time played: "<<gameTime.seconds/60<<" minutes.\n";
     }
 	}
 };
