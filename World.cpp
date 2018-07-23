@@ -1067,8 +1067,19 @@ void World::generateLocal(const int _localX, const int _localY)
     {
       aLocalTile(_x,_y).baseTerrain = globalBaseTerrain;
       aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+      
+      if (random.oneIn(100))
+      {
+        //put tree
+        aLocalTile(_x,_y).addObject(new WorldObject);
+      }
     }
   }
+  
+  aLocalTile(random.randInt(LOCAL_MAP_SIZE-1),random.randInt(LOCAL_MAP_SIZE-1)).baseTerrain = OCEAN;
+  aLocalTile(random.randInt(LOCAL_MAP_SIZE-1),random.randInt(LOCAL_MAP_SIZE-1)).baseTerrain = OCEAN;
+  aLocalTile(random.randInt(LOCAL_MAP_SIZE-1),random.randInt(LOCAL_MAP_SIZE-1)).baseTerrain = OCEAN;
+  aLocalTile(random.randInt(LOCAL_MAP_SIZE-1),random.randInt(LOCAL_MAP_SIZE-1)).baseTerrain = OCEAN;
   
 	std::cout<<"Checking map data in path: "<<strSavePath<<"\n";
   

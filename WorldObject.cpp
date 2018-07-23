@@ -32,4 +32,9 @@ int WorldObject::distanceTo (WorldObject* _obj)
 
 int WorldObject::distanceFrom(WorldObject* _obj) { return distanceTo(_obj); } /* Alias. */
 
+Texture* WorldObject::currentTexture()
+{
+	return &TEX_TEST_404;
+}
+
 #endif

@@ -18,15 +18,17 @@ class WorldObject: public HasTexture
 	double bulk; /* In cm^3 , and adjusted higher for cumbersome items.*/
 	
 	WorldObject();
+	virtual ~WorldObject() {}
+  
+  
 	virtual std::string getName();
 	virtual std::string getExtendedInfo() { return "N/A"; }
 	
 	
 	int distanceTo(WorldObject*); /* Chebyshev (this one is distances where diagonal movement is allowed.) */
 		int distanceFrom(WorldObject*); /* Alias. */
-		
-	virtual ~WorldObject()
-	{}
+
+	virtual Texture* currentTexture();
 };
 
 #endif

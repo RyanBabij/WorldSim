@@ -31,6 +31,12 @@ class LocalTile: public HasTexture
   int seed;
   enumBiome baseTerrain;
   
+    // Vector of objects on this tile.
+  Vector <WorldObject*> vObject;
+  
+  
+  void addObject(WorldObject*);
+  
   
 
     // This returns the base texture.

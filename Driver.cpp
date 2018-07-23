@@ -83,9 +83,11 @@ class Stream
 
 #include "TextureInterface.cpp"
 
-#include "WorldObject.cpp"
+
 
 #include "Driver_LoadTextures.hpp"
+
+#include "WorldObject.cpp"
 
 #include "World.hpp"
 

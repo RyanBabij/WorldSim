@@ -232,12 +232,11 @@ void zoomIn()
 	if ( tilesToSkip > 0 ) { --tilesToSkip; }
 	else
 	{
-	//tilesToSkip=0;
-	tileSize*=2;
+  tileSize*=2;
 	if(tileSize>400000)
 	{ tileSize=400000; }
 	}
-	std::cout<<"Tilesize: "<<tileSize<<".\n";
+	//std::cout<<"Tilesize: "<<tileSize<<".\n";
 	// if (tileSize < 32 && world->isSafe(hoveredXTile, hoveredYTile))
 	// {
 		// centerTileX=hoveredXTile;
@@ -248,6 +247,7 @@ void zoomIn()
 void zoomOut()
 {
 	tileSize/=2;
+  
 	if(tileSize<1)
 	{ tileSize=1; ++tilesToSkip; }
 
@@ -704,7 +704,7 @@ void switchTarget(World_Local* _worldLocal)
 				for (int currentX = pixelTileX; currentX<mainViewNX+tileSize; currentX+=tileSize)
 				{
 						// RENDER THE LOCAL TILE
-					if (localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
+					if (tileSize > 4 && localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
 					{
 						float pixelsPerLocalTile = (float)tileSize/LOCAL_MAP_SIZE;
 						//std::cout<<"pixelsPerLocalTile: "<<pixelsPerLocalTile<<".\n";
@@ -737,6 +737,11 @@ void switchTarget(World_Local* _worldLocal)
 									{
                     
                     Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), world->aLocalTile(localXTile,localYTile).currentTexture(), false);
+                    
+                    for(int i=0;i<world->aLocalTile(localXTile,localYTile).vObject.size();++i)
+                    {
+                      Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), world->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                    }
                     
                     // if ( localBaseBiome == OCEAN )
                     // {
