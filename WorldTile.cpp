@@ -280,7 +280,7 @@ Texture* WorldTile::currentTexture()
 	}
 	else if (biome == FOREST)
 	{
-		return &TEX_WORLD_TERRAIN_FOREST_TREE;
+		return &TEX_WORLD_TERRAIN_FOREST_TREES;
 	}
 	else if (biome == DESERT)
 	{

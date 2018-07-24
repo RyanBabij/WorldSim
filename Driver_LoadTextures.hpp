@@ -80,8 +80,11 @@ const std::string PATH_TEX_ALCHEMY = "Textures/World/Terrain/Alchemy/05.png";
 Texture TEX_WORLD_TERRAIN_OCEAN_00;
 const std::string PATH_TEX_WORLD_TERRAIN_OCEAN_00 = "Textures/World/Terrain/Ocean/01.png";
 
+Texture TEX_WORLD_TERRAIN_FOREST_TREES;
+const std::string PATH_TEX_WORLD_TERRAIN_FOREST_TREES = "Textures/World/Terrain/Forest/00.png";
+
 Texture TEX_WORLD_TERRAIN_FOREST_TREE;
-const std::string PATH_TEX_WORLD_TERRAIN_FOREST_TREE = "Textures/World/Terrain/Forest/00.png";
+const std::string PATH_TEX_WORLD_TERRAIN_FOREST_TREE = "Textures/World/Terrain/Forest/tree.png";
 
 Texture TEX_WORLD_TERRAIN_MOUNTAIN_00;
 const std::string PATH_TEX_WORLD_TERRAIN_MOUNTAIN_00 = "Textures/World/Terrain/Mountain/01.png";
@@ -173,6 +176,7 @@ void loadTextures()
 	
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_OCEAN_00,&TEX_WORLD_TERRAIN_OCEAN_00);
 	
+	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_FOREST_TREES,&TEX_WORLD_TERRAIN_FOREST_TREES);
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_FOREST_TREE,&TEX_WORLD_TERRAIN_FOREST_TREE);
 	
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_MOUNTAIN_00,&TEX_WORLD_TERRAIN_MOUNTAIN_00);

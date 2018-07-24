@@ -121,7 +121,7 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		cDropPanel.set(170,170,170);
 		cHighlight.set(170,170,170);
 	
-		buttonNewGame.text="New Game";
+		buttonNewGame.text="1. New Game";
 		buttonNewGame.setColours(&cNormal,&cHighlight,0);
 		
 		buttonLoadGame.text="Load Game";
@@ -297,7 +297,12 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 			return true;
 		}
 		
-		//if (_keyboard->isPressed
+		if (_keyboard->isPressed(Keyboard::ONE) )
+    {
+      _keyboard->unpress(Keyboard::ONE);
+      menuWorldGenerator.active=true;
+      return true;
+    }
 		
 		return false;
 	}

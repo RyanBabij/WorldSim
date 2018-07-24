@@ -1071,7 +1071,7 @@ void World::generateLocal(const int _localX, const int _localY)
       if (random.oneIn(100))
       {
         //put tree
-        aLocalTile(_x,_y).addObject(new WorldObject);
+        aLocalTile(_x,_y).addObject(new WorldObject_Tree);
       }
     }
   }

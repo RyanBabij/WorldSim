@@ -294,7 +294,7 @@ class Menu_WorldGenerator: public GUI_Interface
 		guiCaptionNTribeElven.centeredY=true;
 		
 		/* GENERATE BUTTON */
-		buttonGenerate.text="Generate";
+		buttonGenerate.text="1. Generate";
 		buttonGenerate.setColours(&cNormal,&cHighlight,0);
 		
 		/* WORLD NAME */
@@ -337,7 +337,7 @@ class Menu_WorldGenerator: public GUI_Interface
 		textMenuTitle.centeredX=true;
 		textMenuTitle.centeredY=true;
 		
-		buttonSimWorld.text="Simulate World";
+		buttonSimWorld.text="2. Simulate World";
 		buttonSimWorld.setColours(&cNormal,&cHighlight,0);
 		
 		buttonExportData.text="Export World Data";
@@ -617,9 +617,16 @@ class Menu_WorldGenerator: public GUI_Interface
 				return true;
 			}
 			
-			
 			if(_keyboard->isPressed(Keyboard::ONE)) /* Flush console. */
 			{
+				eventGenerate();
+        _keyboard->unpress(Keyboard::ONE);
+        return true;
+			}
+      
+			if(_keyboard->isPressed(Keyboard::TWO)) /* Flush console. */
+			{
+        _keyboard->unpress(Keyboard::TWO);
 				if (world.generated == true)
 				{
 					std::cout<<"Simulate world.\n";
@@ -634,6 +641,7 @@ class Menu_WorldGenerator: public GUI_Interface
 					std::cout<<"You must first generate a world.\n";
 				}
 			}
+      
 		}
 		
 		return false;
@@ -678,107 +686,8 @@ class Menu_WorldGenerator: public GUI_Interface
 				if(buttonGenerate.clicked==true)
 				{
 					buttonGenerate.unclick();
-					
-					// First check to ensure the world has a name. Important because it's also the name of the savefile.
-					
-					if ( textEntryWorldName.input == "" )
-					{
-						std::cout<<"Error: World needs a name.\n";
-					}
-					else if (DataTools::isAlphaNumeric(textEntryWorldName.input) == false)
-					{
-						std::cout<<"Error: World name must be alphanumeric.\n";
-						textEntryWorldName.input="";
-					}
-					else
-					{
-						//world.name=textEntryWorldName.input;
-						int worldSizeV = DataTools::toInt(worldSize.getCurrentOption());
-						
-						if (worldSizeV<0 || worldSizeV>100000)
-						{
-							std::cout<<"Warning. Strange worldsize. Attempting to continue.\n";
-						}
-						//textEntryFullSeed.input;
-						
-							// If a seed string has been entered, either use the actual number,
-							// or hash it to a number if it contains non-numeric characters.
-							// This allows for a word seed to have a numeric equivalent.
-						int seed = 0;
-						if (textEntryFullSeed.input != "")
-						{
-							if ( DataTools::isNumeric(textEntryFullSeed.input))
-							{
-								seed = DataTools::toInt(textEntryFullSeed.input);
-							}
-							else
-							{
-								std::hash<std::string> hasher;
-								seed=hasher(textEntryFullSeed.input);
-								if ( seed < 0 )
-								{
-									seed *= -1;
-								}
-							}
-						}
-						
-						// GET FRAGMENTATION
-						int fragmentation = DataTools::toInt(freeSteps.getCurrentOption());
-						
-						bool islandMode = true;
-						if ( guiIslandMode.currentOption==1 )
-						{
-							islandMode=false;
-						}
-
-						bool wrapX = true;
-						if ( guiWrapX.currentOption==1 )
-						{
-							wrapX=false;
-						}
-						bool wrapY = true;
-						if ( guiWrapY.currentOption==1 )
-						{
-							wrapY=false;
-						}
-						
-						double landPercent = (double) nLandPercent.currentValue / 100;
-
-
-	//string s = "heyho";
-
-	//size_t hash = hasher(s);
-						
-						std::cout<<"The raw seed is: "<<textEntryFullSeed.input<<".\n";
-						std::cout<<"The hashed seed is: "<<seed<<".\n";
-						world.generateWorld(textEntryWorldName.input,worldSizeV,worldSizeV,seed,fragmentation,islandMode,wrapX,wrapY,landPercent);
-						
-					//	std::cout<<"no crash\n";
-					//	exit(0);
-						
-						worldViewer.active=true;
-						
-						//world.generateCivs(nCiv.currentValue);
-						
-							// Just to start, we'll put all three races down immediately.
-						//world.addRace(1,"Dwarves");
-						//world.addRace(1,"Elves");
-						//world.addRace(1,"Humans");
-						
-						
-						
-						std::cout<<"Generating "<<nTribe.currentValue<<" tribes.\n";
-						world.generateTribes(nTribe.currentValue,nTribeDwarven.currentValue,nTribeElven.currentValue);
-						
-							// Get name of regions.
-							std::cout<<"Naming regions.\n";
-						world.nameRegions();
-						
-						
-						std::cout<<"end generate.\n";
-						buttonGenerate.unclick();
-						
-					}
+          eventGenerate();
+					buttonGenerate.unclick();
 				}
 				if(buttonExpandPreviewWindow.clicked==true)
 				{
@@ -882,6 +791,111 @@ class Menu_WorldGenerator: public GUI_Interface
 		return guiManager.stealKeyboard();
 	}
 	
+  
+  void eventGenerate()
+  {
+    // First check to ensure the world has a name. Important because it's also the name of the savefile.
+    
+    if ( textEntryWorldName.input == "" )
+    {
+      std::cout<<"Error: World needs a name.\n";
+    }
+    else if (DataTools::isAlphaNumeric(textEntryWorldName.input) == false)
+    {
+      std::cout<<"Error: World name must be alphanumeric.\n";
+      textEntryWorldName.input="";
+    }
+    else
+    {
+      //world.name=textEntryWorldName.input;
+      int worldSizeV = DataTools::toInt(worldSize.getCurrentOption());
+      
+      if (worldSizeV<0 || worldSizeV>100000)
+      {
+        std::cout<<"Warning. Strange worldsize. Attempting to continue.\n";
+      }
+      //textEntryFullSeed.input;
+      
+        // If a seed string has been entered, either use the actual number,
+        // or hash it to a number if it contains non-numeric characters.
+        // This allows for a word seed to have a numeric equivalent.
+      int seed = 0;
+      if (textEntryFullSeed.input != "")
+      {
+        if ( DataTools::isNumeric(textEntryFullSeed.input))
+        {
+          seed = DataTools::toInt(textEntryFullSeed.input);
+        }
+        else
+        {
+          std::hash<std::string> hasher;
+          seed=hasher(textEntryFullSeed.input);
+          if ( seed < 0 )
+          {
+            seed *= -1;
+          }
+        }
+      }
+      
+      // GET FRAGMENTATION
+      int fragmentation = DataTools::toInt(freeSteps.getCurrentOption());
+      
+      bool islandMode = true;
+      if ( guiIslandMode.currentOption==1 )
+      {
+        islandMode=false;
+      }
+
+      bool wrapX = true;
+      if ( guiWrapX.currentOption==1 )
+      {
+        wrapX=false;
+      }
+      bool wrapY = true;
+      if ( guiWrapY.currentOption==1 )
+      {
+        wrapY=false;
+      }
+      
+      double landPercent = (double) nLandPercent.currentValue / 100;
+
+
+//string s = "heyho";
+
+//size_t hash = hasher(s);
+      
+      //std::cout<<"The raw seed is: "<<textEntryFullSeed.input<<".\n";
+      //std::cout<<"The hashed seed is: "<<seed<<".\n";
+      world.generateWorld(textEntryWorldName.input,worldSizeV,worldSizeV,seed,fragmentation,islandMode,wrapX,wrapY,landPercent);
+      
+    //	std::cout<<"no crash\n";
+    //	exit(0);
+      
+      worldViewer.active=true;
+      
+      //world.generateCivs(nCiv.currentValue);
+      
+        // Just to start, we'll put all three races down immediately.
+      //world.addRace(1,"Dwarves");
+      //world.addRace(1,"Elves");
+      //world.addRace(1,"Humans");
+      
+      
+      
+      //std::cout<<"Generating "<<nTribe.currentValue<<" tribes.\n";
+      world.generateTribes(nTribe.currentValue,nTribeDwarven.currentValue,nTribeElven.currentValue);
+      
+        // Get name of regions.
+      //std::cout<<"Naming regions.\n";
+      world.nameRegions();
+      
+      
+      //std::cout<<"end generate.\n";
+    }
+    
+    
+  }
+  
 };
 
 #endif

@@ -88,6 +88,7 @@ class Stream
 #include "Driver_LoadTextures.hpp"
 
 #include "WorldObject.cpp"
+#include "WorldObject_Tree.cpp"
 
 #include "World.hpp"
 

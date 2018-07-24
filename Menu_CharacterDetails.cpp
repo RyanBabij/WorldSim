@@ -27,6 +27,9 @@ class Menu_CharacterDetails: public GUI_Interface
 	
 	GUI_Button buttonClose;
 
+	GUI_Button buttonFavourite;
+	GUI_Button buttonPossess;
+
 	Character* selectedCharacter;
 	
 	GUI_Link textFatherLink;
@@ -63,6 +66,14 @@ class Menu_CharacterDetails: public GUI_Interface
 		buttonClose.text="X";
 		buttonClose.setColours(&cNormal,&cHighlight,0);
 		buttonClose.active=true;
+    
+    buttonFavourite.text="Favourite";
+		buttonFavourite.setColours(&cNormal,&cHighlight,0);
+		buttonFavourite.active=true;
+    
+    buttonPossess.text="Control";
+		buttonPossess.setColours(&cNormal,&cHighlight,0);
+		buttonPossess.active=true;
 		
 		textFatherLink.text = "Test";
 		textMotherLink.text = "Test";
@@ -91,6 +102,8 @@ class Menu_CharacterDetails: public GUI_Interface
 //std::cout<<"Clearing children vector 3\n";
 
 		guiManager.add(&buttonClose);
+		guiManager.add(&buttonFavourite);
+		guiManager.add(&buttonPossess);
 		guiManager.add(&textFatherLink);
 		guiManager.add(&textMotherLink);
 		guiManager.add(&textSpouseLink);
@@ -270,10 +283,24 @@ class Menu_CharacterDetails: public GUI_Interface
 				
 			}
 
-			if  (buttonClose.clicked==true)
+			if (buttonClose.clicked==true)
 			{
 				active=false;
 				buttonClose.unclick();
+			}
+      
+			if (buttonFavourite.clicked==true)
+			{
+        std::cout<<"Not yet implemented.\n";
+				active=false;
+				buttonFavourite.unclick();
+			}
+      
+			if (buttonPossess.clicked==true)
+			{
+        std::cout<<"Yeah you can't do that yet.\n";
+				active=false;
+				buttonPossess.unclick();
 			}
 			
 			if (textFatherLink.clicked==true)
@@ -331,6 +358,9 @@ class Menu_CharacterDetails: public GUI_Interface
 	{
 		
 		buttonClose.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
+    
+    buttonFavourite.setPanel(panelX2-100, panelY1+40, panelX2-20, panelY1+20);
+    buttonPossess.setPanel(panelX2-100, panelY1+65, panelX2-20, panelY1+45);
 	}
 	
 };

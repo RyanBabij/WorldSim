@@ -27,7 +27,7 @@ int lastline = 0;
 
 bool FAST_COUT = false;
 
-const std::string VERSION = "0.0.023 Win32 dev";
+const std::string VERSION = "0.0.025 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 
 const std::string SAVE_FOLDER_PATH = "savedata";
@@ -70,7 +70,7 @@ const int HARVESTING_TIME = 100; /* Testing. */
 //enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13, RIVER=14};
 //const std::string biomeName [15] = { "nothing", "ocean", "grassland", "forest", "desert", "mountain", "snow", "hilly", "jungle", "wetland", "steppes", "cave", "ruin", "ice", "river" };
 
-unsigned int RESOLUTIONX=1000, RESOLUTIONY=800;
+unsigned int RESOLUTIONX=1280, RESOLUTIONY=720;
 bool RESET=false;
 
 bool HOTKEYS_ENABLED = false;
