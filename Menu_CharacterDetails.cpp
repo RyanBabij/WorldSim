@@ -291,7 +291,7 @@ class Menu_CharacterDetails: public GUI_Interface
       
 			if (buttonFavourite.clicked==true)
 			{
-        std::cout<<"Not yet implemented.\n";
+        selectedCharacter->isFavourite=true;
 				active=false;
 				buttonFavourite.unclick();
 			}

@@ -55,6 +55,8 @@ Character::Character()
 	tribe = 0;
   
   causeOfDeath = UNKNOWN;
+  
+  isFavourite=false;
 	
 	//enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, OLD_AGE=2 };
 	
@@ -457,6 +459,12 @@ std::string Character::getColumn(std::string _column)
 	{
 		return DataTools::toString(vKills.size());
 	}
+  
+  if ( _column=="favourite" )
+  {
+    if ( isFavourite ) { return "T"; }
+    return "";
+  }
 	// if ( _column=="coordinates" )
 	// {
 		// return DataTools::toString(worldX)+","+DataTools::toString(worldY);

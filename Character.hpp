@@ -56,6 +56,9 @@ class Character: public WorldObject, public TableInterface
 	int endurance;
 	int courage;
 	
+    // True if player has flagged this character as favourite.
+  bool isFavourite;
+  
 		/* Right now each character has a biological mother and father. In the future we might also have guardians */
 	Character* father;
 	Character* mother;
