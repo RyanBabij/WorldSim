@@ -1067,11 +1067,27 @@ void World::generateLocal(const int _localX, const int _localY)
     {
       aLocalTile(_x,_y).baseTerrain = globalBaseTerrain;
       aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+      aLocalTile(_x,_y).clearObjects();
       
       if (random.oneIn(100))
       {
         //put tree
         aLocalTile(_x,_y).addObject(new WorldObject_Tree);
+      }
+      
+      else if ( globalBaseTerrain == MOUNTAIN )
+      {
+        if (random.oneIn(10))
+        {
+          auto * rockyBoi = new WorldObject_Rock;
+          if ( random.oneIn(10) )
+          {
+            rockyBoi->nGold = 100;
+          }
+          
+          aLocalTile(_x,_y).addObject(rockyBoi);
+        }
+        
       }
     }
   }

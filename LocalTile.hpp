@@ -37,6 +37,7 @@ class LocalTile: public HasTexture
   
   void addObject(WorldObject*);
   
+  void clearObjects();
   
 
     // This returns the base texture.

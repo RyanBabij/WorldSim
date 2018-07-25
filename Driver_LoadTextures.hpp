@@ -89,6 +89,12 @@ const std::string PATH_TEX_WORLD_TERRAIN_FOREST_TREE = "Textures/World/Terrain/F
 Texture TEX_WORLD_TERRAIN_MOUNTAIN_00;
 const std::string PATH_TEX_WORLD_TERRAIN_MOUNTAIN_00 = "Textures/World/Terrain/Mountain/01.png";
 
+Texture TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI;
+const std::string PATH_TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI = "Textures/World/Terrain/Mountain/Rockyboi.png";
+
+Texture TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI_GOLD;
+const std::string PATH_TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI_GOLD = "Textures/World/Terrain/Mountain/RockyboiGold.png";
+
 Texture TEX_WORLD_TERRAIN_DESERT_00;
 Texture TEX_WORLD_TERRAIN_DESERT_01;
 const std::string PATH_TEX_WORLD_TERRAIN_DESERT_00 = "Textures/World/Terrain/Desert/00.png";
@@ -131,7 +137,8 @@ void loadTextures()
 {
   
 		// LOAD MENU TEXTURES
-	loadTextureVerbose("Textures/Menu/TitleImage-CR.png",&TEX_TITLE);
+	//loadTextureVerbose("Textures/Menu/TitleImage-CR.png",&TEX_TITLE);
+	loadTextureVerbose("Textures/Menu/Black.png",&TEX_TITLE);
 	loadTextureVerbose("Textures/Menu/Black.png",&TEX_OPTIONS_BACKGROUND);
 	loadTextureVerbose("Textures/Menu/Black.png",&TEX_LOAD_GAME_BACKGROUND);
 	loadTextureVerbose("Textures/Menu/Black.png",&TEX_NEW_GAME_BACKGROUND);
@@ -180,6 +187,8 @@ void loadTextures()
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_FOREST_TREE,&TEX_WORLD_TERRAIN_FOREST_TREE);
 	
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_MOUNTAIN_00,&TEX_WORLD_TERRAIN_MOUNTAIN_00);
+	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI,&TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI);
+	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI_GOLD,&TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI_GOLD);
 	
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_DESERT_00,&TEX_WORLD_TERRAIN_DESERT_00);
 	
