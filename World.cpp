@@ -1056,7 +1056,48 @@ void World::generateLocal(const int _localX, const int _localY)
   enumBiome globalBaseTerrain = aWorldTile(localX,localY).biome;
   
   
+
+		// GENERATE HEIGHTMAP
+  DiamondSquareAlgorithmCustomRange dsa2;
+	dsa2.maxValue=5;
   
+  ArrayS2 <int> aLocalHeight;
+  aLocalHeight.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
+  
+  // If we are generating a mountain, set a summit in the middle which is 3x3 tiles.
+  if ( globalBaseTerrain == MOUNTAIN )
+  {
+    aLocalHeight(LOCAL_MAP_SIZE/2,LOCAL_MAP_SIZE/2) = 100;
+    aLocalHeight((LOCAL_MAP_SIZE/2)+1,LOCAL_MAP_SIZE/2) = 100;
+    aLocalHeight((LOCAL_MAP_SIZE/2)-1,LOCAL_MAP_SIZE/2) = 100;
+    
+    aLocalHeight(LOCAL_MAP_SIZE/2,(LOCAL_MAP_SIZE/2)-1) = 100;
+    aLocalHeight((LOCAL_MAP_SIZE/2)+1,(LOCAL_MAP_SIZE/2)-1) = 100;
+    aLocalHeight((LOCAL_MAP_SIZE/2)-1,(LOCAL_MAP_SIZE/2)-1) = 100;
+    
+    aLocalHeight(LOCAL_MAP_SIZE/2,(LOCAL_MAP_SIZE/2)+1) = 100;
+    aLocalHeight((LOCAL_MAP_SIZE/2)+1,(LOCAL_MAP_SIZE/2)+1) = 100;
+    aLocalHeight((LOCAL_MAP_SIZE/2)-1,(LOCAL_MAP_SIZE/2)+1) = 100;
+    
+    aLocalHeight.fillBorder(1);
+    dsa2.maxValue=100;
+    dsa2.generate(&aLocalHeight,0,0,0.9,10);
+    
+  for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+  {
+    for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+    {
+      aLocalHeight(_x,_y) =  aLocalHeight(_x,_y)/20;
+    }
+  }
+    //aLocalHeight.setBorder(1);
+  }
+  else
+  {
+	////HEIGHTMAP TABLE FREESTEPS SMOOTHING
+	dsa2.generate(&aLocalHeight,0,0,0.75,100);
+  }
+
   
   // Take the seed for this world tile and expand it into a subseed for every local tile */
   random.seed(aSeed(localX,localY));
@@ -1068,6 +1109,7 @@ void World::generateLocal(const int _localX, const int _localY)
       aLocalTile(_x,_y).baseTerrain = globalBaseTerrain;
       aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
       aLocalTile(_x,_y).clearObjects();
+      aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
       
       if (random.oneIn(100))
       {

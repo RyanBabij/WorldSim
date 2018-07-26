@@ -31,6 +31,10 @@ class LocalTile: public HasTexture
   int seed;
   enumBiome baseTerrain;
   
+  int height;
+  
+  bool isUphill [8]; /* Clockwise starting north */
+  
     // Vector of objects on this tile.
   Vector <WorldObject*> vObject;
   

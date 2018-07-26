@@ -735,12 +735,27 @@ void switchTarget(World_Local* _worldLocal)
 								{
 									if ( nextPixel>=mainViewX1 && currentPixel <= mainViewX2 && floor(currentPixel) != floor(nextPixel) )
 									{
+                    LocalTile* localTile = &world->aLocalTile(localXTile,localYTile);
                     
-                    Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), world->aLocalTile(localXTile,localYTile).currentTexture(), false);
+                    
+                    //Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), localTile->currentTexture(), false);
+                    //if (localTile->height < 5 )
+                    //{
+                      unsigned char lightValue = localTile->height*15;
+                      glColor3ub(180+lightValue,180+lightValue,180+lightValue);
+                      Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                      glColor3ub(255,255,255);
+                    //}
+                    //else
+                   // {
+                    //  Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                   // }
+                    
+
                     
                     for(int i=0;i<world->aLocalTile(localXTile,localYTile).vObject.size();++i)
                     {
-                      Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), world->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                      Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), world->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
                     }
                     
                     // if ( localBaseBiome == OCEAN )
@@ -808,7 +823,9 @@ void switchTarget(World_Local* _worldLocal)
 							
 							if (world->aSeed(tileX,tileY) % 4 == 0)
 							{
+                glColor4f(2.0f, 2.0f, 2.0f, 1.0f);
 								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
+                glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 							}
 							else if (world->aSeed(tileX,tileY) % 4 == 1)
 							{
@@ -912,13 +929,15 @@ void switchTarget(World_Local* _worldLocal)
 						
 						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == FOREST)
 						{
-							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_FOREST_TREE, false);
+							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_FOREST_TREES, false);
 						}
 						
 						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == MOUNTAIN)
 						{
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
+              glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_MOUNTAIN_00, false);
+              glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 						}
 
 						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == DESERT)

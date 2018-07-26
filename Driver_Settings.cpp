@@ -27,7 +27,7 @@ int lastline = 0;
 
 bool FAST_COUT = false;
 
-const std::string VERSION = "0.0.027 Win32 dev";
+const std::string VERSION = "0.0.028 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 
 const std::string SAVE_FOLDER_PATH = "savedata";
@@ -59,7 +59,7 @@ bool FOG_OF_WAR = true;
 /* Size of each city in tiles. Size is CITY_SIZE * CITY_SIZE.
   Realistically it should be 3000, however I might need to reduce it
   depending on scaling and performance considerations. */
-const int LOCAL_MAP_SIZE = 400; 
+const int LOCAL_MAP_SIZE = 513; 
 
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 
