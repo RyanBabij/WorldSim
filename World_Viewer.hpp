@@ -55,6 +55,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 	
 	bool territoryView;
   bool tilesetMode;
+  bool subterraneanMode;
 	
 		// Temp: Local tile to render.
 	int localX, localY;
@@ -87,7 +88,8 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 		localX=-1;
 		localY=-1;
     
-    tilesetMode = false;
+    tilesetMode = true;
+    subterraneanMode = false;
 	}
 	
 		// Center the view on the middle of the world. Good for initializing.
@@ -157,6 +159,14 @@ bool keyboardEvent( Keyboard* _keyboard )
 			if (_keyboard->keyWasPressed)
 			{
 				zoomOut();
+			}
+		}
+    
+		if(_keyboard->isPressed(Keyboard::TAB))
+		{
+			if (_keyboard->keyWasPressed)
+			{
+				subterraneanMode = !subterraneanMode;
 			}
 		}
 		// if(keyboard->isPressed(Keyboard::SPACEBAR))
@@ -735,50 +745,32 @@ void switchTarget(World_Local* _worldLocal)
 								{
 									if ( nextPixel>=mainViewX1 && currentPixel <= mainViewX2 && floor(currentPixel) != floor(nextPixel) )
 									{
-                    LocalTile* localTile = &world->aLocalTile(localXTile,localYTile);
                     
-                    
-                    //Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), localTile->currentTexture(), false);
-                    //if (localTile->height < 5 )
-                    //{
+                    if ( subterraneanMode )
+                    {
+                      LocalTile* localTile = &world->aSubterranean(localXTile,localYTile);
+                      
+                      Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                    }
+                    else
+                    {
+                      
+                      LocalTile* localTile = &world->aLocalTile(localXTile,localYTile);
+                      
                       unsigned char lightValue = localTile->height*15;
                       glColor3ub(180+lightValue,180+lightValue,180+lightValue);
                       Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
                       glColor3ub(255,255,255);
-                    //}
-                    //else
-                   // {
-                    //  Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
-                   // }
-                    
-
-                    
-                    for(int i=0;i<world->aLocalTile(localXTile,localYTile).vObject.size();++i)
-                    {
-                      Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), world->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                      
+                      
+                      for(int i=0;i<world->aLocalTile(localXTile,localYTile).vObject.size();++i)
+                      {
+                        Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), world->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                      }
                     }
                     
-                    // if ( localBaseBiome == OCEAN )
-                    // {
-                      // Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_WORLD_TERRAIN_OCEAN_00, false);
-                    // }
-                    // //else if ( localBaseBio
-                    // else
-                    // {
-                      // Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_WORLD_TERRAIN_GRASS_00, false);
-                      
-                      // if ( r1.oneIn(10) )
-                      // {
-                        // Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_ALCHEMY, false);
-                      // }
-                    // }
                     
-										//std::cout<<".";
-										
-                    
-                    
-										//Renderer::placeTexture4(floor(currentPixel), floor(currentSubY), floor(nextPixel), floor(nextSubY), &TEX_WORLD_TERRAIN_OCEAN_00, false);
-
+    
 										
 
 									}

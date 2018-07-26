@@ -32,8 +32,6 @@ const std::string G_WINDOW_TITLE = "WorldSim";
 
 const std::string SAVE_FOLDER_PATH = "savedata";
 
-volatile const std::string devmessage = "HEY THIS IS GARO WADDUP.";
-
 /* DEBUG MENU SHORTCUTS */
 //bool AUTO_GENERATE_WORLD = false;
 //bool AUTO_NEW_SIMULATION = true;
@@ -59,7 +57,7 @@ bool FOG_OF_WAR = true;
 /* Size of each city in tiles. Size is CITY_SIZE * CITY_SIZE.
   Realistically it should be 3000, however I might need to reduce it
   depending on scaling and performance considerations. */
-const int LOCAL_MAP_SIZE = 513; 
+const int LOCAL_MAP_SIZE = 513;
 
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 

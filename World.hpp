@@ -141,6 +141,8 @@ class World: public LogicTickInterface, public IdleTickInterface
   
     /* LOCAL MAP ARRAYS */
   ArrayS2 <LocalTile> aLocalTile;
+    //Underground map
+  ArrayS2 <LocalTile> aSubterranean;
 	
 	//Vector <std::string> vLandmassName;
 	Vector <World_Landmass*> vLandmass;

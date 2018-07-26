@@ -52,6 +52,10 @@ Texture* LocalTile::currentTexture()
 	{
 		return &TEX_WORLD_TERRAIN_DESERT_00;
 	}
+	else if (baseTerrain == UNDERGROUND)
+	{
+		return &TEX_WORLD_TERRAIN_UNDERGROUND_00;
+	}
 	
 	//else if ( biome == GRASSLAND )
 	else

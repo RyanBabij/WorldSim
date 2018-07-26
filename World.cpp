@@ -550,6 +550,7 @@ void World::buildArrays()
 
         //Initialise the WorldTile with biome enum.
       aWorldTile(_x,_y).init(aTerrain(_x,_y), aSeed(_x,_y));
+        //Initialise the subterranean tiles
 			
 			int _red;
 			int _green;
@@ -777,6 +778,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	
 	aWorldTile.initClass(x,y);
 	aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+	aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
   
 	dailyCounter=0;
 	monthlyCounter=0;
@@ -1110,6 +1112,12 @@ void World::generateLocal(const int _localX, const int _localY)
       aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
       aLocalTile(_x,_y).clearObjects();
       aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
+      
+      
+      aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+      aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+      aSubterranean(_x,_y).clearObjects();
+      aSubterranean(_x,_y).height = -1;
       
       if (random.oneIn(100))
       {
