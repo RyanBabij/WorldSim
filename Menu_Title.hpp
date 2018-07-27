@@ -2,14 +2,13 @@
 #ifndef WORLDSIM_MENU_TITLE_HPP
 #define WORLDSIM_MENU_TITLE_HPP
 
-/*
+/* WorldSim: Menu_Title
 	#include "Menu_Title.hpp"
 	
 	The title menu. This is the main menu, appearing when the application is launched,
 	and also when the player calls the main menu from within the game. It displays some
-	fancy opening thingy, or some nice picture, and the basic options for starting
+	fancy opening cutscene, or some nice picture, and the basic options for starting
 	and configuring your game.
-
 */
 
 #include "Menu_WorldGenerator.hpp"
@@ -53,8 +52,6 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 	
 	/* Background image */
 	Texture* backgroundTexture;
-	
-  int testCount;
 
 	Menu_Title()
 	{
@@ -64,9 +61,6 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		
 		menuWorldGenerator.active=false;
 		active=true;
-		//buttonNewGame.clicked = AUTO_NEW_SIMULATION;
-    
-    testCount=0;
 	}
 	
 	void setFont(Wildcat::Font* _font)
@@ -77,29 +71,7 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		menuWorldGenerator.setFont(_font);
 		guiManager.setFont(_font);
 	}
-	
-	/* This is used for init, and also called when the panel is resized. */
-	// void setPanel(const int _panelX1, const int _panelY1, const int _panelX2, const int _panelY2)
-	// {
-	
-		// /* Sort the x and y coords. */
-		// if(_panelX1<=_panelX2)
-		// { panelX1=_panelX1; panelX2=_panelX2; }
-		// else
-		// { panelX2=_panelX1; panelX1=_panelX2; }
-		// if(_panelY1<=_panelY2)
-		// { panelY1=_panelY1; panelY2=_panelY2; }
-		// else
-		// { panelY2=_panelY1; panelY1=_panelY2; }
-		
-		// menuNewGame.setPanel(panelX1,panelY1,panelX2,panelY2);
-		// menuOptions.setPanel(panelX1,panelY1,panelX2,panelY2);
-		// menuLoadGame.setPanel(panelX1,panelY1,panelX2,panelY2);
-		
-		// /* Resize the GUI controls. */
-		
-	// }
-	
+
 	void eventResize()
 	{
 		/* Update control positions. */
@@ -118,9 +90,6 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 	
 	void init()
 	{
-
-    
-		//std::cout<<"Menu title init\n";
 		cNormal.set(200,200,200);
 		cSelected.set(180,180,180);
 		cDropPanel.set(170,170,170);
@@ -145,8 +114,6 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		/* Update GUI positions. */
 		eventResize();
 		
-		//guiManager.addControl(&menuWorldGenerator);
-		
 		guiManager.addControl(&buttonNewGame);
 		guiManager.addControl(&buttonLoadGame);
 		guiManager.addControl(&buttonOptions);
@@ -158,18 +125,13 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		menuOptions.init();
 		menuLoadGame.init();
 		menuWorldGenerator.init();
-		
-		// if (QUICKSTART==true)
-		// {
-			// menuNewGame.active=true;
-		// }
+
 		menuWorldGenerator.active = false;
 		active=true;
 		
 		if ( QUICKSTART )
 		{
 			menuWorldGenerator.active=true;
-			//active = false;
 		}
 
 	
@@ -177,17 +139,12 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 	/* DisplayInterface:: */
 	void render()
 	{
-		//std::cout<<"menu title render call\n";
 		if(menuWorldGenerator.active)
 		{
-			//std::cout<<"Worldgen active\n";
 			menuWorldGenerator.render();
 		}
 		else if(active)
 		{
-			//std::cout<<"title active\n";
-			
-			// Currently a bad design but not important to fix right now.
 		
 			if(menuOptions.active)
 			{
@@ -204,17 +161,9 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 				guiManager.render();
 			}
 			
-			
-
-			
 		}
-
-		
-		//if(menuNewGame.active)
-		//{
-			//menuNewGame.render();
-		//}
 	}
+  
 	/* MouseInterface:: */
 	bool mouseEvent (Mouse* _mouse)
 	{
@@ -242,16 +191,6 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 					{
 						buttonNewGame.unclick();
 						menuWorldGenerator.active=true;
-						//active=false;
-					
-						//std::cout<<"New game\n";
-						//buttonNewGame.clicked=false;
-						//menuNewGame.active=true;
-						//menuNewGame.setPanel(panelX1,panelX2,panelY1,panelY2);
-						
-						//deactivate self.
-						//active=false;
-						
 						return true;
 					}
 					if(buttonQuit.clicked==true)

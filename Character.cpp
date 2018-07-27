@@ -2,6 +2,11 @@
 #ifndef WORLDSIM_CHARACTER_CPP
 #define WORLDSIM_CHARACTER_CPP
 
+/* WorldSim: Character
+  #include "Character.cpp"
+  
+  <Documentation>
+*/
 
 #include "Character.hpp"
 #include "Tribe.hpp"

@@ -1,6 +1,12 @@
 #pragma once
-#ifndef GUILD_CIV_HPP
-#define GUILD_CIV_HPP
+#ifndef WORLDSIM_CIV_HPP
+#define WORLDSIM_CIV_HPP
+
+/* WorldSim: Civ
+  #include "Civ.hpp"
+
+  <Documentation>
+*/
 
 class Character;
 class Settlement;
@@ -23,9 +29,6 @@ class Civ: public TableInterface
 
 
 	public:
-	
-		//static int s_nIDGenerator;
-		
 		
 			// EACH TILE MAY ONLY BE OWNED BY ONE CIV, THEREFORE THIS ARRAY IS SHARED BETWEEN ALL CIVS.
 		static ArrayS2 <Civ*> aOwnership;
@@ -44,9 +47,6 @@ class Civ: public TableInterface
     
       // A list of all settlements owned by this Civ. Each Settlement is owned by exactly one Civ.
 		Vector <Settlement*> vSettlement;
-    
-		
-		//Vector <Unit*> vUnit;
 	
 		std::string name;
 		int money;
@@ -57,7 +57,6 @@ class Civ: public TableInterface
 		int colourGreen;
 		int colourBlue;
 		
-    //enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
     int race;
     
 		Civ();
@@ -76,11 +75,7 @@ class Civ: public TableInterface
 		void init(World*);
 		void collectTaxes();
 		void logicTick();
-		
-		
-			// Place a city near the civ, in an 'optimal' location.
-		//City* foundCity();
-		
+
 		void setColour (const int,const int,const int);
 		
 			/* Returns false if the spawn failed. */
@@ -121,14 +116,5 @@ class Civ: public TableInterface
 		std::string getColumnType(std::string _column);
 	
 };
-
-//int Civ::s_nIDGenerator = 1;
-
-	// DECLARE STATIC STUFFS.
-ArrayS2 <Civ*> Civ::aOwnership;
-
-//Civ::aOwnership;
-
-//static ArrayS2 <Civ*> aOwnership;
 
 #endif

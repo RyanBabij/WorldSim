@@ -1,8 +1,8 @@
-/* Driver.cpp
-	Worldsim
-	Project name: Worldsim.
-
-	This project takes a world generated using worldgen and simulates the rise of civilisations on it.
+/* WorldSim: Driver
+  
+	Main file for WorldSim. Created by Ryan Babij.
+  
+  https://github.com/RyanBabij/WorldSim
 */
 
 #include <string>
@@ -10,7 +10,6 @@
 
 #define WILDCAT_USE_OPENGL
 //#define WILDCAT_USE_DIRECT3D
-
 
 	// What OS we are compiling for. Currently only Windows and Linux are supported cos I don't got a Mac.
 #include <Wildcat/Windows.hpp>
@@ -20,7 +19,6 @@
 #include "CompileCount.hpp"
 
 #include <iostream>
-
 
 #include "Driver_Settings.cpp"
 
@@ -70,16 +68,8 @@ class Stream
 
 #include <Render/Renderer.cpp>
 
-//#include <Output/ThreadedCout.hpp>
-
 #include <Graphics/Texture/Texture.hpp>
 #include <Graphics/Texture/TextureLoader.hpp>
-
-// #include <File/FileLog.hpp>
-// FileLog gameLog;
-// FileLog marriageLog;
-// FileLog birthLog;
-// FileLog deathLog;
 
 #include "TextureInterface.cpp"
 
@@ -102,8 +92,6 @@ class Stream
 #include <File/FileManager.hpp>
 
 #include <string>
-
-//#pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" )  
 
 void printHelp()
 {
@@ -181,11 +169,6 @@ World world;
 
 #include "World_Local.cpp"
 World_Local * worldLocal;
-
-
-//#include "Creature.cpp"
-// #include "Building.cpp"
-	// #include "Building/Building_Farm.cpp"
 	
 #include "Character.cpp"
 
@@ -242,7 +225,6 @@ IdleTickManager idleManager;
 
 /* Title Menu / Main Menu */
 #include "Menu_Title.hpp"
-//Menu_Title menuWorldGenerator;
 Menu_Title menuTitle;
 
 /* Title menu */
