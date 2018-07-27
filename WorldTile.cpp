@@ -267,6 +267,11 @@ void WorldTile::init(enumBiome _biomeID, int _seed = 0)
 
 }
 
+std::string WorldTile::getTerrainName()
+{
+  return biomeName[biome];
+}
+
 Texture* WorldTile::currentTexture()
 {
 	//enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13};

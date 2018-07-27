@@ -89,17 +89,16 @@ class World: public LogicTickInterface, public IdleTickInterface
 	bool generated; /* False until a world has been generated. Prevents trying to simulate a non-existent world. */
   
   int localX, localY; /* The current local map viewed by player */
-	
+  
+  /* The current tile that the player wants information on */
+	int queryWorldX, queryWorldY; 
+  
 	long long unsigned int ticksBacklog; /* World will simulate these ticks whenever it can, while still relinquishing for input etc. */
 	Timer relinquishTimer;
 	
 	RandomNonStatic random;
 	
-		/* This array stores the base terrain data. */
-	//enum enumType { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6 };
-		//UPDATED FOR NEW WORLDGEN
-	//enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13, RIVER=14};
-	//const std::string biomeName [15] = { "nothing", "ocean", "grassland", "forest", "desert", "mountain", "snow", "hilly", "jungle", "wetland", "steppes", "cave", "ruin", "ice", "river" };
+  /* This array stores the base terrain data. */
 	ArrayS2 <enumBiome> aTerrain;
 	
 		/* Overlays on top of base terrain. Each tile may have a 'point of interest' on it. */
@@ -160,22 +159,13 @@ class World: public LogicTickInterface, public IdleTickInterface
 	unsigned char mountainLevel;
 
 
+  Character * playerCharacter;
+  
 	Vector <Tribe*> vTribe;
 	Vector <Civ*> vCiv;
 	
-	//ArrayS2 <TribalTerritory> vTribeTerritory;
-	
-	//ArrayS2 < std::map<Tribe*,int> * > aInfluence;
-	
 	ArrayS2 <unsigned char> aGoodEvil;
 
-	//Vector <HasXY*> v
-	
-		/* This vector stores influence that each civ holds over each tile. */
-	//Vector < ArrayS2 <char> > vInfluence;
-	
-	//Calendar date;
-	//Calendar lastDate;
 	
 	GuildCalendar calendar;
 	GuildDate lastDate; /* The date on the last logic tick. */
@@ -188,60 +178,51 @@ class World: public LogicTickInterface, public IdleTickInterface
 		// CHECK ALL CIV LOS ARRAYS, AND IF ANY OVERLAP, THEN MAKE THEM DISCOVER EACH OTHER.
 	//void updateCivContacts();
 	
+
+
+
+    /* TICK LOGIC */
+		/* I want this to be the new method of incrementing time in the world. It will dynamically abstract things based on the amount of turns to simulate. Each tick is one second. */
+	void incrementTicks ( int /* nTicks */ );
+	void incrementTicksBacklog ( long long unsigned int /* nTicks */ );
+	void handleTickBacklog ();
+	void idleTick();
+	void logicTick();
+  
+    /* FILE IO */
+	bool loadWorld(std::string /* filepath */);
+  
+    /* WORLD GENERATION */
+  
+	void generateWorld (const std::string /* _name */, const int /* x */, const int /* y */, int /* seed */, int /* fragmentation */, const bool /* islandMode */, const bool /* wrapX */, const bool /* wrapY */, const double /* landPercent */);
+		// Generate a local map so it can be viewed and interacted with.
+	void generateLocal(const int /* worldX */, const int /* worldY */);
+	void buildArrays();
+		// Find all unique areas and give them names.
+	void nameRegions();
+	void generateTribes( int/* nTribes */, int /* nTribesDwarven */, int /* nTribesElven */);
+		//Put down some Dwarven civs.
+	bool addRace (int /* nTribes */, std::string /* name */);
+	//bool addElvenTribe(int nTribes);
+	//bool addHumanTribe(int nTribes);
+	
+  /* WORLD QUERIES */
+		/* Returns population of all characters (Human, Dwarven, Elven)
+    alive in the world. */
+	int getPopulation();
+  
+      /* WORLD TILE / COORDINATE QUERIES */
+  
 		// RETURNS TRUE IF THE TILE IS LAND. RETURNS FALSE IF IT IS NOT LAND, OR IF IT IS OUT OF BOUNDS.
 	bool isLand(int _x, int _y);
 		inline bool isLand(HasXY*);
 	
 		// RETURNS TRUE IF THE COORDINATES ARE WITHIN BOUNDS OF THE MAP.
 	bool isSafe (int _x, int _y);
-
-	// GENERATION
-	
-	//void generateCharacters(const int /*nCitizens*/);
-	
-	//void generateCivs(int /* nCivs */);
-	void generateTribes( int/* nTribes */, int /* nTribesDwarven */, int /* nTribesElven */);
-	
-		// Find all unique areas and give them names.
-	void nameRegions();
-	
-		// Find all landmasses.
-	//void getLandmassIDs();
-	
-		//getPopulation returns the population of all characters alive in the world. Includes Dwarves, Elves and Humans.
-	int getPopulation();
-	
-	
-	
-	//void incrementDay();
-	//void incrementSecond();
-	
-		/* I want this to be the new method of incrementing time in the world. It will dynamically abstract things based on the amount of turns to simulate. Each tick is one second. */
-	void incrementTicks ( int /* nTicks */ );
-	
-	void incrementTicksBacklog ( long long unsigned int /* nTicks */ );
-	void handleTickBacklog ();
-	
-	void idleTick();
-	
-	void logicTick();
   
-	//int nCities();
-	//bool putRandomCity();
-	//bool putCity(City*);
-	/* Load world data from the given file. */
-	bool loadWorld(std::string /* filepath */);
-	/* World_Viewer.hpp is code related to rendering the world. */
-	//#include "World_Viewer.hpp"
-	//void loadHeightMap(std::string /* filepath */);
-	//bool loadWorldData(std::string /* filepath */);
-	void generateWorld(const std::string /* _name */, const int /* x */, const int /* y */, int /* seed */, int /* fragmentation */, const bool /* islandMode */, const bool /* wrapX */, const bool /* wrapY */, const double /* landPercent */);
-	
-		// Generate a local map so it can be viewed and interacted with.
-	void generateLocal(const int /* worldX */, const int /* worldY */);
-	
-	void buildArrays();
-	
+   /* Return a pointer to the WorldTile at the coordinates.
+    Return null pointer if fail */
+  WorldTile * getTile (const int /* x */, const int /* y */ );
 		/* Return the fertility value of the tile. */
 	int getTileFertility(const int /* x */, const int /* y */);
 		int getTileFertility(const HasXY* /* xy */);
@@ -268,14 +249,20 @@ class World: public LogicTickInterface, public IdleTickInterface
 	bool putObject(WorldObjectGlobal* _object, int x = -1, int y = -1);
     // Remove object from world.
   bool removeObject(WorldObjectGlobal* _object);
-	
-		//Put down some Dwarven civs.
-	bool addRace (int nTribes, std::string name);
-	//bool addElvenTribe(int nTribes);
-	//bool addHumanTribe(int nTribes);
+  
+		//Return the name of the landmass the tile is on. Return empty string if not on a landmass.
+	std::string getLandmassName(const int /* x */, const int /* y */);
+		std::string getLandmassName (HasXY*);
+    
+  std::string getBiomeName( const int /* x */, const int /* y */);
+    
+	//INFO GETTING FUNCTIONS
+	std::string getTileType (const int _x, const int _y);
+	void queryTile( int hoveredXTile, int hoveredYTile);
 	
   
-  // TRIBE FUNCTIONS
+  
+      /* TRIBE FUNCTIONS */
 	
 	void addInfluence(Tribe* tribe, int amount);
 		// Subtract an influence point from every tile this tribe has.
@@ -301,19 +288,8 @@ class World: public LogicTickInterface, public IdleTickInterface
     // Return 0 if none. Only check same race by default.
   Tribe * getNearestConnectedTribe (Tribe *, bool sameRace = true);
   
-  
-  
-  
-  
 	int getHighestInfluence(const int, const int);
 		int getHighestInfluence(HasXY*);
-	
-		//Return the name of the landmass the tile is on. Return empty string if not on a landmass.
-	std::string getLandmassName(const int /* x */, const int /* y */);
-		std::string getLandmassName (HasXY*);
-	//INFO GETTING FUNCTIONS
-	std::string getTileType (const int _x, const int _y);
-	void queryTile( int hoveredXTile, int hoveredYTile);
 	
 };
 

@@ -184,44 +184,44 @@ bool keyboardEvent( Keyboard* _keyboard )
 		// }
 		if(_keyboard->isPressed(Keyboard::D)||_keyboard->isPressed(Keyboard::d)) /* Debug info. */
 		{
-			std::cout<<"Debug Info:\n";
+			// std::cout<<"Debug Info:\n";
 			
-			if (world==0)
-			{
-				std::cout<<"ERROR: World doesn't exist.\n";
-			}
-			else
-			{
+			// if (world==0)
+			// {
+				// std::cout<<"ERROR: World doesn't exist.\n";
+			// }
+			// else
+			// {
 			
-				std::cout<<"Num tribes: "<<world->vTribe.size()<<"\n";
+				// std::cout<<"Num tribes: "<<world->vTribe.size()<<"\n";
 				
-				for (int i=0;i<world->vTribe.size();++i)
-				{
-					Tribe* t = world->vTribe(i);
-					std::cout<<"All living members of tribe "<<t->name<<".\n";
+				// for (int i=0;i<world->vTribe.size();++i)
+				// {
+					// Tribe* t = world->vTribe(i);
+					// std::cout<<"All living members of tribe "<<t->name<<".\n";
 					
-					for(int j=0;j<t->vCharacter.size();++j)
-					{
-						Character* c = t->vCharacter(j);
-						if(c->isAlive)
-						{
-						std::cout<<c->id<<": "<<c->getFullName()<<", age: "<<c->age<<". ";
-						if(c->isMale==true)
-						{ std::cout<<"Male.\n"; }
-						else
-						{ std::cout<<"Female.\n";
-						}
-						}
-					}
+					// for(int j=0;j<t->vCharacter.size();++j)
+					// {
+						// Character* c = t->vCharacter(j);
+						// if(c->isAlive)
+						// {
+						// std::cout<<c->id<<": "<<c->getFullName()<<", age: "<<c->age<<". ";
+						// if(c->isMale==true)
+						// { std::cout<<"Male.\n"; }
+						// else
+						// { std::cout<<"Female.\n";
+						// }
+						// }
+					// }
 					
-				}
-				std::cout<<"World population: "<<world->getPopulation()<<".\n";
-			}
+				// }
+				// std::cout<<"World population: "<<world->getPopulation()<<".\n";
+			// }
 			
-			std::cout.flush();
+			// std::cout.flush();
 			
-			_keyboard->keyUp(Keyboard::D);
-			_keyboard->keyUp(Keyboard::d);
+			// _keyboard->keyUp(Keyboard::D);
+			// _keyboard->keyUp(Keyboard::d);
 		}
 		
 		
@@ -977,6 +977,8 @@ void switchTarget(World_Local* _worldLocal)
 		
 		/* Now render the icons on the world map. */
 		renderWorldIcons();
+    
+    
 			//Renderer::placeTexture4(mainViewX1+(mainViewNX/2)-32, mainViewY1+(mainViewNY/2)-32, mainViewX1+(mainViewNX/2)+32, mainViewY1+(mainViewNY/2)+32, &TEX_WORLD_TEST_00, false);
 		normaliseCoordinates();
 		

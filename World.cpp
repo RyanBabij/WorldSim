@@ -68,7 +68,12 @@ World::World(): seaLevel(0), mountainLevel(0)
   localX = -1;
   localY = -1;
   
+  queryWorldX = -1;
+  queryWorldY = -1;
+  
   worldFilePath = "";
+  
+  playerCharacter = 0;
 }
 
 void World::nameRegions()
@@ -1381,48 +1386,26 @@ HasXY* World::getRandomTileOfType(enumBiome _type)
 
 void World::queryTile( int hoveredXTile, int hoveredYTile)
 {
-	//std::cout<<"Nx: "<<nX<<".\n";
 	if ( hoveredXTile < 0 || hoveredYTile < 0 || hoveredXTile >= nX || hoveredYTile >= nY )
-	{
-		//std::cout<<"Invalid\n";
-		return;
-	}
-
-  std::cout<<"\n*** QUERY WORLD INFO ("<<hoveredXTile<<", "<<hoveredYTile<<") ***\n";
-	int terrain = aTerrain(hoveredXTile,hoveredYTile);
-	std::cout<<"Terrain value: "<<terrain<<" ("<<biomeName[terrain]<<").\n";
+	{ return; }
   
-  std::cout<<"Metal: "<<aWorldTile(hoveredXTile,hoveredYTile).baseMetal<<".\n";
-	
-	
-	for (int i=0;i<vTribe.size();++i)
-	{
-		if ( vTribe(i)->worldX == hoveredXTile && vTribe(i)->worldY == hoveredYTile)
-		{
-			//std::cout<<"Tribe: "<<vTribe(i)->name<<".\n";
-		}
-	}
-	
+  queryWorldX = hoveredXTile;
+  queryWorldY = hoveredYTile;
+
+
+  //bool hasObject = false;
 	for (int i=0;i<vWorldObjectGlobal.size();++i)
 	{
 		if ( vWorldObjectGlobal(i)->worldX == hoveredXTile && vWorldObjectGlobal(i)->worldY == hoveredYTile)
 		{
 			std::cout<<vWorldObjectGlobal(i)->nameType<<": "<<vWorldObjectGlobal(i)->name<<".\n";
       Console (Stream() <<vWorldObjectGlobal(i)->nameType<<": "<<vWorldObjectGlobal(i)->name);
+      //hasObject = true;
 		}
 	}
-  Console (Stream() <<"Objects:");
-  
-	std::cout<<"Landmass name: "<<getLandmassName(hoveredXTile,hoveredYTile)<<".\n";
-	
-	std::cout<<"Local seed: "<<aSeed(hoveredXTile,hoveredYTile)<<".\n";
-  
-  std::cout<<"************\n";
-  
-  Console (Stream() <<"Landmass name: "<<getLandmassName(hoveredXTile,hoveredYTile));
-  Console(Stream() <<"Metal: "<<aWorldTile(hoveredXTile,hoveredYTile).baseMetal);
-  Console (Stream() <<"Terrain: "<<biomeName[terrain]);
-  Console (Stream() <<"("<<hoveredXTile<<", "<<hoveredYTile<<")");
+  //if ( hasObject )
+  //{ Console (Stream() <<"Objects:"); }
+
 }
 
 void World::addInfluence(Tribe* tribe, int amount)
@@ -1431,37 +1414,6 @@ void World::addInfluence(Tribe* tribe, int amount)
 	{ return; }
 	
   aWorldTile(tribe->worldX,tribe->worldY).addInfluence(tribe,amount);
-  
-	// if ( aInfluence.isSafe(tribeX,tribeY))
-	// {
-		// // Create a map for this tile if there isn't one already.
-		// if ( aInfluence(tribeX,tribeY) == 0 )
-		// {
-			// aInfluence(tribeX, tribeY) = new std::map <Tribe*, int>;
-		// }
-
-		// // Search for existing influence from this tribe.
-		// auto search = aInfluence(tribeX,tribeY)->find(tribe);
-		// if(search != aInfluence(tribeX,tribeY)->end())
-		// {
-			// // Increment influence if this tribe has been here.
-			// search->second+=amount;
-			
-				// // Prevent excessive influence on a tile.
-			// if (search->second > 500)
-			// {
-				// search->second = 500;
-			// }
-		// }
-		// else
-		// {
-			// // Create new map entry if this tribe has never been here before.
-			// aInfluence(tribeX,tribeY)->insert(std::make_pair(tribe, amount));
-		// }
-		
-
-	// }
-	//std::cout<<"Addinfluence4\n";
 }
 
 // THIS IS A BIT DODGY. THERE SHOULD BE A SINGLE PASS FOR EVERYONE AT ONCE.
@@ -1474,56 +1426,6 @@ void World::degradeInfluence(int value /* =1 */)
       aWorldTile(_x,_y).degradeInfluence(1);
     }
 	}
-  
-	
-	// for (std::map <Tribe*,int>* mInfluence : aInfluence )
-	// {
-		// if ( mInfluence != 0)
-		// {
-			// // Search for existing influence from this tribe.
-			// auto search = mInfluence->find(tribe);
-			// if(search != mInfluence->end())
-			// {
-				// // Decrement influence if this tribe has been here.
-				// if(search->second > 0)
-				// { search->second--;
-				// }
-        
-        // //When influence is 0, it should be deleted.
-
-
-			// }
-		// }
-	// }
-	//std::cout<<"\nEND\n";
-	
-	// int tribeX = tribe->worldX;
-	// int tribeY = tribe->worldY;
-	
-	// if ( aInfluence.isSafe(tribeX,tribeY))
-	// {
-		// // Create a map for this tile if there isn't one already.
-		// if ( aInfluence(tribeX,tribeY) == 0 )
-		// {
-			// aInfluence(tribeX, tribeY) = new std::map <Tribe*, int>;
-		// }
-
-		// // Search for existing influence from this tribe.
-		// auto search = aInfluence(tribeX,tribeY)->find(tribe);
-		// if(search != aInfluence(tribeX,tribeY)->end())
-		// {
-			// // Increment influence if this tribe has been here.
-			// search->second++;
-		// }
-		// else
-		// {
-			// // Create new map entry if this tribe has never been here before.
-			// aInfluence(tribeX,tribeY)->insert(std::make_pair(tribe, 1));
-		// }
-		
-
-	// }
-	// std::cout<<"Addinfluence4\n";
 }
 
 void World::destroyInfluence (Tribe* _tribe)
@@ -1626,21 +1528,31 @@ int World::getHighestInfluence(const int _x, const int _y)
 	{ return getHighestInfluence(_xy->x,_xy->y); }
 
 	
-	std::string World::getLandmassName(const int _x, const int _y)
-	{
-		if ( aLandmassID.isSafe(_x,_y) )
-		{
-			const int id = aLandmassID(_x,_y);
-			if (id != -1)
-			{
-				return vLandmass(id)->name;
-			}
-		}
-		
-		return "";
-	}
-		std::string World::getLandmassName (HasXY* _xy)
-		{ return getLandmassName(_xy->x,_xy->y); }
+std::string World::getLandmassName(const int _x, const int _y)
+{
+  if ( aLandmassID.isSafe(_x,_y) )
+  {
+    const int id = aLandmassID(_x,_y);
+    if (id != -1)
+    {
+      return vLandmass(id)->name;
+    }
+  }
+  
+  return "";
+}
+  std::string World::getLandmassName (HasXY* _xy)
+  { return getLandmassName(_xy->x,_xy->y); }
+  
+std::string World::getBiomeName(const int _x, const int _y)
+{
+  if ( isSafe(_x,_y) )
+  {
+    return vBiome(aBiomeID(_x,_y))->name;
+  }
+  
+  return "";
+}
     
 
   bool World::hasFreeTerritory(int landmassID)
@@ -1711,50 +1623,56 @@ int World::getHighestInfluence(const int _x, const int _y)
   }
   
   
-  Tribe * World::getNearestConnectedTribe (Tribe * _tribe, bool sameRace /* =true */ )
+Tribe * World::getNearestConnectedTribe (Tribe * _tribe, bool sameRace /* =true */ )
+{
+  // STEP 1: FIND TRIBE ON SAME LANDMASS
+  int distance = -1;
+  Tribe* closestTribe = 0;
+  int landmass = aLandmassID(_tribe->worldX, _tribe->worldY);
+  
+  for (int i=0;i<vTribe.size();++i)
   {
-    // STEP 1: FIND TRIBE ON SAME LANDMASS
-    int distance = -1;
-    Tribe* closestTribe = 0;
-    int landmass = aLandmassID(_tribe->worldX, _tribe->worldY);
-    
-    for (int i=0;i<vTribe.size();++i)
+    if ( vTribe(i) != _tribe && vTribe(i)->isAlive && (sameRace==false || _tribe->race == vTribe(i)->race ) )
     {
-      if ( vTribe(i) != _tribe && vTribe(i)->isAlive && (sameRace==false || _tribe->race == vTribe(i)->race ) )
+      if ( aLandmassID(vTribe(i)->worldX,vTribe(i)->worldY) == landmass )
       {
-        if ( aLandmassID(vTribe(i)->worldX,vTribe(i)->worldY) == landmass )
+        int distance2 = _tribe->distanceTo(vTribe(i));
+        if ( closestTribe == 0 || distance2 < distance )
         {
-          int distance2 = _tribe->distanceTo(vTribe(i));
-          if ( closestTribe == 0 || distance2 < distance )
-          {
-            closestTribe = vTribe(i);
-            distance = distance2;
-          }
+          closestTribe = vTribe(i);
+          distance = distance2;
         }
       }
     }
-    
-    
-    return closestTribe;
   }
-    
-  Tribe* World::combatCheck (Tribe* _tribe)
+  
+  
+  return closestTribe;
+}
+  
+Tribe* World::combatCheck (Tribe* _tribe)
+{
+  for ( int i=0;i<vTribe.size();++i)
   {
-    for ( int i=0;i<vTribe.size();++i)
+    if ( vTribe(i) != _tribe && vTribe(i)->race == _tribe->race && vTribe(i)->isAlive && _tribe->isAlive) /* Temp limit combat between same race */
     {
-      if ( vTribe(i) != _tribe && vTribe(i)->race == _tribe->race && vTribe(i)->isAlive && _tribe->isAlive) /* Temp limit combat between same race */
-      {
-        const int distX = abs(_tribe->worldX - vTribe(i)->worldX);
-        const int distY = abs(_tribe->worldY - vTribe(i)->worldY);
+      const int distX = abs(_tribe->worldX - vTribe(i)->worldX);
+      const int distY = abs(_tribe->worldY - vTribe(i)->worldY);
 
-        if ( distX < 2 && distY < 2 )
-        {
-          return vTribe(i);
-        }
+      if ( distX < 2 && distY < 2 )
+      {
+        return vTribe(i);
       }
     }
-    return 0;
   }
+  return 0;
+}
 	
+WorldTile * World::getTile (const int x, const int y )
+{
+  if (isSafe(x,y) )
+  { return &aWorldTile(x,y); }
+  return 0;
+}
 	
 #endif

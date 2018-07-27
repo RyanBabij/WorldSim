@@ -49,6 +49,9 @@ class WorldTile: public HasTexture
   // Keeps track of influence values for each tribe.
   std::map<Tribe*,int> mInfluence;
   
+    //Return a string with the name of the terrain.
+  std::string getTerrainName();
+  
     //Add influence from the particular tribe for this tile. 
   void addInfluence (Tribe* tribe, int amount);
     //Remove influence from the particular tribe for this tile. 

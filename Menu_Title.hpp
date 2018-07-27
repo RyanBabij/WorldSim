@@ -54,6 +54,7 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 	/* Background image */
 	Texture* backgroundTexture;
 	
+  int testCount;
 
 	Menu_Title()
 	{
@@ -64,6 +65,8 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		menuWorldGenerator.active=false;
 		active=true;
 		//buttonNewGame.clicked = AUTO_NEW_SIMULATION;
+    
+    testCount=0;
 	}
 	
 	void setFont(Wildcat::Font* _font)
@@ -115,6 +118,8 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 	
 	void init()
 	{
+
+    
 		//std::cout<<"Menu title init\n";
 		cNormal.set(200,200,200);
 		cSelected.set(180,180,180);
@@ -166,8 +171,7 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 			menuWorldGenerator.active=true;
 			//active = false;
 		}
-		
-		
+
 	
 	}
 	/* DisplayInterface:: */
@@ -264,14 +268,13 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 					{
 						buttonLoadGame.clicked=false;
 						menuLoadGame.active=true;
-						std::cout<<"Load game.\n";
-						
 					}
-					if (buttonTestSomething.clicked == true)
-					{
-						std::cout<<"Uh... 1+1=2. Yep it works.\n";
-            buttonTestSomething.unclick();
-					}
+          if ( buttonTestSomething.clicked == true )
+          {
+            buttonTestSomething.clicked = false;
+            buttonTestSomething.text="Yep it works";
+          }
+
 				}
 			}
 		}
