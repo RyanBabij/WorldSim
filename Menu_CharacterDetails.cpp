@@ -299,7 +299,7 @@ class Menu_CharacterDetails: public GUI_Interface
 			if (buttonPossess.clicked==true)
 			{
         //std::cout<<"Yeah you can't do that yet.\n";
-        world.playerCharacter = selectedCharacter;
+        world.controlCharacter(selectedCharacter);
         Console(Stream() << "Controlling: " << selectedCharacter->getFullName());
 				active=false;
 				buttonPossess.unclick();

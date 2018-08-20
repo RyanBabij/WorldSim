@@ -205,6 +205,10 @@ class World: public LogicTickInterface, public IdleTickInterface
 	bool addRace (int /* nTribes */, std::string /* name */);
 	//bool addElvenTribe(int nTribes);
 	//bool addHumanTribe(int nTribes);
+  
+    // Ensure conditions are set up for this character to be controlled.
+    // For example generate the local map.
+  void controlCharacter (Character*);
 	
   /* WORLD QUERIES */
 		/* Returns population of all characters (Human, Dwarven, Elven)
@@ -272,6 +276,8 @@ class World: public LogicTickInterface, public IdleTickInterface
 		/* Return pointer to tribe with most influence here. Return null pointer if no tribe */
 	Tribe* getDominantInfluence (const int, const int);
 	Tribe* getDominantInfluence (HasXY*);
+  
+  Vector <Tribe*>* getTribesOn(const int /* x */, const int /* y */);
   
   // Check if tribe is in engagement range of another tribe.
   // If yes, return pointer to Tribe, otherwise return 0.

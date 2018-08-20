@@ -141,7 +141,7 @@ void loadTextures()
   
 		// LOAD MENU TEXTURES
 	//loadTextureVerbose("Textures/Menu/TitleImage-CR.png",&TEX_TITLE);
-	loadTextureVerbose("Textures/Menu/Black.png",&TEX_TITLE);
+	loadTextureVerbose("Textures/Menu/Title.png",&TEX_TITLE);
 	loadTextureVerbose("Textures/Menu/Black.png",&TEX_OPTIONS_BACKGROUND);
 	loadTextureVerbose("Textures/Menu/Black.png",&TEX_LOAD_GAME_BACKGROUND);
 	loadTextureVerbose("Textures/Menu/Black.png",&TEX_NEW_GAME_BACKGROUND);

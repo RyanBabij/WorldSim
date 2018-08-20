@@ -60,48 +60,48 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 		// Temp: Local tile to render.
 	int localX, localY;
 	
-	WorldViewer()
-	{
-		tileSize=8;
-		centerTileX=0; centerTileY=0;
-		world=0;
-		mainViewX1=0; mainViewX2=0;
-		mainViewY1=0; mainViewY2=0;
-		mainViewNX=0; mainViewNY=0;
-		active=false;
-		
-		panX=0; panY=0;
-		
-		panning=false;
-		alternateTile=0;
-		
-		lastMouseX=0;
-		lastMouseY=0;
-		
-		hoveredXTile=0;
-		hoveredYTile=0;
-		
-		tilesToSkip=0;
-		
-		territoryView = false;
-		
-		localX=-1;
-		localY=-1;
-    
-    tilesetMode = true;
-    subterraneanMode = false;
-	}
+WorldViewer()
+{
+  tileSize=8;
+  centerTileX=0; centerTileY=0;
+  world=0;
+  mainViewX1=0; mainViewX2=0;
+  mainViewY1=0; mainViewY2=0;
+  mainViewNX=0; mainViewNY=0;
+  active=false;
+  
+  panX=0; panY=0;
+  
+  panning=false;
+  alternateTile=0;
+  
+  lastMouseX=0;
+  lastMouseY=0;
+  
+  hoveredXTile=0;
+  hoveredYTile=0;
+  
+  tilesToSkip=0;
+  
+  territoryView = false;
+  
+  localX=-1;
+  localY=-1;
+  
+  tilesetMode = true;
+  subterraneanMode = false;
+}
 	
-		// Center the view on the middle of the world. Good for initializing.
-	void centerView()
-	{
-		if (world==0)
-		{
-			return;
-		}
-		centerTileX = world->nX/2;
-		centerTileY = world->nY/2;
-	}
+  // Center the view on the middle of the world. Good for initializing.
+void centerView()
+{
+  if (world==0)
+  {
+    return;
+  }
+  centerTileX = world->nX/2;
+  centerTileY = world->nY/2;
+}
 	
 bool keyboardEvent( Keyboard* _keyboard )
 {

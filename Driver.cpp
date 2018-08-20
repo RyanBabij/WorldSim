@@ -64,7 +64,6 @@ class Stream
 #include <GL/GLee.h> // THIS CURRENTLY FIXES LINKER CRAP. Also allows RGBA_COMPRESSED, it would seem.
 #include <GL/freeglut.h> //
 
-#include "Coordinate2D.hpp"
 
 #include <Render/Renderer.cpp>
 
@@ -163,6 +162,10 @@ Timer physicsRateTimer;
 /* Use this for checking algo speeds. */
 Timer debugTimer;
 
+/* Instead of having a global worldViewer, I think it would be better to have lots of local worldviewers, as currently I have a problem with the various menus interfering with the global worldViewer. */
+#include "World_Viewer.hpp"
+WorldViewer worldViewer;
+
 	/* WORLD HAS BEEN MOVED INTO GLOBAL SCOPE BECAUSE EVERYTHING NEEDS TO REFER TO IT */
 #include "World.cpp"
 World world;
@@ -208,9 +211,7 @@ KeyboardInterfaceManager keyboardInterfaceManager;
 /* GUI manager. Manages all GUI controls. */
 GUI_Manager globalGuiManager;
 
-/* Instead of having a global worldViewer, I think it would be better to have lots of local worldviewers, as currently I have a problem with the various menus interfering with the global worldViewer. */
-#include "World_Viewer.hpp"
-WorldViewer worldViewer;
+
 
 
 #include <LogicTick/LogicTickInterface.hpp>

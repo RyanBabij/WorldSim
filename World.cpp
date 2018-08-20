@@ -1185,6 +1185,16 @@ void World::generateLocal(const int _localX, const int _localY)
   
 }
 
+Vector <Tribe*>* World::getTribesOn(const int _x, const int _y)
+{
+  Vector <Tribe*>* vTribeOn = new Vector <Tribe*>;
+  if ( isSafe(_x,_y) )
+  {
+    
+  }
+  return 0;
+}
+
 int World::getTileFertility(const int _x, const int _y)
 {
 	if ( aTerrain.isSafe(_x,_y) )
@@ -1615,12 +1625,34 @@ std::string World::getBiomeName(const int _x, const int _y)
           return nUnclaimed;
 
         }
-        
       }
     }
     delete vLandmassTiles;
     return 0;
   }
+  
+  // Generate local map if necessary.
+  // Update worldviewer.
+void World::controlCharacter(Character* _character)
+{
+  if (_character==0) { return; }
+  
+  playerCharacter = _character;
+  
+  /* Get character coordinates */
+  int genX = playerCharacter->tribe->worldX;
+  int genY = playerCharacter->tribe->worldY;
+  
+  worldViewer.localX = genX;
+  worldViewer.localY = genY;
+  
+  worldViewer.centerTileX = genX;
+  worldViewer.centerTileY = genY;
+  
+  /* Generate local map */
+  generateLocal(genX,genY);
+  
+}
   
   
 Tribe * World::getNearestConnectedTribe (Tribe * _tribe, bool sameRace /* =true */ )
