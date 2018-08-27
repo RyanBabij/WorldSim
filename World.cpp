@@ -782,8 +782,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	#endif
 	
 	aWorldTile.initClass(x,y);
-	aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-	aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+//	aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+//	aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
   
 	dailyCounter=0;
 	monthlyCounter=0;
@@ -1113,21 +1113,21 @@ void World::generateLocal(const int _localX, const int _localY)
   {
     for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
-      aLocalTile(_x,_y).baseTerrain = globalBaseTerrain;
-      aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
-      aLocalTile(_x,_y).clearObjects();
-      aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
+      // aLocalTile(_x,_y).baseTerrain = globalBaseTerrain;
+      // aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+      // aLocalTile(_x,_y).clearObjects();
+      // aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
       
       
-      aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
-      aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
-      aSubterranean(_x,_y).clearObjects();
-      aSubterranean(_x,_y).height = -1;
+      // aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+      // aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+      // aSubterranean(_x,_y).clearObjects();
+      // aSubterranean(_x,_y).height = -1;
       
       if (random.oneIn(100))
       {
         //put tree
-        aLocalTile(_x,_y).addObject(new WorldObject_Tree);
+        //aLocalTile(_x,_y).addObject(new WorldObject_Tree);
       }
       
       else if ( globalBaseTerrain == MOUNTAIN )
@@ -1140,17 +1140,17 @@ void World::generateLocal(const int _localX, const int _localY)
             rockyBoi->nGold = 100;
           }
           
-          aLocalTile(_x,_y).addObject(rockyBoi);
+          //aLocalTile(_x,_y).addObject(rockyBoi);
         }
         
       }
     }
   }
   
-  aLocalTile(random.randInt(LOCAL_MAP_SIZE-1),random.randInt(LOCAL_MAP_SIZE-1)).baseTerrain = OCEAN;
-  aLocalTile(random.randInt(LOCAL_MAP_SIZE-1),random.randInt(LOCAL_MAP_SIZE-1)).baseTerrain = OCEAN;
-  aLocalTile(random.randInt(LOCAL_MAP_SIZE-1),random.randInt(LOCAL_MAP_SIZE-1)).baseTerrain = OCEAN;
-  aLocalTile(random.randInt(LOCAL_MAP_SIZE-1),random.randInt(LOCAL_MAP_SIZE-1)).baseTerrain = OCEAN;
+  // aLocalTile(random.randInt(LOCAL_MAP_SIZE-1),random.randInt(LOCAL_MAP_SIZE-1)).baseTerrain = OCEAN;
+  // aLocalTile(random.randInt(LOCAL_MAP_SIZE-1),random.randInt(LOCAL_MAP_SIZE-1)).baseTerrain = OCEAN;
+  // aLocalTile(random.randInt(LOCAL_MAP_SIZE-1),random.randInt(LOCAL_MAP_SIZE-1)).baseTerrain = OCEAN;
+  // aLocalTile(random.randInt(LOCAL_MAP_SIZE-1),random.randInt(LOCAL_MAP_SIZE-1)).baseTerrain = OCEAN;
   
   
   //Generate global objects
@@ -1162,7 +1162,7 @@ void World::generateLocal(const int _localX, const int _localY)
     //RANDOMLY PLACE THE TRIBE CHARACTERS HERE
     Character * c = new Character;
 
-    aLocalTile(0,0).addObject(c);
+    //aLocalTile(0,0).addObject(c);
     
   }
   

@@ -748,25 +748,25 @@ void switchTarget(World_Local* _worldLocal)
                     
                     if ( subterraneanMode )
                     {
-                      LocalTile* localTile = &world->aSubterranean(localXTile,localYTile);
+                      //LocalTile* localTile = &world->aSubterranean(localXTile,localYTile);
                       
-                      Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                      //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
                     }
                     else
                     {
                       
-                      LocalTile* localTile = &world->aLocalTile(localXTile,localYTile);
+                      // LocalTile* localTile = &world->aLocalTile(localXTile,localYTile);
                       
-                      unsigned char lightValue = localTile->height*15;
-                      glColor3ub(180+lightValue,180+lightValue,180+lightValue);
-                      Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
-                      glColor3ub(255,255,255);
+                      // unsigned char lightValue = localTile->height*15;
+                      // glColor3ub(180+lightValue,180+lightValue,180+lightValue);
+                      // Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                      // glColor3ub(255,255,255);
                       
                       
-                      for(int i=0;i<world->aLocalTile(localXTile,localYTile).vObject.size();++i)
-                      {
-                        Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), world->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
-                      }
+                      // for(int i=0;i<world->aLocalTile(localXTile,localYTile).vObject.size();++i)
+                      // {
+                        // Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), world->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                      // }
                     }
                     
                     
