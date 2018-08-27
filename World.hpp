@@ -138,10 +138,11 @@ class World: public LogicTickInterface, public IdleTickInterface
 	ArrayS2 <bool> aIsLand;
 	ArrayS2 <int> aBiomeID;
   
-    /* LOCAL MAP ARRAYS */
-  ArrayS2 <LocalTile> aLocalTile;
-    //Underground map
-  ArrayS2 <LocalTile> aSubterranean;
+  
+    // A vector of all local maps in memory. These worlds can be rendered and simulated.
+  Vector <World_Local*> vWorldLocal;
+  
+
 	
 	//Vector <std::string> vLandmassName;
 	Vector <World_Landmass*> vLandmass;

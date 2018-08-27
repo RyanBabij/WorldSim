@@ -30,6 +30,8 @@
   River - A tile may have a river running through it. Rivers will run between tile boundaries. This is because if you build a fortress or move an army, it's important to know which side of the river it is on.
   
   
+  World_Local should have a custom texture allowing a kind of thumbnail view of the tile.
+  
   
 	Notes:
 
@@ -58,11 +60,17 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 
 	
 	ArrayS2 <bool> aIsLand;
+  
+  
+    /* LOCAL MAP ARRAYS */
+  ArrayS2 <LocalTile> aLocalTile;
+    //Underground map
+  ArrayS2 <LocalTile> aSubterranean;
 
 
 
 	
-	void init();
+	void init(int /*x*/, int /*y*/);
 	
 	bool generate();
 	

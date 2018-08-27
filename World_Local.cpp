@@ -33,8 +33,13 @@ World_Local::World_Local()
 	generated=false;
 }
 
-void World_Local::init()
+void World_Local::init(int _x, int _y)
 {
+  globalX = _x;
+  globalY = _y;
+  
+  aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+  aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 }
 
 bool World_Local::generate()
