@@ -1102,7 +1102,7 @@ void World::generateLocal(const int _localX, const int _localY)
   else
   {
 	////HEIGHTMAP TABLE FREESTEPS SMOOTHING
-	dsa2.generate(&aLocalHeight,0,0,0.75,100);
+    dsa2.generate(&aLocalHeight,0,0,0.75,100);
   }
 
   
@@ -1152,6 +1152,21 @@ void World::generateLocal(const int _localX, const int _localY)
   aLocalTile(random.randInt(LOCAL_MAP_SIZE-1),random.randInt(LOCAL_MAP_SIZE-1)).baseTerrain = OCEAN;
   aLocalTile(random.randInt(LOCAL_MAP_SIZE-1),random.randInt(LOCAL_MAP_SIZE-1)).baseTerrain = OCEAN;
   
+  
+  //Generate global objects
+  Vector <Tribe * > * vTribesHere = getTribesOn(_localX,_localY);
+  
+  for (int i=0;i<vTribesHere->size();++i)
+  {
+    Tribe * currentTribe = (*vTribesHere)(i);
+    //RANDOMLY PLACE THE TRIBE CHARACTERS HERE
+    Character * c = new Character;
+
+    aLocalTile(0,0).addObject(c);
+    
+  }
+  
+  
 	std::cout<<"Checking map data in path: "<<strSavePath<<"\n";
   
 	// strSavePath = "savedata/"+name;
@@ -1190,9 +1205,15 @@ Vector <Tribe*>* World::getTribesOn(const int _x, const int _y)
   Vector <Tribe*>* vTribeOn = new Vector <Tribe*>;
   if ( isSafe(_x,_y) )
   {
-    
+    for ( int i=0;i<vTribe.size();++i)
+    {
+      if ( vTribe(i)->worldX == _x && vTribe(i)->worldY == _y )
+      {
+        vTribeOn->push(vTribe(i));
+      }
+    }
   }
-  return 0;
+  return vTribeOn;
 }
 
 int World::getTileFertility(const int _x, const int _y)
