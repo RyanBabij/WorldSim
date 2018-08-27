@@ -713,9 +713,28 @@ void switchTarget(World_Local* _worldLocal)
 				
 				for (int currentX = pixelTileX; currentX<mainViewNX+tileSize; currentX+=tileSize)
 				{
+          
+            // Check if we're supposed to render a local map on this tile.
+          World_Local * localMap = 0;
+          if ( tileSize > 4 && world->isSafe(tileX,tileY) )
+          {
+            
+            for ( int i=0;i<world->vWorldLocal.size();++i)
+            {
+              if ( world->vWorldLocal(i)->globalX == tileX && world->vWorldLocal(i)->globalY == tileY )
+              {
+                localMap = world->vWorldLocal(i);
+                break;
+              }
+            }
+            
+          }
+          
 						// RENDER THE LOCAL TILE
-					if (tileSize > 4 && localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
+					//if (tileSize > 4 && localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
+          if ( localMap != 0)
 					{
+            
 						float pixelsPerLocalTile = (float)tileSize/LOCAL_MAP_SIZE;
 						//std::cout<<"pixelsPerLocalTile: "<<pixelsPerLocalTile<<".\n";
 						
@@ -748,25 +767,25 @@ void switchTarget(World_Local* _worldLocal)
                     
                     if ( subterraneanMode )
                     {
-                      //LocalTile* localTile = &world->aSubterranean(localXTile,localYTile);
+                      LocalTile* localTile = &localMap->aSubterranean(localXTile,localYTile);
                       
-                      //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                      Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
                     }
                     else
                     {
                       
-                      // LocalTile* localTile = &world->aLocalTile(localXTile,localYTile);
+                      LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
                       
-                      // unsigned char lightValue = localTile->height*15;
-                      // glColor3ub(180+lightValue,180+lightValue,180+lightValue);
-                      // Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
-                      // glColor3ub(255,255,255);
+                      unsigned char lightValue = localTile->height*15;
+                      glColor3ub(180+lightValue,180+lightValue,180+lightValue);
+                      Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                      glColor3ub(255,255,255);
                       
                       
-                      // for(int i=0;i<world->aLocalTile(localXTile,localYTile).vObject.size();++i)
-                      // {
-                        // Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), world->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
-                      // }
+                      for(int i=0;i<localMap->aLocalTile(localXTile,localYTile).vObject.size();++i)
+                      {
+                        Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                      }
                     }
                     
                     

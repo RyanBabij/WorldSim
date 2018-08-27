@@ -42,14 +42,23 @@
 class World_Local: public LogicTickInterface, public IdleTickInterface
 {
 	private:
-	int globalX, globalY; /* The local world's position in the world. */
 	
 	public:
+  
+	int globalX, globalY; /* The local world's position in the world. */
+  
 	World_Local();
+  
+  
+  // Local RNG
+  RandomNonStatic random;
 	
 		/* The size of the world, measured in tiles. */
 	int nX, nY;
 	
+    // The generation seed for this local map.
+  int seed;
+  
 	bool active; /* Whether or not the world should be simulated. */
 	bool generated; /* False until a world has been generated. Prevents trying to simulate a non-existent world. */
 	
@@ -58,6 +67,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	
 	//RandomNonStatic random;
 
+    //The base designated biome for this tile. Will influence generation.
+  enumBiome baseBiome;
 	
 	ArrayS2 <bool> aIsLand;
   
