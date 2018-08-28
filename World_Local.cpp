@@ -116,7 +116,15 @@ bool World_Local::generate()
       if (random.oneIn(100))
       {
         //put tree
-        aLocalTile(_x,_y).addObject(new WorldObject_Tree);
+        auto tree = new WorldObject_Tree;
+        tree->growth = 1;
+        aLocalTile(_x,_y).addObject(tree);
+      }
+      else if (random.oneIn(1000))
+      {
+        auto tree = new WorldObject_Tree;
+        tree->growth = 0;
+        aLocalTile(_x,_y).addObject(tree);
       }
       
       else if ( baseBiome == MOUNTAIN )

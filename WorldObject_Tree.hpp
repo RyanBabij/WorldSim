@@ -16,6 +16,9 @@ class WorldObject_Tree: public WorldObject
 	
 	// double weight; /* in grams */
 	// double bulk; /* In cm^3 , and adjusted higher for cumbersome items.*/
+  
+    // Determines the stage of growth the tree is at: Sapling, young tree, tree.
+  int growth;
 	
 	WorldObject_Tree();
 	virtual ~WorldObject_Tree() {}

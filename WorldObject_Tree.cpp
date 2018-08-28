@@ -14,6 +14,8 @@ WorldObject_Tree::WorldObject_Tree()
 	x=0; y=0;
 	weight=0;
 	bulk=0;
+  
+  growth=0;
 }
 
 std::string WorldObject_Tree::getName()
@@ -24,6 +26,10 @@ std::string WorldObject_Tree::getName()
 
 Texture* WorldObject_Tree::currentTexture()
 {
+  if ( growth==0 )
+  {
+    return &TEX_WORLD_TERRAIN_FOREST_SAPLING;
+  }
 	return &TEX_WORLD_TERRAIN_FOREST_TREE;
 }
 
