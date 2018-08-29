@@ -48,6 +48,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	int globalX, globalY; /* The local world's position in the world. */
   
 	World_Local();
+  virtual ~World_Local() {}
   
   
   // Local RNG

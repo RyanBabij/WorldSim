@@ -157,6 +157,8 @@ bool World_Local::generate()
     
   }
   
+  return false;
+  
 	std::cout<<"Checking map data in path: "<<world.strSavePath<<"\n";
   
 	// strSavePath = "savedata/"+name;
@@ -166,6 +168,7 @@ bool World_Local::generate()
 	// //system(systemCommmand.c_str());
 	// FileManager::DeleteDirectory(strSavePath,true);
 	
+
 
   std::string localMapPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + ".dat";
 	

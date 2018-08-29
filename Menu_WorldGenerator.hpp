@@ -776,8 +776,9 @@ class Menu_WorldGenerator: public GUI_Interface
 				if ( buttonLoadWorld.clicked==true)
 				{
 					buttonLoadWorld.unclick();
-					std::cout<<"Load world data.\n";
-          world.loadWorld("test");
+					//std::cout<<"Load world data.\n";
+          eventLoad();
+          
 				}
 				
 			}
@@ -807,15 +808,12 @@ class Menu_WorldGenerator: public GUI_Interface
     }
     else
     {
-      //world.name=textEntryWorldName.input;
       int worldSizeV = DataTools::toInt(worldSize.getCurrentOption());
       
       if (worldSizeV<0 || worldSizeV>100000)
       {
         std::cout<<"Warning. Strange worldsize. Attempting to continue.\n";
       }
-      //textEntryFullSeed.input;
-      
         // If a seed string has been entered, either use the actual number,
         // or hash it to a number if it contains non-numeric characters.
         // This allows for a word seed to have a numeric equivalent.
@@ -859,40 +857,36 @@ class Menu_WorldGenerator: public GUI_Interface
       
       double landPercent = (double) nLandPercent.currentValue / 100;
 
-
-//string s = "heyho";
-
-//size_t hash = hasher(s);
-      
-      //std::cout<<"The raw seed is: "<<textEntryFullSeed.input<<".\n";
-      //std::cout<<"The hashed seed is: "<<seed<<".\n";
       world.generateWorld(textEntryWorldName.input,worldSizeV,worldSizeV,seed,fragmentation,islandMode,wrapX,wrapY,landPercent);
-      
-    //	std::cout<<"no crash\n";
-    //	exit(0);
-      
-      worldViewer.active=true;
-      
-      //world.generateCivs(nCiv.currentValue);
-      
-        // Just to start, we'll put all three races down immediately.
-      //world.addRace(1,"Dwarves");
-      //world.addRace(1,"Elves");
-      //world.addRace(1,"Humans");
-      
-      
-      
-      //std::cout<<"Generating "<<nTribe.currentValue<<" tribes.\n";
       world.generateTribes(nTribe.currentValue,nTribeDwarven.currentValue,nTribeElven.currentValue);
-      
-        // Get name of regions.
-      //std::cout<<"Naming regions.\n";
       world.nameRegions();
       
-      
-      //std::cout<<"end generate.\n";
+      worldViewer.active=true;
+
     }
+  }
+  
+  
+    // Load the specified world into the generator.
+  void eventLoad()
+  {
+    std::cout<<"Not yet implemented.\n";
+    return;
     
+    // First check to ensure the world has a name. Important because it's also the name of the savefile.
+    if ( textEntryWorldName.input == "" )
+    {
+      std::cout<<"Error: World needs a name.\n";
+    }
+    else if (DataTools::isAlphaNumeric(textEntryWorldName.input) == false)
+    {
+      std::cout<<"Error: World name must be alphanumeric.\n";
+      textEntryWorldName.input="";
+    }
+    else
+    {
+      world.loadWorld(textEntryWorldName.input);
+    }
     
   }
   

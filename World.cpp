@@ -433,12 +433,29 @@ void World::idleTick()
 	handleTickBacklog();
 }
 
-bool World::loadWorld(std::string filePath)
+bool World::loadWorld(std::string _name)
 {
+	strSavePath = "savedata/"+_name;
+	
+  std::cout<<"Attempting to load data from: "<<strSavePath<<".\n";
+		// For now, we will just delete any worlds with the same name.
+	//std::string systemCommmand = "exec rm -r "+strSavePath;
+	//system(systemCommmand.c_str());
+	//FileManager::DeleteDirectory(strSavePath,true);
+	
 
-	std::cout<<"Loading world png.\n";
+	
+	//FileManager::createDirectory(strSavePath);
+	
+	if ( FileManager::directoryExists(strSavePath) == false )
+	{
+		std::cout<<"Error: This world doesn't appear to exist.\n";
+		return false  ;
+	}
   
-  return false;
+  std::cout<<"Loading data from: "<<strSavePath<<".\n";
+  
+  return true;
 	
 	// int fileSize;
 	// unsigned char* data = FileManager::getFile(filePath,&fileSize);
@@ -1050,8 +1067,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	std::cout<<"world generated in: "<<worldGenTimer.fullSeconds<<" seconds.\n";
 }
 
-  // This will likely need to be moved into a local map class.
-  // It's too unwieldy trying to manage it here.
+
 void World::generateLocal(const int _localX, const int _localY)
 {
   if ( isSafe(_localX,_localY) == false )
@@ -1062,7 +1078,7 @@ void World::generateLocal(const int _localX, const int _localY)
   {
     if ( vWorldLocal(i)->globalX == _localX && vWorldLocal(i)->globalY == _localY )
     {
-      std::cout<<"ALREADY GENERATED\n";
+      //std::cout<<"ALREADY GENERATED\n";
       return;
     }
   }
@@ -1073,9 +1089,42 @@ void World::generateLocal(const int _localX, const int _localY)
   
   vWorldLocal.push(worldLocal);
   
+  if ( vWorldLocal.size() > 3 )
+  {
+      // UNLOAD LOCAL MAP HERE
+    delete vWorldLocal(0);
+    vWorldLocal.eraseSlot(0);
+  }
+  
   return;
 
 }
+
+void World::unloadLocal(const int _localX, const int _localY)
+{
+  if ( isSafe(_localX,_localY) == false )
+  { return; }
+
+  // Only unload the local map if it is loaded.
+  for ( int i=0;i<vWorldLocal.size();++i)
+  {
+    if ( vWorldLocal(i)->globalX == _localX && vWorldLocal(i)->globalY == _localY )
+    {
+      //std::cout<<"ALREADY GENERATED\n";
+      return;
+    }
+  }
+
+  // auto worldLocal = new World_Local;
+  // worldLocal->init(_localX,_localY);
+  // worldLocal->generate();
+  
+  // vWorldLocal.push(worldLocal);
+  
+  return;
+
+}
+
 
 Vector <Tribe*>* World::getTribesOn(const int _x, const int _y)
 {
