@@ -455,6 +455,28 @@ bool World::loadWorld(std::string _name)
   
   std::cout<<"Loading data from: "<<strSavePath<<".\n";
   
+	// Load master file.
+  worldFilePath = strSavePath+"/main.dat";
+  
+  if ( FileManager::fileExists(worldFilePath) )
+  {
+    std::cout<<"Loading master.dat\n";
+    
+    std::cout<<FileManager::getFileAsString(worldFilePath)<<".\n";
+  }
+  else
+  {
+    std::cout<<"Master file doesn't appear to exist.\n";
+    return false;
+  }
+
+  
+	//FileManager::createFile(worldFilePath);
+  // FileManager::writeTag("LANDSEED",DataTools::toString(landmassSeed),worldFilePath);
+  // FileManager::writeTag("WORLDNAME",name,worldFilePath);
+  // FileManager::writeTag("SIZEX",DataTools::toString(nX),worldFilePath);
+  // FileManager::writeTag("SIZEY",DataTools::toString(nY),worldFilePath);
+  
   return true;
 	
 	// int fileSize;
@@ -868,7 +890,11 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 
   
 	FileManager::createFile(worldFilePath);
-  FileManager::writeString(DataTools::toString(landmassSeed)+"\n"+name+"\n"+DataTools::toString(nX)+"\n"+DataTools::toString(nY)+"\n",worldFilePath);
+  FileManager::writeTag("LANDSEED",DataTools::toString(landmassSeed),worldFilePath);
+  FileManager::writeTag("WORLDNAME",name,worldFilePath);
+  FileManager::writeTag("SIZEX",DataTools::toString(nX),worldFilePath);
+  FileManager::writeTag("SIZEY",DataTools::toString(nY),worldFilePath);
+  //FileManager::writeString(DataTools::toString(landmassSeed)+"\n"+name+"\n"+DataTools::toString(nX)+"\n"+DataTools::toString(nY)+"\n",worldFilePath);
 	
   
 	#ifdef THREADED
@@ -1049,7 +1075,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   
   
   // SAVE WORLD DATA HERE (LATER PUT INTO FUNCTION)
-  std::string tileData = "[BIOME]";
+  std::string tileData = "";
 	for (int _y=0;_y<nY;++_y)
 	{
 		for (int _x=0;_x<nX;++_x)
@@ -1058,8 +1084,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
       tileData+=DataTools::toString(aWorldTile(_x,_y).biome);
     }
   }
-  tileData+="[/BIOME]";
-  FileManager::writeString(tileData,worldFilePath);
+  FileManager::writeTag("BIOME",tileData,worldFilePath);
 	
 	
 	worldGenTimer.update();

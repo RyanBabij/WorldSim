@@ -770,7 +770,7 @@ class Menu_WorldGenerator: public GUI_Interface
 				if ( buttonExportData.clicked==true)
 				{
 					buttonExportData.unclick();
-					std::cout<<"Export world data.\n";
+					std::cout<<"Not implemented yet.\n";
 				}
 				
 				if ( buttonLoadWorld.clicked==true)
@@ -870,9 +870,6 @@ class Menu_WorldGenerator: public GUI_Interface
     // Load the specified world into the generator.
   void eventLoad()
   {
-    std::cout<<"Not yet implemented.\n";
-    return;
-    
     // First check to ensure the world has a name. Important because it's also the name of the savefile.
     if ( textEntryWorldName.input == "" )
     {

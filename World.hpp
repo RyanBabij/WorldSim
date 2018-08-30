@@ -15,6 +15,7 @@
 #include <Container/ArrayS2/ArrayS2.hpp>
 #include <map>
 
+#include <File/SaveFileManager.hpp>
 
 #include <Math/Random/GlobalRandom.hpp>
 
@@ -82,6 +83,9 @@ class World: public LogicTickInterface, public IdleTickInterface
 {
 	public:
 	
+    // Class for managing world save files.
+  SaveFileManager saveFileManager;
+  
 		/* The size of the world, measured in tiles. */
 	int nX, nY;
 	
