@@ -30,7 +30,7 @@
 #include "WorldObjectGlobal.hpp"
 #include <WorldGenerator/Biome.hpp>
 
-World::World(): seaLevel(0), mountainLevel(0)
+World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
 {
 	// aHeightMap.init(1,1,0);
 	// aWorldObject.init(1,1,0);
@@ -463,6 +463,8 @@ bool World::loadWorld(std::string _name)
     std::cout<<"Loading master.dat\n";
     
     std::cout<<FileManager::getFileAsString(worldFilePath)<<".\n";
+    
+    saveFileManager.loadFile(worldFilePath);
   }
   else
   {
@@ -722,6 +724,8 @@ void World::buildArrays()
 
 void World::generateWorld(const std::string _worldName, const int x=127, const int y=127, const int seed=0, const int fragmentation=2, const bool islandMode = true, const bool wrapX=true, const bool wrapY=false, const double landPercent = 0.66)
 {
+
+  
 	if ( x <= 0 || y <= 0 )
 	{
 		std::cout<<"Error: Invalid world size.\n";
@@ -1090,6 +1094,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	worldGenTimer.update();
 	
 	std::cout<<"world generated in: "<<worldGenTimer.fullSeconds<<" seconds.\n";
+  
+  std::cout<<"The world's uid is: "<<getUID()<<".\n";
 }
 
 
@@ -1678,5 +1684,13 @@ WorldTile * World::getTile (const int x, const int y )
   { return &aWorldTile(x,y); }
   return 0;
 }
-	
+
+
+// SaveFileInterface
+
+std::string getSaveData()
+{
+  return "[WORLD:1:DATA]";
+}
+
 #endif

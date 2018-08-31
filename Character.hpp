@@ -16,7 +16,7 @@ class Tribe;
 enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, MASSACRE=2, COMBAT=3, OLD_AGE=4 };
 const std::string enumCauseOfDeathStr [5] = { "unknown", "starvation", "massacre", "combat", "old age" };
 
-class Character: public WorldObject, public TableInterface
+class Character: public WorldObject, public TableInterface, public SaveFileInterface
 {
 	public:
 	

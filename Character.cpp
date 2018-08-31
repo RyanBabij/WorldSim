@@ -70,6 +70,7 @@ Character::Character()
   //_sex: 0 - Roll, 1 - Male, 2 - Female.
 void Character::init(const int _sex /* =0 */)
 {
+  
   if (_sex == 1) { isMale = true; }
   else if (_sex == 2) { isMale = false; }
   else { isMale = Random::flip(); }

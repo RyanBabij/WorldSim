@@ -79,7 +79,7 @@ class Civ_Dwarven;
 
 /*! A test class */
 
-class World: public LogicTickInterface, public IdleTickInterface
+class World: public LogicTickInterface, public IdleTickInterface, public SaveFileInterface
 {
 	public:
 	
