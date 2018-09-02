@@ -433,83 +433,6 @@ void World::idleTick()
 	handleTickBacklog();
 }
 
-bool World::loadWorld(std::string _name)
-{
-	strSavePath = "savedata/"+_name;
-	
-  std::cout<<"Attempting to load data from: "<<strSavePath<<".\n";
-		// For now, we will just delete any worlds with the same name.
-	//std::string systemCommmand = "exec rm -r "+strSavePath;
-	//system(systemCommmand.c_str());
-	//FileManager::DeleteDirectory(strSavePath,true);
-	
-
-	
-	//FileManager::createDirectory(strSavePath);
-	
-	if ( FileManager::directoryExists(strSavePath) == false )
-	{
-		std::cout<<"Error: This world doesn't appear to exist.\n";
-		return false  ;
-	}
-  
-  std::cout<<"Loading data from: "<<strSavePath<<".\n";
-  
-	// Load master file.
-  worldFilePath = strSavePath+"/main.dat";
-  
-  if ( FileManager::fileExists(worldFilePath) )
-  {
-    std::cout<<"Loading master.dat\n";
-    
-    std::cout<<FileManager::getFileAsString(worldFilePath)<<".\n";
-    
-    saveFileManager.loadFile(worldFilePath);
-  }
-  else
-  {
-    std::cout<<"Master file doesn't appear to exist.\n";
-    return false;
-  }
-
-  
-	//FileManager::createFile(worldFilePath);
-  // FileManager::writeTag("LANDSEED",DataTools::toString(landmassSeed),worldFilePath);
-  // FileManager::writeTag("WORLDNAME",name,worldFilePath);
-  // FileManager::writeTag("SIZEX",DataTools::toString(nX),worldFilePath);
-  // FileManager::writeTag("SIZEY",DataTools::toString(nY),worldFilePath);
-  
-  return true;
-	
-	// int fileSize;
-	// unsigned char* data = FileManager::getFile(filePath,&fileSize);
-	// Png png;
-	// png.load(data,fileSize);
-	// //aHeightMap.init(png.nX,png.nY,0);
-	// aWorldObject.init(png.nX,png.nY,0);
-	// aTopoMap.init(png.nX,png.nY,3,0);
-	// //aInfluence.init(png.nX,png.nY,0);
-
-
-	// //std::cout<<"PNG size: "<<png.nX<<","<<png.nY<<".\n";
-
-	// for(int x=0;x<png.nX;++x)
-	// {
-		// //std::cout<<"Loading in x: "<<x<<".\n";
-		// for(int y=0;y<png.nY;++y)
-		// { /* for some reason, the map needs to loaded upside-down */
-			// //aHeightMap(x,png.nY-y-1)=png.getPixel3D(x,y,0);
-			
-			// aTopoMap(x,png.nY-y-1,0)=png.getPixel3D(x,y,0);
-			// aTopoMap(x,png.nY-y-1,1)=png.getPixel3D(x,y,1);
-			// aTopoMap(x,png.nY-y-1,2)=png.getPixel3D(x,y,2);
-		// }
-	// }
-	// delete [] data;
-	// delete [] png.data;
-
-	// return false;
-}
 
 // void World::loadHeightMap(std::string filePath)
 // {
@@ -1096,6 +1019,14 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	std::cout<<"world generated in: "<<worldGenTimer.fullSeconds<<" seconds.\n";
   
   std::cout<<"The world's uid is: "<<getUID()<<".\n";
+
+  
+  //std::cout<<"Doing test save.\n";
+  
+  // worldFilePath = strSavePath+"/main2.dat";
+  // saveFileManager.vSaveObjects.clear();
+  // saveFileManager.vSaveObjects.push(this);
+  // saveFileManager.saveFile(worldFilePath);
 }
 
 
@@ -1686,11 +1617,121 @@ WorldTile * World::getTile (const int x, const int y )
 }
 
 
+
+bool World::loadWorld(std::string _name)
+{
+  SaveFileManager sfm;
+  
+	strSavePath = "savedata/"+_name;
+	
+  std::cout<<"Attempting to load data from: "<<strSavePath<<".\n";
+	
+	if ( FileManager::directoryExists(strSavePath) == false )
+	{
+		std::cout<<"Error: This world doesn't appear to exist.\n";
+		return false;
+	}
+  
+  std::cout<<"Loading data from: "<<strSavePath<<".\n";
+  
+	// Load master file.
+  worldFilePath = strSavePath+"/main.dat";
+  
+  if ( FileManager::fileExists(worldFilePath) )
+  {
+    std::cout<<"Loading master.dat\n";
+    
+    std::cout<<FileManager::getFileAsString(worldFilePath)<<".\n";
+    
+    sfm.loadFile(worldFilePath);
+  }
+  else
+  {
+    std::cout<<"Master file doesn't appear to exist.\n";
+    return false;
+  }
+
+  
+  std::string wname = sfm.loadVariableString("WORLDNAME");
+  
+  std::cout<<"Loaded worldname is: "<<wname<<".\n";
+  
+	//FileManager::createFile(worldFilePath);
+  // FileManager::writeTag("LANDSEED",DataTools::toString(landmassSeed),worldFilePath);
+  // FileManager::writeTag("WORLDNAME",name,worldFilePath);
+  // FileManager::writeTag("SIZEX",DataTools::toString(nX),worldFilePath);
+  // FileManager::writeTag("SIZEY",DataTools::toString(nY),worldFilePath);
+  
+  return true;
+	
+	// int fileSize;
+	// unsigned char* data = FileManager::getFile(filePath,&fileSize);
+	// Png png;
+	// png.load(data,fileSize);
+	// //aHeightMap.init(png.nX,png.nY,0);
+	// aWorldObject.init(png.nX,png.nY,0);
+	// aTopoMap.init(png.nX,png.nY,3,0);
+	// //aInfluence.init(png.nX,png.nY,0);
+
+
+	// //std::cout<<"PNG size: "<<png.nX<<","<<png.nY<<".\n";
+
+	// for(int x=0;x<png.nX;++x)
+	// {
+		// //std::cout<<"Loading in x: "<<x<<".\n";
+		// for(int y=0;y<png.nY;++y)
+		// { /* for some reason, the map needs to loaded upside-down */
+			// //aHeightMap(x,png.nY-y-1)=png.getPixel3D(x,y,0);
+			
+			// aTopoMap(x,png.nY-y-1,0)=png.getPixel3D(x,y,0);
+			// aTopoMap(x,png.nY-y-1,1)=png.getPixel3D(x,y,1);
+			// aTopoMap(x,png.nY-y-1,2)=png.getPixel3D(x,y,2);
+		// }
+	// }
+	// delete [] data;
+	// delete [] png.data;
+
+	// return false;
+}
+
 // SaveFileInterface
 
-std::string getSaveData()
+
+void World::save()
 {
-  return "[WORLD:1:DATA]";
+  SaveFileManager sfm;
+  
+  // WORLD INFO
+  
+  sfm.addVariable("WORLDNAME",name);
+  sfm.addVariable("LANDSEED",landmassSeed);
+  sfm.addVariable("SIZEX",nX);
+  sfm.addVariable("SIZEY",nY);
+  
+  sfm.saveToFile(worldFilePath);
+  
+  // SAVE BIOME INFO AS PNG.
+    // BIOME INFO ALSO FUNCTIONS AS LANDMASS INFO.
+    
+  ArrayS3 <unsigned char> aBiomeData (nX,nY,3,0);
+  
+	for (int _y=0;_y<nY;++_y)
+	{
+		for (int _x=0;_x<nX;++_x)
+		{
+      enumBiome _biome = aTerrain(_x,_y);
+      
+      aBiomeData(_x,_y,0) = biomeRed[_biome];
+      aBiomeData(_x,_y,1) = biomeGreen[_biome];
+      aBiomeData(_x,_y,2) = biomeBlue[_biome];
+    }
+  }
+    
+	Png png;
+	png.encodeS3(strSavePath+"/biome.png",&aBiomeData);
+  
+  
+  // SAVE RESOURCE INFO AS PNG.
 }
 
 #endif

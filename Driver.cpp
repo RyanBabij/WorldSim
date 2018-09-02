@@ -58,6 +58,11 @@ class Stream
     
 };
 
+
+#include <File/SaveFileManager.hpp>
+  // Class for managing world save files.
+SaveFileManager saveFileManager;
+
 // This allows you to pass multiple datatypes as an std::string.
 // Use like this: function( Stream() << "Error Recieved" << 42 << " " << some_code << " '" << some_msg << "'");
 

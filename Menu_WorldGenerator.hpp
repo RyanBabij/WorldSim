@@ -769,8 +769,17 @@ class Menu_WorldGenerator: public GUI_Interface
 				}
 				if ( buttonExportData.clicked==true)
 				{
+          std::cout<<"Export data\n";
+          
+  //std::cout<<"Doing test save.\n";
+  
+  // worldFilePath = strSavePath+"/main2.dat";
+          // saveFileManager.vSaveObjects.clear();
+          // saveFileManager.vSaveObjects.push(&world);
+          // saveFileManager.saveFile(world.worldFilePath);
+          
+          world.save();
 					buttonExportData.unclick();
-					std::cout<<"Not implemented yet.\n";
 				}
 				
 				if ( buttonLoadWorld.clicked==true)

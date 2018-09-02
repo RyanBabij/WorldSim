@@ -82,9 +82,6 @@ class Civ_Dwarven;
 class World: public LogicTickInterface, public IdleTickInterface, public SaveFileInterface
 {
 	public:
-	
-    // Class for managing world save files.
-  SaveFileManager saveFileManager;
   
 		/* The size of the world, measured in tiles. */
 	int nX, nY;
@@ -306,6 +303,11 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	int getHighestInfluence(const int, const int);
 		int getHighestInfluence(HasXY*);
 	
+  
+    //SAVEFILEINTERFACE
+
+  virtual void save();
+  
 };
 
 
