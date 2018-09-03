@@ -7,3 +7,7 @@
 *.xcf
 *.yml
 *.txt
+icon32.ico
+*.rc
+*.res
+*.ico

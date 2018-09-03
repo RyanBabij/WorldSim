@@ -12,7 +12,7 @@
 //#define WILDCAT_USE_DIRECT3D
 
 	// What OS we are compiling for. Currently only Windows and Linux are supported cos I don't got a Mac.
-#include <Wildcat/Windows.hpp>
+#include <Wildcat/Windows.hpp> //#define WILDCAT_WINDOWS
 //#define WILDCAT_LINUX
 
 	// DYNAMICALLY GENERATED HEADER FILE WITH STRING WHICH COUNTS COMPILATIONS.

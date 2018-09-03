@@ -7,6 +7,7 @@ If DirectX support is implemented, then we would do the same thing with DX event
 //void glutMouseWheelFunc(void*);
 
 
+
 static void GL_mouseMove(const int mouseX, int mouseY);
 static inline void GL_mouseClick (const int clickType, const int state, int mouseX, int mouseY);
 void GL_display();
@@ -53,8 +54,15 @@ void GL_init(int nArgs, char ** arg)
 	std::string windowTitle = G_WINDOW_TITLE+" "+DataTools::toString(VERSION)+" "+DataTools::toString(__DATE__)+" "+DataTools::toString(__TIME__)+" "+DataTools::toString(COMPILE_COUNT);
 
 	glutCreateWindow(windowTitle.c_str());
-
-
+  
+    // Load an icon
+  #ifdef WILDCAT_WINDOWS
+    HWND hwnd = FindWindow(NULL, windowTitle.c_str()); //probably you can get the window handler in different way..
+    HANDLE icon = LoadImage(NULL, "icon.ico", IMAGE_ICON, 32, 32, LR_LOADFROMFILE | LR_COLOR);
+    SendMessage(hwnd, (UINT)WM_SETICON, ICON_BIG, (LPARAM)icon);
+  #endif
+  
+  
 	/* Set perspective? */
 	/* Set window and call reshape. */
 	//glutSetWindow(glutGetWindow());
