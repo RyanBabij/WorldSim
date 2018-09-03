@@ -174,9 +174,6 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	
 	World();
 	
-		// For testing purposes. This will dump a ton of data about everything ever into a file.
-	void dump(std::string /* filename */);
-	
 		// CHECK ALL CIV LOS ARRAYS, AND IF ANY OVERLAP, THEN MAKE THEM DISCOVER EACH OTHER.
 	//void updateCivContacts();
 	

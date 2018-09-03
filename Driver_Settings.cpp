@@ -60,7 +60,7 @@ bool FOG_OF_WAR = true;
   depending on scaling and performance considerations.
   It will likely be set to low values during development.
 */
-const int LOCAL_MAP_SIZE = 65;
+const int LOCAL_MAP_SIZE = 129;
 
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 

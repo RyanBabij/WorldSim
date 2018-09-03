@@ -107,7 +107,7 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		buttonQuit.text="Quit";
 		buttonQuit.setColours(&cNormal,&cHighlight,0);
 		
-		buttonTestSomething.text="Test something";
+		buttonTestSomething.text="Test map";
 		buttonTestSomething.setColours(&cNormal,&cHighlight,0);
 		buttonTestSomething.active=true;
 		

@@ -32,25 +32,8 @@
 
 World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
 {
-	// aHeightMap.init(1,1,0);
-	// aWorldObject.init(1,1,0);
-	// WorldTile w;
-	// aWorldTile.init(1,1,w);
-	// aInfluence.init(1,1,0);
-	// aSeed.init(1,1,0);
-	
 	random.seed();
 	
-//	seaLevel=0;
-//	mountainLevel=0;
-	
-	//date.setDaysPerMonth(30);
-	//date.setMonthsPerYear(12);
-	//date.setUnitsPerDay(10000);
-	
-	//lastDate.setDaysPerMonth(30);
-//	lastDate.setMonthsPerYear(12);
-//	lastDate.setUnitsPerDay(10000);
 	nX=-1;
 	nY=-1;
  
@@ -82,18 +65,10 @@ void World::nameRegions()
 
 bool World::putObject(WorldObjectGlobal* _object, int x /* =-1 */, int y /* =-1 */)
 {
-	//return false;
 	if ( x != -1 && y != -1 )
 	{
-		//x=_object->worldX;
-		//y=_object->worldY;
 		_object->worldX=x;
 		_object->worldY=y;
-	}
-	else
-	{
-		//_object->worldX=x;
-		//_object->worldY=y;
 	}
 	
 	if ( isSafe(_object->worldX, _object->worldY) )
@@ -124,41 +99,6 @@ bool World::removeObject(WorldObjectGlobal* _object)
 
 #include <Time\RyanTime.hpp>
 
-void World::dump(std::string fileName)
-{
-	// const std::string DUMP_PATH = "log/dump.txt";
-
-	// std::cout<<"World::dump()\n";
-	// FileLog::clear(DUMP_PATH);
-	// RyanTime rt;
-	// rt.update();
-	// std::string ryanTime = rt.toString("-");
-	// FileLog::log("Commencing full dump.\n",DUMP_PATH);
-	// FileLog::log("Real time: "+ryanTime+"\n",DUMP_PATH);
-	// FileLog::log("Game time: XXX\n",DUMP_PATH);
-	
-	// std::string _civData = "# civs: ";
-	// _civData+=DataTools::toString(vCiv.size());
-	// _civData+="\n\n";
-	// FileLog::log(_civData,DUMP_PATH);
-	
-	// for ( int i=0;i<vCiv.size();++i)
-	// {
-		// Civ* currentCiv = vCiv(i);
-		// std::string _civData2 = "Civ " + DataTools::toString(i)+": "+currentCiv->name+".\n";
-		// FileLog::log(_civData2,DUMP_PATH);
-		
-		// for ( int iCity=0;iCity<currentCiv->vCity.size();++iCity)
-		// {
-			// City* currentCity = currentCiv->vCity(iCity);
-			// std::string _cityData = "\tCity: "+DataTools::toString(iCity)+": "+currentCity->name+".\n";
-			// FileLog::log(_cityData,DUMP_PATH);
-		// }
-		// FileLog::log("\n",DUMP_PATH);
-		
-	// }
-	
-}
 
 Vector <WorldObjectGlobal*>* World::getNeighboringObjects(WorldObjectGlobal* _obj)
 {
@@ -1552,8 +1492,8 @@ void World::controlCharacter(Character* _character)
   int genX = playerCharacter->tribe->worldX;
   int genY = playerCharacter->tribe->worldY;
   
-  worldViewer.localX = genX;
-  worldViewer.localY = genY;
+  //worldViewer.localX = genX;
+  //worldViewer.localY = genY;
   
   worldViewer.centerTileX = genX;
   worldViewer.centerTileY = genY;

@@ -7,23 +7,16 @@
 #include <Device/Mouse/MouseInterface.hpp>
 #include <Render/Renderer.hpp>
 
-#include <WorldGenerator/Biome.hpp> // For rendering biomes.
-
-/* #include "World_Viewer.hpp"
-	Code for rendering the player's view of the world. There's no class here, just functions and vars.
-	
-	I'm thinking that this could be a seperate class with a pointer to the world. However, this will probably reduce the efficiency.
-	
-*/
-
+#include <WorldGenerator/Biome.hpp> // For rendering biomes (Wow this is terrible).
 
 /* #include "World_Viewer.hpp"
 
-	Needs an updated description.
+  Code for rendering the player's view of the world.
+  
+	I have a dream that one day I will be able to understand this code.
 	
 */
 
-/* Made it a GUI class, since it now functions in GUIs. */
 class WorldViewer: public DisplayInterface, public MouseInterface
 {
 	public:
@@ -31,7 +24,13 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 	bool active;
 	
 	int tileSize; /* How big to render the tiles, in pixels. */
-	float centerTileX, centerTileY; /* The tile at the center of the screen. */
+	
+    /* The tile at the center of the screen.
+      Note that the mantissa is used to center on local tiles.
+      This must be a double due to the required level of precision.
+    */
+  double centerTileX, centerTileY;
+  double localTileMantissa;
 	
 		/* Store the last position of the mouse, so we can figure out which tile the mouse is on. */
 	short int lastMouseX, lastMouseY;
@@ -58,8 +57,14 @@ class WorldViewer: public DisplayInterface, public MouseInterface
   bool subterraneanMode;
 	
 		// Temp: Local tile to render.
-	int localX, localY;
+	int centerLocalX, centerLocalY;
+  double pixelsPerLocalTile;
 	
+    // If true, game will randomly scroll around.
+    // In the future, the title screen will probably be scrolling around a map.
+  bool demoMode;
+  double demoScroll;
+  
 WorldViewer()
 {
   tileSize=8;
@@ -85,11 +90,18 @@ WorldViewer()
   
   territoryView = false;
   
-  localX=-1;
-  localY=-1;
+  centerLocalX=LOCAL_MAP_SIZE/2;
+  centerLocalY=LOCAL_MAP_SIZE/2;
   
   tilesetMode = true;
   subterraneanMode = false;
+  
+  pixelsPerLocalTile = tileSize/LOCAL_MAP_SIZE;
+  
+  localTileMantissa = (double)1/(double)LOCAL_MAP_SIZE;
+  
+  demoMode = false;
+  demoScroll = 0.1;
 }
 	
   // Center the view on the middle of the world. Good for initializing.
@@ -101,52 +113,67 @@ void centerView()
   }
   centerTileX = world->nX/2;
   centerTileY = world->nY/2;
+  
+  centerTileX+=0.5;
+  centerTileY+=0.5;
 }
 	
 bool keyboardEvent( Keyboard* _keyboard )
 {
 	//std::cout<<"Keypress: "<<(int)_keyboard->lastKey<<".\n";
+  
+  //std::cout<<"pixelsPerLocalTile: "<<pixelsPerLocalTile<<".\n";
 
 	/* Pass keyboard event, instead of handling individual keypressed here. */
 	
-	// if ( menuUnitConstructor.active==true )
-	// {
-		// if (keyboard->keyWasPressed)
-		// { menuUnitConstructor.keyboardEvent(keyboard); }
-		// return;
-	// }
-	// else if (unitComponentConstructorMenu.active==true)
-	// {
-		// if (keyboard->keyWasPressed)
-		// { unitComponentConstructorMenu.keyboardEvent(keyboard); }
-		// return;
-	// }
-	// else if (vehicleConstructorMenu.active==true)
-	// {
-		// if (keyboard->keyWasPressed)
-		// { vehicleConstructorMenu.keyboardEvent(keyboard); }
-		// return;
-	// }
-
 	/* Keyboard handling for main view. */
 	
 	//if(keyboard->keyWasPressed&&playerControl)
 	// if(keyboard->keyWasPressed)
 	// {
-		// if(keyboard->isPressed(Keyboard::RIGHT))
-		// {
-		// }
-		// else if(keyboard->isPressed(Keyboard::LEFT))
-		// {
-		// }
-		// else if(keyboard->isPressed(Keyboard::UP))
-		// {
-		// }
-		// else if(keyboard->isPressed(Keyboard::DOWN))
-		// {
-		// }
-		/* Zoom the main map in by one step. */
-		if(_keyboard->isPressed(Keyboard::EQUALS))
+    
+      // If the player is controlling someone, arrows should indicate local tile movement.
+    if ( world->playerCharacter )
+    {
+      if(_keyboard->isPressed(Keyboard::RIGHT))
+      {
+        centerTileX += localTileMantissa;
+      }
+      else if(_keyboard->isPressed(Keyboard::LEFT))
+      {
+        centerTileX -= localTileMantissa;
+      }
+      else if(_keyboard->isPressed(Keyboard::UP))
+      {
+        centerTileY += localTileMantissa;
+      }
+      else if(_keyboard->isPressed(Keyboard::DOWN))
+      {
+        centerTileY -= localTileMantissa;
+      }
+    }
+      // If the player is not controlling someone, arrows should indicate global tile movement.
+    else
+    {
+      if(_keyboard->isPressed(Keyboard::RIGHT))
+      {
+        ++centerTileX;
+      }
+      else if(_keyboard->isPressed(Keyboard::LEFT))
+      {
+        --centerTileX;
+      }
+      else if(_keyboard->isPressed(Keyboard::UP))
+      {
+        ++centerTileY;
+      }
+      else if(_keyboard->isPressed(Keyboard::DOWN))
+      {
+        --centerTileY;
+      }
+    }
+		/* Zoom the main map in by one step.  (Can use either top row or numpad)*/
+		if(_keyboard->isPressed(Keyboard::EQUALS) || _keyboard->isPressed(Keyboard::PLUS))
 		{
 			if (_keyboard->keyWasPressed)
 			{
@@ -243,8 +270,8 @@ void zoomIn()
 	else
 	{
   tileSize*=2;
-	if(tileSize>400000)
-	{ tileSize=400000; }
+	if(tileSize>4000000)
+	{ tileSize=4000000; }
 	}
 	//std::cout<<"Tilesize: "<<tileSize<<".\n";
 	// if (tileSize < 32 && world->isSafe(hoveredXTile, hoveredYTile))
@@ -351,8 +378,8 @@ void switchTarget(World_Local* _worldLocal)
 		if (mouse->isRightClick)
 		{
 			//std::cout<<"Adding tile: "<<hoveredXTile<<", "<<hoveredYTile<<" to render.\n";
-			localX=hoveredXTile;
-			localY=hoveredYTile;
+			//localX=hoveredXTile;
+			//localY=hoveredYTile;
       world->generateLocal(hoveredXTile,hoveredYTile);
 		}
 		
@@ -374,10 +401,13 @@ void switchTarget(World_Local* _worldLocal)
 		
 	}
 	
-	inline void setCenterTile (const float _centerTileX, const float _centerTileY)
+	inline void setCenterTile (const double _centerTileX, const double _centerTileY, const int _subTileX=LOCAL_MAP_SIZE/2, const int _subTileY=LOCAL_MAP_SIZE/2)
 	{
 		centerTileX = _centerTileX;
 		centerTileY = _centerTileY;
+    
+    centerTileX += _subTileX * localTileMantissa;
+    centerTileY += _subTileY * localTileMantissa;
 	}
 	
 		/* Convert tile coordinates to screen (pixel) coordinates. */
@@ -520,6 +550,20 @@ void switchTarget(World_Local* _worldLocal)
 			std::cout<<"ABORT: No world to render.\n";
 			return;
 		}
+    
+    if ( demoMode )
+    {
+      if ( centerTileX < 10 && demoScroll < 0 )
+      {
+        demoScroll = demoScroll * -1;
+      }
+      else if ( centerTileX > world->nX - 10 && demoScroll > 0 )
+      {
+        demoScroll = demoScroll * -1;
+      }
+      
+      centerTileX += demoScroll;
+    }
 
 			/* 0223554692
 				SO I GUESS THIS PART MODIFIES THE SCREEN SO I CAN SIMPLY DRAW FROM (0,0).
@@ -534,10 +578,8 @@ void switchTarget(World_Local* _worldLocal)
 		
 		float centerTileXPixels = centerTileXDecimal*tileSize;
 		float centerTileYPixels = centerTileYDecimal*tileSize;
-	
-
-		//double pixelOffsetX = tileSize*centerTileXDecimal;
-		//double pixelOffsetY = tileSize*centerTileYDecimal;
+    
+    pixelsPerLocalTile = ((double)tileSize/LOCAL_MAP_SIZE);
 
 		const int iCenterTileX = centerTileX;
 		
@@ -734,11 +776,6 @@ void switchTarget(World_Local* _worldLocal)
 					//if (tileSize > 4 && localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
           if ( localMap != 0)
 					{
-            
-						float pixelsPerLocalTile = (float)tileSize/LOCAL_MAP_SIZE;
-						//std::cout<<"pixelsPerLocalTile: "<<pixelsPerLocalTile<<".\n";
-						
-
 						
 						float currentSubY = currentY;
 						float nextSubY = currentY + pixelsPerLocalTile;
@@ -748,9 +785,9 @@ void switchTarget(World_Local* _worldLocal)
 						
             // First we must seed the RNG with the seed for this local tile.
 						Random r1;
-						r1.seed (world->aSeed(localX,localY));
+						r1.seed (world->aSeed(world->localX,world->localY));
             
-            const enumBiome localBaseBiome = world->aTerrain(localX,localY);
+            const enumBiome localBaseBiome = world->aTerrain(world->localX,world->localY);
 						
 						for (int localYTile = 0; localYTile<LOCAL_MAP_SIZE;++localYTile)
 						{
