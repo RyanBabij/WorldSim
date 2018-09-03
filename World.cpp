@@ -1653,45 +1653,83 @@ bool World::loadWorld(std::string _name)
 
   
   std::string wname = sfm.loadVariableString("WORLDNAME");
+  std::string wseed = sfm.loadVariableString("LANDSEED");
+  std::string wX = sfm.loadVariableString("SIZEX");
+  std::string wY = sfm.loadVariableString("SIZEY");
   
   std::cout<<"Loaded worldname is: "<<wname<<".\n";
+  std::cout<<"Loaded seed is: "<<wseed<<".\n";
+  std::cout<<"Loaded x is: "<<wX<<".\n";
+  std::cout<<"Loaded y is: "<<wY<<".\n";
+
+	int fileSize;
+	unsigned char* data = FileManager::getFile(strSavePath+"/biome.png" ,&fileSize);
   
-	//FileManager::createFile(worldFilePath);
-  // FileManager::writeTag("LANDSEED",DataTools::toString(landmassSeed),worldFilePath);
-  // FileManager::writeTag("WORLDNAME",name,worldFilePath);
-  // FileManager::writeTag("SIZEX",DataTools::toString(nX),worldFilePath);
-  // FileManager::writeTag("SIZEY",DataTools::toString(nY),worldFilePath);
+  if (data == 0)
+  {
+    std::cout<<"ERROR: biome.png couldn't be loaded.\n";
+    return false;
+  }
   
-  return true;
-	
-	// int fileSize;
-	// unsigned char* data = FileManager::getFile(filePath,&fileSize);
-	// Png png;
-	// png.load(data,fileSize);
-	// //aHeightMap.init(png.nX,png.nY,0);
-	// aWorldObject.init(png.nX,png.nY,0);
-	// aTopoMap.init(png.nX,png.nY,3,0);
-	// //aInfluence.init(png.nX,png.nY,0);
+	Png png;
+  
+  if (png.load(data,fileSize) == false )
+  {
+    std::cout<<"ERROR: PNG didn't load successfully.\n";
+    return false;
+  }
+  
+  if ( png.nX < 1 || png.nY < 1 )
+  {
+    std::cout<<"ERROR: PNG has bad dimensions.\n";
+    return false;
+  }
+  
+  nX = png.nX;
+  nY = png.nY;
+  
+  
+	aWorldObject.init(png.nX,png.nY,0);
+	aTopoMap.init(png.nX,png.nY,3,0);
+  aTerrain.init(png.nX,png.nY,NOTHING);
+  aSeed.init(png.nX,png.nY,1);
+  aLandmassID.init(png.nX,png.nY,-1);
+  aBiomeID.init(png.nX,png.nY,-1);
+  aIsLand.init(png.nX,png.nY,true);
 
-
-	// //std::cout<<"PNG size: "<<png.nX<<","<<png.nY<<".\n";
-
-	// for(int x=0;x<png.nX;++x)
-	// {
-		// //std::cout<<"Loading in x: "<<x<<".\n";
-		// for(int y=0;y<png.nY;++y)
-		// { /* for some reason, the map needs to loaded upside-down */
-			// //aHeightMap(x,png.nY-y-1)=png.getPixel3D(x,y,0);
+	for(int x=0;x<png.nX;++x)
+	{
+		for(int y=0;y<png.nY;++y)
+		{
+      // Note that PNGs use a different coordinate system, therefore must be loaded upside-down.
+      // Maybe change this in future.
 			
-			// aTopoMap(x,png.nY-y-1,0)=png.getPixel3D(x,y,0);
-			// aTopoMap(x,png.nY-y-1,1)=png.getPixel3D(x,y,1);
-			// aTopoMap(x,png.nY-y-1,2)=png.getPixel3D(x,y,2);
-		// }
-	// }
-	// delete [] data;
-	// delete [] png.data;
+			aTopoMap(x,png.nY-y-1,0)=png.getPixel3D(x,y,0);
+			aTopoMap(x,png.nY-y-1,1)=png.getPixel3D(x,y,1);
+			aTopoMap(x,png.nY-y-1,2)=png.getPixel3D(x,y,2);
+      
+      
+			// aTopoMap(x,y,0)=png.getPixel3D(x,y,0);
+			// aTopoMap(x,y,1)=png.getPixel3D(x,y,1);
+			// aTopoMap(x,y,2)=png.getPixel3D(x,y,2);
+      
+      
+      if (aTopoMap(x,png.nY-y-1,0) == biomeRed[OCEAN] && aTopoMap(x,png.nY-y-1,1) == biomeGreen[OCEAN] && aTopoMap(x,png.nY-y-1,2) == biomeBlue[OCEAN] )
+      //if (aTopoMap(x,y,0) == biomeRed[OCEAN] && aTopoMap(x,y,1) == biomeGreen[OCEAN] && aTopoMap(x,y,2) == biomeBlue[OCEAN] )
+      {
+        aTerrain(x,png.nY-y-1)=OCEAN;
+      }
+      else
+      {
+        aTerrain(x,png.nY-y-1)=GRASSLAND;
+      }
+      
 
-	// return false;
+		}
+	}
+  
+  generated = true;
+	return true;
 }
 
 // SaveFileInterface
