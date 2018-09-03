@@ -78,6 +78,9 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   ArrayS2 <LocalTile> aLocalTile;
     //Underground map
   ArrayS2 <LocalTile> aSubterranean;
+  
+  // Vector of all tile coordinates.
+	Vector <HasXY*> vAllTiles;
 
 
 
@@ -85,6 +88,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	void init(int /*x*/, int /*y*/);
 	
 	bool generate();
+  
+	bool generateTestMap();
 	
 	bool saveToFile(std::string /* path */);
 	

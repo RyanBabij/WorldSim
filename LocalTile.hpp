@@ -30,6 +30,9 @@ class LocalTile: public HasTexture
     for example which variant of texture to draw. */
   int seed;
   enumBiome baseTerrain;
+    //Base terrain can be overlaid with a floor.
+    // For now just a bool.
+  bool hasFloor;
   
   int height;
   

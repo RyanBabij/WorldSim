@@ -131,6 +131,15 @@ const std::string PATH_TEX_WORLD_TERRAIN_ISLAND_00 = "Textures/World/Terrain/Isl
 Texture TEX_WORLD_TEST_00;
 const std::string PATH_TEX_WORLD_TEST_00 = "Textures/Test/00.png";
 
+
+  // LOCAL MAP
+  
+Texture TEX_LOCAL_FLOOR;
+const std::string PATH_TEX_LOCAL_FLOOR = "Textures/Local/Building/Floor.png";
+
+Texture TEX_LOCAL_SIGN;
+const std::string PATH_TEX_LOCAL_SIGN = "Textures/Local/Sign.png";
+
 void loadTextureVerbose(const std::string _path, Texture* _texture)
 {
 	std::cout<<"Loading: "<<_path<<".\n";
@@ -208,6 +217,11 @@ void loadTextures()
   loadTextureVerbose(PATH_TEX_TEST_404,&TEX_TEST_404);
   loadTextureVerbose(PATH_TEX_WORLD_ARTIFACT_GEMS,&TEX_WORLD_ARTIFACT_GEMS);
   loadTextureVerbose(PATH_TEX_WORLD_ARTIFACT_BATTLE,&TEX_WORLD_ARTIFACT_BATTLE);
+  
+  
+  loadTextureVerbose(PATH_TEX_LOCAL_FLOOR,&TEX_LOCAL_FLOOR);
+  
+  loadTextureVerbose(PATH_TEX_LOCAL_SIGN,&TEX_LOCAL_SIGN);
 }
 
 #endif

@@ -81,9 +81,7 @@ SaveFileManager saveFileManager;
 
 #include "Driver_LoadTextures.hpp"
 
-#include "WorldObject.cpp"
-#include "WorldObject_Tree.cpp"
-#include "WorldObject_Rock.cpp"
+
 
 #include "World.hpp"
 

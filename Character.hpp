@@ -11,6 +11,8 @@
 #include "GuildCalendar.hpp"
 #include <Container/Table/TableInterface.hpp>
 
+#include "WorldObject.hpp"
+
 class Tribe;
 
 enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, MASSACRE=2, COMBAT=3, OLD_AGE=4 };

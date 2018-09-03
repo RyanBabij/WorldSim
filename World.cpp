@@ -30,6 +30,11 @@
 #include "WorldObjectGlobal.hpp"
 #include <WorldGenerator/Biome.hpp>
 
+#include "WorldObject.cpp"
+#include "WorldObject_Tree.cpp"
+#include "WorldObject_Rock.cpp"
+#include "WorldObject_Sign.cpp"
+
 World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
 {
 	random.seed();

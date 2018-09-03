@@ -523,10 +523,31 @@ void switchTarget(World_Local* _worldLocal)
 		for (int i=0;i<world->vWorldObjectGlobal.size();++i)
 		{
 			WorldObjectGlobal* wog = world->vWorldObjectGlobal(i);
+      
+      
+        // Check if we're supposed to render a local map on this tile.
+        // If so, don't draw world icons over it.
+      if ( tileSize > 4 && world->isSafe(tileX,tileY) )
+      {
+        
+        for ( int i2=0;i2<world->vWorldLocal.size();++i2)
+        {
+          if ( world->vWorldLocal(i2)->globalX == wog->worldX && world->vWorldLocal(i2)->globalY == wog->worldY )
+          {
+            wog = 0;
+            break;
+          }
+        }
+        
+      }
+      if ( wog == 0 ) { continue; }
+      
 			int wogPixelX=-1;
 			int wogPixelY=-1;
 
 			toScreenCoords(wog->worldX,wog->worldY,&wogPixelX,&wogPixelY);
+      
+
 			
 				// I NEED TO DO A CHECK TO SEE IF THE OBJECT IS VISIBLE WITHIN THE CURRENT VIEW.
 			
