@@ -21,14 +21,7 @@ static void GL_keyboardEvent(const unsigned char key, const int x, const int y);
 
 void GL_init(int nArgs, char ** arg)
 {
-	//glfwInit( );
-
-       //     if( ! FETCH_WCB( *window, Mouse ) &&
-      //          ! FETCH_WCB( *window, MouseWheel ) )
-	//		{ std::cout<<"mwmw\n";	}
-
-
-
+  
 	/* Set the window position to that defined by the player. This must be put before glutInit because otherwise it will override user preferences provided by the -geometry command line arg. */
 	glutInitWindowPosition(0,0);
 	/* Set the window size to that defined by the player. This must be put before glutInit because otherwise it will override user preferences provided by the -geometry command line arg. */
@@ -36,9 +29,6 @@ void GL_init(int nArgs, char ** arg)
 	/* Glut needs the pointer to nArgs because it extracts args intended for GLUT. glutInit should be run before doing anything with the args. GLUT will initialist itself here. If GLUT cannot set up, the program could be terminated with an error message.
 	Useful arg: -geometry 100x200+10+10 will set window 10 pixel in from the top left corner, and make the window 100px wide and 200px high. */
 	glutInit(&nArgs, arg);
-
-	
-
 	
 	/* Set display mode to single or double buffering, and RGBA colour mode. */
 	if(DOUBLE_BUFFERING==true)
@@ -50,12 +40,12 @@ void GL_init(int nArgs, char ** arg)
 	/* Set the window title. */
 	/* NOTE: For some reason this needs to be after initDisplayMode or we get crashes with certain compilation options. Might be unrelated though. */
 	
-	
 	std::string windowTitle = G_WINDOW_TITLE+" "+DataTools::toString(VERSION)+" "+DataTools::toString(__DATE__)+" "+DataTools::toString(__TIME__)+" "+DataTools::toString(COMPILE_COUNT);
 
 	glutCreateWindow(windowTitle.c_str());
   
     // Load an icon
+    // Stolen from: https://stackoverflow.com/questions/12748103/how-to-change-freeglut-main-window-icon-in-c
   #ifdef WILDCAT_WINDOWS
     HWND hwnd = FindWindow(NULL, windowTitle.c_str()); //probably you can get the window handler in different way..
     HANDLE icon = LoadImage(NULL, "icon.ico", IMAGE_ICON, 32, 32, LR_LOADFROMFILE | LR_COLOR);
@@ -170,10 +160,8 @@ static void GL_reshape(const int WIDTH, const int HEIGHT)
 	glLoadIdentity();
 	/* Viewport should match window dimensions. */
 	glViewport(0, 0,RESOLUTIONX, RESOLUTIONY);
-	//gluOrtho2D(0.0, RESOLUTIONX, 0.0, RESOLUTIONY);
 	gluOrtho2D(0.0, RESOLUTIONX, 0.0, RESOLUTIONY);
-	
-	//gluOrtho2D(100,400,100,400);
+
 	/* Go back to default matrix mode. */
 	glMatrixMode(GL_MODELVIEW);
 	//glLoadIdentity();
@@ -272,11 +260,6 @@ void GL_idle()
 	{
 		shutDown();
 	}
-
-
-	//std::cout<<WM_MOUSEWHEEL<<".\n";
-
-//std::cout<<glfwGetMouseWheel()<<".\n";
 
 	pollRateTimer.update();
 	if(pollRateTimer.totalUSeconds>UPOLLSPERSECOND)

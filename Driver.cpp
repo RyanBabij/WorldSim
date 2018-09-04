@@ -77,18 +77,11 @@ SaveFileManager saveFileManager;
 
 #include "TextureInterface.cpp"
 
-
-
 #include "Driver_LoadTextures.hpp"
-
-
 
 #include "World.hpp"
 
 #include "World_Local.hpp"
-
-
-
 
 #include <Graphics/Png/Png.hpp>
 #include <File/FileManager.hpp>
@@ -215,12 +208,9 @@ KeyboardInterfaceManager keyboardInterfaceManager;
 GUI_Manager globalGuiManager;
 
 
-
-
 #include <LogicTick/LogicTickInterface.hpp>
 #include <LogicTick/LogicTickManager.hpp>
 LogicTickManager logicTickManager;
-
 
 #include <IdleTick/IdleTickInterface.hpp>
 #include <IdleTick/IdleTickManager.hpp>

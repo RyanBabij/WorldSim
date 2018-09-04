@@ -81,13 +81,16 @@ class Civ_Dwarven;
 
 class World: public LogicTickInterface, public IdleTickInterface, public SaveFileInterface
 {
+  private:
+    RandomNonStatic random;
+
 	public:
+  
+	bool active; /* Whether or not the world should be simulated. */
+	bool generated; /* False until a world has been generated. Prevents trying to simulate a non-existent world. */
   
 		/* The size of the world, measured in tiles. */
 	int nX, nY;
-	
-	bool active; /* Whether or not the world should be simulated. */
-	bool generated; /* False until a world has been generated. Prevents trying to simulate a non-existent world. */
   
   int localX, localY; /* The current local map viewed by player */
   
@@ -97,7 +100,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	long long unsigned int ticksBacklog; /* World will simulate these ticks whenever it can, while still relinquishing for input etc. */
 	Timer relinquishTimer;
 	
-	RandomNonStatic random;
+
 	
   /* This array stores the base terrain data. */
 	ArrayS2 <enumBiome> aTerrain;

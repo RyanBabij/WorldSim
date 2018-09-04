@@ -13,79 +13,62 @@
 /* World simulator menu. The player can simulate the world to build up civilisation, before jumping in. The player can then select on of the inhabitants to play as. */
 class Menu_WorldSimulator: public GUI_Interface
 {
-	public:
-	GUI_Manager guiManager;
-	
-	/* Colours / theme. */
-	Colour cNormal;
-	Colour cSelected;
-	Colour cDropPanel;
-	Colour cHighlight;
-	
-	Wildcat::Font* font;
-	
-	//GUI_TextBox menuHeading;
-	
-	/* Texture to draw in the background of this menu. */
-	Texture* backgroundTexture;
-	
-	/* Button: Resume or commence simulation of the world map. */
-	GUI_Button buttonStartSimulation;
-	/* Button: Pause the simulation so the player can look around the world as it currently exists. */
-	GUI_Button buttonPauseSimulation;
-	/* Button: Step the simulation forward by a certain amount of time. (Day/Month/Year). */
-	
-	/* Number entry: Simulation speed. */
-	GUI_CycleButton cycleSimulationSpeed;
-	/* Textbox: Caption for simulation speed. */
-	GUI_TextBox textSimulationSpeed;
-	
-	GUI_Button buttonIncrementDay;
-	GUI_Button buttonIncrementMonth;
-	GUI_Button buttonIncrementYear;
-	GUI_Button buttonIncrementDecade;
-	
-		/* Menu for investigating an individual tribe */
-	GUI_Button buttonTribeMenu;
-	
-		/* Menu for seeing info about the world. */
-	GUI_Button buttonWorldMenu;
-	
-		/* Menu for a list of all biomes. */
-	GUI_Button buttonBiomeMenu;
-	
-		/* List of all characters in the game. */
-	GUI_Button buttonCharacterMenu;
-	
-		/* Toggle tribal territory visibility */
-	GUI_Button buttonTerritoryView;
-  
-		/* List of all Civs in the game */
-	GUI_Button buttonCivMenu;
-  
-		/* Switch to tileset view */
-	GUI_Button buttonToggleTileset;
-  
-		/* Switch to subterranean view on local map */
-	GUI_Button buttonSubterraneanView;
-	
-	/* Button: Switch between 1/4 or fullscreen view of world map. */
-	GUI_Button buttonExpandMap;
+  private:
+    GUI_Manager guiManager;
+    Wildcat::Font* font;
+    /* Texture to draw in the background of this menu. */
+    Texture* backgroundTexture;
+    
+    /* Colours / theme. */
+    Colour cNormal;
+    Colour cSelected;
+    Colour cDropPanel;
+    Colour cHighlight;
 
-	bool simulateWorld;
-	
-	bool fullScreenWorldView;
-	
-	/* Use this worldViewer instead of a global one. Just make sure to attach the world pointer. */
-	//WorldViewer worldViewer;
-	//World* world;
-	
-	/* Submenus */
-	Menu_Tribes menuTribes;
-	Menu_Civs menuCivs;
-	Menu_World menuWorld;
-	Menu_Characters menuCharacter;
-	Menu_Biome menuBiome;
+    /* Button: Resume or commence simulation of the world map. */
+    GUI_Button buttonStartSimulation;
+    /* Button: Pause the simulation so the player can look around the world as it currently exists. */
+    GUI_Button buttonPauseSimulation;
+    /* Number entry: Simulation speed. */
+    GUI_CycleButton cycleSimulationSpeed;
+    /* Textbox: Caption for simulation speed. */
+    GUI_TextBox textSimulationSpeed;
+    /* Button: Step the simulation forward by a certain amount of time. (Day/Month/Year). */
+    GUI_Button buttonIncrementDay;
+    GUI_Button buttonIncrementMonth;
+    GUI_Button buttonIncrementYear;
+    GUI_Button buttonIncrementDecade;
+      /* Menu for investigating an individual tribe */
+    GUI_Button buttonTribeMenu;
+      /* Menu for seeing info about the world. */
+    GUI_Button buttonWorldMenu;
+      /* Menu for a list of all biomes. */
+    GUI_Button buttonBiomeMenu;
+      /* List of all characters in the game. */
+    GUI_Button buttonCharacterMenu;
+      /* Toggle tribal territory visibility */
+    GUI_Button buttonTerritoryView;
+      /* List of all Civs in the game */
+    GUI_Button buttonCivMenu;
+      /* Switch to tileset view */
+    GUI_Button buttonToggleTileset;
+      /* Switch to subterranean view on local map */
+    GUI_Button buttonSubterraneanView;
+    /* Button: Switch between 1/4 or fullscreen view of world map. */
+    GUI_Button buttonExpandMap;
+    
+    bool simulateWorld;
+    
+    bool fullScreenWorldView;
+
+    /* Submenus */
+    Menu_Tribes menuTribes;
+    Menu_Civs menuCivs;
+    Menu_World menuWorld;
+    Menu_Characters menuCharacter;
+    Menu_Biome menuBiome;
+  
+	public:
 	
 	
 	Menu_WorldSimulator()

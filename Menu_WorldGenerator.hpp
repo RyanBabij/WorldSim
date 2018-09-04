@@ -21,6 +21,7 @@
 #include <Data/DataTools.hpp> /* To check if seed is numeric */
 
 #include "Menu_WorldSimulator.hpp"
+#include "Menu_AdventureMode.hpp"
 
 
 class Menu_WorldGenerator: public GUI_Interface
