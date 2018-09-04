@@ -27,112 +27,85 @@
 class Menu_WorldGenerator: public GUI_Interface
 {
 	private:
-	GUI_Manager guiManager;
+    GUI_Manager guiManager;
+    
+    /* Colours / theme. */
+    Colour cNormal;
+    Colour cSelected;
+    Colour cDropPanel;
+    Colour cHighlight;
+
+    /* Background image */
+    Texture* backgroundTexture;
+    /* Button: Back to main menu. */
+    GUI_Button buttonBack;
+    /* Button: Expand preview window. */
+    GUI_Button buttonExpandPreviewWindow;
+    /* Textbox: Title for menu. */
+    GUI_TextBox textMenuTitle;
+    /* TextEntry: Name of the world. */
+    GUI_TextEntry textEntryWorldName;
+    /* TextEntry: Full seed value. */
+    GUI_TextEntry textEntryFullSeed;
+    /* TextEntry: Full biome value. */
+    GUI_TextEntry textEntryFullBiome;
+    /* Button: Generate the world. */
+    GUI_Button buttonGenerate;
+    /* Button: Keep this world and move to world simulation phase. */
+    GUI_Button buttonSimWorld;
+    /* Button: Export a bunch of data about the generated world. */
+    GUI_Button buttonExportData;
+    /* Button: Load a world. Note this only loads starting data. Which is geographic data and starting positions. */
+    GUI_Button buttonLoadWorld;
+    /* Number entry: World size (tiles). The world is square, so only one input is needed. */
+    GUI_CycleButton worldSize;
+    /* Textbox: Caption for worldsize selector. */
+    GUI_TextBox textWorldSize;
+    /* Number entry: World size (tiles). The world is square, so only one input is needed. */
+    GUI_CycleButton freeSteps;
+    /* Textbox: Caption for worldsize selector. */
+    GUI_TextBox textFreeSteps;
+    /* WrapX */
+    GUI_CycleButton guiWrapX;
+    GUI_TextBox textWrapX;
+    /* WrapY */
+    GUI_CycleButton guiWrapY;
+    GUI_TextBox textWrapY;
+    /* Island Mode */
+    GUI_CycleButton guiIslandMode;
+    GUI_TextBox textIslandMode;
+    /* Ocean percent */
+    GUI_NumberInput nLandPercent;
+    GUI_TextBox textOceanPercent;
+    /* Number entry: Number of civs to spawn into the world. */
+    GUI_NumberInput nCiv;
+    GUI_TextBox guiCaptionNCiv;
+    /* Number entry: Number of human tribes to spawn into the world. */
+    GUI_NumberInput nTribe;
+    GUI_TextBox guiCaptionNTribe;
+    /* Number entry: Number of Dwarven tribes to spawn into the world. */
+    GUI_NumberInput nTribeDwarven;
+    GUI_TextBox guiCaptionNTribeDwarven;
+    /* Number entry: Number of Elven tribes to spawn into the world. */
+    GUI_NumberInput nTribeElven;
+    GUI_TextBox guiCaptionNTribeElven;
+    
+    bool fullScreenPreview;
+	
+	
+    /* Submenu: World simulator. */
+    // Note:
+    // Having the worldgenerator pass through to the world simulator is a terrible system. There should be a top-level menu manager.
+    Menu_WorldSimulator menuWorldSimulator;
 	
 	public:
 	
-	
-	
-	/* Colours / theme. */
-	Colour cNormal;
-	Colour cSelected;
-	Colour cDropPanel;
-	Colour cHighlight;
-	
-	/* Background image */
-	Texture* backgroundTexture;
-
-	
-	/* Button: Back to main menu. */
-	GUI_Button buttonBack;
-	/* Button: Expand preview window. */
-	GUI_Button buttonExpandPreviewWindow;
-	
-	/* Textbox: Title for menu. */
-	GUI_TextBox textMenuTitle;
-	
-	/* TextEntry: Name of the world. */
-	GUI_TextEntry textEntryWorldName;
-	
-	/* TextEntry: Full seed value. */
-	GUI_TextEntry textEntryFullSeed;
-	
-	/* TextEntry: Full biome value. */
-	GUI_TextEntry textEntryFullBiome;
-	
-	/* Button: Generate the world. */
-	GUI_Button buttonGenerate;
-	
-	/* Button: Keep this world and move to world simulation phase. */
-	GUI_Button buttonSimWorld;
-	
-	/* Button: Export a bunch of data about the generated world. */
-	GUI_Button buttonExportData;
-
-	/* Button: Load a world. Note this only loads starting data. Which is geographic data and starting positions. */
-	GUI_Button buttonLoadWorld;
-	
-	/* Number entry: World size (tiles). The world is square, so only one input is needed. */
-	GUI_CycleButton worldSize;
-	/* Textbox: Caption for worldsize selector. */
-	GUI_TextBox textWorldSize;
-	
-	/* Number entry: World size (tiles). The world is square, so only one input is needed. */
-	GUI_CycleButton freeSteps;
-	/* Textbox: Caption for worldsize selector. */
-	GUI_TextBox textFreeSteps;
-	
-	/* WrapX */
-	GUI_CycleButton guiWrapX;
-	GUI_TextBox textWrapX;
-	/* WrapY */
-	GUI_CycleButton guiWrapY;
-	GUI_TextBox textWrapY;
-	
-	/* Island Mode */
-	GUI_CycleButton guiIslandMode;
-	GUI_TextBox textIslandMode;
-
-	/* Ocean percent */
-	GUI_NumberInput nLandPercent;
-	GUI_TextBox textOceanPercent;
-	
-	/* Number entry: Number of civs to spawn into the world. */
-	GUI_NumberInput nCiv;
-	GUI_TextBox guiCaptionNCiv;
-	
-	/* Number entry: Number of human tribes to spawn into the world. */
-	GUI_NumberInput nTribe;
-	GUI_TextBox guiCaptionNTribe;
-
-	/* Number entry: Number of Dwarven tribes to spawn into the world. */
-	GUI_NumberInput nTribeDwarven;
-	GUI_TextBox guiCaptionNTribeDwarven;
-	
-	/* Number entry: Number of Elven tribes to spawn into the world. */
-	GUI_NumberInput nTribeElven;
-	GUI_TextBox guiCaptionNTribeElven;
-
-	bool fullScreenPreview;
-	
-	
-	/* Submenu: World simulator. */
-	Menu_WorldSimulator menuWorldSimulator;
-	
-	
-	/* Used to display generated worlds. */
-	//WorldViewer worldViewer;
-	
 	Menu_WorldGenerator()
 	{
-		//std::cout<<"menu world gen construct()\n";
 		fullScreenPreview=false;
 		menuWorldSimulator.active=false;
-		
 		worldViewer.world = &world;
 		worldViewer.active = false;
-		
-		//buttonGenerate.clicked = AUTO_GENERATE_WORLD;
 		buttonGenerate.clicked=false;
 	}
 	
@@ -153,7 +126,6 @@ class Menu_WorldGenerator: public GUI_Interface
 	
 	void init()
 	{
-		//std::cout<<"menu world gen init()\n";
 		backgroundTexture=&TEX_NEW_GAME_BACKGROUND;
 		active=false;
 		fullScreenPreview=true;
@@ -184,7 +156,7 @@ class Menu_WorldGenerator: public GUI_Interface
 			else
 			{
 				//worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
-			//	buttonExpandPreviewWindow.setPanel(panelX1,panelY1,panelX1+16,panelY1+16);
+        //buttonExpandPreviewWindow.setPanel(panelX1,panelY1,panelX1+16,panelY1+16);
 				
 					/* Make worldviewer fill screen. */
 				worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
@@ -552,7 +524,6 @@ class Menu_WorldGenerator: public GUI_Interface
 	{
 		if(menuWorldSimulator.active==true)
 		{
-			//std::cout<<"Worldsim render.\n";
 			menuWorldSimulator.render();
 		}
 		
@@ -754,13 +725,11 @@ class Menu_WorldGenerator: public GUI_Interface
 					buttonSimWorld.unclick();
 					if (world.generated == true)
 					{
-						//std::cout<<"Simulate world.\n";
 						menuWorldSimulator.init();
 						menuWorldSimulator.setFont(font);
 						menuWorldSimulator.active=true;
 						world.active=true;
 						//active=false;
-						//std::cout<<"setting inactive\n";
 					}
 					else
 					{
@@ -771,14 +740,6 @@ class Menu_WorldGenerator: public GUI_Interface
 				if ( buttonExportData.clicked==true)
 				{
           std::cout<<"Export data\n";
-          
-  //std::cout<<"Doing test save.\n";
-  
-  // worldFilePath = strSavePath+"/main2.dat";
-          // saveFileManager.vSaveObjects.clear();
-          // saveFileManager.vSaveObjects.push(&world);
-          // saveFileManager.saveFile(world.worldFilePath);
-          
           world.save();
 					buttonExportData.unclick();
 				}
@@ -802,7 +763,6 @@ class Menu_WorldGenerator: public GUI_Interface
 		return guiManager.stealKeyboard();
 	}
 	
-  
   void eventGenerate()
   {
     // First check to ensure the world has a name. Important because it's also the name of the savefile.
@@ -875,7 +835,6 @@ class Menu_WorldGenerator: public GUI_Interface
 
     }
   }
-  
   
     // Load the specified world into the generator.
   void eventLoad()
