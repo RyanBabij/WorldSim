@@ -218,16 +218,16 @@ class Menu_WorldSimulator: public GUI_Interface
 	
 	void render()
 	{
-    if ( active == false )
-    {
-      if ( menuAdventureMode.active )
-      {
-        menuAdventureMode.render();
-        return;
-      }
+    // if ( active == false )
+    // {
+      // if ( menuAdventureMode.active )
+      // {
+        // menuAdventureMode.render();
+        // return;
+      // }
       
-      return;
-    }
+      // return;
+    // }
 		/* Draw background texture. */
 		if ( fullScreenWorldView==true)
 		{

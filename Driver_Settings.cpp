@@ -22,7 +22,7 @@ std::mutex render_mutex;
   allowing any menu to easily switch the "primary" menu.
 */
 
-enum enumMenu { MENU_UNKNOWN, MENU_TITLE, MENU_OPTIONS, MENU_LOADGAME, MENU_WORLDGENERATOR, MENU_GODMODE, MENU_ADVENTUREMODE };
+enum enumMenu { MENU_UNKNOWN, MENU_TITLE, MENU_OPTIONS, MENU_LOADGAME, MENU_WORLDGENERATOR, MENU_WORLDSIMULATOR, MENU_ADVENTUREMODE };
 enumMenu activeMenu = MENU_TITLE;
 
 
@@ -37,7 +37,7 @@ int lastline = 0;
 
 bool FAST_COUT = false;
 
-const std::string VERSION = "0.0.036 Win32 dev";
+const std::string VERSION = "0.0.048 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 
 const std::string SAVE_FOLDER_PATH = "savedata";

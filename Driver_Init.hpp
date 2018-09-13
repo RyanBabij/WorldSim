@@ -83,6 +83,13 @@ void init()
 	//menuWorldGenerator.backgroundTexture=&TEX_TITLE;
 	menuWorldGenerator.active=false;
   
+	/* Initialise the world simulator menu */
+	menuWorldSimulator.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
+	menuWorldSimulator.init();
+	menuWorldSimulator.setFont(&font8x8);
+	//menuWorldSimulator.backgroundTexture=&TEX_TITLE;
+	menuWorldSimulator.active=false;
+  
 	mouseInterfaceManager.add(&menuTitle);
 	//keyboardInterfaceManager.add(&menuTitle);
 	globalGuiManager.add(&menuTitle);

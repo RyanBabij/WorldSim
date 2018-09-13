@@ -20,7 +20,7 @@
 
 #include <Data/DataTools.hpp> /* To check if seed is numeric */
 
-#include "Menu_WorldSimulator.hpp"
+
 #include "Menu_AdventureMode.hpp"
 
 
@@ -92,18 +92,12 @@ class Menu_WorldGenerator: public GUI_Interface
     
     bool fullScreenPreview;
 	
-	
-    /* Submenu: World simulator. */
-    // Note:
-    // Having the worldgenerator pass through to the world simulator is a terrible system. There should be a top-level menu manager.
-    Menu_WorldSimulator menuWorldSimulator;
-	
+
 	public:
 	
 	Menu_WorldGenerator()
 	{
 		fullScreenPreview=false;
-		menuWorldSimulator.active=false;
 		worldViewer.world = &world;
 		worldViewer.active = false;
 		buttonGenerate.clicked=false;
@@ -113,15 +107,14 @@ class Menu_WorldGenerator: public GUI_Interface
 	{
 		font = _font;
 		guiManager.setFont(_font);
-    menuWorldSimulator.setFont(font);
 	}
 	
 	void logicTick()
 	{
-		if(menuWorldSimulator.active==true)
-		{
-			menuWorldSimulator.logicTick();
-		}
+		// if(menuWorldSimulator.active==true)
+		// {
+			// menuWorldSimulator.logicTick();
+		// }
 	}
 	
 	void init()
@@ -359,39 +352,35 @@ class Menu_WorldGenerator: public GUI_Interface
     globalGuiManager.add(&textEntryFullBiome);
 		
 		guiManager.setFont(font);
-		menuWorldSimulator.init();
 		
       // This is a debug option to quickly make a default world for faster testing.
-		if ( QUICKSTART )
-		{
-			world.generateWorld("quickstart",QUICKSTART_WORLD_SIZE,QUICKSTART_WORLD_SIZE);
-			world.generateTribes(); //Generate default tribe settings.
+		// if ( QUICKSTART )
+		// {
+			// world.generateWorld("quickstart",QUICKSTART_WORLD_SIZE,QUICKSTART_WORLD_SIZE);
+			// world.generateTribes(); //Generate default tribe settings.
 			
-      // Simulate a decade immediately.
-			for (int i=0;i<INITIAL_YEARS_SIMULATE;++i)
-			{world.ticksBacklog+=31104000;
-			}
+      // // Simulate a decade immediately.
+			// for (int i=0;i<INITIAL_YEARS_SIMULATE;++i)
+			// {world.ticksBacklog+=31104000;
+			// }
       
-      if (QUICKSTART_SIMULATOR)
-      {
-        menuWorldSimulator.init();
-        menuWorldSimulator.setFont(font);
-        menuWorldSimulator.active=true;
-        world.active=true;
-      }
+      // // if (QUICKSTART_SIMULATOR)
+      // // {
+        // // menuWorldSimulator.init();
+        // // menuWorldSimulator.setFont(font);
+        // // menuWorldSimulator.active=true;
+        // // world.active=true;
+      // // }
 
-			worldViewer.active=true;
-			active=true;
-		}
+			// worldViewer.active=true;
+			// //active=true;
+		// }
 
 
 	}
 	
 	void eventResize()
 	{
-		/* Update submenus. */
-		menuWorldSimulator.setPanel(panelX1,panelY1,panelX2,panelY2);
-	
 			/* Menu title. */
 		textMenuTitle.setPanel(panelX1, panelY2, panelX2/2, panelY2-20);
 	
@@ -522,10 +511,6 @@ class Menu_WorldGenerator: public GUI_Interface
 	
 	void render()
 	{
-		if(menuWorldSimulator.active==true)
-		{
-			menuWorldSimulator.render();
-		}
 		
     // if ( textEntryWorldName.selected == true )
     // { HOTKEYS_ENABLED=false; }
@@ -573,43 +558,32 @@ class Menu_WorldGenerator: public GUI_Interface
 	
 	bool keyboardEvent(Keyboard* _keyboard)
 	{
-		if(menuWorldSimulator.active)
-		{
-			return menuWorldSimulator.keyboardEvent(_keyboard);
-		}
-		else if ( active )
-		{
-			//std::cout<<"menu world gen active\n";
-			if ( guiManager.keyboardEvent(_keyboard) )
-			{
-				return true;
-			}
-			
-			if(_keyboard->isPressed(Keyboard::ONE)) /* Flush console. */
-			{
-				eventGenerate();
-        _keyboard->unpress(Keyboard::ONE);
-        return true;
-			}
-      
-			if(_keyboard->isPressed(Keyboard::TWO)) /* Flush console. */
-			{
-        _keyboard->unpress(Keyboard::TWO);
-				if (world.generated == true)
-				{
-					std::cout<<"Simulate world.\n";
-					menuWorldSimulator.init();
-					menuWorldSimulator.setFont(font);
-					menuWorldSimulator.active=true;
-					world.active=true;
-					//active=false;
-				}
-				else
-				{
-					std::cout<<"You must first generate a world.\n";
-				}
-			}
-      
+    if ( guiManager.keyboardEvent(_keyboard) )
+    {
+      return true;
+    }
+    
+    if(_keyboard->isPressed(Keyboard::ONE)) /* Flush console. */
+    {
+      eventGenerate();
+      _keyboard->unpress(Keyboard::ONE);
+      return true;
+    }
+    
+    if(_keyboard->isPressed(Keyboard::TWO)) /* Flush console. */
+    {
+      _keyboard->unpress(Keyboard::TWO);
+      if (world.generated == true)
+      {
+        std::cout<<"Simulate world.\n";
+        activeMenu = MENU_WORLDSIMULATOR;
+        world.active=true;
+        //active=false;
+      }
+      else
+      {
+        std::cout<<"You must first generate a world.\n";
+      }
 		}
 		
 		return false;
@@ -631,11 +605,7 @@ class Menu_WorldGenerator: public GUI_Interface
 	
 	bool mouseEvent (Mouse* _mouse)
 	{
-	//	std::cout<<"WG ME\n";
-		if(menuWorldSimulator.active)
-		{ menuWorldSimulator.mouseEvent(_mouse); }
 
-		
     worldViewer.mouseEvent(_mouse);
     //buttonExpandMap.mouseEvent(_mouse);
 
@@ -719,11 +689,8 @@ class Menu_WorldGenerator: public GUI_Interface
         buttonSimWorld.unclick();
         if (world.generated == true)
         {
-          menuWorldSimulator.init();
-          menuWorldSimulator.setFont(font);
-          menuWorldSimulator.active=true;
+          activeMenu = MENU_WORLDSIMULATOR;
           world.active=true;
-          //active=false;
         }
         else
         {

@@ -175,6 +175,8 @@ static void GL_reshape(const int WIDTH, const int HEIGHT)
   menuLoadGame.eventResize();
 	menuWorldGenerator.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
   menuWorldGenerator.eventResize();
+	menuWorldSimulator.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
+  menuWorldSimulator.eventResize();
 
 }
 
@@ -193,6 +195,27 @@ static void GL_keyboardUpEvent(const unsigned char key, const int x, const int y
 static void GL_keyboardEvent(const unsigned char key, const int x, const int y)
 {
 	globalKeyboard.keyDown(key);
+  
+  if ( activeMenu == MENU_TITLE )
+  {
+    menuTitle.keyboardEvent(&globalKeyboard);
+  }
+  else if (activeMenu == MENU_OPTIONS )
+  {
+    menuOptions.keyboardEvent(&globalKeyboard);
+  }
+  else if (activeMenu == MENU_LOADGAME )
+  {
+    menuLoadGame.keyboardEvent(&globalKeyboard);
+  }
+  else if (activeMenu == MENU_WORLDGENERATOR )
+  {
+    menuWorldGenerator.keyboardEvent(&globalKeyboard);
+  }
+  else if (activeMenu == MENU_WORLDSIMULATOR )
+  {
+    menuWorldSimulator.keyboardEvent(&globalKeyboard);
+  }
   
   // NOTE:
   // It seems globalGUIManager is not active for anything except preventing accidental
@@ -439,7 +462,10 @@ void GL_display()
   {
     menuWorldGenerator.render();
   }
-
+  else if (activeMenu == MENU_WORLDSIMULATOR )
+  {
+    menuWorldSimulator.render();
+  }
   
     /* Render everything that wants to render. */
   displayInterfaceManager.renderAll();
@@ -484,6 +510,10 @@ static void GL_mouseWheel (const int wheel, const int direction, const int _x, c
   else if (activeMenu == MENU_WORLDGENERATOR )
   {
     menuWorldGenerator.mouseEvent(&globalMouse);
+  }
+  else if (activeMenu == MENU_WORLDSIMULATOR )
+  {
+    menuWorldSimulator.mouseEvent(&globalMouse);
   }
 }
 
@@ -541,6 +571,10 @@ static inline void GL_mouseClick (const int clickType, const int state, int mous
   {
     menuWorldGenerator.mouseEvent(&globalMouse);
   }
+  else if (activeMenu == MENU_WORLDSIMULATOR )
+  {
+    menuWorldSimulator.mouseEvent(&globalMouse);
+  }
 }
 
 
@@ -573,6 +607,10 @@ static void GL_mouseMove(const int mouseX, int mouseY)
   else if (activeMenu == MENU_WORLDGENERATOR )
   {
     menuWorldGenerator.mouseEvent(&globalMouse);
+  }
+  else if (activeMenu == MENU_WORLDSIMULATOR )
+  {
+    menuWorldSimulator.mouseEvent(&globalMouse);
   }
 
 }

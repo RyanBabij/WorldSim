@@ -231,6 +231,9 @@ Menu_LoadGame menuLoadGame;
 #include "Menu_WorldGenerator.hpp"
 Menu_WorldGenerator menuWorldGenerator;
 
+#include "Menu_WorldSimulator.hpp"
+Menu_WorldSimulator menuWorldSimulator;
+
 /* Initialization goes here. */
 #include "Driver_Init.hpp"
 
