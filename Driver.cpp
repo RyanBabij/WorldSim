@@ -229,6 +229,7 @@ Menu_LoadGame menuLoadGame;
 
 /* Title menu */
 #include "Menu_WorldGenerator.hpp"
+Menu_WorldGenerator menuWorldGenerator;
 
 /* Initialization goes here. */
 #include "Driver_Init.hpp"

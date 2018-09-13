@@ -527,52 +527,48 @@ class Menu_WorldGenerator: public GUI_Interface
 			menuWorldSimulator.render();
 		}
 		
-		else if(active)
-		{
-			// if ( textEntryWorldName.selected == true )
-			// { HOTKEYS_ENABLED=false; }
-			// else
-			// { HOTKEYS_ENABLED=true; }
-			
+    // if ( textEntryWorldName.selected == true )
+    // { HOTKEYS_ENABLED=false; }
+    // else
+    // { HOTKEYS_ENABLED=true; }
+    
 
-			/* World preview takes top-right quarter of screen. */
-			if(fullScreenPreview==false)
-			{
-				int panelSizeX = panelX2-panelX1;
-				int panelSizeY = panelY2-panelY1;
-				
-				int worldPreviewX1=panelX1+(panelSizeX/2);
-				//int worldPreviewY1=panelY1+(panelSizeY/2);
-				int worldPreviewY1=panelY1;
-			
-			
-					/* Background image. */
-				//Renderer::placeTexture4(panelX1,panelY1,panelX2,panelY2,backgroundTexture,true);
-				//Renderer::placeTexture4(panelX1,panelY1,panelX2,panelY2,&TEX_WORLD_UNIT_NOMAD_01,true);
-				//Renderer::placeColour4(0,0,0,worldPreviewX1,worldPreviewY1,panelX2,panelY2);
+    /* World preview takes top-right quarter of screen. */
+    if(fullScreenPreview==false)
+    {
+      int panelSizeX = panelX2-panelX1;
+      int panelSizeY = panelY2-panelY1;
+      
+      int worldPreviewX1=panelX1+(panelSizeX/2);
+      //int worldPreviewY1=panelY1+(panelSizeY/2);
+      int worldPreviewY1=panelY1;
+    
+    
+        /* Background image. */
+      //Renderer::placeTexture4(panelX1,panelY1,panelX2,panelY2,backgroundTexture,true);
+      //Renderer::placeTexture4(panelX1,panelY1,panelX2,panelY2,&TEX_WORLD_UNIT_NOMAD_01,true);
+      //Renderer::placeColour4(0,0,0,worldPreviewX1,worldPreviewY1,panelX2,panelY2);
 
-				//worldViewer.setPanel(worldPreviewX1,worldPreviewY1,panelX2,panelY2);
-				//buttonExpandPreviewWindow.setPanel(worldPreviewX1,worldPreviewY1,worldPreviewX1+16,worldPreviewY1+16);
-				
+      //worldViewer.setPanel(worldPreviewX1,worldPreviewY1,panelX2,panelY2);
+      //buttonExpandPreviewWindow.setPanel(worldPreviewX1,worldPreviewY1,worldPreviewX1+16,worldPreviewY1+16);
+      
 
-				
-			}
-			else
-			{
-				//Renderer::placeColour4(0,0,0,panelX1,panelY1,panelX2,panelY2);
-				//worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
-				//buttonExpandPreviewWindow.setPanel(panelX1,panelY1,panelX1+16,panelY1+16);
+      
+    }
+    else
+    {
+      //Renderer::placeColour4(0,0,0,panelX1,panelY1,panelX2,panelY2);
+      //worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
+      //buttonExpandPreviewWindow.setPanel(panelX1,panelY1,panelX1+16,panelY1+16);
 
-			}
-			Renderer::placeTexture4(panelX1,panelY1,panelX2,panelY2,backgroundTexture,true);
-			//Renderer::placeTexture4(panelX1,panelY1,panelX2,panelY2,backgroundTexture,true);
-				worldViewer.render();
-				/* Render GUI controls. */
-				guiManager.render();
+    }
+    Renderer::placeTexture4(panelX1,panelY1,panelX2,panelY2,backgroundTexture,true);
+    //Renderer::placeTexture4(panelX1,panelY1,panelX2,panelY2,backgroundTexture,true);
+    worldViewer.render();
+    /* Render GUI controls. */
+    guiManager.render();
 				
 
-			
-		}
 	}
 	
 	bool keyboardEvent(Keyboard* _keyboard)
@@ -638,123 +634,119 @@ class Menu_WorldGenerator: public GUI_Interface
 	//	std::cout<<"WG ME\n";
 		if(menuWorldSimulator.active)
 		{ menuWorldSimulator.mouseEvent(_mouse); }
-		
-		else if(active)
-		{
-		
-			worldViewer.mouseEvent(_mouse);
-			//buttonExpandMap.mouseEvent(_mouse);
 
-			/* If the guiManager did something with the mouse event. */
-			if(guiManager.mouseEvent(_mouse)==true)
-			{
-			
-				if(buttonBack.clicked==true)
-				{
-					buttonBack.unclick();
-					//std::cout<<"Back.\n";
-					active=false;
-				}
-				if(buttonGenerate.clicked==true)
-				{
-					buttonGenerate.unclick();
-          eventGenerate();
-					buttonGenerate.unclick();
-				}
-				if(buttonExpandPreviewWindow.clicked==true)
-				{
-					fullScreenPreview=!fullScreenPreview;
-					/* World preview takes top-right quarter of screen. */
-					if(fullScreenPreview==false)
-					{
-					
-						/* Shrink the preview window. Restore GUI. */
-					
-						int panelSizeX = panelX2-panelX1;
-						int panelSizeY = panelY2-panelY1;
-						
-						int worldPreviewX1=panelX1+(panelSizeX/2);
-						int worldPreviewY1=panelY1+(panelSizeY/2);
-				
-						//worldViewer.setPanel(worldPreviewX1,worldPreviewY1,panelX2,panelY2);
-						//buttonExpandPreviewWindow.setPanel(worldPreviewX1,worldPreviewY1,worldPreviewX1+16,worldPreviewY1+16);
-						
-						buttonSimWorld.active=true;
-						buttonExportData.active=true;
-						buttonLoadWorld.active=true;
-						buttonGenerate.active=true;
-						textEntryWorldName.active=true;
-						textEntryFullSeed.active=true;
-						textEntryFullBiome.active=true;
-						textWorldSize.active=true;
-						textFreeSteps.active=true;
-						textIslandMode.active=true;
-						textWrapX.active=true;
-						textWrapY.active=true;
-						buttonBack.active=true;
-						worldSize.active=true;
-						freeSteps.active=true;
-						guiWrapX.active=true;
-						guiWrapY.active=true;
-						guiIslandMode.active=true;
-						
-						
-						
-						worldViewer.setPanel(panelX2/2,panelY2/2,panelX2,panelY2);
-					}
-					else
-					{
-						/* Expand the preview window. Hide GUI. */
-					
-						//worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
-						//buttonExpandPreviewWindow.setPanel(panelX1,panelY1,panelX1+16,panelY1+16);
-						worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
-						
-						//buttonSimWorld.active=true;
-						//buttonGenerate.active=true;
-						//textEntryWorldName.active=true;
-						//textWorldSize.active=true;
-						//buttonBack.active=true;
-						//worldSize.active=true;
-						
-					}
-					buttonExpandPreviewWindow.unclick();
-				}
-				if(buttonSimWorld.clicked==true)
-				{
-					buttonSimWorld.unclick();
-					if (world.generated == true)
-					{
-						menuWorldSimulator.init();
-						menuWorldSimulator.setFont(font);
-						menuWorldSimulator.active=true;
-						world.active=true;
-						//active=false;
-					}
-					else
-					{
-						std::cout<<"You must first generate a world.\n";
-					}
-					
-				}
-				if ( buttonExportData.clicked==true)
-				{
-          std::cout<<"Export data\n";
-          world.save();
-					buttonExportData.unclick();
-				}
-				
-				if ( buttonLoadWorld.clicked==true)
-				{
-					buttonLoadWorld.unclick();
-					//std::cout<<"Load world data.\n";
-          eventLoad();
+		
+    worldViewer.mouseEvent(_mouse);
+    //buttonExpandMap.mouseEvent(_mouse);
+
+    /* If the guiManager did something with the mouse event. */
+    if(guiManager.mouseEvent(_mouse)==true)
+    {
+    
+      if(buttonBack.clicked==true)
+      {
+        buttonBack.unclick();
+        //std::cout<<"Back.\n";
+        active=false;
+      }
+      if(buttonGenerate.clicked==true)
+      {
+        buttonGenerate.unclick();
+        eventGenerate();
+        buttonGenerate.unclick();
+      }
+      if(buttonExpandPreviewWindow.clicked==true)
+      {
+        fullScreenPreview=!fullScreenPreview;
+        /* World preview takes top-right quarter of screen. */
+        if(fullScreenPreview==false)
+        {
+        
+          /* Shrink the preview window. Restore GUI. */
+        
+          int panelSizeX = panelX2-panelX1;
+          int panelSizeY = panelY2-panelY1;
           
-				}
-				
-			}
-
-		}
+          int worldPreviewX1=panelX1+(panelSizeX/2);
+          int worldPreviewY1=panelY1+(panelSizeY/2);
+      
+          //worldViewer.setPanel(worldPreviewX1,worldPreviewY1,panelX2,panelY2);
+          //buttonExpandPreviewWindow.setPanel(worldPreviewX1,worldPreviewY1,worldPreviewX1+16,worldPreviewY1+16);
+          
+          buttonSimWorld.active=true;
+          buttonExportData.active=true;
+          buttonLoadWorld.active=true;
+          buttonGenerate.active=true;
+          textEntryWorldName.active=true;
+          textEntryFullSeed.active=true;
+          textEntryFullBiome.active=true;
+          textWorldSize.active=true;
+          textFreeSteps.active=true;
+          textIslandMode.active=true;
+          textWrapX.active=true;
+          textWrapY.active=true;
+          buttonBack.active=true;
+          worldSize.active=true;
+          freeSteps.active=true;
+          guiWrapX.active=true;
+          guiWrapY.active=true;
+          guiIslandMode.active=true;
+          
+          
+          
+          worldViewer.setPanel(panelX2/2,panelY2/2,panelX2,panelY2);
+        }
+        else
+        {
+          /* Expand the preview window. Hide GUI. */
+        
+          //worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
+          //buttonExpandPreviewWindow.setPanel(panelX1,panelY1,panelX1+16,panelY1+16);
+          worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
+          
+          //buttonSimWorld.active=true;
+          //buttonGenerate.active=true;
+          //textEntryWorldName.active=true;
+          //textWorldSize.active=true;
+          //buttonBack.active=true;
+          //worldSize.active=true;
+          
+        }
+        buttonExpandPreviewWindow.unclick();
+      }
+      if(buttonSimWorld.clicked==true)
+      {
+        buttonSimWorld.unclick();
+        if (world.generated == true)
+        {
+          menuWorldSimulator.init();
+          menuWorldSimulator.setFont(font);
+          menuWorldSimulator.active=true;
+          world.active=true;
+          //active=false;
+        }
+        else
+        {
+          std::cout<<"You must first generate a world.\n";
+        }
+        
+      }
+      if ( buttonExportData.clicked==true)
+      {
+        std::cout<<"Export data\n";
+        world.save();
+        buttonExportData.unclick();
+      }
+      
+      if ( buttonLoadWorld.clicked==true)
+      {
+        buttonLoadWorld.unclick();
+        //std::cout<<"Load world data.\n";
+        eventLoad();
+        
+      }
+      
+    }
 		return false;
 	}
 	

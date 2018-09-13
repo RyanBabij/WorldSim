@@ -22,7 +22,7 @@ std::mutex render_mutex;
   allowing any menu to easily switch the "primary" menu.
 */
 
-enum enumMenu { MENU_UNKNOWN, MENU_TITLE, MENU_OPTIONS, MENU_LOADGAME };
+enum enumMenu { MENU_UNKNOWN, MENU_TITLE, MENU_OPTIONS, MENU_LOADGAME, MENU_WORLDGENERATOR, MENU_GODMODE, MENU_ADVENTUREMODE };
 enumMenu activeMenu = MENU_TITLE;
 
 

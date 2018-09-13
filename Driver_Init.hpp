@@ -75,7 +75,14 @@ void init()
 	menuLoadGame.setFont(&font8x8);
 	menuLoadGame.backgroundTexture=&TEX_TITLE;
 	menuLoadGame.active=false;
-
+  
+	/* Initialise the world generator menu */
+	menuWorldGenerator.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
+	menuWorldGenerator.init();
+	menuWorldGenerator.setFont(&font8x8);
+	//menuWorldGenerator.backgroundTexture=&TEX_TITLE;
+	menuWorldGenerator.active=false;
+  
 	mouseInterfaceManager.add(&menuTitle);
 	//keyboardInterfaceManager.add(&menuTitle);
 	globalGuiManager.add(&menuTitle);

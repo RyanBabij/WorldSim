@@ -173,6 +173,8 @@ static void GL_reshape(const int WIDTH, const int HEIGHT)
   menuOptions.eventResize();
 	menuLoadGame.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
   menuLoadGame.eventResize();
+	menuWorldGenerator.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
+  menuWorldGenerator.eventResize();
 
 }
 
@@ -433,23 +435,24 @@ void GL_display()
   {
     menuLoadGame.render();
   }
+  else if (activeMenu == MENU_WORLDGENERATOR )
+  {
+    menuWorldGenerator.render();
+  }
 
   
-      /* Render everything that wants to render. */
-    displayInterfaceManager.renderAll();
+    /* Render everything that wants to render. */
+  displayInterfaceManager.renderAll();
     
     
   if(DOUBLE_BUFFERING==true)
   { glutSwapBuffers(); }
   else
   { glFlush(); }
-      
 }
-
 
 static void GL_mouseWheel (const int wheel, const int direction, const int _x, const int _y)
 {
-
 	/* Get window size. */
 	GLint windowDimensions[4];
 	glGetIntegerv( GL_VIEWPORT, windowDimensions );
@@ -457,7 +460,6 @@ static void GL_mouseWheel (const int wheel, const int direction, const int _x, c
 	//_y=windowDimensions[3]-_y;
 	/* Update globalMouse pointer coordinates. */
 	globalMouse.move(_x,windowDimensions[3]-_y);
-
 
 	if(direction==1)
 	{ globalMouse.isWheelUp=true; globalMouse.isWheelDown=false; }
@@ -478,6 +480,10 @@ static void GL_mouseWheel (const int wheel, const int direction, const int _x, c
   else if (activeMenu == MENU_LOADGAME )
   {
     menuLoadGame.mouseEvent(&globalMouse);
+  }
+  else if (activeMenu == MENU_WORLDGENERATOR )
+  {
+    menuWorldGenerator.mouseEvent(&globalMouse);
   }
 }
 
@@ -531,6 +537,10 @@ static inline void GL_mouseClick (const int clickType, const int state, int mous
   {
     menuLoadGame.mouseEvent(&globalMouse);
   }
+  else if (activeMenu == MENU_WORLDGENERATOR )
+  {
+    menuWorldGenerator.mouseEvent(&globalMouse);
+  }
 }
 
 
@@ -559,6 +569,10 @@ static void GL_mouseMove(const int mouseX, int mouseY)
   else if (activeMenu == MENU_LOADGAME )
   {
     menuLoadGame.mouseEvent(&globalMouse);
+  }
+  else if (activeMenu == MENU_WORLDGENERATOR )
+  {
+    menuWorldGenerator.mouseEvent(&globalMouse);
   }
 
 }

@@ -11,18 +11,9 @@
 	and configuring your game.
 */
 
-
-#include "Menu_WorldGenerator.hpp"
-#include "Menu_Options.hpp"
-#include "Menu_LoadGame.hpp"
-
 class Menu_Title: public GUI_Interface, public LogicTickInterface
 {
 	public:
-
-	/* Submenus. */
-	/* New game -> Goes to world generator. */
-	Menu_WorldGenerator menuWorldGenerator;
 
 	
 	/* Colours / theme. */
@@ -55,15 +46,11 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		active=false;
 		panelX1=0; panelY1=0; panelX2=0; panelY2=0;
 		font=0;
-		
-		menuWorldGenerator.active=false;
-		active=true;
 	}
 	
 	void setFont(Wildcat::Font* _font)
 	{
 		font = _font;
-		menuWorldGenerator.setFont(_font);
 		guiManager.setFont(_font);
 	}
 
@@ -75,9 +62,6 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		buttonOptions.setPanel(panelCenterX-60, panelY2-64, panelCenterX+60, panelY2-84);
 		buttonQuit.setPanel(panelCenterX-60, panelY2-86, panelCenterX+60, panelY2-106);
 		buttonTestSomething.setPanel(panelCenterX-60, panelY2-108, panelCenterX+60, panelY2-128);
-
-		/* Pass resize down to submenus. */
-		menuWorldGenerator.setPanel(panelX1,panelY1,panelX2,panelY2);
 	}
 	
 	void init()
@@ -114,14 +98,9 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		
 		setFont(font);
 		
-		menuWorldGenerator.init();
-
-		menuWorldGenerator.active = false;
-		active=true;
-		
 		if ( QUICKSTART )
 		{
-			menuWorldGenerator.active=true;
+			//menuWorldGenerator.active=true;
 		}
 
 	
@@ -129,78 +108,58 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 	/* DisplayInterface:: */
 	void render()
 	{
-		if(menuWorldGenerator.active)
-		{
-			menuWorldGenerator.render();
-		}
-		else if(active)
-		{
-				/* Background image. Stretch to fit, preserve aspect ratio. */
-				Renderer::placeTexture4(panelX1,panelY1,panelX2,panelY2,backgroundTexture,true);
-				guiManager.render();
-			
-		}
+    /* Background image. Stretch to fit, preserve aspect ratio. */
+    Renderer::placeTexture4(panelX1,panelY1,panelX2,panelY2,backgroundTexture,true);
+    guiManager.render();
 	}
   
 	/* MouseInterface:: */
 	bool mouseEvent (Mouse* _mouse)
 	{
-		if(menuWorldGenerator.active)
-		{
-			menuWorldGenerator.mouseEvent(_mouse);
-		}
-		else if(active)
-		{
-
-      /* If the guiManager did something with the mouse event. */
-      if(guiManager.mouseEvent(_mouse)==true)
+    /* If the guiManager did something with the mouse event. */
+    if(guiManager.mouseEvent(_mouse)==true)
+    {
+      if(buttonNewGame.clicked==true)
       {
-        if(buttonNewGame.clicked==true)
-        {
-          buttonNewGame.unclick();
-          menuWorldGenerator.active=true;
-          return true;
-        }
-        if(buttonQuit.clicked==true)
-        {
-          QUIT_FLAG=true;
-          buttonQuit.clicked=false;
-        }
-        if(buttonOptions.clicked==true)
-        {
-          buttonOptions.clicked=false;
-          activeMenu = MENU_OPTIONS;
-        }
-        if(buttonLoadGame.clicked==true)
-        {
-          buttonLoadGame.clicked=false;
-          activeMenu = MENU_LOADGAME;
-        }
-        if ( buttonTestSomething.clicked == true )
-        {
-          buttonTestSomething.clicked = false;
-          buttonTestSomething.text="Yep it works";
-        }
-			}
-		}
+        buttonNewGame.unclick();
+        activeMenu = MENU_WORLDGENERATOR;
+        return true;
+      }
+      if(buttonQuit.clicked==true)
+      {
+        QUIT_FLAG=true;
+        buttonQuit.clicked=false;
+      }
+      if(buttonOptions.clicked==true)
+      {
+        buttonOptions.clicked=false;
+        activeMenu = MENU_OPTIONS;
+      }
+      if(buttonLoadGame.clicked==true)
+      {
+        buttonLoadGame.clicked=false;
+        activeMenu = MENU_LOADGAME;
+      }
+      if ( buttonTestSomething.clicked == true )
+      {
+        buttonTestSomething.clicked = false;
+        buttonTestSomething.text="Yep it works";
+      }
+    }
 		return false;
 	}
 	
 	void logicTick()
 	{
-		if(menuWorldGenerator.active==true)
-		{
-			menuWorldGenerator.logicTick();
-		}
+		// if(menuWorldGenerator.active==true)
+		// {
+			// menuWorldGenerator.logicTick();
+		// }
 	}
 	
 	bool keyboardEvent(Keyboard* _keyboard)
 	{
-		if (menuWorldGenerator.active == true )
-		{
-			menuWorldGenerator.keyboardEvent(_keyboard);
-		}
-		else if ( guiManager.keyboardEvent(_keyboard) )
+    if ( guiManager.keyboardEvent(_keyboard) )
 		{
 			return true;
 		}
@@ -208,7 +167,8 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		if (_keyboard->isPressed(Keyboard::ONE) )
     {
       _keyboard->unpress(Keyboard::ONE);
-      menuWorldGenerator.active=true;
+      //menuWorldGenerator.active=true;
+      activeMenu = MENU_WORLDGENERATOR;
       return true;
     }
 		
