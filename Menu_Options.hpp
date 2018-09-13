@@ -42,8 +42,6 @@ class Menu_Options: public GUI_Interface
 	{
 		/* Update control positions. */
 		buttonBack.setPanel(panelCenterX-60, panelY2-20, panelCenterX+60, panelY2-40);
-
-
 	}
 	
 	void init()

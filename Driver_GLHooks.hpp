@@ -171,6 +171,8 @@ static void GL_reshape(const int WIDTH, const int HEIGHT)
   menuTitle.eventResize();
 	menuOptions.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
   menuOptions.eventResize();
+	menuLoadGame.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
+  menuLoadGame.eventResize();
 
 }
 
@@ -378,7 +380,7 @@ double aFrameTime [OUTPUT_FRAMERATE_SAMPLE_SIZE];
 int iFrameTime=0;
 
 double rollingAverage=0;
-/* NOTE: Some of this shit should be moved out of the GL area. */
+
 void GL_display()
 {
 	// lock for entire scope
@@ -427,6 +429,10 @@ void GL_display()
   {
     menuOptions.render();
   }
+  else if (activeMenu == MENU_LOADGAME )
+  {
+    menuLoadGame.render();
+  }
 
   
       /* Render everything that wants to render. */
@@ -469,7 +475,10 @@ static void GL_mouseWheel (const int wheel, const int direction, const int _x, c
   {
     menuOptions.mouseEvent(&globalMouse);
   }
-
+  else if (activeMenu == MENU_LOADGAME )
+  {
+    menuLoadGame.mouseEvent(&globalMouse);
+  }
 }
 
 
@@ -514,9 +523,13 @@ static inline void GL_mouseClick (const int clickType, const int state, int mous
   {
     menuTitle.mouseEvent(&globalMouse);
   }
-  else if (activeMenu == MENU_OPTIONS )
+  else if ( activeMenu == MENU_OPTIONS )
   {
     menuOptions.mouseEvent(&globalMouse);
+  }
+  else if (activeMenu == MENU_LOADGAME )
+  {
+    menuLoadGame.mouseEvent(&globalMouse);
   }
 }
 
@@ -542,6 +555,10 @@ static void GL_mouseMove(const int mouseX, int mouseY)
   else if (activeMenu == MENU_OPTIONS )
   {
     menuOptions.mouseEvent(&globalMouse);
+  }
+  else if (activeMenu == MENU_LOADGAME )
+  {
+    menuLoadGame.mouseEvent(&globalMouse);
   }
 
 }

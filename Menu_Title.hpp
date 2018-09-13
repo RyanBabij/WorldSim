@@ -23,10 +23,6 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 	/* Submenus. */
 	/* New game -> Goes to world generator. */
 	Menu_WorldGenerator menuWorldGenerator;
-	/* Options. */
-	//Menu_Options menuOptions;
-	/* Load Game. */
-	Menu_LoadGame menuLoadGame;
 
 	
 	/* Colours / theme. */
@@ -67,8 +63,6 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 	void setFont(Wildcat::Font* _font)
 	{
 		font = _font;
-		//menuOptions.setFont(_font);
-		menuLoadGame.setFont(_font);
 		menuWorldGenerator.setFont(_font);
 		guiManager.setFont(_font);
 	}
@@ -84,9 +78,6 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 
 		/* Pass resize down to submenus. */
 		menuWorldGenerator.setPanel(panelX1,panelY1,panelX2,panelY2);
-		//menuOptions.setPanel(panelX1,panelY1,panelX2,panelY2);
-		menuLoadGame.setPanel(panelX1,panelY1,panelX2,panelY2);
-
 	}
 	
 	void init()
@@ -123,8 +114,6 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		
 		setFont(font);
 		
-		//menuOptions.init();
-		menuLoadGame.init();
 		menuWorldGenerator.init();
 
 		menuWorldGenerator.active = false;
@@ -146,21 +135,9 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		}
 		else if(active)
 		{
-		
-			//if(menuOptions.active)
-			//{
-				//menuOptions.render();
-			//}
-      if(menuLoadGame.active)
-			{
-				menuLoadGame.render();
-			}
-			else
-			{
 				/* Background image. Stretch to fit, preserve aspect ratio. */
 				Renderer::placeTexture4(panelX1,panelY1,panelX2,panelY2,backgroundTexture,true);
 				guiManager.render();
-			}
 			
 		}
 	}
@@ -174,49 +151,36 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		}
 		else if(active)
 		{
-		
-			//if(menuOptions.active)
-			//{
-				//menuOptions.mouseEvent(_mouse);
-			//}
-      if(menuLoadGame.active)
-			{
-				menuLoadGame.mouseEvent(_mouse);
-			}
-			else
-			{
-				/* If the guiManager did something with the mouse event. */
-				if(guiManager.mouseEvent(_mouse)==true)
-				{
-					if(buttonNewGame.clicked==true)
-					{
-						buttonNewGame.unclick();
-						menuWorldGenerator.active=true;
-						return true;
-					}
-					if(buttonQuit.clicked==true)
-					{
-						QUIT_FLAG=true;
-						buttonQuit.clicked=false;
-					}
-					if(buttonOptions.clicked==true)
-					{
-						buttonOptions.clicked=false;
-            activeMenu = MENU_OPTIONS;
-						//menuOptions.active=true;
-					}
-					if(buttonLoadGame.clicked==true)
-					{
-						buttonLoadGame.clicked=false;
-						menuLoadGame.active=true;
-					}
-          if ( buttonTestSomething.clicked == true )
-          {
-            buttonTestSomething.clicked = false;
-            buttonTestSomething.text="Yep it works";
-          }
 
-				}
+      /* If the guiManager did something with the mouse event. */
+      if(guiManager.mouseEvent(_mouse)==true)
+      {
+        if(buttonNewGame.clicked==true)
+        {
+          buttonNewGame.unclick();
+          menuWorldGenerator.active=true;
+          return true;
+        }
+        if(buttonQuit.clicked==true)
+        {
+          QUIT_FLAG=true;
+          buttonQuit.clicked=false;
+        }
+        if(buttonOptions.clicked==true)
+        {
+          buttonOptions.clicked=false;
+          activeMenu = MENU_OPTIONS;
+        }
+        if(buttonLoadGame.clicked==true)
+        {
+          buttonLoadGame.clicked=false;
+          activeMenu = MENU_LOADGAME;
+        }
+        if ( buttonTestSomething.clicked == true )
+        {
+          buttonTestSomething.clicked = false;
+          buttonTestSomething.text="Yep it works";
+        }
 			}
 		}
 		return false;

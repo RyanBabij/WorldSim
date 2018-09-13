@@ -2,7 +2,7 @@
 #ifndef GUILD_MENU_LOADGAME_HPP
 #define GUILD_MENU_LOADGAME_HPP
 
-class Menu_LoadGame: public Menu_Interface
+class Menu_LoadGame: public GUI_Interface
 {
 	public:
 	Texture* backgroundTexture;
@@ -18,7 +18,6 @@ class Menu_LoadGame: public Menu_Interface
   
   Menu_LoadGame()
   {
-    menuID = MENU_LOADGAME;
   }
   ~Menu_LoadGame()
   {
@@ -27,7 +26,7 @@ class Menu_LoadGame: public Menu_Interface
 	void render()
 	{
 		/* Render background image. */
-		Renderer::placeTexture4(0,0,1024,600,backgroundTexture);
+		Renderer::placeTexture4(panelX1,panelY1,panelX2,panelY2,backgroundTexture,true);
 		guiManager.render();
 	}
 	
@@ -42,7 +41,8 @@ class Menu_LoadGame: public Menu_Interface
 		cDropPanel.set(170,170,170);
 		cHighlight.set(255,160,160);
 		
-		buttonBack.setPanel((1024/2)-70, 400, (1024/2)+70, 420);
+		/* Update control positions. */
+		buttonBack.setPanel(panelCenterX-60, panelY2-20, panelCenterX+60, panelY2-40);
 		buttonBack.text="Back";
 		buttonBack.setColours(&cNormal,&cHighlight,0);
 		
@@ -52,6 +52,12 @@ class Menu_LoadGame: public Menu_Interface
 		guiManager.setFont(font);
 	}
 	
+	void eventResize()
+	{
+		/* Update control positions. */
+		buttonBack.setPanel(panelCenterX-60, panelY2-20, panelCenterX+60, panelY2-40);
+	}
+  
 	void setFont(Wildcat::Font* _font)
 	{
 		font = _font;
@@ -60,22 +66,17 @@ class Menu_LoadGame: public Menu_Interface
 	
 	bool mouseEvent (Mouse* _mouse)
 	{
-		if(active)
-		{
-			/* If the guiManager did something with the mouse event. */
-			if(guiManager.mouseEvent(_mouse)==true)
-			{
-			
-				if(buttonBack.clicked==true)
-				{
-					buttonBack.unclick();
+    /* If the guiManager did something with the mouse event. */
+    if(guiManager.mouseEvent(_mouse)==true)
+    {
+    
+      if(buttonBack.clicked==true)
+      {
+        buttonBack.unclick();
+        activeMenu = MENU_TITLE;
+      }
+    }
 
-					//std::cout<<"Back.\n";
-					active=false;
-				}
-			}
-
-		}
 		return false;
 	}
 	

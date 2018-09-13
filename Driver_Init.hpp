@@ -69,15 +69,12 @@ void init()
 	menuOptions.backgroundTexture=&TEX_TITLE;
 	menuOptions.active=false;
   
-  /* Push menus to menuManager */
-  //menuManager.add(&menuTitle);
-  //menuManager.add(&menuOptions);
-  //menuManager.add(&menuLoadGame);
-  
-  menuManager.setFont(&font8x8);
-  menuManager.initAll();
-  menuManager.eventResize();
-	
+	/* Initialise the load game menu */
+	menuLoadGame.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
+	menuLoadGame.init();
+	menuLoadGame.setFont(&font8x8);
+	menuLoadGame.backgroundTexture=&TEX_TITLE;
+	menuLoadGame.active=false;
 
 	mouseInterfaceManager.add(&menuTitle);
 	//keyboardInterfaceManager.add(&menuTitle);
