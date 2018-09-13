@@ -62,8 +62,21 @@ void init()
 	menuTitle.backgroundTexture=&TEX_TITLE;
 	menuTitle.active=true;
   
+	/* Initialise the options menu */
+	menuOptions.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
+	menuOptions.init();
+	menuOptions.setFont(&font8x8);
+	menuOptions.backgroundTexture=&TEX_TITLE;
+	menuOptions.active=false;
+  
   /* Push menus to menuManager */
-  menuManager.add(&menuTitle);
+  //menuManager.add(&menuTitle);
+  //menuManager.add(&menuOptions);
+  //menuManager.add(&menuLoadGame);
+  
+  menuManager.setFont(&font8x8);
+  menuManager.initAll();
+  menuManager.eventResize();
 	
 
 	mouseInterfaceManager.add(&menuTitle);

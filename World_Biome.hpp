@@ -2,18 +2,10 @@
 #ifndef WORLDSIM_WORLD_BIOME_HPP
 #define WORLDSIM_WORLD_BIOME_HPP
 
-/* World_Biome.hpp
+/* WorldSim: World_Biome.hpp
 	#include "World_Biome.hpp"
 
-	Project: WorldSim
-	Created: 2/12/2017, 0272554803.
-	Updated: 2/12/2017, 0272554803.
-
-	Description:
-	
-
-	Notes:
-
+  Not currently functional. Intended to store non-hardcoded biome data in future.
 
 */
 

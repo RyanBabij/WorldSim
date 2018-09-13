@@ -168,6 +168,9 @@ static void GL_reshape(const int WIDTH, const int HEIGHT)
 	
 	/* Update GUI coords. */
 	menuTitle.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
+  menuTitle.eventResize();
+	menuOptions.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
+  menuOptions.eventResize();
 
 }
 
@@ -380,66 +383,61 @@ void GL_display()
 {
 	// lock for entire scope
 	//std::lock_guard<std::mutex> guard(render_mutex);
-	
-	
-if (DONT_RENDER==false)
-{
+  
+  if ( DONT_RENDER )
+  { return; }
 
-	if(OUTPUT_FRAMERATE == true)
-	{
-	
-		/* Timer must be done like this because OpenGL threads shit which can hang the app but won't show up if the timer is checked directly after OpenGL calls. Maybe the framerate smoother could learn from this. */
-		debugTimer.update();
-		//std::cout<<"Seconds per frame rolling average: "<<debugTimer.fullSeconds<<".\n";
-		
-		aFrameTime[iFrameTime] = debugTimer.fullSeconds;
-		++iFrameTime;
-		if(iFrameTime==OUTPUT_FRAMERATE_SAMPLE_SIZE)
-		{
-			double totalFrameTime = 0;
-			for (int i=0;i<OUTPUT_FRAMERATE_SAMPLE_SIZE;++i)
-			{
-				totalFrameTime+=aFrameTime[i];
-			}
-			totalFrameTime/=OUTPUT_FRAMERATE_SAMPLE_SIZE;
-			std::cout<<"SPF: "<<totalFrameTime<<". ";
-			double frameRate = 1/totalFrameTime;
-			std::cout<<"FPS: "<<frameRate<<".\n";
-		
-			iFrameTime=0;
-		}
-		debugTimer.start();
-		
-	}
+  if( OUTPUT_FRAMERATE )
+  {
+  
+    /* Timer must be done like this because OpenGL threads shit which can hang the app but won't show up if the timer is checked directly after OpenGL calls. Maybe the framerate smoother could learn from this. */
+    debugTimer.update();
+    //std::cout<<"Seconds per frame rolling average: "<<debugTimer.fullSeconds<<".\n";
+    
+    aFrameTime[iFrameTime] = debugTimer.fullSeconds;
+    ++iFrameTime;
+    if(iFrameTime==OUTPUT_FRAMERATE_SAMPLE_SIZE)
+    {
+      double totalFrameTime = 0;
+      for (int i=0;i<OUTPUT_FRAMERATE_SAMPLE_SIZE;++i)
+      {
+        totalFrameTime+=aFrameTime[i];
+      }
+      totalFrameTime/=OUTPUT_FRAMERATE_SAMPLE_SIZE;
+      std::cout<<"SPF: "<<totalFrameTime<<". ";
+      double frameRate = 1/totalFrameTime;
+      std::cout<<"FPS: "<<frameRate<<".\n";
+    
+      iFrameTime=0;
+    }
+    debugTimer.start();
+    
+  }
 
-		glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT);
+  
+    // NEW SYSTEM FOR MENU MANAGEMENT.
+    // No more complicated hierarchies or menu managers. Just one global variable.
+  
+  if ( activeMenu == MENU_TITLE )
+  {
+    menuTitle.render();
+  }
+  else if (activeMenu == MENU_OPTIONS )
+  {
+    menuOptions.render();
+  }
 
-		
-		/* If we are in the title menu, then render it. */
-	if(menuTitle.active)
-	{
-		menuTitle.render();
-//			menuManager.render();
-	}
-		/* if we are in the character creation menu, render it. */
-
-		/* If we are not in any menus, then render the main game screen. */
-	else
-	{
-
-		
-	}
-	
-			/* Render everything that wants to render. */
-		displayInterfaceManager.renderAll();
-		
-		
-		if(DOUBLE_BUFFERING==true)
-		{ glutSwapBuffers(); }
-		else
-		{ glFlush(); }
-		
-}
+  
+      /* Render everything that wants to render. */
+    displayInterfaceManager.renderAll();
+    
+    
+  if(DOUBLE_BUFFERING==true)
+  { glutSwapBuffers(); }
+  else
+  { glFlush(); }
+      
 }
 
 
@@ -461,7 +459,16 @@ static void GL_mouseWheel (const int wheel, const int direction, const int _x, c
 	{ globalMouse.isWheelDown=true; globalMouse.isWheelUp=false; }
 
 	/* Send mouse event to all MouseInterface objects. */
-	mouseInterfaceManager.mouseEventAll(&globalMouse);
+	//mouseInterfaceManager.mouseEventAll(&globalMouse);
+  
+  if ( activeMenu == MENU_TITLE )
+  {
+    menuTitle.mouseEvent(&globalMouse);
+  }
+  else if (activeMenu == MENU_OPTIONS )
+  {
+    menuOptions.mouseEvent(&globalMouse);
+  }
 
 }
 
@@ -501,7 +508,16 @@ static inline void GL_mouseClick (const int clickType, const int state, int mous
 	globalMouse.move(mouseX,mouseY);
 	
 	/* Send mouse event to all MouseInterface objects. */
-	mouseInterfaceManager.mouseEventAll(&globalMouse);
+	//mouseInterfaceManager.mouseEventAll(&globalMouse);
+  
+  if ( activeMenu == MENU_TITLE )
+  {
+    menuTitle.mouseEvent(&globalMouse);
+  }
+  else if (activeMenu == MENU_OPTIONS )
+  {
+    menuOptions.mouseEvent(&globalMouse);
+  }
 }
 
 
@@ -517,6 +533,15 @@ static void GL_mouseMove(const int mouseX, int mouseY)
 	globalMouse.move(mouseX,mouseY);
 
 	/* Send mouse event to all MouseInterface objects. */
-	mouseInterfaceManager.mouseEventAll(&globalMouse);	
+	//mouseInterfaceManager.mouseEventAll(&globalMouse);	
+  
+  if ( activeMenu == MENU_TITLE )
+  {
+    menuTitle.mouseEvent(&globalMouse);
+  }
+  else if (activeMenu == MENU_OPTIONS )
+  {
+    menuOptions.mouseEvent(&globalMouse);
+  }
 
 }

@@ -11,6 +11,7 @@
 	and configuring your game.
 */
 
+
 #include "Menu_WorldGenerator.hpp"
 #include "Menu_Options.hpp"
 #include "Menu_LoadGame.hpp"
@@ -18,12 +19,12 @@
 class Menu_Title: public GUI_Interface, public LogicTickInterface
 {
 	public:
-	
+
 	/* Submenus. */
 	/* New game -> Goes to world generator. */
 	Menu_WorldGenerator menuWorldGenerator;
 	/* Options. */
-	Menu_Options menuOptions;
+	//Menu_Options menuOptions;
 	/* Load Game. */
 	Menu_LoadGame menuLoadGame;
 
@@ -66,7 +67,7 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 	void setFont(Wildcat::Font* _font)
 	{
 		font = _font;
-		menuOptions.setFont(_font);
+		//menuOptions.setFont(_font);
 		menuLoadGame.setFont(_font);
 		menuWorldGenerator.setFont(_font);
 		guiManager.setFont(_font);
@@ -83,7 +84,7 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 
 		/* Pass resize down to submenus. */
 		menuWorldGenerator.setPanel(panelX1,panelY1,panelX2,panelY2);
-		menuOptions.setPanel(panelX1,panelY1,panelX2,panelY2);
+		//menuOptions.setPanel(panelX1,panelY1,panelX2,panelY2);
 		menuLoadGame.setPanel(panelX1,panelY1,panelX2,panelY2);
 
 	}
@@ -122,7 +123,7 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		
 		setFont(font);
 		
-		menuOptions.init();
+		//menuOptions.init();
 		menuLoadGame.init();
 		menuWorldGenerator.init();
 
@@ -146,11 +147,11 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		else if(active)
 		{
 		
-			if(menuOptions.active)
-			{
-				menuOptions.render();
-			}
-			else if(menuLoadGame.active)
+			//if(menuOptions.active)
+			//{
+				//menuOptions.render();
+			//}
+      if(menuLoadGame.active)
 			{
 				menuLoadGame.render();
 			}
@@ -174,11 +175,11 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		else if(active)
 		{
 		
-			if(menuOptions.active)
-			{
-				menuOptions.mouseEvent(_mouse);
-			}
-			else if(menuLoadGame.active)
+			//if(menuOptions.active)
+			//{
+				//menuOptions.mouseEvent(_mouse);
+			//}
+      if(menuLoadGame.active)
 			{
 				menuLoadGame.mouseEvent(_mouse);
 			}
@@ -201,7 +202,8 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 					if(buttonOptions.clicked==true)
 					{
 						buttonOptions.clicked=false;
-						menuOptions.active=true;
+            activeMenu = MENU_OPTIONS;
+						//menuOptions.active=true;
 					}
 					if(buttonLoadGame.clicked==true)
 					{

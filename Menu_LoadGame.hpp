@@ -2,7 +2,7 @@
 #ifndef GUILD_MENU_LOADGAME_HPP
 #define GUILD_MENU_LOADGAME_HPP
 
-class Menu_LoadGame: public GUI_Interface
+class Menu_LoadGame: public Menu_Interface
 {
 	public:
 	Texture* backgroundTexture;
@@ -15,6 +15,14 @@ class Menu_LoadGame: public GUI_Interface
 	Colour cSelected;
 	Colour cDropPanel;
 	Colour cHighlight;
+  
+  Menu_LoadGame()
+  {
+    menuID = MENU_LOADGAME;
+  }
+  ~Menu_LoadGame()
+  {
+  }
 	
 	void render()
 	{

@@ -16,11 +16,18 @@ class Menu_Options: public GUI_Interface
 	GUI_Button buttonBack;
 	/* GUI manager. Manages all GUI controls. */
 	GUI_Manager guiManager;
+  
+  Menu_Options()
+  {
+  }
+  ~Menu_Options()
+  {
+  }
 	
 	void render()
 	{
 		/* Render background image. */
-		Renderer::placeTexture4(0,0,1024,600,backgroundTexture);
+		Renderer::placeTexture4(panelX1,panelY1,panelX2,panelY2,backgroundTexture,true);
 		
 		guiManager.render();
 	}
@@ -29,6 +36,14 @@ class Menu_Options: public GUI_Interface
 	{
 		font = _font;
 		guiManager.setFont(_font);
+	}
+  
+	void eventResize()
+	{
+		/* Update control positions. */
+		buttonBack.setPanel(panelCenterX-60, panelY2-20, panelCenterX+60, panelY2-40);
+
+
 	}
 	
 	void init()
@@ -43,7 +58,8 @@ class Menu_Options: public GUI_Interface
 		cDropPanel.set(170,170,170);
 		cHighlight.set(255,160,160);
 		
-		buttonBack.setPanel((1024/2)-70, 400, (1024/2)+70, 420);
+		/* Update control positions. */
+		buttonBack.setPanel(panelCenterX-60, panelY2-20, panelCenterX+60, panelY2-40);
 		buttonBack.text="Back";
 		buttonBack.setColours(&cNormal,&cHighlight,0);
 		
@@ -55,9 +71,6 @@ class Menu_Options: public GUI_Interface
 	
 	bool mouseEvent (Mouse* _mouse)
 	{
-		if(active)
-		{
-		
 			/* If the guiManager did something with the mouse event. */
 			if(guiManager.mouseEvent(_mouse)==true)
 			{
@@ -66,11 +79,11 @@ class Menu_Options: public GUI_Interface
 				{
 					buttonBack.unclick();
 					//std::cout<<"Back.\n";
-					active=false;
+					//active=false;
+          activeMenu = MENU_TITLE;
 				}
 			}
 
-		}
 		return false;
 	}
 	

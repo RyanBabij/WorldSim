@@ -16,6 +16,16 @@ std::mutex render_mutex;
 // that out later.
 #define PORTABLE_INT_MAX 32767
 
+/* MENU ENUMS
+
+  A game only has a handful of "primary" menus (title screen, load game, save game, pause menu, etc), therefore it's practical to manage menu switching by using a global variable,
+  allowing any menu to easily switch the "primary" menu.
+*/
+
+enum enumMenu { MENU_UNKNOWN, MENU_TITLE, MENU_OPTIONS, MENU_LOADGAME };
+enumMenu activeMenu = MENU_TITLE;
+
+
   /* Race */
 enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
 

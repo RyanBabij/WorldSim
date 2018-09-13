@@ -223,6 +223,12 @@ Menu_Manager menuManager;
 /* Title Menu / Main Menu */
 #include "Menu_Title.hpp"
 Menu_Title menuTitle;
+/* Options menu */
+#include "Menu_Options.hpp"
+Menu_Options menuOptions;
+/* Load game menu */
+#include "Menu_LoadGame.hpp"
+Menu_LoadGame menuLoadGame;
 
 /* Title menu */
 #include "Menu_WorldGenerator.hpp"
