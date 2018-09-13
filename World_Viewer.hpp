@@ -779,7 +779,7 @@ void switchTarget(World_Local* _worldLocal)
           
             // Check if we're supposed to render a local map on this tile.
           World_Local * localMap = 0;
-          if ( tileSize > 4 && world->isSafe(tileX,tileY) )
+          if ( tileSize >= 12 && world->isSafe(tileX,tileY) )
           {
             
             for ( int i=0;i<world->vWorldLocal.size();++i)

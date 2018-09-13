@@ -217,6 +217,9 @@ LogicTickManager logicTickManager;
 IdleTickManager idleManager;
 
 
+#include "Menu_Manager.hpp"
+Menu_Manager menuManager;
+
 /* Title Menu / Main Menu */
 #include "Menu_Title.hpp"
 Menu_Title menuTitle;

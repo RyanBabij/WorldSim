@@ -61,6 +61,9 @@ void init()
 	menuTitle.setFont(&font8x8);
 	menuTitle.backgroundTexture=&TEX_TITLE;
 	menuTitle.active=true;
+  
+  /* Push menus to menuManager */
+  menuManager.add(&menuTitle);
 	
 
 	mouseInterfaceManager.add(&menuTitle);
