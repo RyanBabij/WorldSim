@@ -1562,6 +1562,33 @@ WorldTile * World::getTile (const int x, const int y )
 }
 
 
+bool World::prepareAdventureMode( Character * _character )
+{
+  std::cout<<"World is preparing for Adventure Mode.\n";
+  
+  if ( _character == 0 )
+  {
+    std::cout<<"Error: Bad pointer.\n";
+    return false;
+  }
+  
+  playerCharacter = _character;
+  
+  if ( playerCharacter->tribe == 0 )
+  {
+    std::cout<<"Error: Character doesn't have Tribe.\n";
+    return false;
+  }
+  
+  std::cout<<"Generating local map: ("<<playerCharacter->tribe->worldX<<", "<<playerCharacter->tribe->worldY<<").\n";
+  generateLocal(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
+  
+  worldViewer.tileSize = 1000;
+  worldViewer.setCenterTile(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY,playerCharacter->x,playerCharacter->y);
+  
+  return true;
+}
+
 
 bool World::loadWorld(std::string _name)
 {

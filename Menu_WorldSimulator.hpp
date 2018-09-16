@@ -378,17 +378,27 @@ class Menu_WorldSimulator: public GUI_Interface
       {
       
         std::cout<<"Entering adventure mode.\n";
+        
+        if ( world.prepareAdventureMode(world.playerCharacter) )
+        {
+          activeMenu = MENU_ADVENTUREMODE;
+          
+          menuTribes.active = false;
+          menuCivs.active = false;
+          menuWorld.active = false;
+          menuCharacter.active = false;
+          menuBiome.active = false;
+          active = false;
+      
+        }
+        else
+        {
+          std::cout<<"Error: Something went wrong.\n";
+        }
+        
         _keyboard->keyUp(Keyboard::TAB);
         
-        activeMenu = MENU_ADVENTUREMODE;
-        
-        menuTribes.active = false;
-        menuCivs.active = false;
-        menuWorld.active = false;
-        menuCharacter.active = false;
-        menuBiome.active = false;
-        active = false;
-      
+
       }
       else
       {

@@ -202,6 +202,10 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
     //Unload a local map from RAM and into a save file.
 	void unloadLocal(const int /* worldX */, const int /* worldY */);
   
+    /* ADVENTURE MODE */
+    // Load up the required local map, do any required logic, center map on character. Return false if error.
+  bool prepareAdventureMode( Character * );
+  
   
 	void buildArrays();
 		// Find all unique areas and give them names.

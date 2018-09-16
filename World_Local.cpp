@@ -167,8 +167,13 @@ bool World_Local::generate()
     {
       //RANDOMLY PLACE THE TRIBE CHARACTERS HERE
       //Character * c = new Character;
+      
+      int randX = Random::randInt(nX-1);
+      int randY = Random::randInt(nY-1);
 
-      aLocalTile(Random::randInt(nX-1),Random::randInt(nY-1)).addObject(currentTribe->vCharacter(i2));
+      currentTribe->vCharacter(i2)->x=randX;
+      currentTribe->vCharacter(i2)->y=randY;
+      aLocalTile(randX,randY).addObject(currentTribe->vCharacter(i2));
       //aLocalTile(Random::randInt(nX-1),Random::randInt(nY-1)).addObject(c);
     
     }

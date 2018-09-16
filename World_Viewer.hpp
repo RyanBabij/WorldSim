@@ -406,8 +406,8 @@ void switchTarget(World_Local* _worldLocal)
 		centerTileX = _centerTileX;
 		centerTileY = _centerTileY;
     
-    centerTileX += _subTileX * localTileMantissa;
-    centerTileY += _subTileY * localTileMantissa;
+    centerTileX += (_subTileX * localTileMantissa)+localTileMantissa/2;
+    centerTileY += (_subTileY * localTileMantissa)+localTileMantissa/2;
 	}
 	
 		/* Convert tile coordinates to screen (pixel) coordinates. */
