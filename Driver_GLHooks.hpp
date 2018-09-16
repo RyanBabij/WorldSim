@@ -145,6 +145,16 @@ static void GL_specialUpFunc(const int key, const int x, const int y)
 static void GL_specialFunc(const int key, const int x, const int y)
 {
 	globalKeyboard.specialKeyDown(key);
+  
+  if (activeMenu == MENU_ADVENTUREMODE )
+  {
+    menuAdventureMode.keyboardEvent(&globalKeyboard);
+  }
+  else if (activeMenu == MENU_WORLDSIMULATOR )
+  {
+    menuWorldSimulator.keyboardEvent(&globalKeyboard);
+  }
+  
 	globalGuiManager.keyboardEvent(&globalKeyboard);
 }
 

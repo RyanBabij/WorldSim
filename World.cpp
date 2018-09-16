@@ -60,8 +60,6 @@ World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
   queryWorldY = -1;
   
   worldFilePath = "";
-  
-  playerCharacter = 0;
 }
 
 void World::nameRegions()

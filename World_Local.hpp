@@ -92,6 +92,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	bool generateTestMap();
 	
 	bool saveToFile(std::string /* path */);
+  
+  bool moveObject (WorldObject* , int /* newX */, int /* newY */ );
 	
 };
 

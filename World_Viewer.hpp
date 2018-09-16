@@ -133,45 +133,45 @@ bool keyboardEvent( Keyboard* _keyboard )
 	// {
     
       // If the player is controlling someone, arrows should indicate local tile movement.
-    if ( world->playerCharacter )
-    {
-      if(_keyboard->isPressed(Keyboard::RIGHT))
-      {
-        centerTileX += localTileMantissa;
-      }
-      else if(_keyboard->isPressed(Keyboard::LEFT))
-      {
-        centerTileX -= localTileMantissa;
-      }
-      else if(_keyboard->isPressed(Keyboard::UP))
-      {
-        centerTileY += localTileMantissa;
-      }
-      else if(_keyboard->isPressed(Keyboard::DOWN))
-      {
-        centerTileY -= localTileMantissa;
-      }
-    }
-      // If the player is not controlling someone, arrows should indicate global tile movement.
-    else
-    {
-      if(_keyboard->isPressed(Keyboard::RIGHT))
-      {
-        ++centerTileX;
-      }
-      else if(_keyboard->isPressed(Keyboard::LEFT))
-      {
-        --centerTileX;
-      }
-      else if(_keyboard->isPressed(Keyboard::UP))
-      {
-        ++centerTileY;
-      }
-      else if(_keyboard->isPressed(Keyboard::DOWN))
-      {
-        --centerTileY;
-      }
-    }
+    // if ( world->playerCharacter )
+    // {
+      // if(_keyboard->isPressed(Keyboard::RIGHT))
+      // {
+        // centerTileX += localTileMantissa;
+      // }
+      // else if(_keyboard->isPressed(Keyboard::LEFT))
+      // {
+        // centerTileX -= localTileMantissa;
+      // }
+      // else if(_keyboard->isPressed(Keyboard::UP))
+      // {
+        // centerTileY += localTileMantissa;
+      // }
+      // else if(_keyboard->isPressed(Keyboard::DOWN))
+      // {
+        // centerTileY -= localTileMantissa;
+      // }
+    // }
+      // // If the player is not controlling someone, arrows should indicate global tile movement.
+    // else
+    // {
+      // if(_keyboard->isPressed(Keyboard::RIGHT))
+      // {
+        // ++centerTileX;
+      // }
+      // else if(_keyboard->isPressed(Keyboard::LEFT))
+      // {
+        // --centerTileX;
+      // }
+      // else if(_keyboard->isPressed(Keyboard::UP))
+      // {
+        // ++centerTileY;
+      // }
+      // else if(_keyboard->isPressed(Keyboard::DOWN))
+      // {
+        // --centerTileY;
+      // }
+    // }
 		/* Zoom the main map in by one step.  (Can use either top row or numpad)*/
 		if(_keyboard->isPressed(Keyboard::EQUALS) || _keyboard->isPressed(Keyboard::PLUS))
 		{

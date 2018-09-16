@@ -164,7 +164,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	unsigned char mountainLevel;
 
 
-  Character * playerCharacter;
+
   
 	Vector <Tribe*> vTribe;
 	Vector <Civ*> vCiv;
@@ -181,7 +181,18 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	//void updateCivContacts();
 	
 
-
+  // Return a World_Local object for this local map. Will generate a local map if necessary. Returns null pointer for invalid request.
+	inline World_Local* operator() (const int _x, const int _y)
+	{
+    for (int i=0;i<vWorldLocal.size();++i)
+    {
+      if (vWorldLocal(i)->globalX == _x && vWorldLocal(i)->globalY == _y )
+      {
+        return vWorldLocal(i);
+      }
+    }
+    return 0;
+  }
 
     /* TICK LOGIC */
 		/* I want this to be the new method of incrementing time in the world. It will dynamically abstract things based on the amount of turns to simulate. Each tick is one second. */

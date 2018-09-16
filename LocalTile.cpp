@@ -23,6 +23,10 @@ void LocalTile::addObject(WorldObject* obj)
 {
   vObject.push(obj);
 }
+void LocalTile::removeObject(WorldObject* obj)
+{
+  vObject.erase(obj);
+}
 
 void LocalTile::clearObjects()
 {

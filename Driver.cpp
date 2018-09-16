@@ -158,6 +158,9 @@ Timer physicsRateTimer;
 /* Use this for checking algo speeds. */
 Timer debugTimer;
 
+#include "Character.hpp"
+Character * playerCharacter; /* Global link to the player character (null if player hasn't selected a character) */
+
 /* Instead of having a global worldViewer, I think it would be better to have lots of local worldviewers, as currently I have a problem with the various menus interfering with the global worldViewer. */
 #include "World_Viewer.hpp"
 WorldViewer worldViewer;

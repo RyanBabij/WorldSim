@@ -43,6 +43,7 @@ class LocalTile: public HasTexture
   
   
   void addObject(WorldObject*);
+  void removeObject(WorldObject*);
   
   void clearObjects();
   

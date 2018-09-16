@@ -339,6 +339,16 @@ bool World_Local::saveToFile(std::string _path)
 	return false;
 }
 
+bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
+{
+  aLocalTile(_object->x,_object->y).removeObject(_object);
+  
+  _object->x=newX;
+  _object->y=newY;
+  aLocalTile(newX,newY).addObject(_object);
+  return true;
+}
+
 // void World_Local::getRandomTile (int* x, int* y)
 // {
 	// *x = Random::randomInt(nX);

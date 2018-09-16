@@ -96,6 +96,39 @@ class Menu_AdventureMode: public GUI_Interface
       _keyboard->keyUp(Keyboard::TAB);
       activeMenu = MENU_WORLDSIMULATOR;
 		}
+    
+    if(_keyboard->isPressed(Keyboard::RIGHT))
+    {
+      World_Local* wl = world(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
+      if ( wl != 0 )
+      {
+        wl->moveObject(playerCharacter,playerCharacter->x+1,playerCharacter->y);
+      }
+    }
+    else if(_keyboard->isPressed(Keyboard::LEFT))
+    {
+      World_Local* wl = world(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
+      if ( wl != 0 )
+      {
+        wl->moveObject(playerCharacter,playerCharacter->x-1,playerCharacter->y);
+      }
+    }
+    else if(_keyboard->isPressed(Keyboard::UP))
+    {
+      World_Local* wl = world(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
+      if ( wl != 0 )
+      {
+        wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y+1);
+      }
+    }
+    else if(_keyboard->isPressed(Keyboard::DOWN))
+    {
+      World_Local* wl = world(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
+      if ( wl != 0 )
+      {
+        wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y-1);
+      }
+    }
 
 		guiManager.keyboardEvent(_keyboard);
 		worldViewer.keyboardEvent(_keyboard);

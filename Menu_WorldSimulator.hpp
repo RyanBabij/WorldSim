@@ -374,12 +374,12 @@ class Menu_WorldSimulator: public GUI_Interface
       // TAB will switch between adventure mode and god mode.
 		if(_keyboard->isPressed(Keyboard::TAB))
 		{
-      if ( world.playerCharacter != 0 )
+      if ( playerCharacter != 0 )
       {
       
         std::cout<<"Entering adventure mode.\n";
         
-        if ( world.prepareAdventureMode(world.playerCharacter) )
+        if ( world.prepareAdventureMode(playerCharacter) )
         {
           activeMenu = MENU_ADVENTUREMODE;
           

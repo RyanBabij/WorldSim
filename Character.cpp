@@ -8,6 +8,8 @@
   <Documentation>
 */
 
+#include "World.hpp"
+
 #include "Character.hpp"
 #include "Tribe.hpp"
 

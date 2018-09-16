@@ -13,7 +13,6 @@ NameGen ng;
 void init()
 {	
 	//Makes cout faster but less reliable
-	
 	if ( FAST_COUT )
 	{
 		std::ios_base::sync_with_stdio(false);
@@ -99,6 +98,9 @@ void init()
 	mouseInterfaceManager.add(&menuTitle);
 	//keyboardInterfaceManager.add(&menuTitle);
 	globalGuiManager.add(&menuTitle);
-
+  
+  
+  
+  playerCharacter = 0;
 	
 }
