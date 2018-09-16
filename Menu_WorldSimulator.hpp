@@ -10,8 +10,6 @@
 #include "Menu_Character.hpp"
 #include "Menu_Biome.hpp"
 
-#include "Menu_AdventureMode.hpp"
-
 /* Menu_WorldSimulator.hpp
 	#include "Menu_WorldSimulator.hpp"
 
@@ -76,7 +74,6 @@ class Menu_WorldSimulator: public GUI_Interface
     Menu_World menuWorld;
     Menu_Characters menuCharacter;
     Menu_Biome menuBiome;
-    Menu_AdventureMode menuAdventureMode;
   
 	public:
 	
@@ -100,7 +97,6 @@ class Menu_WorldSimulator: public GUI_Interface
 		menuWorld.active=false;
 		menuCharacter.active=false;
 		menuBiome.active=false;
-		menuAdventureMode.active=false;
 	}
 	
 	void setFont(Wildcat::Font* _font)
@@ -182,7 +178,6 @@ class Menu_WorldSimulator: public GUI_Interface
 		guiManager.add(&menuWorld);
 		guiManager.add(&menuCharacter);
 		guiManager.add(&menuBiome);
-		guiManager.add(&menuAdventureMode);
 
 		textSimulationSpeed.active=true;
 		cycleSimulationSpeed.active=true;
@@ -210,7 +205,6 @@ class Menu_WorldSimulator: public GUI_Interface
 		menuWorld.init();
 		menuCharacter.init();
 		menuBiome.init();
-		menuAdventureMode.init();
 		
 		worldViewer.centerView();
 		eventResize();
@@ -370,7 +364,6 @@ class Menu_WorldSimulator: public GUI_Interface
 			menuWorld.active = false;
 			menuCharacter.active = false;
 			menuBiome.active = false;
-			menuAdventureMode.active = false;
 			
         //Clear the backlog so time stops progressing.
 			world.ticksBacklog=0;
@@ -381,16 +374,26 @@ class Menu_WorldSimulator: public GUI_Interface
       // TAB will switch between adventure mode and god mode.
 		if(_keyboard->isPressed(Keyboard::TAB))
 		{
-      std::cout<<"Entering adventure mode.\n";
-			_keyboard->keyUp(Keyboard::TAB);
+      if ( world.playerCharacter != 0 )
+      {
       
-			menuTribes.active = false;
-			menuCivs.active = false;
-			menuWorld.active = false;
-			menuCharacter.active = false;
-			menuBiome.active = false;
-			menuAdventureMode.active = true;
-      active = false;
+        std::cout<<"Entering adventure mode.\n";
+        _keyboard->keyUp(Keyboard::TAB);
+        
+        activeMenu = MENU_ADVENTUREMODE;
+        
+        menuTribes.active = false;
+        menuCivs.active = false;
+        menuWorld.active = false;
+        menuCharacter.active = false;
+        menuBiome.active = false;
+        active = false;
+      
+      }
+      else
+      {
+        std::cout<<"Select character first\n";
+      }
       
 		}
 
@@ -574,7 +577,6 @@ class Menu_WorldSimulator: public GUI_Interface
 		menuWorld.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuCharacter.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuBiome.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
-		menuAdventureMode.setPanel(0,0,panelX2,panelY2);
 		
 		if (fullScreenWorldView==true)
 		{

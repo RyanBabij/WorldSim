@@ -90,6 +90,12 @@ void init()
 	//menuWorldSimulator.backgroundTexture=&TEX_TITLE;
 	menuWorldSimulator.active=false;
   
+	menuAdventureMode.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
+	menuAdventureMode.init();
+	menuAdventureMode.setFont(&font8x8);
+	//menuAdventureMode.backgroundTexture=&TEX_TITLE;
+	menuAdventureMode.active=false;
+  
 	mouseInterfaceManager.add(&menuTitle);
 	//keyboardInterfaceManager.add(&menuTitle);
 	globalGuiManager.add(&menuTitle);

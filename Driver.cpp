@@ -234,6 +234,9 @@ Menu_WorldGenerator menuWorldGenerator;
 #include "Menu_WorldSimulator.hpp"
 Menu_WorldSimulator menuWorldSimulator;
 
+#include "Menu_AdventureMode.hpp"
+Menu_AdventureMode menuAdventureMode;
+
 /* Initialization goes here. */
 #include "Driver_Init.hpp"
 

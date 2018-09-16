@@ -51,9 +51,9 @@ class Menu_AdventureMode: public GUI_Interface
   
   void render()
   {
-    if ( active == false )
-    { return; }
-  
+		/* Preview world view. */
+		worldViewer.render();
+    
 		// MESSAGE CONSOLE		
 		const int nY = panelY2-panelY1;
 		Renderer::placeColour4a(200,200,250,125,panelX1,panelY1+120,panelX1+220,panelY2);
@@ -78,20 +78,23 @@ class Menu_AdventureMode: public GUI_Interface
   
 	void logicTick()
 	{
-    if ( active == false )
-    { return; }
+    return;
 	}
   
 	bool keyboardEvent (Keyboard* _keyboard)
 	{
-    if ( active == false )
-    { return false; }
-  
 			// ESCAPE - Close all submenus and go back to main game.
 			// If all submenus are already closed, bring up main menu.
 		if(_keyboard->isPressed(Keyboard::ESCAPE)) /* Flush console. */
 		{
 			_keyboard->keyUp(Keyboard::ESCAPE);	
+		}
+    
+      // TAB will switch between adventure mode and god mode.
+		if(_keyboard->isPressed(Keyboard::TAB))
+		{
+      _keyboard->keyUp(Keyboard::TAB);
+      activeMenu = MENU_WORLDSIMULATOR;
 		}
 
 		guiManager.keyboardEvent(_keyboard);
@@ -101,10 +104,7 @@ class Menu_AdventureMode: public GUI_Interface
   
 	bool mouseEvent (Mouse* _mouse)
 	{
-    if ( active == false )
-    { return false; }
 		worldViewer.mouseEvent(_mouse);
-
 		return false;
 	}
   

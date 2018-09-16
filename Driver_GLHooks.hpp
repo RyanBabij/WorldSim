@@ -216,6 +216,10 @@ static void GL_keyboardEvent(const unsigned char key, const int x, const int y)
   {
     menuWorldSimulator.keyboardEvent(&globalKeyboard);
   }
+  else if (activeMenu == MENU_ADVENTUREMODE )
+  {
+    menuAdventureMode.keyboardEvent(&globalKeyboard);
+  }
   
   // NOTE:
   // It seems globalGUIManager is not active for anything except preventing accidental
@@ -445,6 +449,7 @@ void GL_display()
   
     // NEW SYSTEM FOR MENU MANAGEMENT.
     // No more complicated hierarchies or menu managers. Just one global variable.
+    // Submenus are still contained within their parent menu.
   
   if ( activeMenu == MENU_TITLE )
   {
@@ -465,6 +470,10 @@ void GL_display()
   else if (activeMenu == MENU_WORLDSIMULATOR )
   {
     menuWorldSimulator.render();
+  }
+  else if (activeMenu == MENU_ADVENTUREMODE )
+  {
+    menuAdventureMode.render();
   }
   
     /* Render everything that wants to render. */
@@ -514,6 +523,10 @@ static void GL_mouseWheel (const int wheel, const int direction, const int _x, c
   else if (activeMenu == MENU_WORLDSIMULATOR )
   {
     menuWorldSimulator.mouseEvent(&globalMouse);
+  }
+  else if (activeMenu == MENU_ADVENTUREMODE )
+  {
+    menuAdventureMode.mouseEvent(&globalMouse);
   }
 }
 
@@ -575,6 +588,10 @@ static inline void GL_mouseClick (const int clickType, const int state, int mous
   {
     menuWorldSimulator.mouseEvent(&globalMouse);
   }
+  else if (activeMenu == MENU_ADVENTUREMODE )
+  {
+    menuAdventureMode.mouseEvent(&globalMouse);
+  }
 }
 
 
@@ -611,6 +628,10 @@ static void GL_mouseMove(const int mouseX, int mouseY)
   else if (activeMenu == MENU_WORLDSIMULATOR )
   {
     menuWorldSimulator.mouseEvent(&globalMouse);
+  }
+  else if (activeMenu == MENU_ADVENTUREMODE )
+  {
+    menuAdventureMode.mouseEvent(&globalMouse);
   }
 
 }
