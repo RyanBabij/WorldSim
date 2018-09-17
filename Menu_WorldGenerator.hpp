@@ -274,7 +274,8 @@ class Menu_WorldGenerator: public GUI_Interface
 		textEntryFullSeed.setColours(&cNormal,&cHighlight);
 		textEntryFullSeed.fieldName="World seed:";
 		textEntryFullSeed.characterLimit=16	;
-		textEntryFullSeed.input="1902830183";
+		//textEntryFullSeed.input="1902830183";
+		textEntryFullSeed.input="";
 		
 		/* BIOME SEED */
 		textEntryFullBiome.setColours(&cNormal,&cHighlight);
@@ -306,10 +307,10 @@ class Menu_WorldGenerator: public GUI_Interface
 		buttonSimWorld.text="2. Simulate World";
 		buttonSimWorld.setColours(&cNormal,&cHighlight,0);
 		
-		buttonExportData.text="Export World Data";
+		buttonExportData.text="Export World Data (N/A)";
 		buttonExportData.setColours(&cNormal,&cHighlight,0);
 		
-		buttonLoadWorld.text="Load world";
+		buttonLoadWorld.text="Load world (N/A)";
 		buttonLoadWorld.setColours(&cNormal,&cHighlight,0);
 		
 		buttonExpandPreviewWindow.texture = &TEX_GUI_EXPAND;
@@ -709,7 +710,7 @@ class Menu_WorldGenerator: public GUI_Interface
       {
         buttonLoadWorld.unclick();
         //std::cout<<"Load world data.\n";
-        eventLoad();
+        //eventLoad();
         
       }
       
@@ -786,11 +787,11 @@ class Menu_WorldGenerator: public GUI_Interface
       
       double landPercent = (double) nLandPercent.currentValue / 100;
 
-      world.generateWorld(textEntryWorldName.input,worldSizeV,worldSizeV,seed,fragmentation,islandMode,wrapX,wrapY,landPercent);
+      world.generateWorld(textEntryWorldName.input,worldSizeV,worldSizeV,seed,fragmentation,islandMode,wrapX,wrapY,landPercent); /* MEMORY LEAK */
       world.generateTribes(nTribe.currentValue,nTribeDwarven.currentValue,nTribeElven.currentValue);
       world.nameRegions();
       
-      worldViewer.active=true;
+      //worldViewer.active=true;
 
     }
   }

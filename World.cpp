@@ -619,8 +619,6 @@ void World::buildArrays()
 
 void World::generateWorld(const std::string _worldName, const int x=127, const int y=127, const int seed=0, const int fragmentation=2, const bool islandMode = true, const bool wrapX=true, const bool wrapY=false, const double landPercent = 0.66)
 {
-
-  
 	if ( x <= 0 || y <= 0 )
 	{
 		std::cout<<"Error: Invalid world size.\n";
@@ -653,7 +651,9 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   landmassSeed = seed;
 	
 	strSavePath = "savedata/"+name;
-	
+  
+
+  
 		// For now, we will just delete any worlds with the same name.
 	//std::string systemCommmand = "exec rm -r "+strSavePath;
 	//system(systemCommmand.c_str());
@@ -680,13 +680,12 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	
 	/* WIPE OLD WORLD. */
 	
-	//Timer threadTimer;
-	//threadTimer.init();
-	//threadTimer.start();
+	// Timer threadTimer;
+	// threadTimer.init();
+	// threadTimer.start();
 	
 	
 	// Multithreading this segment runs 23% faster. Saves about 0.1 seconds or something.
-
   #define THREADED
 //#undef THREADED
 	
@@ -701,6 +700,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 		aLandmassID.init(x,y,-1);
 		aBiomeID.init(x,y,-1);
 		aIsLand.init(x,y,true);
+
 	#else
 //		std::thread t1 (&ArrayS2 <unsigned char>::init, &this->aHeightMap, x,y,0);
 		WorldObject* const woNull = 0;
@@ -708,7 +708,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 		std::thread t3 (ArrayS2 <enumBiome>::init, &this->aTerrain, x,y,NOTHING);
 		std::thread t4 (&ArrayS3 <unsigned char>::init, &this->aTopoMap, x,y,3,0);
 		
-		std::map<Tribe*,int> * const influenceNull = 0;
+		//std::map<Tribe*,int> * const influenceNull = 0;
 		
 		//std::thread t5 (&ArrayS2 <std::map<Tribe*,int> *>::init, &this->aInfluence, x,y,influenceNull);
 		std::thread t6 (&ArrayS2 <int>::init, &this->aSeed, x,y,0);
@@ -751,27 +751,11 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	wg.landSmoothing=0.88;
 	
 
-	for ( int i=0;i<vWorldObjectGlobal.size();++i)
-	{
-		delete vWorldObjectGlobal(i);
-	}	
-	vWorldObjectGlobal.clear();
-	
-	for ( int i=0;i<vLandmass.size();++i)
-	{
-		delete vLandmass(i);
-	}	
-	vLandmass.clear();
-	
-	for ( int i=0;i<vBiome.size();++i)
-	{
-		delete vBiome(i);
-	}	
-	vBiome.clear();
-	
-	// all tribe objects are already deleted through vWorldObjectGlobal.
-	vTribe.clear();
-	
+	// vTribe does not need to be deleted, because all Tribe objects are in vWorldObjectGlobal
+	vWorldObjectGlobal.deleteAll();
+	vLandmass.deleteAll();
+	vBiome.deleteAll();
+  vLandmass.deleteAll();
 	// for (int _y=0; _y<nY; ++_y)
 	// {
 		// for ( int _x=0;_x<nX;++_x)
@@ -809,14 +793,13 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	#endif
 
 
-	wg.generate();
+	wg.generate(); /* SMALL MEM LEAK */
 	
 		// We could remove this later by using a pointer.
 	aTerrain = wg.aTerrainType;
 	
-	buildArrays();
-	
-	
+	buildArrays(); 
+
 	// BUILD LANDMASS ID ARRAY
 	int currentID = 0;
 
@@ -824,7 +807,6 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 		
 	for ( int _y=0;_y<nY;++_y)
 	{
-		//break;
 		for ( int _x=0;_x<nX;++_x)
 		{
 			if (aLandmassID(_x,_y) == -1 && aIsLand(_x,_y) == true )
@@ -843,8 +825,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 				landmass->size = vFill->size();
 				landmass->getAverageCoordinates(vFill);
 				vLandmass.push(landmass);
-				
-				vFill->clear();
+
+				vFill->deleteAll();
 				delete vFill;
 				
 				++currentID;
@@ -853,6 +835,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 		}
 	}
 	std::cout<<"Filled "<<currentID<<" landmasses.\n";
+  
 	
 	// Trying another algorithm
 	
@@ -914,11 +897,9 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 					}
 				}
 				
-				
-				
 				vBiome.push(biome);
-				
-				vFill->clear();
+
+        vFill->deleteAll();
 				delete vFill;
 				
 				++currentID;
@@ -956,7 +937,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
     }
 	}
   vAllTiles2.shuffle();
-	
+  
+
 	for (int i=0;i<nY;++i)
 	{
 		Vector <int>* vCoord = new Vector <int>;
@@ -987,7 +969,6 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	
 	
 	worldGenTimer.update();
-	
 	std::cout<<"world generated in: "<<worldGenTimer.fullSeconds<<" seconds.\n";
   
   std::cout<<"The world's uid is: "<<getUID()<<".\n";
@@ -1610,7 +1591,7 @@ bool World::prepareAdventureMode( Character * _character )
   std::cout<<"Generating local map: ("<<playerCharacter->tribe->worldX<<", "<<playerCharacter->tribe->worldY<<").\n";
   generateLocal(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
   
-  worldViewer.tileSize = 1000;
+  worldViewer.tileSize = 2000;
   worldViewer.setCenterTile(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY,playerCharacter->x,playerCharacter->y);
   
   return true;

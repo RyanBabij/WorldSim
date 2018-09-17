@@ -2,17 +2,8 @@
 #ifndef WORLDSIM_WORLD_LANDMASS_HPP
 #define WORLDSIM_WORLD_LANDMASS_HPP
 
-/* World_Landmass.hpp
+/* WorldSim: World_Landmass.hpp
 	#include "World_Landmass.hpp"
-
-	Project: WorldSim
-	Created: 2/12/2017, 0272554803.
-	Updated: 2/12/2017, 0272554803.
-
-	Description:
-	
-
-	Notes:
 
 
 */

@@ -341,6 +341,11 @@ bool World_Local::saveToFile(std::string _path)
 
 bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
 {
+  if ( aLocalTile.isSafe(newX,newY) == false )
+  {
+    return false;
+  }
+  
   aLocalTile(_object->x,_object->y).removeObject(_object);
   
   _object->x=newX;
