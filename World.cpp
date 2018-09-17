@@ -146,6 +146,8 @@ Character* World::getRandomCharacter()
 {
   //Get total world population.
   
+  Character* chosenChar = 0;
+  
   int totalPop = 0;
   for ( int i=0; i<vTribe.size(); ++i )
   {
@@ -158,7 +160,7 @@ Character* World::getRandomCharacter()
   {
     if (randomChar < vTribe(i)->vCharacter.size() )
     {
-      
+      return vTribe(i)->vCharacter(randomChar);
     }
     else
     {

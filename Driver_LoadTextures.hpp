@@ -28,6 +28,8 @@ Texture TEX_GUI_INCREMENT;
 Texture TEX_GUI_DECREMENT;
 Texture TEX_GUI_EXPAND;
 
+Texture TEX_GUI_CENTER_CAMERA;
+const std::string PATH_TEX_GUI_CENTER_CAMERA = "Textures/GUI/CenterCamera.png";
 
 Texture TEX_NPC;
 
@@ -222,6 +224,7 @@ void loadTextures()
   loadTextureVerbose(PATH_TEX_LOCAL_FLOOR,&TEX_LOCAL_FLOOR);
   
   loadTextureVerbose(PATH_TEX_LOCAL_SIGN,&TEX_LOCAL_SIGN);
+  loadTextureVerbose(PATH_TEX_GUI_CENTER_CAMERA,&TEX_GUI_CENTER_CAMERA);
 }
 
 #endif

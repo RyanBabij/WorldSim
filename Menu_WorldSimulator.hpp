@@ -374,6 +374,13 @@ class Menu_WorldSimulator: public GUI_Interface
       // TAB will switch between adventure mode and god mode.
 		if(_keyboard->isPressed(Keyboard::TAB))
 		{
+      if (playerCharacter == 0 )
+      {
+        std::cout<<"No character selected, selecting random character.\n";
+        //Automatically select a random character so we can go straight into adventure mode.
+        playerCharacter = world.getRandomCharacter();
+      }
+      
       if ( playerCharacter != 0 )
       {
       
@@ -402,12 +409,9 @@ class Menu_WorldSimulator: public GUI_Interface
       }
       else
       {
-        std::cout<<"No character selected, selecting random character.\n";
-        //Automatically select a random character so we can go straight into adventure mode.
-        
-        Character* _mainChar = world.getRandomCharacter();
-        
+        std::cout<<"Error: Something went wrong.\n";
       }
+
       
 		}
 

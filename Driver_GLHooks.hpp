@@ -208,6 +208,8 @@ static void GL_reshape(const int WIDTH, const int HEIGHT)
   menuWorldGenerator.eventResize();
 	menuWorldSimulator.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
   menuWorldSimulator.eventResize();
+	menuAdventureMode.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
+  menuAdventureMode.eventResize();
 
 }
 

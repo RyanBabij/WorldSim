@@ -28,6 +28,9 @@ class Menu_AdventureMode: public GUI_Interface
     Texture* backgroundTexture;
     
   
+      /* Menu for investigating an individual tribe */
+    GUI_Button buttonCenterCamera;
+  
   public:
   
 
@@ -45,6 +48,13 @@ class Menu_AdventureMode: public GUI_Interface
 		cSelected.set(180,180,180);
 		cDropPanel.set(170,170,170);
 		cHighlight.set(170,170,170);
+
+		buttonCenterCamera.text="";
+		buttonCenterCamera.setColours(&cNormal,&cHighlight,0);
+		guiManager.add(&buttonCenterCamera);
+		buttonCenterCamera.active=true;
+    buttonCenterCamera.texture = &TEX_GUI_CENTER_CAMERA;
+
     eventResize();
   }
   
@@ -70,7 +80,11 @@ class Menu_AdventureMode: public GUI_Interface
       currentY-=2;
 		}
 
-    Renderer::placeColour4a(200,200,250,250,panelX1,panelY1,panelX1+220,panelY1+120);
+    Renderer::placeColour4a(200,200,250,250,panelX1,panelY1,panelX1+220,panelY1+220);
+    linesDrawn = font8x8.drawText("Minimap",panelX1,panelY1,panelX1+220,panelY1+220,true,true);
+    
+    Renderer::placeColour4a(150,150,250,250,panelX1,panelY1+220,panelX1+220,panelY1+320);
+    linesDrawn = font8x8.drawText("Action Menu",panelX1,panelY1+220,panelX1+220,panelY1+320,true,true);
   
   
     guiManager.render();
@@ -143,12 +157,22 @@ class Menu_AdventureMode: public GUI_Interface
   
 	bool mouseEvent (Mouse* _mouse)
 	{
+    guiManager.mouseEvent(_mouse);
+    
+		if (buttonCenterCamera.clicked==true)
+		{
+      std::cout<<"CENTER\n";
+			buttonCenterCamera.unclick();
+		}
+    
 		worldViewer.mouseEvent(_mouse);
 		return false;
 	}
   
 	void eventResize()
 	{
+		buttonCenterCamera.setPanel(panelX1,panelY1+304,panelX1+32,panelY1+320);
+    
 		worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
 
 	}
