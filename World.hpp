@@ -230,6 +230,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
     // Ensure conditions are set up for this character to be controlled.
     // For example generate the local map.
   void controlCharacter (Character*);
+  
+  Character* getRandomCharacter();
 	
   /* WORLD QUERIES */
 		/* Returns population of all characters (Human, Dwarven, Elven)

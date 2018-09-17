@@ -50,6 +50,27 @@ void GL_init(int nArgs, char ** arg)
     HWND hwnd = FindWindow(NULL, windowTitle.c_str()); //probably you can get the window handler in different way..
     HANDLE icon = LoadImage(NULL, "icon.ico", IMAGE_ICON, 32, 32, LR_LOADFROMFILE | LR_COLOR);
     SendMessage(hwnd, (UINT)WM_SETICON, ICON_BIG, (LPARAM)icon);
+    
+    
+    
+  // CHECK FREE RAM
+  // The game uses a lot of RAM, so it's useful to know how much we have to work with.
+  // Stolen from https://msdn.microsoft.com/en-us/library/windows/desktop/aa366589%28v=vs.85%29.aspx
+  
+    MEMORYSTATUSEX statex;
+
+    statex.dwLength = sizeof (statex);
+
+    GlobalMemoryStatusEx (&statex);
+    std::cout<<"There is "<<statex.ullTotalPhys/1024/1024<<" MB of RAM.\n";
+    std::cout<<"There is "<<statex.ullAvailPhys/1024/1024<<" MB of free RAM.\n";
+    
+    std::cout<<"There is "<<statex.ullTotalPageFile/1024/1024<<" MB of paging file.\n";
+    std::cout<<"There is "<<statex.ullAvailPageFile/1024/1024<<" MB of free paging file.\n";
+    
+    std::cout<<"There is "<<statex.ullTotalVirtual/1024/1024<<" MB of virtual memory.\n";
+    std::cout<<"There is "<<statex.ullAvailVirtual/1024/1024<<" MB of free virtual memory.\n";
+
   #endif
   
   

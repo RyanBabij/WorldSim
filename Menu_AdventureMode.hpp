@@ -104,30 +104,36 @@ class Menu_AdventureMode: public GUI_Interface
       {
         wl->moveObject(playerCharacter,playerCharacter->x+1,playerCharacter->y);
       }
+      
+      _keyboard->keyUp(Keyboard::RIGHT);
     }
-    else if(_keyboard->isPressed(Keyboard::LEFT))
+    if(_keyboard->isPressed(Keyboard::LEFT))
     {
       World_Local* wl = world(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
       if ( wl != 0 )
       {
         wl->moveObject(playerCharacter,playerCharacter->x-1,playerCharacter->y);
       }
+      
+      _keyboard->keyUp(Keyboard::LEFT);
     }
-    else if(_keyboard->isPressed(Keyboard::UP))
+    if(_keyboard->isPressed(Keyboard::UP))
     {
       World_Local* wl = world(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
       if ( wl != 0 )
       {
         wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y+1);
       }
+      _keyboard->keyUp(Keyboard::UP);
     }
-    else if(_keyboard->isPressed(Keyboard::DOWN))
+    if(_keyboard->isPressed(Keyboard::DOWN))
     {
       World_Local* wl = world(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
       if ( wl != 0 )
       {
         wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y-1);
       }
+      _keyboard->keyUp(Keyboard::DOWN);
     }
 
 		guiManager.keyboardEvent(_keyboard);

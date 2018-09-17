@@ -142,6 +142,33 @@ bool World::isSafe(int _x, int _y)
 }
 
 
+Character* World::getRandomCharacter()
+{
+  //Get total world population.
+  
+  int totalPop = 0;
+  for ( int i=0; i<vTribe.size(); ++i )
+  {
+    totalPop += vTribe(i)->vCharacter.size();
+  }
+  
+  int randomChar = Random::randomInt(totalPop-1);
+  
+  for (int i=0;i<vTribe.size();++i)
+  {
+    if (randomChar < vTribe(i)->vCharacter.size() )
+    {
+      
+    }
+    else
+    {
+      randomChar -= vTribe(i)->vCharacter.size();
+    }
+  }
+  
+  return 0;
+}
+
 
 
 void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int nTribesDwarven = DEFAULT_NUMBER_TRIBES_DWARVEN, int nTribesElven = DEFAULT_NUMBER_TRIBES_ELVEN)
@@ -188,7 +215,7 @@ void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int 
 		t->spawn();
 		t->generateCouples(7);
 	}
-	
+ 
 	
 	std::cout<<"END Generate tribes\n";
 	

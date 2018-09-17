@@ -402,7 +402,11 @@ class Menu_WorldSimulator: public GUI_Interface
       }
       else
       {
-        std::cout<<"Select character first\n";
+        std::cout<<"No character selected, selecting random character.\n";
+        //Automatically select a random character so we can go straight into adventure mode.
+        
+        Character* _mainChar = world.getRandomCharacter();
+        
       }
       
 		}
