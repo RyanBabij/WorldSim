@@ -3,7 +3,7 @@
 #define WORLDSIM_MENU_CIVDETAILS_HPP
 
 /* WorldSim: Menu_CivDetails.cpp
-#include "Menu_CivDetails.hpp"
+  #include "Menu_CivDetails.hpp"
 
 	This menu shows details of a specific civ.
 */

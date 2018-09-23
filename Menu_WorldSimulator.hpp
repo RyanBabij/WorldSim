@@ -2,6 +2,14 @@
 #ifndef WORLDSIM_MENU_WORLDSIMULATOR_HPP
 #define WORLDSIM_MENU_WORLDSIMULATOR_HPP
 
+/* WorldSim: Menu_WorldSimulator.hpp
+	#include "Menu_WorldSimulator.hpp"
+
+  World simulator menu.
+  The player can simulate the world to build up civilisation, before jumping in.
+  The player can then select on of the inhabitants to play as.
+*/
+
 #include "World_Viewer.hpp"
 
 #include "Menu_Tribes.hpp"
@@ -10,13 +18,7 @@
 #include "Menu_Character.hpp"
 #include "Menu_Biome.hpp"
 
-/* Menu_WorldSimulator.hpp
-	#include "Menu_WorldSimulator.hpp"
 
-  World simulator menu.
-  The player can simulate the world to build up civilisation, before jumping in.
-  The player can then select on of the inhabitants to play as.
-*/
 
 class Menu_WorldSimulator: public GUI_Interface
 {

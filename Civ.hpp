@@ -4,8 +4,8 @@
 
 /* WorldSim: Civ
   #include "Civ.hpp"
-
-  <Documentation>
+  
+  Civs are an evolution of Tribes. They manage multiple Cities and can raise Armies and do other advanced things.
 */
 
 class Character;

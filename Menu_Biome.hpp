@@ -2,9 +2,8 @@
 #ifndef WORLDSIM_MENU_BIOME_HPP
 #define WORLDSIM_MENU_BIOME_HPP
 
-/* Menu_Biome.cpp
-	WorldSim
-	Project code name: WorldSim.
+/* WorldSim: Menu_Biome.hpp
+	#include "Menu_Biome.hpp"
 
 	fff
 */

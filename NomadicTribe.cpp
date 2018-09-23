@@ -2,19 +2,9 @@
 #ifndef WORLDSIM_NOMADIC_TRIBE_CPP
 #define WORLDSIM_NOMADIC_TRIBE_CPP
 
-/* NomadicTribe.cpp
+/* WorldSim: NomadicTribe.cpp
 	#include "NomadicTribe.cpp"
 
-	Project: WorldSim
-	Created: 7/10/2017, 0271994297.
-	Updated: 7/10/2017, 0271994297.
-
-	Description:
-	A nomadic tribe is a global unit which wanders the world map randomly, gathering resources from the tile it is on. When it grows large enough, it becomes a settlement.
-
-	Notes:
-
-	0271994297 - Created header.
 */
 
 #include "NomadicTribe.hpp"

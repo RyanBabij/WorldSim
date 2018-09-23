@@ -1,6 +1,6 @@
 #pragma once
-#ifndef GUILD_MENU_LOADGAME_HPP
-#define GUILD_MENU_LOADGAME_HPP
+#ifndef WORLDSIM_MENU_LOADGAME_HPP
+#define WORLDSIM_MENU_LOADGAME_HPP
 
 class Menu_LoadGame: public GUI_Interface
 {

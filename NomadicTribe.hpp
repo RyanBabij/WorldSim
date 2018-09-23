@@ -2,23 +2,14 @@
 #ifndef WORLDSIM_NOMADIC_TRIBE_HPP
 #define WORLDSIM_NOMADIC_TRIBE_HPP
 
-/* NomadicTribe.hpp
+/* WorldSim: NomadicTribe.hpp
 	#include "NomadicTribe.hpp"
 
-	Project: WorldSim
-	Created: 7/10/2017, 0271994297.
-	Updated: 7/10/2017, 0271994297.
+  	A nomadic tribe is a global unit which wanders the world map randomly, gathering resources from the tile it is on. When it grows large enough, it becomes a settlement.
+    
+  Name: The X Tribe.
 
-	Description:
-	A nomadic tribe is a global unit which wanders the world map randomly, gathering resources from the tile it is on. When it grows large enough, it becomes a settlement.
-
-	Notes:
-
-	0271994297 - Created header.
-	
-Name: The X Tribe.
-
-X can be a random animal noun to start.
+  X can be a random animal noun to start.
 */
 
 

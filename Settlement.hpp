@@ -1,6 +1,6 @@
 #pragma once
-#ifndef GUILD_SETTLEMENT_HPP
-#define GUILD_SETTLEMENT_HPP
+#ifndef WORLDSIM_SETTLEMENT_HPP
+#define WORLDSIM_SETTLEMENT_HPP
 
 
 class Settlement: public WorldObjectGlobal, public TableInterface

@@ -4,8 +4,6 @@
 
 /* WorldSim: Character
   #include "Character.cpp"
-  
-  <Documentation>
 */
 
 #include "World.hpp"

@@ -2,14 +2,12 @@
 #ifndef WORLDSIM_MENU_WORLD_GENERATOR_HPP
 #define WORLDSIM_MENU_WORLD_GENERATOR_HPP
 
-/*
+/* WorldSim: Menu_WorldGenerator.hpp
 	#include"Menu_WorldGenerator.hpp"
 	
 	Implementation of GUI interface.
 	This menu is displayed upon starting the game app. It allows the player to start a new game, load a saved game, access the options menu, and quit the application.
-	
-	Notes:
-	
+
 */
 
 #include <GUI/GUI.hpp>

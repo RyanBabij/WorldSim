@@ -1,6 +1,12 @@
 #pragma once
-#ifndef GUILD_CIV_DWARVEN_HPP
-#define GUILD_CIV_DWARVEN_HPP
+#ifndef WORLDSIM_CIV_DWARVEN_HPP
+#define WORLDSIM_CIV_DWARVEN_HPP
+
+/* WorldSim: Civ_Dwarven
+  #include "Civ_Dwarven.hpp"
+
+  A type of Civ. Dwarven civs build mines in the mountains.
+*/
 
 
 class Civ;

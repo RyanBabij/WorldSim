@@ -1,17 +1,15 @@
 #pragma once
-#ifndef LOAD_TEXTURES_HPP
-#define LOAD_TEXTURES_HPP
+#ifndef WORLDSIM_LOAD_TEXTURES_HPP
+#define WORLDSIM_LOAD_TEXTURES_HPP
 
 #include <string>
 
 #include <Graphics/Texture/TextureLoader.hpp>
 #include <Graphics/Texture/Texture.hpp>
 
-/*
-	0221215653: TextureList and LoadTextures have been merged.
-*/
+/* WorldSim: Driver_LoadTextures.hpp
+  #include "Driver_LoadTextures.hpp"
 
-/*
 	Called from Driver::init().
 	These vars are global.
 	All texture refs start with TEX_, and then use the path and filename from the textures folder.

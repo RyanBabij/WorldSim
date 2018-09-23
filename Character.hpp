@@ -5,7 +5,9 @@
 /* WorldSim: Character
   #include "Character.hpp"
   
-  <Documentation>
+  Characters can be either NPCs or the player. They interact with the world.
+  
+  Characters may be either human, elven, or dwarven.
 */
 
 #include "GuildCalendar.hpp"

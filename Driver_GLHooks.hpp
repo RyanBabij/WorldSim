@@ -1,4 +1,5 @@
-/* Driver_GLHooks.hpp
+/* WorldSim: Driver_GLHooks.hpp
+  #include "Driver_GLHooks.hpp"
 
 OpenGL hooks. Catches OpenGL events and translates them for use with internal engine.
 If DirectX support is implemented, then we would do the same thing with DX events.

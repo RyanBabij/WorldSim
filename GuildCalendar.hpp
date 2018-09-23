@@ -1,21 +1,25 @@
 #pragma once
-#ifndef GUILD_CALENDAR
-#define GUILD_CALENDAR
+#ifndef WORLDSIM_CALENDAR_HPP
+#define WORLDSIM_CALENDAR_HPP
 
-/* Guild implementation of a calendar.
-For now, making a dynamic calendar class seems like too much trouble, so I'll just hardcode one.
+/* WorldSim: GuildCalendar.hpp
+  #include "GuildCalendar.hpp"
 
-Check DD for specifics and lore.
+  Guild implementation of a calendar.
 
-I'm going with the following simple approach:
+    For now, making a dynamic calendar class seems like too much trouble, so I'll just hardcode one.
 
-60 seconds per minute.
-60 minutes per hour.
-24 hours per day.
-30 days per month.
-12 months per year.
+    Check DD for specifics and lore.
 
+    I'm going with the following simple approach:
+
+    60 seconds per minute.
+    60 minutes per hour.
+    24 hours per day.
+    30 days per month.
+    12 months per year.
 */
+
 class GuildCalendar
 {
 	public:
@@ -236,7 +240,6 @@ class GuildDate
 		while(counter < c)
 		{
 			++nDays;
-		//std::cout<<"<";
 			counter.advanceDay(1);
 		}
 		

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef GUILD_WORLDOBJECT_CPP
-#define GUILD_WORLDOBJECT_CPP
+#ifndef WORLDSIM_WORLDOBJECT_CPP
+#define WORLDSIM_WORLDOBJECT_CPP
 
 #include"WorldObject.hpp"
 

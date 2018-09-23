@@ -1,6 +1,6 @@
 #pragma once
-#ifndef GUILD_SETTLEMENT_CPP
-#define GUILD_SETTLEMENT_CPP
+#ifndef WORLDSIM_SETTLEMENT_CPP
+#define WORLDSIM_SETTLEMENT_CPP
 
 #include "Settlement.hpp"
 

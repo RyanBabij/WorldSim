@@ -2,9 +2,7 @@
 #ifndef WORLDSIM_MENU_WORLD_HPP
 #define WORLDSIM_MENU_WORLD_HPP
 
-/* Menu_Tribes.cpp
-	WorldSim
-	Project code name: WorldSim.
+/* WorldSim: Menu_World.hpp
 
 	This menu shows a database of all tribes in the world. The player can click a tribe to get a detailed view of the tribe.
 */

@@ -2,8 +2,9 @@
 #ifndef WORLDSIM_DRIVER_SETTINGS_CPP
 #define WORLDSIM_DRIVER_SETTINGS_CPP
 
-/*
-	"GLobalSettings.cpp"
+/* WorldSim: Driver_Settings.cpp
+  #include "Driver_Settings.cpp"
+
 	Gameplay settings and other global settings go here. Some of this stuff will probably end up in an .ini file.
 */
 

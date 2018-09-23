@@ -1,7 +1,13 @@
-/* Driver_Init.hpp
-#include "Driver_Init.hpp"
+#pragma once
+#ifndef WORLDSIM_DRIVER_INIT_HPP
+#define WORLDSIM_DRIVER_INIT_HPP
+
+/* WorldSim: Driver_Init.hpp
+  #include "Driver_Init.hpp"
 
 Driver initialization goes here.
+
+Initialize main menus, start timers, initialise any important data.
 
 */
 
@@ -104,3 +110,5 @@ void init()
   playerCharacter = 0;
 	
 }
+
+#endif

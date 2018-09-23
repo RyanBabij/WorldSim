@@ -4,8 +4,6 @@
 
 /* WorldSim: Civ
   #include "Civ.cpp"
-
-  <Documentation>
 */
 
 #include "Civ.hpp"

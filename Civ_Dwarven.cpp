@@ -1,6 +1,10 @@
 #pragma once
-#ifndef GUILD_CIV_DWARVEN_CPP
-#define GUILD_CIV_DWARVEN_CPP
+#ifndef WORLDSIM_CIV_DWARVEN_CPP
+#define WORLDSIM_CIV_DWARVEN_CPP
+
+/* WorldSim: Civ_Dwarven
+  #include "Civ_Dwarven.cpp"
+*/
 
 #include "Civ_Dwarven.hpp"
 
