@@ -45,19 +45,8 @@ Tribe::Tribe()
 
 Tribe::~Tribe()
 {
-
-	for (int i=0;i<vCharacter.size();++i)
-	{
-		delete vCharacter(i);
-	}
-	vCharacter.clear();
-	
-	for (int i=0;i<vTerritory.size();++i)
-	{
-		delete vTerritory(i);
-	}
-	vTerritory.clear();
-	
+	vCharacter.deleteAll();
+	vTerritory.deleteAll();
 }
 
 void Tribe::init(World* _world)
@@ -82,18 +71,8 @@ void Tribe::init(World* _world)
 	worldY=-1;
   isAlive = true;
 	
-	
-	for (int i=0;i<vCharacter.size();++i)
-	{
-		delete vCharacter(i);
-	}
-	vCharacter.clear();
-	
-	for (int i=0;i<vTerritory.size();++i)
-	{
-		delete vTerritory(i);
-	}
-	vTerritory.clear();
+	vCharacter.deleteAll();
+	vTerritory.deleteAll();
 	
 	random.seed(Random::randInt(99999));
 	setColour(random.randomInt(255),random.randomInt(255),random.randomInt(255));
@@ -384,27 +363,25 @@ void Tribe::setColour( const unsigned char r, const unsigned char g, const unsig
 
 bool Tribe::spawn()
 {
-	if ( world == 0 )
-	{
-		return false;
-	}
+  return false;
+	// if ( world == 0 )
+	// { return false; }
 	
-	HasXY* spawnTile = world->getRandomTileOfType(GRASSLAND);
+	// HasXY* spawnTile = world->getRandomTileOfType(GRASSLAND);
 	
-	if ( spawnTile == 0 )
-	{
-		std::cout<<"ABORT: Couldn't find land tile.\n";
-		return false;
-	}
+	// if ( spawnTile == 0 )
+	// {
+		// std::cout<<"ABORT: Couldn't find land tile.\n";
+		// return false;
+	// }
 
-	name = globalNameGen.generateName();
-	nFood = 10;
+	//name = globalNameGen.generateName();
+	//nFood = 10;
 	
-	worldX=spawnTile->x;
-	worldY=spawnTile->y;
-
-	world->putObject(this,worldX, worldY);
-	world->vTribe.push(this);
+	//worldX=spawnTile->x;
+	//
+	//world->putObject(this,worldX, worldY);
+	//world->vTribe.push(this);
 	
 	return true;
 

@@ -60,6 +60,7 @@ bool Tribe_Elf::spawn()
 	
 	worldX=spawnTile->x;
 	worldY=spawnTile->y;
+  delete spawnTile;
 
 	world->putObject(this,worldX,worldY);
 	world->vTribe.push(this);

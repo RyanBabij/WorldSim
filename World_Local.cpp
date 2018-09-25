@@ -180,7 +180,7 @@ bool World_Local::generate()
     
 
   }
-  
+  delete vTribesHere;
   return false;
   
 	std::cout<<"Checking map data in path: "<<world.strSavePath<<"\n";
@@ -295,7 +295,7 @@ bool World_Local::generateTestMap()
     aLocalTile(0,0).addObject(c);
     
   }
-  
+  delete vTribesHere;
   return false;
   
 	std::cout<<"Checking map data in path: "<<world.strSavePath<<"\n";

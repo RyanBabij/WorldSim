@@ -28,9 +28,16 @@ class Menu_AdventureMode: public GUI_Interface
     Texture* backgroundTexture;
     
   
-      /* Menu for investigating an individual tribe */
+      /* Button to center camera on current player */
     GUI_Button buttonCenterCamera;
+    
+      /* Button to toggle sneaking */
+    GUI_Button buttonSneak;
   
+  
+      /* Button to view inventory */
+    GUI_Button buttonInventory;
+    
   public:
   
 
@@ -39,6 +46,7 @@ class Menu_AdventureMode: public GUI_Interface
 	Menu_AdventureMode()
 	{	
 		backgroundTexture=&TEX_NEW_GAME_BACKGROUND;
+    font = &font8x8;
 	}
   
   void init()
@@ -50,10 +58,23 @@ class Menu_AdventureMode: public GUI_Interface
 		cHighlight.set(170,170,170);
 
 		buttonCenterCamera.text="";
+		buttonSneak.text="SNK";
+    buttonSneak.font = font;
 		buttonCenterCamera.setColours(&cNormal,&cHighlight,0);
+		buttonSneak.setColours(&cNormal,&cHighlight,0);
 		guiManager.add(&buttonCenterCamera);
+		guiManager.add(&buttonSneak);
 		buttonCenterCamera.active=true;
+		buttonSneak.active=true;
     buttonCenterCamera.texture = &TEX_GUI_CENTER_CAMERA;
+    
+    
+    buttonInventory.active = true;
+    buttonInventory.text = "INV";
+    buttonInventory.font = font;
+		buttonInventory.setColours(&cNormal,&cHighlight,0);
+		guiManager.add(&buttonInventory);
+
 
     eventResize();
   }
@@ -172,8 +193,11 @@ class Menu_AdventureMode: public GUI_Interface
 	void eventResize()
 	{
 		buttonCenterCamera.setPanel(panelX1,panelY1+304,panelX1+32,panelY1+320);
+		buttonSneak.setPanel(panelX1+33,panelY1+304,panelX1+65,panelY1+320);
+		buttonInventory.setPanel(panelX1+66,panelY1+304,panelX1+98,panelY1+320);
     
 		worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
+
 
 	}
 	

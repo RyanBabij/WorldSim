@@ -196,10 +196,13 @@ void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int 
 		if (t->spawn() == false)
 		{
 			delete t;
-			continue;
-		}
+    }
+    else
+    {
+      t->generateCouples(7);
+    }
 
-		t->generateCouples(7);
+
 	}
 	
 	for (int i=0;i<nTribesDwarven;++i)
@@ -752,10 +755,12 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	
 
 	// vTribe does not need to be deleted, because all Tribe objects are in vWorldObjectGlobal
+  // However, the vector must be cleared.
 	vWorldObjectGlobal.deleteAll();
 	vLandmass.deleteAll();
 	vBiome.deleteAll();
   vLandmass.deleteAll();
+  vTribe.clear();
 	// for (int _y=0; _y<nY; ++_y)
 	// {
 		// for ( int _x=0;_x<nX;++_x)
@@ -1095,7 +1100,7 @@ int World::getSurroundingFertility(const int _x, const int _y)
 			// totalFertility += 1;
 		// }
 	}
-	vTerrain->clearData();
+	vTerrain->deleteAll();
 	delete vTerrain;
 	return totalFertility;
 	
