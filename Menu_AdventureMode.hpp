@@ -126,6 +126,7 @@ class Menu_AdventureMode: public GUI_Interface
 		}
     
       // TAB will switch between adventure mode and god mode.
+      // Make sure to relinquish control of character.
 		if(_keyboard->isPressed(Keyboard::TAB))
 		{
       _keyboard->keyUp(Keyboard::TAB);
@@ -138,6 +139,7 @@ class Menu_AdventureMode: public GUI_Interface
       if ( wl != 0 )
       {
         wl->moveObject(playerCharacter,playerCharacter->x+1,playerCharacter->y);
+        worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
       }
       
       _keyboard->keyUp(Keyboard::RIGHT);
@@ -148,6 +150,7 @@ class Menu_AdventureMode: public GUI_Interface
       if ( wl != 0 )
       {
         wl->moveObject(playerCharacter,playerCharacter->x-1,playerCharacter->y);
+        worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
       }
       
       _keyboard->keyUp(Keyboard::LEFT);
@@ -158,6 +161,7 @@ class Menu_AdventureMode: public GUI_Interface
       if ( wl != 0 )
       {
         wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y+1);
+        worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
       }
       _keyboard->keyUp(Keyboard::UP);
     }
@@ -167,6 +171,7 @@ class Menu_AdventureMode: public GUI_Interface
       if ( wl != 0 )
       {
         wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y-1);
+        worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
       }
       _keyboard->keyUp(Keyboard::DOWN);
     }

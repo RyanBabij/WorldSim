@@ -1597,7 +1597,7 @@ bool World::prepareAdventureMode( Character * _character )
   generateLocal(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
   
   worldViewer.tileSize = 2000;
-  worldViewer.setCenterTile(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY,playerCharacter->x,playerCharacter->y);
+  worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
   
   return true;
 }

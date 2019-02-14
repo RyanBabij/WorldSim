@@ -300,6 +300,13 @@ class Menu_CharacterDetails: public GUI_Interface
         //std::cout<<"Yeah you can't do that yet.\n";
         world.controlCharacter(selectedCharacter);
         Console(Stream() << "Controlling: " << selectedCharacter->getFullName());
+        
+        world.prepareAdventureMode(selectedCharacter);
+        //Transition into the Adventure mode GUI. Transitioning back to god mode will relinquish control of the character.
+        activeMenu = MENU_ADVENTUREMODE;
+        
+
+        
 				active=false;
 				buttonPossess.unclick();
 			}

@@ -189,11 +189,12 @@ bool keyboardEvent( Keyboard* _keyboard )
 			}
 		}
     
+      //TAB should be for switching between Adventure mode and God mode
 		if(_keyboard->isPressed(Keyboard::TAB))
 		{
 			if (_keyboard->keyWasPressed)
 			{
-				subterraneanMode = !subterraneanMode;
+				//subterraneanMode = !subterraneanMode;
 			}
 		}
 		// if(keyboard->isPressed(Keyboard::SPACEBAR))
