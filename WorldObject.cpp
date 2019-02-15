@@ -32,6 +32,11 @@ int WorldObject::distanceTo (WorldObject* _obj)
 
 int WorldObject::distanceFrom(WorldObject* _obj) { return distanceTo(_obj); } /* Alias. */
 
+int WorldObject::distanceTo (int _x, int _y) 
+{
+	return std::max(abs(x-_x),abs(y-_y));
+}
+
 Texture* WorldObject::currentTexture()
 {
 	return &TEX_TEST_404;

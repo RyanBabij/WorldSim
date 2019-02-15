@@ -173,6 +173,7 @@ World world;
 World_Local * worldLocal;
 	
 #include "Character.cpp"
+#include "Character_Knowledge.cpp"
 
 #include "Tribe.cpp"
 #include "Tribe_Dwarven.cpp"

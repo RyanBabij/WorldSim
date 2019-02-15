@@ -4,11 +4,14 @@
 
 /* WorldSim: Character
   #include "Character.cpp"
+  
+  Implementation of Character.hpp
 */
 
 #include "World.hpp"
 
 #include "Character.hpp"
+#include "Character_Knowledge.hpp"
 #include "Tribe.hpp"
 
 const int MAX_CHILDREN = 5;
@@ -62,6 +65,8 @@ Character::Character()
   causeOfDeath = UNKNOWN;
   
   isFavourite=false;
+  
+  knowledge=0;
 	
 	//enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, OLD_AGE=2 };
 	
@@ -414,7 +419,19 @@ void Character::attack(Character* target)
 
 
 
-
+  // LOCATION
+  
+  bool Character::isOnMap(int _mapX , int _mapY)
+  {
+    //For now we are assuming the Character is on the same map as his tribe.
+    
+    if ( tribe != 0 )
+    {
+      return tribe->isOnMap(_mapX,_mapY);
+    }
+    
+    return false;
+  }
 
 
 // INHERITED FUNCTIONS
@@ -493,6 +510,14 @@ std::string Character::getColumnType(std::string _column)
 		return "number";
 	}
 	return "string";
+}
+
+void Character::initialiseKnowledge()
+{
+  if ( knowledge == 0 )
+  {
+    knowledge = new Character_Knowledge;
+  }
 }
 
 #endif

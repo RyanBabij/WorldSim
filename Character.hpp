@@ -17,6 +17,8 @@
 
 class Tribe;
 
+class Character_Knowledge;
+
 enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, MASSACRE=2, COMBAT=3, OLD_AGE=4 };
 const std::string enumCauseOfDeathStr [5] = { "unknown", "starvation", "massacre", "combat", "old age" };
 
@@ -79,6 +81,10 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	Tribe* tribe;
   
   enumCauseOfDeath causeOfDeath;
+  
+  
+    //Character's knowledge of the world (optional).
+  Character_Knowledge* knowledge;
 	
 	
 		/* INITIALIZATION */
@@ -133,6 +139,14 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	std::string getBiography();
 	std::string getFullName() const;
 
+  
+    // LOCATION
+    
+    // Returns true if the Character is at this world map coordinate.
+  bool isOnMap(int /* _mapX */, int /* _mapY */);
+  
+  
+  
 	/* TABLE INTERFACE */
 	std::string getColumn(std::string _column);
 	std::string getColumnType(std::string _column);
@@ -142,6 +156,10 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   
     //Attack a character once.
   void attack (Character*);
+  
+  
+    //Ensure the character's knowledge object exists.
+  void initialiseKnowledge();
 
 	
 };

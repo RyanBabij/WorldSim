@@ -55,6 +55,11 @@ class WorldObjectGlobal: public HasTexture
 	
 		return (xChange+yChange);
 	}
+  
+  bool isOnMap(int _x, int _y)
+  {
+    return (worldX == _x && worldY == _y);
+  }
 	
 	virtual ~WorldObjectGlobal()
 	{

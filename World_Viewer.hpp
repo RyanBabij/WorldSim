@@ -833,18 +833,45 @@ void switchTarget(World_Local* _worldLocal)
                     else
                     {
                       
-                      LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
+                      //Very basic player line of sight check here (only if we're in Adventure mode)
                       
-                      unsigned char lightValue = localTile->height*15;
-                      glColor3ub(180+lightValue,180+lightValue,180+lightValue);
-                      Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
-                      glColor3ub(255,255,255);
-                      
-                      
-                      for(int i=0;i<localMap->aLocalTile(localXTile,localYTile).vObject.size();++i)
+                      if (playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->isOnMap(tileX,tileY)
+                        && playerCharacter->distanceTo(localXTile,localYTile)>20 )
                       {
-                        Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+
+                        //Draw tile very dark to symbolise fog of war
+                        
+                        LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
+                        
+                        unsigned char lightValue = 100;
+                        glColor3ub(180+lightValue,180+lightValue,180+lightValue);
+                        Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                        glColor3ub(255,255,255);
+                        
+                        
+                        for(int i=0;i<localMap->aLocalTile(localXTile,localYTile).vObject.size();++i)
+                        {
+                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                        }
+                       
                       }
+                      else
+                      {
+                        LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
+                        
+                        unsigned char lightValue = localTile->height*15;
+                        glColor3ub(180+lightValue,180+lightValue,180+lightValue);
+                        Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                        glColor3ub(255,255,255);
+                        
+                        
+                        for(int i=0;i<localMap->aLocalTile(localXTile,localYTile).vObject.size();++i)
+                        {
+                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                        }
+                      }
+                      
+
                     }
                     
                     
