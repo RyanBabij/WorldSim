@@ -103,6 +103,18 @@ bool World_Local::generate()
     for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
       aLocalTile(_x,_y).baseTerrain = baseBiome;
+      
+      int baseTreeChance = 20;
+      
+      // Temporary hack to make forests look less bad.
+      if ( baseBiome == FOREST || baseBiome == JUNGLE )
+      {
+        aLocalTile(_x,_y).baseTerrain = GRASSLAND;
+        baseTreeChance/=3;
+      }
+      
+      
+
       aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
       aLocalTile(_x,_y).clearObjects();
       aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
@@ -113,7 +125,7 @@ bool World_Local::generate()
       aSubterranean(_x,_y).clearObjects();
       aSubterranean(_x,_y).height = -1;
       
-      if (random.oneIn(100))
+      if (random.oneIn(baseTreeChance))
       {
         //put tree
         auto tree = new WorldObject_Tree;
@@ -259,7 +271,7 @@ bool World_Local::generateTestMap()
       aSubterranean(_x,_y).clearObjects();
       aSubterranean(_x,_y).height = -1;
       
-      if (random.oneIn(100))
+      if (random.oneIn(20))
       {
         //put tree
         auto tree = new WorldObject_Tree;
@@ -412,7 +424,152 @@ Vector <HasXY*> * World_Local::rayTraceLOS (int _x, int _y, const int RANGE)
   // We now have a list of coordinates to raytrace.
   //std::cout<<"RayTrace Coordinats size: "<<rayTraceCoordinates.size()<<".\n";
   
-  return 0;
+  auto vVisibleTiles = new Vector <HasXY*>;
+  
+  
+  for (int i=0;i<rayTraceCoordinates.size();++i)
+  {
+    rayTrace (_x,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
+  }
+  
+  
+  return vVisibleTiles;
+}
+
+void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> * vVisibleTiles)
+{
+  // Old code from ECHO
+  
+  //std::cout<<"Tracing ray: ("<<_x1<<", "<<_y1<<") ("<<_x2<<", "<<_y2<<").\n";
+  
+  int xDiff = 0;
+  if ( _x1 > _x2 )
+  { xDiff = _x2 - _x1; }
+  else if ( _x2 > _x1 )
+  { xDiff = _x1 - _x2; }
+
+  int yDiff = 0;
+  if ( _y1 > _y2 )
+  { yDiff = _y2 - _y1; }
+  else if ( _y2 > _y1 )
+  { yDiff = _y1 - _y2; }
+
+
+  double slope = BasicMath::getSlope(_x1,_y1,_x2,_y2);
+
+  // IF SLOPE IS INFINITY, CHANGE VALUE TO 0.
+  if ( slope == std::numeric_limits<double>::infinity() )
+  { slope=0; }
+
+			// SPECIAL CASE: 1 TILE.
+			// REVEAL TILE STANDING ON.
+		if ( (_x1==_x2) && (_y1==_y2) )
+		{
+			if ( aLocalTile.isSafe(_x1,_y2) == true )
+			{ vVisibleTiles->push(new HasXY (_x1,_y1) ); }
+		}
+    
+			// SPECIAL CASE: UP/DOWN
+		else if (_x1 == _x2)
+		{
+			while ( _y1 != _y2 )
+			{
+				if ( aLocalTile.isSafe(_x1,_y1) == true )
+				{
+					vVisibleTiles->push(new HasXY (_x1,_y1) );
+          
+          if (isBlockingView(_x1,_y1))
+          { break; }
+
+				}
+				if ( _y1 < _y2 )
+				{ ++_y1; }
+				else
+				{ --_y1; }
+
+			}
+		}
+			//SHALLOW SLOPE
+		else if ( xDiff <= yDiff )
+		{
+			if (_x1>_x2)
+			{ slope*=-1; }
+
+			double currentY = _y1;
+
+			while (_x1 != _x2 )
+			{
+
+				int roundedY=0;
+
+				if ( _y1 > _y2 )
+				{
+					roundedY = floor(currentY);
+				}
+				else if ( _y1 < _y2 )
+				{
+					roundedY = ceil(currentY);
+				}
+				else
+				{
+					roundedY = round(currentY);
+				}
+
+				if ( aLocalTile.isSafe(_x1,roundedY) == true )
+				{
+					vVisibleTiles->push(new HasXY (_x1,roundedY) );
+          
+          if (isBlockingView(_x1,roundedY))
+          { break; }
+
+
+					currentY+=slope;
+
+				}
+				if (_x1<_x2)
+				{ ++_x1; }
+				else
+				{ --_x1; }
+			}
+		}
+			//STEEP SLOPE.
+		else
+		{
+			slope = BasicMath::getSlope(_y1,_x1,_y2,_x2);
+
+			if (_y1>_y2)
+			{ slope*=-1; }
+
+			double currentX = _x1;
+
+			while (_y1 != _y2 )
+			{
+				int roundedX=0;
+
+				if ( _x1 > _x2 )
+				{ roundedX = floor(currentX); }
+				else if ( _x1 < _x2 )
+				{ roundedX = ceil(currentX); }
+				else
+				{ roundedX = round(currentX); }
+
+				if ( aLocalTile.isSafe(roundedX,_y1) == true )
+				{
+					vVisibleTiles->push(new HasXY (roundedX,_y1) );
+          
+          if (isBlockingView(roundedX,_y1))
+          { break; }
+
+					currentX+=slope;
+
+				}
+				if (_y1<_y2)
+				{ ++_y1; }
+				else
+				{ --_y1; }
+			}
+		}
+
 }
 
 bool World_Local::isBlockingView(int _x, int _y)

@@ -462,15 +462,15 @@ void Character::initialiseKnowledge()
     
     // The basic 3x3 box of guaranteed sight.
     
-    knowledge->addTile(tribe->getCurrentMap(), x,y);
-    knowledge->addTile(tribe->getCurrentMap(), x-1,y);
-    knowledge->addTile(tribe->getCurrentMap(), x+1,y);
-    knowledge->addTile(tribe->getCurrentMap(), x,y-1);
-    knowledge->addTile(tribe->getCurrentMap(), x-1,y-1);
-    knowledge->addTile(tribe->getCurrentMap(), x+1,y-1);
-    knowledge->addTile(tribe->getCurrentMap(), x,y+1);
-    knowledge->addTile(tribe->getCurrentMap(), x-1,y+1);
-    knowledge->addTile(tribe->getCurrentMap(), x+1,y+1);
+    // knowledge->addTile(tribe->getCurrentMap(), x,y);
+    // knowledge->addTile(tribe->getCurrentMap(), x-1,y);
+    // knowledge->addTile(tribe->getCurrentMap(), x+1,y);
+    // knowledge->addTile(tribe->getCurrentMap(), x,y-1);
+    // knowledge->addTile(tribe->getCurrentMap(), x-1,y-1);
+    // knowledge->addTile(tribe->getCurrentMap(), x+1,y-1);
+    // knowledge->addTile(tribe->getCurrentMap(), x,y+1);
+    // knowledge->addTile(tribe->getCurrentMap(), x-1,y+1);
+    // knowledge->addTile(tribe->getCurrentMap(), x+1,y+1);
     
     // Now we need to run a proper line of sight algorithm. We can start with raytrace.
     //MAX_VIEW_RANGE
@@ -483,12 +483,18 @@ void Character::initialiseKnowledge()
       {
         break;
       }
-      knowledge->addTile(tribe->getCurrentMap(), x+i,y);
+      //knowledge->addTile(tribe->getCurrentMap(), x+i,y);
       
     }
     
     
     Vector <HasXY*> * vVisibleTiles = tribe->getCurrentMap()->rayTraceLOS(x,y,MAX_VIEW_RANGE);
+    
+    for (int i=0; i<vVisibleTiles->size(); ++i)
+    {
+      knowledge->addTile(tribe->getCurrentMap(), (*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
+    }
+    
     
   }
   

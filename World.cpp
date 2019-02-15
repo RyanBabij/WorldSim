@@ -1,6 +1,6 @@
 #pragma once
-#ifndef GUILD_WORLD_CPP
-#define GUILD_WORLD_CPP
+#ifndef WORLDSIM_WORLD_CPP
+#define WORLDSIM_WORLD_CPP
 
 /* World.cpp
 	#include "World.cpp"

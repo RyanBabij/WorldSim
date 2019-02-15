@@ -38,7 +38,7 @@ int lastline = 0;
 
 bool FAST_COUT = false;
 
-const std::string VERSION = "0.0.060 Win32 dev";
+const std::string VERSION = "0.0.061 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 
 const std::string SAVE_FOLDER_PATH = "savedata";
@@ -75,7 +75,7 @@ const int LOCAL_MAP_SIZE = 129;
 
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 
-const int MAX_VIEW_RANGE = 12;
+const int MAX_VIEW_RANGE = 50;
 
 
 //const int PLANTING_TIME = 7200; /* Realistic. */
