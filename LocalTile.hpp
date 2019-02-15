@@ -53,6 +53,9 @@ class LocalTile: public HasTexture
   
     // Return vector of all textures to be drawn, to be drawn from index 0 to n-1.
   virtual Vector <HasTexture*> * currentTextures();
+  
+    // Returns true is this tile has an object that can block line of sight. */
+  bool hasViewBlocker();
 
 	
 };

@@ -16,6 +16,12 @@ class WorldObject: public HasTexture
 	
 	double weight; /* in grams */
 	double bulk; /* In cm^3 , and adjusted higher for cumbersome items.*/
+  
+  /* True if line of sight cannot pass this object.
+    Might be expanded in future. For example maybe a
+    crate will block view of people who are sneaking. */
+  bool blocksView;
+  
 	
 	WorldObject();
 	virtual ~WorldObject() {}

@@ -37,6 +37,34 @@ void LocalTile::clearObjects()
   vObject.clear();
 }
 
+
+
+    // Returns true is this tile has an object that can block line of sight. */
+bool LocalTile::hasViewBlocker()
+{
+  for ( int i=0; i<vObject.size();++i)
+  {
+    if (vObject(i)->blocksView)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+    /* INHERITED FUNCTIONS */
+
 Texture* LocalTile::currentTexture()
 {
   if ( hasFloor )

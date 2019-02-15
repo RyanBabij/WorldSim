@@ -16,6 +16,8 @@ WorldObject_Tree::WorldObject_Tree()
 	bulk=0;
   
   growth=0;
+  
+  blocksView = true;
 }
 
 std::string WorldObject_Tree::getName()

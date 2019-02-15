@@ -98,6 +98,14 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	bool saveToFile(std::string /* path */);
   
   bool moveObject (WorldObject* , int /* newX */, int /* newY */ );
+  
+// LINE OF SIGHT
+    
+      // Returns true if an object on this tile can block line of sight */
+  bool isBlockingView(int /* _x */, int /* _y */);
+  
+    //Return a vector of coordinates visible from the given location.
+  Vector <HasXY*> * rayTraceLOS (int /* _x */, int /* _y */, const int /* RANGE */);
 	
 };
 

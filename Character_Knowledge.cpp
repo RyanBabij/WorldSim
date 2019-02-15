@@ -24,6 +24,9 @@ void Character_Knowledge::addTile( World_Local* _map, int _x, int _y)
 {
   if ( _map == 0 ) { return; }
   
+  if ( _x < 0 || _y < 0 || _x >= LOCAL_MAP_SIZE || _y >= LOCAL_MAP_SIZE )
+  { return; }
+  
   for ( int i=0; i<vMapsVisited.size(); ++i)
   {
     if ( vMapsVisited(i) == _map )
@@ -51,6 +54,9 @@ void Character_Knowledge::addTile( World_Local* _map, int _x, int _y)
 bool Character_Knowledge::hasSeen( World_Local* _map, int _x, int _y)
 {
   if ( _map == 0 ) { return false; }
+  
+  if ( _x < 0 || _y < 0 || _x >= LOCAL_MAP_SIZE || _y >= LOCAL_MAP_SIZE )
+  { return false; }
   
   for ( int i=0; i<vMapsVisited.size(); ++i)
   {

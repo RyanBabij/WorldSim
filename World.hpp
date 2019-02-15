@@ -213,25 +213,24 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
     //Unload a local map from RAM and into a save file.
 	void unloadLocal(const int /* worldX */, const int /* worldY */);
   
-    /* ADVENTURE MODE */
-    // Load up the required local map, do any required logic, center map on character. Return false if error.
-  bool prepareAdventureMode( Character * );
-  
-  
-	void buildArrays();
-		// Find all unique areas and give them names.
-	void nameRegions();
-	void generateTribes( int/* nTribes */, int /* nTribesDwarven */, int /* nTribesElven */);
-		//Put down some Dwarven civs.
-	bool addRace (int /* nTribes */, std::string /* name */);
-	//bool addElvenTribe(int nTribes);
-	//bool addHumanTribe(int nTribes);
-  
-    // Ensure conditions are set up for this character to be controlled.
-    // For example generate the local map.
-  void controlCharacter (Character*);
-  
-  Character* getRandomCharacter();
+  /* ADVENTURE MODE */
+      // Load up the required local map, do any required logic, center map on character. Return false if error.
+      bool prepareAdventureMode( Character * );
+      
+      void buildArrays();
+        // Find all unique areas and give them names.
+      void nameRegions();
+      void generateTribes( int/* nTribes */, int /* nTribesDwarven */, int /* nTribesElven */);
+        //Put down some Dwarven civs.
+      bool addRace (int /* nTribes */, std::string /* name */);
+      //bool addElvenTribe(int nTribes);
+      //bool addHumanTribe(int nTribes);
+      
+        // Ensure conditions are set up for this character to be controlled.
+        // For example generate the local map.
+      void controlCharacter (Character*);
+      
+      Character* getRandomCharacter();
 	
   /* WORLD QUERIES */
 		/* Returns population of all characters (Human, Dwarven, Elven)

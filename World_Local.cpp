@@ -354,6 +354,73 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
   return true;
 }
 
+
+    //Return a vector of coordinates visible from the given location.
+Vector <HasXY*> * World_Local::rayTraceLOS (int _x, int _y, const int RANGE)
+{
+  if (RANGE <= 0) { return 0; }
+  
+  if (_x < 0 || _y < 0 || _x >= LOCAL_MAP_SIZE || _y >= LOCAL_MAP_SIZE )
+  { return 0; }
+  
+  
+  //Step 1: Get all raytrace coordinates.
+  
+  Vector <HasXY*> rayTraceCoordinates;
+  
+  int rayX = _x-RANGE;
+  if (rayX<0) { rayX=0; }
+    
+  int rayY = _y-RANGE;
+  if (rayY<0) { rayY=0; }
+  
+  int rayMaxX = _x+RANGE;
+  
+  if ( rayMaxX >= LOCAL_MAP_SIZE)
+  {
+    rayMaxX = LOCAL_MAP_SIZE - 1;
+  }
+  
+  int rayMaxY = _y+RANGE;
+  
+  if ( rayMaxY >= LOCAL_MAP_SIZE)
+  {
+    rayMaxY = LOCAL_MAP_SIZE - 1;
+  }
+  
+  int tempX = rayX;
+  int tempY = rayY;
+    
+  //rayTraceCoordinates.push( new HasXY(tempX,tempY) );
+  
+  while (tempX <= rayMaxX)
+  {
+    rayTraceCoordinates.push( new HasXY(tempX,rayY) );
+    rayTraceCoordinates.push( new HasXY(tempX,rayMaxY) );
+    ++tempX;
+  }
+  
+  // On the Y pass we prevent doing the corners again.
+  ++tempY;
+  while (tempY < rayMaxY)
+  {
+    rayTraceCoordinates.push( new HasXY(rayX,tempY) );
+    rayTraceCoordinates.push( new HasXY(rayMaxX,tempY) );
+    ++tempY;
+  }
+  
+  // We now have a list of coordinates to raytrace.
+  //std::cout<<"RayTrace Coordinats size: "<<rayTraceCoordinates.size()<<".\n";
+  
+  return 0;
+}
+
+bool World_Local::isBlockingView(int _x, int _y)
+{
+  return aLocalTile(_x,_y).hasViewBlocker();
+
+}
+
 // void World_Local::getRandomTile (int* x, int* y)
 // {
 	// *x = Random::randomInt(nX);
