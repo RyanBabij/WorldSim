@@ -433,7 +433,38 @@ void Character::attack(Character* target)
     return false;
   }
 
+  
+  // KNOWLEDGE
+  
+void Character::initialiseKnowledge()
+{
+  if ( knowledge == 0 )
+  {
+    knowledge = new Character_Knowledge;
+  }
+}
+  
+  bool Character::hasSeen( World_Local* _map, int _x, int _y )
+  {
+    if (knowledge==0) { return false; }
+    
+    
+    return ( knowledge->hasSeen(_map,_x,_y) );
+  }
 
+    //Update knowledge with current instance.
+  void Character::updateKnowledge()
+  {
+    if ( knowledge == 0 ) { return; }
+    if ( tribe == 0 ) { return; }
+
+    //learn about all surrounding tiles.
+    
+    knowledge->addTile(tribe->getCurrentMap(), x,y);
+    
+    
+  }
+  
 // INHERITED FUNCTIONS
 
 
@@ -510,14 +541,6 @@ std::string Character::getColumnType(std::string _column)
 		return "number";
 	}
 	return "string";
-}
-
-void Character::initialiseKnowledge()
-{
-  if ( knowledge == 0 )
-  {
-    knowledge = new Character_Knowledge;
-  }
 }
 
 #endif

@@ -836,7 +836,7 @@ void switchTarget(World_Local* _worldLocal)
                       //Very basic player line of sight check here (only if we're in Adventure mode)
                       
                       if (playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->isOnMap(tileX,tileY)
-                        && playerCharacter->distanceTo(localXTile,localYTile)>20 )
+                        && playerCharacter->hasSeen(localMap, localXTile,localYTile) == false )
                       {
 
                         //Draw tile very dark to symbolise fog of war

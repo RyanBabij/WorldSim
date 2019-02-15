@@ -24,6 +24,12 @@ class Character_Knowledge
     // Initialise, including roll for stats. 0 - Roll gender. 1 - Male. 2 - Female.
 	void init();
 
+  
+    // Add this tile into the Character's knowledge (if it isn't already)
+  void addTile( World_Local* /* _map */, int /* _x */, int /* _y */ );
+  
+    //returns true if the Character has seen this tile.
+  bool hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */ );
 	
 };
 

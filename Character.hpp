@@ -18,6 +18,7 @@
 class Tribe;
 
 class Character_Knowledge;
+class World_Local;
 
 enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, MASSACRE=2, COMBAT=3, OLD_AGE=4 };
 const std::string enumCauseOfDeathStr [5] = { "unknown", "starvation", "massacre", "combat", "old age" };
@@ -146,6 +147,11 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   bool isOnMap(int /* _mapX */, int /* _mapY */);
   
   
+    // KNOWLEDGE
+    
+    //returns true if the Character has seen this tile.
+  bool hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */ );
+  
   
 	/* TABLE INTERFACE */
 	std::string getColumn(std::string _column);
@@ -160,6 +166,9 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   
     //Ensure the character's knowledge object exists.
   void initialiseKnowledge();
+  
+    //Update knowledge with current instance.
+  void updateKnowledge();
 
 	
 };

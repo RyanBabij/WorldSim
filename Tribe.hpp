@@ -116,6 +116,12 @@ class Tribe: public WorldObjectGlobal, public TableInterface
       // Return a Character capable of combat. If there is none, return 0.
     Character* getDefender ();
     
+    // LOCATION
+    
+      //Return the local map the tribe is on.
+    World_Local* getCurrentMap ();
+    
+    
     /* WORLD OBJECT GLOBAL */
 		Texture* currentTexture();
 		

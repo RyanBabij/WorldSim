@@ -552,6 +552,17 @@ Character* Tribe::getDefender()
   return 0;
 }
 
+
+    // LOCATION
+    
+  //Return the local map the tribe is on.
+World_Local* Tribe::getCurrentMap ()
+{
+  return (*world)(worldX,worldY);
+}
+    
+
+
 /* TABLE INTERFACE */
 
 std::string Tribe::getColumn(std::string _column)

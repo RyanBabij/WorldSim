@@ -1519,6 +1519,8 @@ void World::controlCharacter(Character* _character)
   /* Generate local map */
   generateLocal(genX,genY);
   
+  playerCharacter->initialiseKnowledge();
+  
 }
   
   
@@ -1575,6 +1577,7 @@ WorldTile * World::getTile (const int x, const int y )
 }
 
 
+// This should be merged with control character.
 bool World::prepareAdventureMode( Character * _character )
 {
   std::cout<<"World is preparing for Adventure Mode.\n";
@@ -1598,6 +1601,8 @@ bool World::prepareAdventureMode( Character * _character )
   
   worldViewer.tileSize = 2000;
   worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
+  
+  controlCharacter(_character);
   
   return true;
 }
