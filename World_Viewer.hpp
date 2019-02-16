@@ -835,15 +835,14 @@ void switchTarget(World_Local* _worldLocal)
                       
                       //Very basic player line of sight check here (only if we're in Adventure mode)
                       
-                      if (playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->isOnMap(tileX,tileY)
-                        && playerCharacter->hasSeen(localMap, localXTile,localYTile) == false )
+                      if (playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == false )
                       {
 
                         //Draw tile very dark to symbolise fog of war
                         
                         LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
                         
-                        unsigned char lightValue = 100;
+                        unsigned char lightValue = 150;
                         glColor3ub(180+lightValue,180+lightValue,180+lightValue);
                         Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
                         glColor3ub(255,255,255);

@@ -428,12 +428,14 @@ void Character::attack(Character* target)
   {
     //For now we are assuming the Character is on the same map as his tribe.
     
-    if ( tribe != 0 )
-    {
-      return tribe->isOnMap(_mapX,_mapY);
-    }
+    return (worldX == _mapX && worldY == _mapY);
     
-    return false;
+    // if ( tribe != 0 )
+    // {
+      // return tribe->isOnMap(_mapX,_mapY);
+    // }
+    
+    // return false;
   }
 
   
@@ -471,7 +473,7 @@ void Character::initialiseKnowledge()
     
     // The basic 3x3 box of guaranteed sight.
     
-    // knowledge->addTile(tribe->getCurrentMap(), x,y);
+    knowledge->addTile(world(worldX,worldY), x,y);
     // knowledge->addTile(tribe->getCurrentMap(), x-1,y);
     // knowledge->addTile(tribe->getCurrentMap(), x+1,y);
     // knowledge->addTile(tribe->getCurrentMap(), x,y-1);
@@ -484,24 +486,24 @@ void Character::initialiseKnowledge()
     // Now we need to run a proper line of sight algorithm. We can start with raytrace.
     //MAX_VIEW_RANGE
     
-    for (int i=0;i<MAX_VIEW_RANGE;++i)
-    {
-      int actualTileX = x+i;
+    // for (int i=0;i<MAX_VIEW_RANGE;++i)
+    // {
+      // int actualTileX = x+i;
       
-      if (tribe->getCurrentMap()->isBlockingView(x+i,y))
-      {
-        break;
-      }
-      //knowledge->addTile(tribe->getCurrentMap(), x+i,y);
+      // if (tribe->getCurrentMap()->isBlockingView(x+i,y))
+      // {
+        // break;
+      // }
+      // //knowledge->addTile(tribe->getCurrentMap(), x+i,y);
       
-    }
+    // }
     
     
-    Vector <HasXY*> * vVisibleTiles = tribe->getCurrentMap()->rayTraceLOS(x,y,MAX_VIEW_RANGE);
+    Vector <HasXY*> * vVisibleTiles = world(worldX,worldY)->rayTraceLOS(x,y,MAX_VIEW_RANGE);
     
     for (int i=0; i<vVisibleTiles->size(); ++i)
     {
-      knowledge->addTile(tribe->getCurrentMap(), (*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
+      knowledge->addTile(world(worldX,worldY), (*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
     }
     
     
