@@ -38,7 +38,7 @@ int lastline = 0;
 
 bool FAST_COUT = false;
 
-const std::string VERSION = "0.0.061 Win32 dev";
+const std::string VERSION = "0.0.063 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 
 const std::string SAVE_FOLDER_PATH = "savedata";
@@ -71,7 +71,7 @@ bool FOG_OF_WAR = true;
   depending on scaling and performance considerations.
   It will likely be set to low values during development.
 */
-const int LOCAL_MAP_SIZE = 129;
+const int LOCAL_MAP_SIZE = 65;
 
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 
@@ -80,7 +80,7 @@ const int MAX_VIEW_RANGE = 50;
 // The number of local maps to hold in memory at once. Minimum should be 4.
 // (One for the player's current map, and three neighboring maps).
 // However additional maps should be allocated for background processing.
-const int MAX_LOCAL_MAPS_IN_MEMORY = 5;
+const int MAX_LOCAL_MAPS_IN_MEMORY = 10;
 
 
 //const int PLANTING_TIME = 7200; /* Realistic. */

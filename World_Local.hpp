@@ -97,6 +97,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	
 	bool saveToFile(std::string /* path */);
   
+  bool putObject (WorldObject* , int /* _x */, int /* _y */);
   bool moveObject (WorldObject* , int /* newX */, int /* newY */ );
   
 // LINE OF SIGHT

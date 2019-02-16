@@ -380,7 +380,6 @@ void World::logicTick()
 
 void World::updateMaps()
 {
-  std::cout<<"UPDATE MAPS\n";
   
   if ( playerCharacter != 0 && playerCharacter->tribe != 0 && playerCharacter->knowledge != 0 )
   {
@@ -1056,8 +1055,8 @@ void World::generateLocal(const int _localX, const int _localY)
   if ( vWorldLocal.size() > MAX_LOCAL_MAPS_IN_MEMORY )
   {
       // UNLOAD LOCAL MAP HERE
-    delete vWorldLocal(0);
-    vWorldLocal.eraseSlot(0);
+    //delete vWorldLocal(0);
+    //vWorldLocal.eraseSlot(0);
   }
   
   return;

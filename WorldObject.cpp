@@ -16,6 +16,8 @@ WorldObject::WorldObject()
 	bulk=0;
   
   blocksView=false;
+  
+  worldX=-1; worldY=-1;
 }
 
 std::string WorldObject::getName()

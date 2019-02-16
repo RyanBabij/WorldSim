@@ -11,6 +11,12 @@ class WorldObject: public HasTexture
 {
 	public:
 	int x, y;
+  
+  
+    /* TEMPORARY WORKAROUND TO ALLOW CHARACTERS TO MOVE ACROSS MAPS.
+      CURRENTLY ONLY USED FOR CHARACTERS
+      In future World_Local should distinguish between actors and objects */
+  int worldX, worldY;
 	
 	bool stackable; /* True if multiple objects of this class can be merged together into a single stack, sharing their data. */
 	

@@ -351,17 +351,154 @@ bool World_Local::saveToFile(std::string _path)
 	return false;
 }
 
+
+bool World_Local::putObject (WorldObject* _object, int _x, int _y)
+{
+  if ( aLocalTile.isSafe(_x,_y) == false )
+  { return false; }
+
+  _object->worldX = globalX;
+  _object->worldY = globalY;
+  aLocalTile(_x,_y).addObject(_object);
+  return true;
+}
+
 bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
 {
   if ( aLocalTile.isSafe(newX,newY) == false )
   {
+    // Moving between maps.
+    
+      //LEFT
+    if ( newX < 0 )
+    {
+      int nMaps = 0;
+      while ( newX < 0 )
+      {
+        newX += LOCAL_MAP_SIZE-1;
+        ++nMaps;
+      }
+      ++newX;
+      
+      //PUT OBJECT
+      if (nMaps > 0 )
+      {
+        if (world.isSafe(globalX-nMaps,globalY))
+        {
+          aLocalTile(_object->x,_object->y).removeObject(_object);
+          _object->x=newX;
+          _object->y=newY;
+          _object->worldX = globalX-nMaps;
+          _object->worldY = globalY;
+          world(globalX-nMaps,globalY)->putObject(_object,newX,newY);
+          
+          return false;
+          
+        }
+      }
+    }
+      //RIGHT
+    else if (newX > LOCAL_MAP_SIZE-1)
+    {
+      int nMaps = 0;
+      while ( newX > LOCAL_MAP_SIZE-1 )
+      {
+        newX -= LOCAL_MAP_SIZE-1;
+        ++nMaps;
+      }
+      --newX;
+      //std::cout<<"NEWX: "<<newX<<".\n";
+      
+      //PUT OBJECT
+      if (nMaps > 0 )
+      {
+        if (world.isSafe(globalX+nMaps,globalY))
+        {
+          aLocalTile(_object->x,_object->y).removeObject(_object);
+          _object->x=newX;
+          _object->y=newY;
+          _object->worldX = globalX+nMaps;
+          _object->worldY = globalY;
+          world(globalX+nMaps,globalY)->putObject(_object,newX,newY);
+          
+          return false;
+          
+        }
+      }
+    }
+      //DOWN
+    else if ( newY < 0 )
+    {
+      int nMaps = 0;
+      while ( newY < 0 )
+      {
+        newY += LOCAL_MAP_SIZE-1;
+        ++nMaps;
+      }
+      ++newY;
+      
+      //PUT OBJECT
+      if (nMaps > 0 )
+      {
+        if (world.isSafe(globalX,globalY-nMaps))
+        {
+          aLocalTile(_object->x,_object->y).removeObject(_object);
+          _object->x=newX;
+          _object->y=newY;
+          _object->worldX = globalX;
+          _object->worldY = globalY-nMaps;
+          world(globalX,globalY-nMaps)->putObject(_object,newX,newY);
+          
+          return false;
+          
+        }
+      }
+    }
+      //UP
+    else if (newY > LOCAL_MAP_SIZE-1)
+    {
+      int nMaps = 0;
+      while ( newY > LOCAL_MAP_SIZE-1 )
+      {
+        newY -= LOCAL_MAP_SIZE-1;
+        ++nMaps;
+      }
+      --newY;
+
+      //PUT OBJECT
+      if (nMaps > 0 )
+      {
+        if (world.isSafe(globalX,globalY+nMaps))
+        {
+          aLocalTile(_object->x,_object->y).removeObject(_object);
+          _object->x=newX;
+          _object->y=newY;
+          _object->worldX = globalX;
+          _object->worldY = globalY+nMaps;
+          world(globalX,globalY+nMaps)->putObject(_object,newX,newY);
+          
+          return false;
+          
+        }
+      }
+    }
+      
     return false;
+
   }
   
   aLocalTile(_object->x,_object->y).removeObject(_object);
   
+
+
+
+
+  
   _object->x=newX;
   _object->y=newY;
+  _object->worldX = globalX;
+  _object->worldY = globalY;
+  
   aLocalTile(newX,newY).addObject(_object);
   return true;
 }

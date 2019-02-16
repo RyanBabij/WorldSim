@@ -135,14 +135,12 @@ class Menu_AdventureMode: public GUI_Interface
     
     if(_keyboard->isPressed(Keyboard::RIGHT))
     {
-      World_Local* wl = world(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
+      World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
       if ( wl != 0 )
       {
         wl->moveObject(playerCharacter,playerCharacter->x+1,playerCharacter->y);
-        worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
-        
+        worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
         world.updateMaps();
-        
         playerCharacter->updateKnowledge();
       }
       
@@ -150,14 +148,12 @@ class Menu_AdventureMode: public GUI_Interface
     }
     if(_keyboard->isPressed(Keyboard::LEFT))
     {
-      World_Local* wl = world(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
+      World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
       if ( wl != 0 )
       {
         wl->moveObject(playerCharacter,playerCharacter->x-1,playerCharacter->y);
-        worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
-        
+        worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
         world.updateMaps();
-        
         playerCharacter->updateKnowledge();
       }
       
@@ -165,28 +161,24 @@ class Menu_AdventureMode: public GUI_Interface
     }
     if(_keyboard->isPressed(Keyboard::UP))
     {
-      World_Local* wl = world(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
+      World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
       if ( wl != 0 )
       {
         wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y+1);
-        worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
-        
+        worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
         world.updateMaps();
-        
         playerCharacter->updateKnowledge();
       }
       _keyboard->keyUp(Keyboard::UP);
     }
     if(_keyboard->isPressed(Keyboard::DOWN))
     {
-      World_Local* wl = world(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
+      World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
       if ( wl != 0 )
       {
         wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y-1);
-        worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
-        
+        worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
         world.updateMaps();
-        
         playerCharacter->updateKnowledge();
       }
       _keyboard->keyUp(Keyboard::DOWN);
