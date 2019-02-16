@@ -77,6 +77,11 @@ int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 
 const int MAX_VIEW_RANGE = 50;
 
+// The number of local maps to hold in memory at once. Minimum should be 4.
+// (One for the player's current map, and three neighboring maps).
+// However additional maps should be allocated for background processing.
+const int MAX_LOCAL_MAPS_IN_MEMORY = 5;
+
 
 //const int PLANTING_TIME = 7200; /* Realistic. */
 //const int PLANTING_TIME = 100; /* Testing. */

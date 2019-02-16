@@ -193,14 +193,21 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
     }
     return 0;
   }
+  
+  
+  
 
-    /* TICK LOGIC */
-		/* I want this to be the new method of incrementing time in the world. It will dynamically abstract things based on the amount of turns to simulate. Each tick is one second. */
+/* TICK LOGIC */
+/* I want this to be the new method of incrementing time in the world. It will dynamically abstract things based on the amount of turns to simulate. Each tick is one second. */
 	void incrementTicks ( int /* nTicks */ );
 	void incrementTicksBacklog ( long long unsigned int /* nTicks */ );
 	void handleTickBacklog ();
 	void idleTick();
 	void logicTick();
+  
+/* UPDATES */
+  /* World updates not relying on ticks. For example loading in maps that the player is near. */
+  void updateMaps();
   
     /* FILE IO */
 	bool loadWorld(std::string /* world name */);

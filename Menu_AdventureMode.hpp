@@ -141,6 +141,8 @@ class Menu_AdventureMode: public GUI_Interface
         wl->moveObject(playerCharacter,playerCharacter->x+1,playerCharacter->y);
         worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
         
+        world.updateMaps();
+        
         playerCharacter->updateKnowledge();
       }
       
@@ -153,6 +155,8 @@ class Menu_AdventureMode: public GUI_Interface
       {
         wl->moveObject(playerCharacter,playerCharacter->x-1,playerCharacter->y);
         worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
+        
+        world.updateMaps();
         
         playerCharacter->updateKnowledge();
       }
@@ -167,6 +171,8 @@ class Menu_AdventureMode: public GUI_Interface
         wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y+1);
         worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
         
+        world.updateMaps();
+        
         playerCharacter->updateKnowledge();
       }
       _keyboard->keyUp(Keyboard::UP);
@@ -178,6 +184,8 @@ class Menu_AdventureMode: public GUI_Interface
       {
         wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y-1);
         worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
+        
+        world.updateMaps();
         
         playerCharacter->updateKnowledge();
       }

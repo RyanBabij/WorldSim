@@ -378,6 +378,44 @@ void World::logicTick()
 	//handleTickBacklog();
 }
 
+void World::updateMaps()
+{
+  std::cout<<"UPDATE MAPS\n";
+  
+  if ( playerCharacter != 0 && playerCharacter->tribe != 0 && playerCharacter->knowledge != 0 )
+  {
+    if ( playerCharacter->x == 0 )
+    {
+      generateLocal(playerCharacter->worldX-1,playerCharacter->worldY);
+    }
+    if ( playerCharacter->y == 0 )
+    {
+      generateLocal(playerCharacter->worldX,playerCharacter->worldY-1);
+    }
+    if (playerCharacter->x == 0 && playerCharacter->y == 0)
+    {
+      generateLocal(playerCharacter->worldX-1,playerCharacter->worldY-1);
+    }
+    
+    if ( playerCharacter->x == LOCAL_MAP_SIZE-1 )
+    {
+      generateLocal(playerCharacter->worldX+1,playerCharacter->worldY);
+    }
+    if ( playerCharacter->y == LOCAL_MAP_SIZE-1 )
+    {
+      generateLocal(playerCharacter->worldX,playerCharacter->worldY+1);
+    }
+    if (playerCharacter->x == LOCAL_MAP_SIZE-1 && playerCharacter->y == LOCAL_MAP_SIZE-1)
+    {
+      generateLocal(playerCharacter->worldX+1,playerCharacter->worldY+1);
+    }
+    
+  }
+
+
+    
+}
+
 void World::handleTickBacklog()
 {
 	if (ticksBacklog<=0) { return; }
@@ -988,6 +1026,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 }
 
 
+//This makes the local map visible.
 void World::generateLocal(const int _localX, const int _localY)
 {
   if ( isSafe(_localX,_localY) == false )
@@ -1009,7 +1048,12 @@ void World::generateLocal(const int _localX, const int _localY)
   
   vWorldLocal.push(worldLocal);
   
-  if ( vWorldLocal.size() > 3 )
+  //There needs to be a minimum of 3 maps active at any time. (1 map the player is currently in,
+    // and potentially three neighboring maps. Additional maps will likely need to be loaded in
+    // the background, therefore I'll set it to 5 for now.
+    // I'll need to make an algorithm to decide which maps to purge.
+  
+  if ( vWorldLocal.size() > MAX_LOCAL_MAPS_IN_MEMORY )
   {
       // UNLOAD LOCAL MAP HERE
     delete vWorldLocal(0);

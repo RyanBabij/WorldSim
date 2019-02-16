@@ -81,6 +81,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	
 	Tribe* tribe;
   
+  int worldX, worldY;
+  
   enumCauseOfDeath causeOfDeath;
   
   

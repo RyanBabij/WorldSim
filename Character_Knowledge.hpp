@@ -18,7 +18,6 @@ class Character_Knowledge
   Vector < ArrayS2 <bool>* > vaTileVisited;
   
 
-	
 		/* INITIALIZATION */
 	Character_Knowledge();
     // Initialise, including roll for stats. 0 - Roll gender. 1 - Male. 2 - Female.

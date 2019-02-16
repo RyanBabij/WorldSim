@@ -67,6 +67,9 @@ Character::Character()
   isFavourite=false;
   
   knowledge=0;
+  
+  worldX = -1;
+  worldY = -1;
 	
 	//enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, OLD_AGE=2 };
 	
@@ -441,6 +444,12 @@ void Character::initialiseKnowledge()
   if ( knowledge == 0 )
   {
     knowledge = new Character_Knowledge;
+    
+    if ( tribe != 0 )
+    {
+      worldX = tribe->worldX;
+      worldY = tribe->worldY;
+    }
   }
 }
   
