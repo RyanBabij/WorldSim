@@ -15,7 +15,7 @@ class Character_Knowledge
   
     // Vector of places this Character has visited. I think most characters will only visit a handful of maps.
   Vector <World_Local*> vMapsVisited;
-  Vector < ArrayS2 <bool>* > vaTileVisited;
+  Vector < ArrayS2 <char>* > vaTileVisited;
   
 
 		/* INITIALIZATION */
@@ -27,9 +27,15 @@ class Character_Knowledge
     // Add this tile into the Character's knowledge (if it isn't already)
   void addTile( World_Local* /* _map */, int /* _x */, int /* _y */ );
   
-    //returns true if the Character has seen this tile.
-  bool hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */ );
+    //returns true if the Character has seen this tile. 0 = no. 1 = has seen. 2 = currently visible.
+  char hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */ );
+  
+  
+  // Sets all 2 to 1 for LOS update.
+  void updateLOS();
 	
+    //returns true if the Character can currently see this tile.
+  //bool canSee( World_Local* /* _map */, int /* _x */, int /* _y */ );
 };
 
 #endif

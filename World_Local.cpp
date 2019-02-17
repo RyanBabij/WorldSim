@@ -609,8 +609,8 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
 			// SPECIAL CASE: UP/DOWN
 		else if (_x1 == _x2)
 		{
-			while ( _y1 != _y2 )
-			{
+      do
+      {
 				if ( aLocalTile.isSafe(_x1,_y1) == true )
 				{
 					vVisibleTiles->push(new HasXY (_x1,_y1) );
@@ -623,8 +623,20 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
 				{ ++_y1; }
 				else
 				{ --_y1; }
+      } 
+      while( _y1 != _y2 );
+      
+      // Final case
+      if (_y1 == _y2)
+      { vVisibleTiles->push(new HasXY (_x1,_y1) );
+      }
+      
+			// while ( _y1 != _y2 )
+			// {
 
-			}
+			// }
+      //Final case
+      //vVisibleTiles->push(new HasXY (_x1,_y1) );
 		}
 			//SHALLOW SLOPE
 		else if ( xDiff <= yDiff )
@@ -634,7 +646,8 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
 
 			double currentY = _y1;
 
-			while (_x1 != _x2 )
+			//while (_x1 != _x2 )
+      do
 			{
 
 				int roundedY=0;
@@ -668,6 +681,14 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
 				else
 				{ --_x1; }
 			}
+      while (_x1 != _x2 );
+      
+      // Final case
+      if (_x1 == _x2)
+      { vVisibleTiles->push(new HasXY (_x1,_y2) );
+      }
+      //Final case
+      //vVisibleTiles->push(new HasXY (_x1,_y1) );
 		}
 			//STEEP SLOPE.
 		else
@@ -679,7 +700,8 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
 
 			double currentX = _x1;
 
-			while (_y1 != _y2 )
+			//while (_y1 != _y2 )
+      do
 			{
 				int roundedX=0;
 
@@ -705,6 +727,14 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
 				else
 				{ --_y1; }
 			}
+      while (_y1 != _y2 );
+      
+      // Final case
+      if (_y1 == _y2)
+      { vVisibleTiles->push(new HasXY (_x2,_y1) );
+      } 
+      //Final case
+      //vVisibleTiles->push(new HasXY (_x1,_y1) );
 		}
 
 }

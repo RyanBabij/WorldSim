@@ -473,6 +473,10 @@ void Character::initialiseKnowledge()
     
     // The basic 3x3 box of guaranteed sight.
     
+    
+      //For now this simply wipes LOS from last turn.
+    knowledge->updateLOS();
+    
     knowledge->addTile(world(worldX,worldY), x,y);
     // knowledge->addTile(tribe->getCurrentMap(), x-1,y);
     // knowledge->addTile(tribe->getCurrentMap(), x+1,y);

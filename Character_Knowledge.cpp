@@ -32,7 +32,7 @@ void Character_Knowledge::addTile( World_Local* _map, int _x, int _y)
     if ( vMapsVisited(i) == _map )
     {
       // Flip fog bit
-      (*vaTileVisited(i))(_x,_y) = true;
+      (*vaTileVisited(i))(_x,_y) = 1;
       return;
     }
   }
@@ -41,22 +41,22 @@ void Character_Knowledge::addTile( World_Local* _map, int _x, int _y)
   
   vMapsVisited.push(_map);
   
-  auto aFog = new ArrayS2 <bool>;
-  aFog->init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,false);
+  auto aFog = new ArrayS2 <char>;
+  aFog->init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
     // Flip fog bit
-  (*aFog)(_x,_y) = true;
+  (*aFog)(_x,_y) = 1;
   
   vaTileVisited.push(aFog);
 }
 
 
   //returns true if the Character has seen this tile.
-bool Character_Knowledge::hasSeen( World_Local* _map, int _x, int _y)
+char Character_Knowledge::hasSeen( World_Local* _map, int _x, int _y)
 {
   if ( _map == 0 ) { return false; }
   
   if ( _x < 0 || _y < 0 || _x >= LOCAL_MAP_SIZE || _y >= LOCAL_MAP_SIZE )
-  { return false; }
+  { return 0; }
   
   for ( int i=0; i<vMapsVisited.size(); ++i)
   {
@@ -65,10 +65,16 @@ bool Character_Knowledge::hasSeen( World_Local* _map, int _x, int _y)
       return (*vaTileVisited(i))(_x,_y);
     }
   }
-  return false;
+  return 0;
 }
 
-
+void Character_Knowledge::updateLOS()
+{
+  for ( int i=0; i<vMapsVisited.size(); ++i)
+  {
+    (*vaTileVisited(i)).fill(0);
+  }
+}
 
 
 #endif

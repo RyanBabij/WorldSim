@@ -1563,6 +1563,7 @@ void World::controlCharacter(Character* _character)
   generateLocal(genX,genY);
   
   playerCharacter->initialiseKnowledge();
+  playerCharacter->updateKnowledge();
   
 }
   
