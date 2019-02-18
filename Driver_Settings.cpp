@@ -24,7 +24,8 @@ std::mutex render_mutex;
 */
 
 enum enumMenu { MENU_UNKNOWN, MENU_TITLE, MENU_OPTIONS, MENU_LOADGAME, MENU_WORLDGENERATOR, MENU_WORLDSIMULATOR, MENU_ADVENTUREMODE };
-enumMenu activeMenu = MENU_TITLE;
+// Should be MENU_TITLE but I'm bypassing it for now because the main menu has no function atm.
+enumMenu activeMenu = MENU_WORLDGENERATOR;
 
 
   /* Race */
@@ -38,15 +39,15 @@ int lastline = 0;
 
 bool FAST_COUT = false;
 
-const std::string VERSION = "0.0.065 Win32 dev";
+const std::string VERSION = "0.0.066 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 
 const std::string SAVE_FOLDER_PATH = "savedata";
 
 /* DEBUG MENU SHORTCUTS */
-//bool AUTO_GENERATE_WORLD = false;
+//bool AUTO_GENERATE_WORLD = true;
 //bool AUTO_NEW_SIMULATION = true;
-bool QUICKSTART = false; // Skip menu stuff and jump right into the game. (Will use defaults).
+bool QUICKSTART_GENERATOR = true; // Skip menu stuff and immediately generate a default world.
   //Quickly go straight into the simulator.
 bool QUICKSTART_SIMULATOR = false; // Skip menu stuff and jump right into the game. (Will use defaults).
   // DEFAULT WORLD WHICH IS AUTO-GENERATED.
@@ -80,6 +81,7 @@ const int MAX_VIEW_RANGE = 50;
 // The number of local maps to hold in memory at once. Minimum should be 4.
 // (One for the player's current map, and three neighboring maps).
 // However additional maps should be allocated for background processing.
+// Not currently functional
 const int MAX_LOCAL_MAPS_IN_MEMORY = 10;
 
 

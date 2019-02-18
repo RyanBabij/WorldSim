@@ -35,7 +35,6 @@ Tribe_Human::Tribe_Human()
 
 bool Tribe_Human::spawn()
 {
-
 	if ( world == 0 )
 	{
 		//std::cout<<"ABORT: Tribe doesn't have pointer to world object.\n";
@@ -55,8 +54,6 @@ bool Tribe_Human::spawn()
 	
 	worldX=spawnTile->x;
 	worldY=spawnTile->y;
-  
-  delete spawnTile;
 
   world->vTribe.push(this);
 	world->putObject(this,worldX,worldY);

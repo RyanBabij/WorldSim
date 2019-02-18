@@ -51,7 +51,6 @@ bool Tribe_Dwarven::spawn()
 	
 	worldX=spawnTile->x;
 	worldY=spawnTile->y;
-  delete spawnTile;
 
 	world->putObject(this,worldX,worldY);
 	world->vTribe.push(this);

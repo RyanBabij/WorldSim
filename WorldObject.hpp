@@ -12,6 +12,10 @@ class WorldObject: public HasTexture
 	public:
 	int x, y;
   
+  //Implementing full global coordinates to make life easier for now.
+  // This datatype should be able to hold coordinates for any reasonably-sized world.
+  long unsigned int fullX, fullY;
+  
   
     /* TEMPORARY WORKAROUND TO ALLOW CHARACTERS TO MOVE ACROSS MAPS.
       CURRENTLY ONLY USED FOR CHARACTERS

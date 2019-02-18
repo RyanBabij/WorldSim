@@ -12,6 +12,7 @@
 WorldObject::WorldObject()
 {
 	x=0; y=0;
+  fullX = 0; fullY = 0;
 	weight=0;
 	bulk=0;
   

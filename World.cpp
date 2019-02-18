@@ -189,37 +189,59 @@ void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int 
 	{ std::cout<<"WARNING: Unexpected number of human tribes.\n"; }
 
 
+  std::cout<<"Generate humans: ";
 	for (int i=0;i<nTribesHuman;++i)
 	{
+    std::cout<<".";
 		Tribe_Human * t = new Tribe_Human;
 		t->init(this);
 		if (t->spawn() == false)
 		{
+      std::cout<<" FAIL ";
 			delete t;
     }
     else
     {
       t->generateCouples(7);
     }
-
-
 	}
-	
+  std::cout<<"\n";
+  
+  std::cout<<"Generate dwarves: ";
 	for (int i=0;i<nTribesDwarven;++i)
 	{
+    std::cout<<".";
 		Tribe_Dwarven * t = new Tribe_Dwarven;
 		t->init(this);
-		t->spawn();
-		t->generateCouples(7);
+		if (t->spawn() == false)
+		{
+      std::cout<<" FAIL ";
+			delete t;
+    }
+    else
+    {
+      t->generateCouples(7);
+    }
 	}
+  std::cout<<"\n";
   
+  std::cout<<"Generate elves: ";
 	for (int i=0;i<nTribesElven;++i)
 	{
+    std::cout<<".";
 		Tribe_Elf * t = new Tribe_Elf;
 		t->init(this);
-		t->spawn();
-		t->generateCouples(7);
+		if (t->spawn() == false)
+		{
+      std::cout<<" FAIL ";
+			delete t;
+    }
+    else
+    {
+      t->generateCouples(7);
+    }
 	}
+  std::cout<<"\n";
  
 	
 	std::cout<<"END Generate tribes\n";
@@ -383,36 +405,34 @@ void World::updateMaps()
   
   if ( playerCharacter != 0 && playerCharacter->tribe != 0 && playerCharacter->knowledge != 0 )
   {
-    if ( playerCharacter->x == 0 )
+    if ( playerCharacter->x < 20 )
     {
       generateLocal(playerCharacter->worldX-1,playerCharacter->worldY);
     }
-    if ( playerCharacter->y == 0 )
+    if ( playerCharacter->y < 20 )
     {
       generateLocal(playerCharacter->worldX,playerCharacter->worldY-1);
     }
-    if (playerCharacter->x == 0 && playerCharacter->y == 0)
+    if (playerCharacter->x < 20 && playerCharacter->y < 20)
     {
       generateLocal(playerCharacter->worldX-1,playerCharacter->worldY-1);
     }
     
-    if ( playerCharacter->x == LOCAL_MAP_SIZE-1 )
+    if ( playerCharacter->x > LOCAL_MAP_SIZE-21 )
     {
       generateLocal(playerCharacter->worldX+1,playerCharacter->worldY);
     }
-    if ( playerCharacter->y == LOCAL_MAP_SIZE-1 )
+    if ( playerCharacter->y > LOCAL_MAP_SIZE-21 )
     {
       generateLocal(playerCharacter->worldX,playerCharacter->worldY+1);
     }
-    if (playerCharacter->x == LOCAL_MAP_SIZE-1 && playerCharacter->y == LOCAL_MAP_SIZE-1)
+    if (playerCharacter->x > LOCAL_MAP_SIZE-21 && playerCharacter->y > LOCAL_MAP_SIZE-21)
     {
       generateLocal(playerCharacter->worldX+1,playerCharacter->worldY+1);
     }
     
   }
 
-
-    
 }
 
 void World::handleTickBacklog()
@@ -979,6 +999,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
     }
 	}
   vAllTiles2.shuffle();
+
   
 
 	for (int i=0;i<nY;++i)
@@ -1298,8 +1319,6 @@ HasXY* World::getRandomTileOfType(enumBiome _type)
 	// }
 	
 	
-
-
 	return 0;
 }
 
@@ -1562,6 +1581,9 @@ void World::controlCharacter(Character* _character)
   /* Generate local map */
   generateLocal(genX,genY);
   
+  worldViewer.tileSize = 2000;
+  worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
+  
   playerCharacter->initialiseKnowledge();
   playerCharacter->updateKnowledge();
   
@@ -1642,9 +1664,6 @@ bool World::prepareAdventureMode( Character * _character )
   
   std::cout<<"Generating local map: ("<<playerCharacter->tribe->worldX<<", "<<playerCharacter->tribe->worldY<<").\n";
   generateLocal(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
-  
-  worldViewer.tileSize = 2000;
-  worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
   
   controlCharacter(_character);
   

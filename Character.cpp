@@ -451,6 +451,9 @@ void Character::initialiseKnowledge()
     {
       worldX = tribe->worldX;
       worldY = tribe->worldY;
+      
+      fullX = tribe->worldX * LOCAL_MAP_SIZE;
+      fullY = tribe->worldY * LOCAL_MAP_SIZE;
     }
   }
 }

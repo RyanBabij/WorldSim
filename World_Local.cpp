@@ -360,6 +360,10 @@ bool World_Local::putObject (WorldObject* _object, int _x, int _y)
   _object->worldX = globalX;
   _object->worldY = globalY;
   aLocalTile(_x,_y).addObject(_object);
+  
+  _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
+  _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
+  
   return true;
 }
 
@@ -390,7 +394,12 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           _object->y=newY;
           _object->worldX = globalX-nMaps;
           _object->worldY = globalY;
+          
           world(globalX-nMaps,globalY)->putObject(_object,newX,newY);
+          
+          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
+          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
+          std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
           
           return false;
           
@@ -421,6 +430,10 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           _object->worldY = globalY;
           world(globalX+nMaps,globalY)->putObject(_object,newX,newY);
           
+          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
+          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
+          std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
+          
           return false;
           
         }
@@ -448,6 +461,11 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           _object->worldX = globalX;
           _object->worldY = globalY-nMaps;
           world(globalX,globalY-nMaps)->putObject(_object,newX,newY);
+          
+          
+          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
+          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
+          std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
           
           return false;
           
@@ -477,6 +495,10 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           _object->worldY = globalY+nMaps;
           world(globalX,globalY+nMaps)->putObject(_object,newX,newY);
           
+          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
+          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
+          std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
+          
           return false;
           
         }
@@ -500,6 +522,10 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
   _object->worldY = globalY;
   
   aLocalTile(newX,newY).addObject(_object);
+  
+          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
+          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
+          std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
   return true;
 }
 

@@ -49,7 +49,7 @@ void GL_init(int nArgs, char ** arg)
     // Stolen from: https://stackoverflow.com/questions/12748103/how-to-change-freeglut-main-window-icon-in-c
   #ifdef WILDCAT_WINDOWS
     HWND hwnd = FindWindow(NULL, windowTitle.c_str()); //probably you can get the window handler in different way..
-    HANDLE icon = LoadImage(NULL, "icon.ico", IMAGE_ICON, 32, 32, LR_LOADFROMFILE | LR_COLOR);
+    HANDLE icon = LoadImage(NULL, "Textures/icon.ico", IMAGE_ICON, 32, 32, LR_LOADFROMFILE | LR_COLOR);
     SendMessage(hwnd, (UINT)WM_SETICON, ICON_BIG, (LPARAM)icon);
     
     

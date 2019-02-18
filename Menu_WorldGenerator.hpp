@@ -314,7 +314,8 @@ class Menu_WorldGenerator: public GUI_Interface
 		buttonExpandPreviewWindow.texture = &TEX_GUI_EXPAND;
 		
 		guiManager.add(&textMenuTitle);
-		guiManager.add(&buttonBack);
+    //Not currently functional
+    //guiManager.add(&buttonBack);
 		guiManager.add(&textEntryWorldName);
 		guiManager.add(&textEntryFullSeed);
 		guiManager.add(&textEntryFullBiome);
@@ -353,11 +354,11 @@ class Menu_WorldGenerator: public GUI_Interface
 		guiManager.setFont(font);
 		
       // This is a debug option to quickly make a default world for faster testing.
-		// if ( QUICKSTART )
-		// {
-			// world.generateWorld("quickstart",QUICKSTART_WORLD_SIZE,QUICKSTART_WORLD_SIZE);
-			// world.generateTribes(); //Generate default tribe settings.
-			
+    if ( QUICKSTART_GENERATOR )
+		{
+      //world.generateWorld("quickstart",65,65);
+      //world.generateTribes(); //Generate default tribe settings.
+			eventGenerate();
       // // Simulate a decade immediately.
 			// for (int i=0;i<INITIAL_YEARS_SIMULATE;++i)
 			// {world.ticksBacklog+=31104000;
@@ -373,7 +374,7 @@ class Menu_WorldGenerator: public GUI_Interface
 
 			// worldViewer.active=true;
 			// //active=true;
-		// }
+		}
 
 
 	}
@@ -654,7 +655,9 @@ class Menu_WorldGenerator: public GUI_Interface
           textIslandMode.active=true;
           textWrapX.active=true;
           textWrapY.active=true;
-          buttonBack.active=true;
+            //Not currently functional
+            //buttonBack.active=true;
+            buttonBack.active=false;
           worldSize.active=true;
           freeSteps.active=true;
           guiWrapX.active=true;

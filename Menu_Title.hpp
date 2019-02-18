@@ -98,9 +98,9 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		
 		setFont(font);
 		
-		if ( QUICKSTART )
+		if ( QUICKSTART_GENERATOR )
 		{
-			//menuWorldGenerator.active=true;
+			//activeMenu = MENU_WORLDGENERATOR;
 		}
 
 	
