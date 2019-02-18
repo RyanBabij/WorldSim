@@ -41,7 +41,10 @@ World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
 	
 	nX=-1;
 	nY=-1;
- 
+
+  maximumX = 0;
+  maximumY = 0;
+  
 	active=false;
 	generated=false;
 	
@@ -706,6 +709,12 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 
 	nX = x;
 	nY = y;
+  
+    //maximum possible tile X/Y coordinate.
+  maximumX = LOCAL_MAP_SIZE*nX-1;
+  maximumY = LOCAL_MAP_SIZE*nY-1;
+  
+  std::cout<<"Maximum X: "<<maximumX<<".\n";
 
 	mX=x;
   landmassSeed = seed;
@@ -1569,20 +1578,20 @@ void World::controlCharacter(Character* _character)
   playerCharacter = _character;
   
   /* Get character coordinates */
-  int genX = playerCharacter->tribe->worldX;
-  int genY = playerCharacter->tribe->worldY;
+  int genX = playerCharacter->worldX;
+  int genY = playerCharacter->worldY;
   
   //worldViewer.localX = genX;
   //worldViewer.localY = genY;
   
-  worldViewer.centerTileX = genX;
-  worldViewer.centerTileY = genY;
+  //worldViewer.centerTileX = genX;
+  //worldViewer.centerTileY = genY;
   
   /* Generate local map */
   generateLocal(genX,genY);
   
   worldViewer.tileSize = 2000;
-  worldViewer.setCenterTile(playerCharacter->tribe->worldX, playerCharacter->tribe->worldY, playerCharacter->x, playerCharacter->y);
+  worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
   
   playerCharacter->initialiseKnowledge();
   playerCharacter->updateKnowledge();

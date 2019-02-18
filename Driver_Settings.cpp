@@ -28,41 +28,49 @@ enum enumMenu { MENU_UNKNOWN, MENU_TITLE, MENU_OPTIONS, MENU_LOADGAME, MENU_WORL
 enumMenu activeMenu = MENU_WORLDGENERATOR;
 
 
-  /* Race */
+  // RACE ENUM
 enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
 
-  /* BASE TERRAIN ON LOCAL MAP */
+  // BASE TERRAIN ENUM (I DON'T KNOW IF THIS IS BEING USED)
 enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
+
+
+  // STRINGS
+const std::string VERSION = "0.0.067 Win32 dev";
+const std::string G_WINDOW_TITLE = "WorldSim";
+const std::string SAVE_FOLDER_PATH = "savedata";
+
+  // BOOLEANS
+
+  // MAKES COUT MUCH FASTER BUT DOES NOT GUARANTEE ORDER OR COMPLETION BEFORE EXIT/CRASH.
+const bool FAST_COUT = false;
+/* DEBUG MENU SHORTCUTS */
+//bool AUTO_GENERATE_WORLD = true;
+//bool AUTO_NEW_SIMULATION = true;
+const bool QUICKSTART_GENERATOR = true; // Skip menu stuff and immediately generate a default world.
+  //Quickly go straight into the simulator.
+const bool QUICKSTART_SIMULATOR = false; // Skip menu stuff and jump right into the game. (Will use defaults).
+
+
+
+
 
 int worldPop = 0;
 int lastline = 0;
 
-bool FAST_COUT = false;
 
-const std::string VERSION = "0.0.066 Win32 dev";
-const std::string G_WINDOW_TITLE = "WorldSim";
-
-const std::string SAVE_FOLDER_PATH = "savedata";
-
-/* DEBUG MENU SHORTCUTS */
-//bool AUTO_GENERATE_WORLD = true;
-//bool AUTO_NEW_SIMULATION = true;
-bool QUICKSTART_GENERATOR = true; // Skip menu stuff and immediately generate a default world.
-  //Quickly go straight into the simulator.
-bool QUICKSTART_SIMULATOR = false; // Skip menu stuff and jump right into the game. (Will use defaults).
   // DEFAULT WORLD WHICH IS AUTO-GENERATED.
-int QUICKSTART_WORLD_SIZE = 129; /* Please set to (power of 2)+1. */
 
-
+const int QUICKSTART_WORLD_SIZE = 129; /* Please set to (power of 2)+1. */
 long long int INITIAL_YEARS_SIMULATE = 0;
 
   // Default setting on the GUI
-int DEFAULT_WORLD_SIZE_SLOT = 2; /* 0 = 129, 1 = 257, 513, 1025, 2049, 4097. You can set it lower for easier debugging. */
+const int DEFAULT_WORLD_SIZE_SLOT = 2; /* 0 = 129, 1 = 257, 513, 1025, 2049, 4097. You can set it lower for easier debugging. */
 
-int DEFAULT_NUMBER_TRIBES_DWARVEN = 12;
-int DEFAULT_NUMBER_TRIBES_HUMAN = 12;
-int DEFAULT_NUMBER_TRIBES_ELVEN = 12;
-int DEFAULT_NUMBER_CIVS = 0;
+const int DEFAULT_NUMBER_TRIBES_DWARVEN = 12;
+const int DEFAULT_NUMBER_TRIBES_HUMAN = 12;
+const int DEFAULT_NUMBER_TRIBES_ELVEN = 12;
+const int DEFAULT_NUMBER_CIVS = 0;
 
 bool FOG_OF_WAR = true;
 
@@ -73,9 +81,7 @@ bool FOG_OF_WAR = true;
   It will likely be set to low values during development.
 */
 const int LOCAL_MAP_SIZE = 65;
-
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
-
 const int MAX_VIEW_RANGE = 50;
 
 // The number of local maps to hold in memory at once. Minimum should be 4.
@@ -84,18 +90,10 @@ const int MAX_VIEW_RANGE = 50;
 // Not currently functional
 const int MAX_LOCAL_MAPS_IN_MEMORY = 10;
 
-
-//const int PLANTING_TIME = 7200; /* Realistic. */
-//const int PLANTING_TIME = 100; /* Testing. */
-//const int HARVESTING_TIME = 100; /* Testing. */
-
-//enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13, RIVER=14};
-//const std::string biomeName [15] = { "nothing", "ocean", "grassland", "forest", "desert", "mountain", "snow", "hilly", "jungle", "wetland", "steppes", "cave", "ruin", "ice", "river" };
-
 unsigned int RESOLUTIONX=1024, RESOLUTIONY=720;
 bool RESET=false;
 
-bool HOTKEYS_ENABLED = false;
+const bool HOTKEYS_ENABLED = false;
 
 /* Will output the framerate. */
 const bool OUTPUT_FRAMERATE = false;
@@ -122,6 +120,9 @@ const int U_PHYSICS_PER_SECOND = 1000000/PHYSICS_PER_SECOND;
 const char THOUSANDS_DELIMITER = ',';
 const char DECIMAL_DELIMITER = '.';
 
+
+  // RENDER AND FRAME STUFF
+
 /* Double buffering will make the frame transitions smoother, but it is slower. */
 const bool DOUBLE_BUFFERING = false;
 
@@ -144,12 +145,6 @@ bool PAUSE_LOGIC = false; /* True will suspend logic. */
 /* Calendar setting when new game is started. */
 const int CALENDAR_INITIAL_HOUR = 5;
 const int CALENDAR_INITIAL_MINUTE = 59;
-
-/* Global var to flag for a test battle. */
-bool BATTLE_TEST = false;
-bool BATTLE_TEST_INITIALISED = false;
-
-bool REVEAL_ALL = true;
 
 bool EMULATE_2_BUTTON_MIDDLE_CLICK = false; // Allows middle click with mice without middle click by pressing left and right click.
 

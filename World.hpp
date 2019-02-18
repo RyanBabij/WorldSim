@@ -91,6 +91,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
   
 		/* The size of the world, measured in tiles. */
 	int nX, nY;
+    // The maximum global coordinate
+  unsigned long int maximumX, maximumY;
   
   int localX, localY; /* The current local map viewed by player */
   
@@ -194,6 +196,56 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
     return 0;
   }
   
+  //New operator: Gets tiles using global coordinates.
+  // IT DOES NOT RETURN WORLD_LOCAL LIKE THE OTHER FUNCTION
+  // Yeah this is a confusing overload which needs to be fixed in the future.
+  // This will generate a local map if necessary.
+	inline LocalTile* operator() (unsigned long int _x, unsigned long int _y)
+	{
+    int globalX = 0;
+    while (_x > LOCAL_MAP_SIZE-1 )
+    {
+      _x-=(LOCAL_MAP_SIZE);
+      ++globalX;
+    }
+    
+    int globalY = 0;
+    while (_y > LOCAL_MAP_SIZE-1 )
+    {
+      _y-=(LOCAL_MAP_SIZE);
+      ++globalY;
+    }
+    
+    // _x is converted to the local coordinate.
+    // globalX is the global tile coordinate.
+    
+    std::cout<<"Global tile coords: "<<globalX<<", "<<globalY<<"\n";
+    std::cout<<"Local tile queried: "<<_x<<", "<<_y<<"\n";
+    
+    
+    for (int i=0;i<vWorldLocal.size();++i)
+    {
+      if (vWorldLocal(i)->globalX == (int)_x && vWorldLocal(i)->globalY == (int)_y )
+      {
+        std::cout<<"Map is loaded.\n";
+        return &vWorldLocal(i)->aLocalTile((int)_x,(int)_y);
+      }
+    }
+    
+    generateLocal(globalX,globalY);
+    
+    
+    for (int i=0;i<vWorldLocal.size();++i)
+    {
+      if (vWorldLocal(i)->globalX == (int)_x && vWorldLocal(i)->globalY == (int)_y )
+      {
+        std::cout<<"Map is loaded.\n";
+        return &vWorldLocal(i)->aLocalTile((int)_x,(int)_y);
+      }
+    }
+    
+    return 0;
+  }
   
   
 

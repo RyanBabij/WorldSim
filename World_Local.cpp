@@ -401,6 +401,9 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
           std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
           
+          std::cout<<"World conversion:";
+          world(_object->fullX,_object->fullY);
+          
           return false;
           
         }
@@ -433,6 +436,9 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
           std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
+          
+          std::cout<<"World conversion:";
+          world(_object->fullX,_object->fullY);
           
           return false;
           
@@ -467,6 +473,9 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
           std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
           
+          std::cout<<"World conversion:";
+          world(_object->fullX,_object->fullY);
+          
           return false;
           
         }
@@ -499,6 +508,10 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
           std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
           
+          
+          std::cout<<"World conversion:";
+          world(_object->fullX,_object->fullY);
+          
           return false;
           
         }
@@ -526,6 +539,9 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
           std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
+          
+          std::cout<<"World conversion:";
+          world(_object->fullX,_object->fullY);
   return true;
 }
 
@@ -586,6 +602,84 @@ Vector <HasXY*> * World_Local::rayTraceLOS (int _x, int _y, const int RANGE)
   
   // We now have a list of coordinates to raytrace.
   //std::cout<<"RayTrace Coordinats size: "<<rayTraceCoordinates.size()<<".\n";
+  
+  auto vVisibleTiles = new Vector <HasXY*>;
+  
+  
+  for (int i=0;i<rayTraceCoordinates.size();++i)
+  {
+    rayTrace (_x,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
+  }
+  
+  
+  return vVisibleTiles;
+}
+
+    //Return a vector of coordinates visible from the given location.
+    // New version using global coordinates
+    // Yes, this is a confusing overload which should be fixed in the future.
+Vector <HasXY*> * World_Local::rayTraceLOS (long unsigned int _x, long unsigned int _y, const int RANGE)
+{
+  if (RANGE <= 0) { return 0; }
+  
+  if ( _x >= (long unsigned int) LOCAL_MAP_SIZE*world.nX || _y >= (long unsigned int) LOCAL_MAP_SIZE*world.nY )
+  { return 0; }
+  
+  
+  //Step 1: Get all raytrace coordinates.
+  
+  Vector <HasXY*> rayTraceCoordinates;
+  
+  unsigned long int rayX = _x-RANGE;
+  
+  //overflow check
+  if ( rayX > world.maximumX )
+  { rayX = 0; }
+  
+  unsigned long int rayY = _y-RANGE;
+  
+  //overflow check
+  if ( rayY > world.maximumY )
+  { rayY = 0; }
+  
+  unsigned long int rayMaxX = _x+RANGE;
+  
+  //overflow check
+  if ( rayMaxX > world.maximumX )
+  { rayMaxX = world.maximumX; }
+  
+  unsigned long int rayMaxY = _y+RANGE;
+  
+  //overflow check
+  if ( rayMaxY > world.maximumY )
+  { rayMaxY = world.maximumY; }
+  
+  //Easy check for overflow
+  
+  
+  unsigned long int tempX = rayX;
+  unsigned long int tempY = rayY;
+    
+  // //rayTraceCoordinates.push( new HasXY(tempX,tempY) );
+  
+  // while (tempX <= rayMaxX)
+  // {
+    // rayTraceCoordinates.push( new HasXY(tempX,rayY) );
+    // rayTraceCoordinates.push( new HasXY(tempX,rayMaxY) );
+    // ++tempX;
+  // }
+  
+  // // On the Y pass we prevent doing the corners again.
+  // ++tempY;
+  // while (tempY < rayMaxY)
+  // {
+    // rayTraceCoordinates.push( new HasXY(rayX,tempY) );
+    // rayTraceCoordinates.push( new HasXY(rayMaxX,tempY) );
+    // ++tempY;
+  // }
+  
+  // // We now have a list of coordinates to raytrace.
+  // //std::cout<<"RayTrace Coordinats size: "<<rayTraceCoordinates.size()<<".\n";
   
   auto vVisibleTiles = new Vector <HasXY*>;
   
