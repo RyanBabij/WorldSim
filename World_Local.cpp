@@ -104,13 +104,13 @@ bool World_Local::generate()
     {
       aLocalTile(_x,_y).baseTerrain = baseBiome;
       
-      int baseTreeChance = 20;
+      int baseTreeChance = 30;
       
       // Temporary hack to make forests look less bad.
       if ( baseBiome == FOREST || baseBiome == JUNGLE )
       {
         aLocalTile(_x,_y).baseTerrain = GRASSLAND;
-        baseTreeChance/=3;
+        baseTreeChance/=8;
       }
       
       

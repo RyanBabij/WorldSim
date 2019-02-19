@@ -7,6 +7,8 @@
 	Implementation of "World.hpp".
 */
 
+//#include<set> /* For raytraceLOS */
+
 #include <NameGen/NameGen.hpp>
 #include <WorldGenerator/WorldGenerator2.hpp>
 
@@ -254,6 +256,9 @@ Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x
   unsigned long int tempY = rayY;
     
   auto hXY = new HasXY2 <unsigned long int>;
+  
+  //std::set <HasXY2 <unsigned long int> * > sInt;
+  //setOfNumbers.insert("first");
     
   rayTraceCoordinates.push( new HasXY2 <unsigned long int> (tempX,tempY) );
   
@@ -315,7 +320,26 @@ void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned lon
   if ( (_x1==_x2) && (_y1==_y2) )
   {
     if ( isSafe(_x1,_y2) )
-    { vVisibleTiles->push(new HasXY2 <unsigned long int> (_x1,_y1) ); }
+    {
+      auto temp = new HasXY2 <unsigned long int> (_x1,_y1);
+      
+      // Proper optimisation would use a set, however for now we'll just do a pre-check
+      // to prevent storing duplicates.
+      // Update: I removed the dupe detection as it significantly hurts performance.
+      // The renderer must iterate over the dupes, however it seems to be able to handle it better for now.
+      //if ( vVisibleTiles->contains(temp) == false )
+      if (true)
+      {
+        vVisibleTiles->push( temp );
+      }
+      else
+      {
+        //std::cout<<"DUPE DETECTED\n";
+        delete temp;
+      }
+      
+      
+    }
   }
 
     // SPECIAL CASE: UP/DOWN
@@ -325,17 +349,22 @@ void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned lon
     {
       if ( isSafe(_x1,_y1) )
       {
-        vVisibleTiles->push(new HasXY2 <unsigned long int> (_x1,_y1) );
+        auto temp = new HasXY2 <unsigned long int> (_x1,_y1);
+        
+        //if ( vVisibleTiles->containsPtr(temp) == false )
+        if (true)
+        {
+          vVisibleTiles->push( temp );
+        }
+        else
+        {
+          //std::cout<<"DUPE DETECTED\n";
+          delete temp;
+        }
         
         LocalTile * lt = (*this)(_x1, _y1);
         if (lt != 0 && lt->hasViewBlocker())
         { break; }
-      
-        if (lt == 0)
-        {
-          std::cout<<"MAP ISNT LOADING\n";
-        }
-
       }
       if ( _y1 < _y2 )
       { ++_y1; }
@@ -379,7 +408,18 @@ void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned lon
 
       if ( isSafe(_x1,roundedY) == true )
       {
-        vVisibleTiles->push(new HasXY2 <unsigned long int> (_x1,roundedY) );
+        auto temp = new HasXY2 <unsigned long int> (_x1,roundedY);
+        
+        //if ( vVisibleTiles->containsPtr(temp) == false )
+        if (true)
+        {
+          vVisibleTiles->push( temp );
+        }
+        else
+        {
+          //std::cout<<"DUPE DETECTED\n";
+          delete temp;
+        }
         
         LocalTile * lt = (*this)(_x1, roundedY);
         if (lt != 0 && lt->hasViewBlocker())
@@ -426,7 +466,18 @@ void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned lon
 
       if ( isSafe(roundedX,_y1) == true )
       {
-        vVisibleTiles->push(new HasXY2 <unsigned long int> (roundedX, _y1) );
+        auto temp = new HasXY2 <unsigned long int> (roundedX,_y1);
+        
+        //if ( vVisibleTiles->containsPtr(temp) == false )
+        if (true)
+        {
+          vVisibleTiles->push( temp );
+        }
+        else
+        {
+          //std::cout<<"DUPE DETECTED\n";
+          delete temp;
+        }
         
         LocalTile * lt = (*this)(roundedX, _y1);
         if (lt != 0 && lt->hasViewBlocker())
@@ -744,6 +795,10 @@ void World::handleTickBacklog()
 void World::idleTick()
 {
 	handleTickBacklog();
+  if ( playerCharacter != 0 )
+  {
+    playerCharacter->updateKnowledgeIdle();
+  }
 }
 
 

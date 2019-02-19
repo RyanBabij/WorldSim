@@ -62,6 +62,10 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
     // True if player has flagged this character as favourite.
   bool isFavourite;
   
+  
+  char idleCounter;
+  Vector <HasXY2 <unsigned long int> * > vMovesToProcess;
+  
 		/* Right now each character has a biological mother and father. In the future we might also have guardians */
 	Character* father;
 	Character* mother;
@@ -171,6 +175,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   
     //Update knowledge with current instance.
   void updateKnowledge();
+  // Extra processing available
+  void updateKnowledgeIdle();
 
 	
 };

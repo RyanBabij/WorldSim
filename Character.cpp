@@ -70,6 +70,8 @@ Character::Character()
   
   worldX = -1;
   worldY = -1;
+  
+  idleCounter=0;
 	
 	//enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, OLD_AGE=2 };
 	
@@ -471,6 +473,8 @@ void Character::initialiseKnowledge()
   {
     if ( knowledge == 0 ) { return; }
     if ( tribe == 0 ) { return; }
+    
+    idleCounter=0;
 
     //learn about all surrounding tiles.
     
@@ -478,7 +482,7 @@ void Character::initialiseKnowledge()
     
     
       //For now this simply wipes LOS from last turn.
-    knowledge->updateLOS();
+    //knowledge->updateLOS();
     
     //knowledge->addTile(world(worldX,worldY), x,y);
     
@@ -515,7 +519,7 @@ void Character::initialiseKnowledge()
     
     //std::cout<<"coordinates to raytrace from: "<<fullX<<", "<<fullY<<".\n";
     
-    Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(fullX,fullY,MAX_VIEW_RANGE);
+    Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(fullX,fullY,MAX_VIEW_RANGE/2);
     
     if ( vVisibleTiles!=0 )
     {
@@ -527,7 +531,50 @@ void Character::initialiseKnowledge()
       }
     }
     
+    // Add this tile for later processing when idle.
+    vMovesToProcess.push(new HasXY2 <unsigned long int> (fullX,fullY));
     
+  }
+  
+    //Update knowledge with current instance.
+  void Character::updateKnowledgeIdle()
+  {
+    // Implement a basic delay to prevent idle flickering in.
+    ++idleCounter;
+    if (idleCounter > 10) { idleCounter=10; }
+    
+    if ( vMovesToProcess.size() == 0 ) { return; }
+    if ( knowledge == 0 ) { return; }
+    if ( tribe == 0 ) { return; }
+    
+    
+
+    //Update the LOS backlog during idle time.
+    
+      //For now this simply wipes LOS from last turn.
+    //knowledge->updateLOS();
+    
+    vMovesToProcess.shuffle();
+    
+    auto moveToProcess = vMovesToProcess(0);
+
+    knowledge->addTile(moveToProcess->x,moveToProcess->y);
+    
+
+    Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(moveToProcess->x,moveToProcess->y,MAX_VIEW_RANGE);
+    
+    if ( vVisibleTiles!=0 )
+    {
+      for (int i=0; i<vVisibleTiles->size(); ++i)
+      {
+        //std::cout<<"ADDING\n";
+        knowledge->addTile((*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
+        delete (*vVisibleTiles)(i);
+      }
+    }
+    
+    delete moveToProcess;
+    vMovesToProcess.removeSlot(0);
     
   }
   
