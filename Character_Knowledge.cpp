@@ -49,6 +49,46 @@ void Character_Knowledge::addTile( World_Local* _map, int _x, int _y)
   vaTileVisited.push(aFog);
 }
 
+  // Adds the tile to the Character's knowledge.
+  // Overloaded to allow absolute coordinates.
+void Character_Knowledge::addTile( unsigned long int _x, unsigned long int _y)
+{
+  if ( _x > world.maximumX || _y > world.maximumY )
+  { return; }
+
+  int _gX = 0;
+  int _gY = 0;
+  int _lX = 0;
+  int _lY = 0;
+
+  world.absoluteToRelative(_x, _y, &_gX, &_gY, &_lX, &_lY);
+  
+  World_Local* _map = world(_gX,_gY);
+  
+  if (_map == 0) { return; }
+
+  for ( int i=0; i<vMapsVisited.size(); ++i)
+  {
+    if ( vMapsVisited(i) == _map )
+    {
+      // Flip fog bit
+      (*vaTileVisited(i))(_lX,_lY) = 1;
+      return;
+    }
+  }
+  
+  // // If we are here, the map doesn't exist in knowledge yet, and we must add it.
+  
+  vMapsVisited.push(_map);
+  
+  auto aFog = new ArrayS2 <char>;
+  aFog->init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
+  // Flip fog bit
+  (*aFog)(_lX,_lY) = 1;
+  
+  vaTileVisited.push(aFog);
+}
+
 
   //returns true if the Character has seen this tile.
 char Character_Knowledge::hasSeen( World_Local* _map, int _x, int _y)

@@ -110,7 +110,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   
     //Return a vector of coordinates visible from the given location.
     // New version using global coordinates
-  Vector <HasXY*> * rayTraceLOS (long unsigned int /* _x */, long unsigned int /* _y */, const int /* RANGE */);
+  Vector <HasXY2 <unsigned long int> *> * rayTraceLOS (long unsigned int /* _x */, long unsigned int /* _y */, const int /* RANGE */);
   
   
     // Trace 1 ray, and adds visible coords to vector.

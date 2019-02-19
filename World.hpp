@@ -202,51 +202,46 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
   // This will generate a local map if necessary.
 	inline LocalTile* operator() (unsigned long int _x, unsigned long int _y)
 	{
-    int globalX = 0;
-    while (_x > LOCAL_MAP_SIZE-1 )
+    //std::cout<<"WORLD ABSOLUTE QUERY\n";
+    
+    // CONVERT COORDINATES TO RELATIVE.
+    int gX = 0;
+    int gY = 0;
+    int lX = 0;
+    int lY = 0;
+    
+    if ( absoluteToRelative(_x,_y,&gX,&gY,&lX,&lY) == false )
     {
-      _x-=(LOCAL_MAP_SIZE);
-      ++globalX;
+      return 0;
     }
     
-    int globalY = 0;
-    while (_y > LOCAL_MAP_SIZE-1 )
-    {
-      _y-=(LOCAL_MAP_SIZE);
-      ++globalY;
-    }
-    
-    // _x is converted to the local coordinate.
-    // globalX is the global tile coordinate.
-    
-    std::cout<<"Global tile coords: "<<globalX<<", "<<globalY<<"\n";
-    std::cout<<"Local tile queried: "<<_x<<", "<<_y<<"\n";
-    
-    
+    // Check if local map is already loaded.
     for (int i=0;i<vWorldLocal.size();++i)
     {
-      if (vWorldLocal(i)->globalX == (int)_x && vWorldLocal(i)->globalY == (int)_y )
+      if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY )
       {
-        std::cout<<"Map is loaded.\n";
-        return &vWorldLocal(i)->aLocalTile((int)_x,(int)_y);
+        return &vWorldLocal(i)->aLocalTile(lX,lY);
       }
     }
-    
-    generateLocal(globalX,globalY);
-    
-    
+    // The local map isn't in memory, therefore we need to load it up.
+    // For now we just generate it from scratch.
+    generateLocal(gX,gY);
+
     for (int i=0;i<vWorldLocal.size();++i)
     {
-      if (vWorldLocal(i)->globalX == (int)_x && vWorldLocal(i)->globalY == (int)_y )
+      if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY )
       {
-        std::cout<<"Map is loaded.\n";
-        return &vWorldLocal(i)->aLocalTile((int)_x,(int)_y);
+        return &vWorldLocal(i)->aLocalTile(lX,lY);
       }
     }
     
     return 0;
   }
   
+  // COORDINATE CONVERSIONS
+  
+    // Pass absolute coordinates and recieve world and local relative coordinates.
+  bool absoluteToRelative (const unsigned long int _absoluteX, const unsigned long int _absoluteY, int * _globalX, int * _globalY, int * _localX, int * _localY);
   
 
 /* TICK LOGIC */
@@ -290,6 +285,10 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
       void controlCharacter (Character*);
       
       Character* getRandomCharacter();
+      
+      // Return vector of coordinates visible from given coordinate.
+      Vector <HasXY2 <unsigned long int> *> * rayTraceLOS (unsigned long int _x, unsigned long int _y, const int RANGE);
+      void rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned long int _x2, unsigned long int _y2, Vector <HasXY2 <unsigned long int> *> * vVisibleTiles);
 	
   /* WORLD QUERIES */
 		/* Returns population of all characters (Human, Dwarven, Elven)
@@ -304,6 +303,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	
 		// RETURNS TRUE IF THE COORDINATES ARE WITHIN BOUNDS OF THE MAP.
 	bool isSafe (int _x, int _y);
+    // SAME BUT FOR ABSOLUTE COORDINATES.
+	bool isSafe (unsigned long int _x, unsigned long int _y);
   
    /* Return a pointer to the WorldTile at the coordinates.
     Return null pointer if fail */

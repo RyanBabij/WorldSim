@@ -480,7 +480,11 @@ void Character::initialiseKnowledge()
       //For now this simply wipes LOS from last turn.
     knowledge->updateLOS();
     
-    knowledge->addTile(world(worldX,worldY), x,y);
+    //knowledge->addTile(world(worldX,worldY), x,y);
+    
+    //std::cout<<"Adding tile: "<<fullX<<", "<<fullY<<"\n";
+    knowledge->addTile(fullX,fullY);
+    
     // knowledge->addTile(tribe->getCurrentMap(), x-1,y);
     // knowledge->addTile(tribe->getCurrentMap(), x+1,y);
     // knowledge->addTile(tribe->getCurrentMap(), x,y-1);
@@ -506,12 +510,23 @@ void Character::initialiseKnowledge()
     // }
     
     
-    Vector <HasXY*> * vVisibleTiles = world(worldX,worldY)->rayTraceLOS(x,y,MAX_VIEW_RANGE);
+    //Vector <HasXY*> * vVisibleTiles = world(worldX,worldY)->rayTraceLOS(x,y,MAX_VIEW_RANGE);
+    //Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world(worldX,worldY)->rayTraceLOS(fullX,fullY,MAX_VIEW_RANGE);
     
-    for (int i=0; i<vVisibleTiles->size(); ++i)
+    //std::cout<<"coordinates to raytrace from: "<<fullX<<", "<<fullY<<".\n";
+    
+    Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(fullX,fullY,MAX_VIEW_RANGE);
+    
+    if ( vVisibleTiles!=0 )
     {
-      knowledge->addTile(world(worldX,worldY), (*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
+      for (int i=0; i<vVisibleTiles->size(); ++i)
+      {
+        //std::cout<<"ADDING\n";
+        knowledge->addTile((*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
+        delete (*vVisibleTiles)(i);
+      }
     }
+    
     
     
   }

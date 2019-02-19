@@ -369,6 +369,9 @@ bool World_Local::putObject (WorldObject* _object, int _x, int _y)
 
 bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
 {
+  
+  // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
+  
   if ( aLocalTile.isSafe(newX,newY) == false )
   {
     // Moving between maps.
@@ -399,10 +402,25 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-          std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
+          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
           
-          std::cout<<"World conversion:";
+          //std::cout<<"World conversion:";
           world(_object->fullX,_object->fullY);
+          
+          
+          
+          
+          //std::cout<<"Conversion test:\n";
+          
+          
+          //void absoluteToRelative (const int _absoluteX, const int _absoluteY, int * _globalX, int * _globalY, int * _localX, int * _localY)
+          
+          int gX = 0;
+          int gY = 0;
+          int lX = 0;
+          int lY = 0;
+          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
+          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
           
           return false;
           
@@ -435,10 +453,17 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-          std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
+          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
           
-          std::cout<<"World conversion:";
+          //std::cout<<"World conversion:";
           world(_object->fullX,_object->fullY);
+          
+          int gX = 0;
+          int gY = 0;
+          int lX = 0;
+          int lY = 0;
+          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
+          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
           
           return false;
           
@@ -446,7 +471,7 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
       }
     }
       //DOWN
-    else if ( newY < 0 )
+    if ( newY < 0 )
     {
       int nMaps = 0;
       while ( newY < 0 )
@@ -471,10 +496,17 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-          std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
+          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
           
-          std::cout<<"World conversion:";
+          //std::cout<<"World conversion:";
           world(_object->fullX,_object->fullY);
+          
+          int gX = 0;
+          int gY = 0;
+          int lX = 0;
+          int lY = 0;
+          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
+          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
           
           return false;
           
@@ -506,11 +538,18 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-          std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
+          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
           
           
-          std::cout<<"World conversion:";
+          //std::cout<<"World conversion:";
           world(_object->fullX,_object->fullY);
+          
+          int gX = 0;
+          int gY = 0;
+          int lX = 0;
+          int lY = 0;
+          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
+          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
           
           return false;
           
@@ -538,10 +577,19 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
   
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-          std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
+          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
           
-          std::cout<<"World conversion:";
+          //std::cout<<"World conversion:";
+          
           world(_object->fullX,_object->fullY);
+          
+          
+          int gX = 0;
+          int gY = 0;
+          int lX = 0;
+          int lY = 0;
+          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
+          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
   return true;
 }
 
@@ -618,7 +666,7 @@ Vector <HasXY*> * World_Local::rayTraceLOS (int _x, int _y, const int RANGE)
     //Return a vector of coordinates visible from the given location.
     // New version using global coordinates
     // Yes, this is a confusing overload which should be fixed in the future.
-Vector <HasXY*> * World_Local::rayTraceLOS (long unsigned int _x, long unsigned int _y, const int RANGE)
+Vector <HasXY2 <unsigned long int> *> * World_Local::rayTraceLOS (long unsigned int _x, long unsigned int _y, const int RANGE)
 {
   if (RANGE <= 0) { return 0; }
   
@@ -628,7 +676,7 @@ Vector <HasXY*> * World_Local::rayTraceLOS (long unsigned int _x, long unsigned 
   
   //Step 1: Get all raytrace coordinates.
   
-  Vector <HasXY*> rayTraceCoordinates;
+  Vector <HasXY2 <unsigned long int> *> rayTraceCoordinates;
   
   unsigned long int rayX = _x-RANGE;
   
@@ -660,6 +708,8 @@ Vector <HasXY*> * World_Local::rayTraceLOS (long unsigned int _x, long unsigned 
   unsigned long int tempX = rayX;
   unsigned long int tempY = rayY;
     
+  auto hXY = new HasXY2 <unsigned long int>;
+    
   // //rayTraceCoordinates.push( new HasXY(tempX,tempY) );
   
   // while (tempX <= rayMaxX)
@@ -681,12 +731,12 @@ Vector <HasXY*> * World_Local::rayTraceLOS (long unsigned int _x, long unsigned 
   // // We now have a list of coordinates to raytrace.
   // //std::cout<<"RayTrace Coordinats size: "<<rayTraceCoordinates.size()<<".\n";
   
-  auto vVisibleTiles = new Vector <HasXY*>;
+  auto vVisibleTiles = new Vector <HasXY2 <unsigned long int> *>;
   
   
   for (int i=0;i<rayTraceCoordinates.size();++i)
   {
-    rayTrace (_x,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
+    //rayTrace (_x,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
   }
   
   

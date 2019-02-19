@@ -36,7 +36,7 @@ enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
 
 
   // STRINGS
-const std::string VERSION = "0.0.067 Win32 dev";
+const std::string VERSION = "0.0.068 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -81,8 +81,9 @@ bool FOG_OF_WAR = true;
   It will likely be set to low values during development.
 */
 const int LOCAL_MAP_SIZE = 65;
+//const int LOCAL_MAP_SIZE = 129;
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
-const int MAX_VIEW_RANGE = 50;
+const int MAX_VIEW_RANGE = 100;
 
 // The number of local maps to hold in memory at once. Minimum should be 4.
 // (One for the player's current map, and three neighboring maps).

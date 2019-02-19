@@ -65,6 +65,42 @@ World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
   worldFilePath = "";
 }
 
+  
+  // COORDINATE CONVERSIONS
+  
+    // Pass absolute coordinates and recieve world and local relative coordinates.
+bool World::absoluteToRelative (const unsigned long int _absoluteX, const unsigned long int _absoluteY, int * _globalX, int * _globalY, int * _localX, int * _localY)
+{
+  if ( _globalX == 0 || _globalY == 0 || _localX == 0 || _localY == 0 )
+  { return false; }
+  
+  // overflow check
+  
+  if (_absoluteX > maximumX || _absoluteY > maximumY )
+  {
+    *_globalX = 0;
+    *_globalY = 0;
+    *_localX = 0;
+    *_localY = 0;
+    return false;
+  }
+  
+  *_globalX = _absoluteX / LOCAL_MAP_SIZE;
+  *_globalY = _absoluteY / LOCAL_MAP_SIZE;
+  
+  if ( *_globalX == 0 )
+  { *_localX = _absoluteX; }
+  else
+  { *_localX = _absoluteX % LOCAL_MAP_SIZE; }
+  
+  if ( *_globalY == 0 )
+  { *_localY = _absoluteY; }
+  else
+  { *_localY = _absoluteY % LOCAL_MAP_SIZE; } 
+  return true;
+
+}
+
 void World::nameRegions()
 {
 }
@@ -144,6 +180,11 @@ bool World::isSafe(int _x, int _y)
 	return ( _x >= 0 && _x < nX && _y >= 0 && _y < nY );
 }
 
+bool World::isSafe(unsigned long int _x, unsigned long int _y)
+{
+	return ( _x <= maximumX && _y <= maximumY );
+}
+
 
 Character* World::getRandomCharacter()
 {
@@ -172,6 +213,243 @@ Character* World::getRandomCharacter()
   }
   
   return 0;
+}
+
+    //Return a vector of coordinates visible from the given location.
+Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x, unsigned long int _y, const int RANGE)
+{
+  if (RANGE <= 0) { return 0; }
+  
+  if (_x > maximumX || _y > maximumY )
+  { return 0; }
+  
+  //Step 1: Get all raytrace coordinates.
+  Vector <HasXY2 <unsigned long int> *> rayTraceCoordinates;
+  
+  unsigned long int rayX = _x-RANGE;
+  
+  //overflow check
+  if ( rayX > maximumX )
+  { rayX = 0; }
+  
+  unsigned long int rayY = _y-RANGE;
+  
+  //overflow check
+  if ( rayY > maximumY )
+  { rayY = 0; }
+  
+  unsigned long int rayMaxX = _x+RANGE;
+  
+  //overflow check
+  if ( rayMaxX > maximumX )
+  { rayMaxX = maximumX; }
+  
+  unsigned long int rayMaxY = _y+RANGE;
+  
+  //overflow check
+  if ( rayMaxY > maximumY )
+  { rayMaxY = maximumY; }
+
+  unsigned long int tempX = rayX;
+  unsigned long int tempY = rayY;
+    
+  auto hXY = new HasXY2 <unsigned long int>;
+    
+  rayTraceCoordinates.push( new HasXY2 <unsigned long int> (tempX,tempY) );
+  
+  while (tempX <= rayMaxX)
+  {
+    rayTraceCoordinates.push( new HasXY2 <unsigned long int> (tempX,rayY) );
+    rayTraceCoordinates.push( new HasXY2 <unsigned long int> (tempX,rayMaxY) );
+    ++tempX;
+  }
+  
+  // On the Y pass we prevent doing the corners again.
+  ++tempY;
+  while (tempY < rayMaxY)
+  {
+    rayTraceCoordinates.push( new HasXY2 <unsigned long int> (rayX,tempY) );
+    rayTraceCoordinates.push( new HasXY2 <unsigned long int> (rayMaxX,tempY) );
+    ++tempY;
+  }
+  
+  // We now have a list of coordinates to raytrace.
+  // //std::cout<<"RayTrace Coordinats size: "<<rayTraceCoordinates.size()<<".\n";
+  
+  auto vVisibleTiles = new Vector <HasXY2 <unsigned long int> *>;
+  
+  
+  for (int i=0;i<rayTraceCoordinates.size();++i)
+  {
+    rayTrace (_x,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
+  }
+  
+  return vVisibleTiles;
+}
+
+void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned long int _x2, unsigned long int _y2, Vector <HasXY2 <unsigned long int> *> * vVisibleTiles)
+{
+  // Old code from ECHO
+  
+  int xDiff = 0;
+  if ( _x1 > _x2 )
+  { xDiff = _x2 - _x1; }
+  else if ( _x2 > _x1 )
+  { xDiff = _x1 - _x2; }
+
+  int yDiff = 0;
+  if ( _y1 > _y2 )
+  { yDiff = _y2 - _y1; }
+  else if ( _y2 > _y1 )
+  { yDiff = _y1 - _y2; }
+
+
+  double slope = BasicMath::getSlopeULI(_x1,_y1,_x2,_y2);
+
+  // IF SLOPE IS INFINITY, CHANGE VALUE TO 0.
+  if ( slope == std::numeric_limits<double>::infinity() )
+  { slope=0; }
+
+    // SPECIAL CASE: 1 TILE.
+    // REVEAL TILE STANDING ON.
+  if ( (_x1==_x2) && (_y1==_y2) )
+  {
+    if ( isSafe(_x1,_y2) )
+    { vVisibleTiles->push(new HasXY2 <unsigned long int> (_x1,_y1) ); }
+  }
+
+    // SPECIAL CASE: UP/DOWN
+  else if (_x1 == _x2)
+  {
+    do
+    {
+      if ( isSafe(_x1,_y1) )
+      {
+        vVisibleTiles->push(new HasXY2 <unsigned long int> (_x1,_y1) );
+        
+        LocalTile * lt = (*this)(_x1, _y1);
+        if (lt != 0 && lt->hasViewBlocker())
+        { break; }
+      
+        if (lt == 0)
+        {
+          std::cout<<"MAP ISNT LOADING\n";
+        }
+
+      }
+      if ( _y1 < _y2 )
+      { ++_y1; }
+      else
+      { --_y1; }
+    } 
+    while( _y1 != _y2 );
+    
+    // Final case
+    if (_y1 == _y2)
+    { vVisibleTiles->push(new HasXY2 <unsigned long int> (_x1,_y1) );
+    }
+    
+  }
+    //SHALLOW SLOPE
+  else if ( xDiff <= yDiff )
+  {
+    if (_x1>_x2)
+    { slope*=-1; }
+
+    double currentY = _y1;
+
+    //while (_x1 != _x2 )
+    do
+    {
+
+      unsigned long int roundedY = 0;
+
+      if ( _y1 > _y2 )
+      {
+        roundedY = floor(currentY);
+      }
+      else if ( _y1 < _y2 )
+      {
+        roundedY = ceil(currentY);
+      }
+      else
+      {
+        roundedY = round(currentY);
+      }
+
+      if ( isSafe(_x1,roundedY) == true )
+      {
+        vVisibleTiles->push(new HasXY2 <unsigned long int> (_x1,roundedY) );
+        
+        LocalTile * lt = (*this)(_x1, roundedY);
+        if (lt != 0 && lt->hasViewBlocker())
+        { break; }
+
+        currentY+=slope;
+
+      }
+      if (_x1<_x2)
+      { ++_x1; }
+      else
+      { --_x1; }
+    }
+    while (_x1 != _x2 );
+    
+    // Final case
+    if (_x1 == _x2)
+    { vVisibleTiles->push(new HasXY2 <unsigned long int> (_x1,_y2) );
+    }
+    //Final case
+    //vVisibleTiles->push(new HasXY (_x1,_y1) );
+  }
+    //STEEP SLOPE.
+  else
+  {
+    slope = BasicMath::getSlopeULI(_y1,_x1,_y2,_x2);
+
+    if (_y1>_y2)
+    { slope*=-1; }
+
+    double currentX = _x1;
+
+    //while (_y1 != _y2 )
+    do
+    {
+      unsigned long int roundedX=0;
+
+      if ( _x1 > _x2 )
+      { roundedX = floor(currentX); }
+      else if ( _x1 < _x2 )
+      { roundedX = ceil(currentX); }
+      else
+      { roundedX = round(currentX); }
+
+      if ( isSafe(roundedX,_y1) == true )
+      {
+        vVisibleTiles->push(new HasXY2 <unsigned long int> (roundedX, _y1) );
+        
+        LocalTile * lt = (*this)(roundedX, _y1);
+        if (lt != 0 && lt->hasViewBlocker())
+        { break; }
+
+        currentX+=slope;
+
+      }
+      if (_y1<_y2)
+      { ++_y1; }
+      else
+      { --_y1; }
+    }
+    while (_y1 != _y2 );
+    
+    // Final case
+    if (_y1 == _y2)
+    { vVisibleTiles->push(new HasXY2 <unsigned long int> (_x2,_y1) );
+    } 
+    //Final case
+    //vVisibleTiles->push(new HasXY (_x1,_y1) );
+  }
+
 }
 
 

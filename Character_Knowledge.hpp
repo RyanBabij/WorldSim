@@ -27,6 +27,10 @@ class Character_Knowledge
     // Add this tile into the Character's knowledge (if it isn't already)
   void addTile( World_Local* /* _map */, int /* _x */, int /* _y */ );
   
+  // Adds the tile to the Character's knowledge.
+  // Overloaded to allow absolute coordinates.
+  void addTile( unsigned long int /* _x */, unsigned long int /* _y */);
+  
     //returns true if the Character has seen this tile. 0 = no. 1 = has seen. 2 = currently visible.
   char hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */ );
   
