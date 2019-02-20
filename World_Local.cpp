@@ -2,22 +2,25 @@
 #ifndef WORLDSIM_WORLD_LOCAL_CPP
 #define WORLDSIM_WORLD_LOCAL_CPP
 
-/* WorldSim: World_Local
+/* World_Local.hpp
 	#include "World_Local.cpp"
 
+	Project: WorldSim
+	Created: 10/12/2017, 0272632857.
+	Updated: 10/12/2017, 0272632857.
 
 	Description:
 	The World stores local-level data, such as the position of local units.
 
+	Notes:
+
+	0272632857 - Added basic documentation.
 
 */
 
+
+
 #include "World_Local.hpp"
-
-
-
-
-
 
 World_Local::World_Local()
 {
@@ -95,71 +98,65 @@ bool World_Local::generate()
   // Take the seed for this world tile and expand it into a subseed for every local tile */
   random.seed(seed);
   
-
   for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
   {
     for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
       aLocalTile(_x,_y).baseTerrain = baseBiome;
       
-      if ( baseBiome != OCEAN )
-      {
+      int baseTreeChance = 30;
       
-        int baseTreeChance = 30;
-        
-        // Temporary hack to make forests look less bad.
-        if ( baseBiome == FOREST || baseBiome == JUNGLE )
-        {
-          aLocalTile(_x,_y).baseTerrain = GRASSLAND;
-          baseTreeChance/=8;
-        }
-        
-        
+      // Temporary hack to make forests look less bad.
+      if ( baseBiome == FOREST || baseBiome == JUNGLE )
+      {
+        aLocalTile(_x,_y).baseTerrain = GRASSLAND;
+        baseTreeChance/=8;
+      }
+      
+      
 
-        aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
-        aLocalTile(_x,_y).clearObjects();
-        aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
-        
-        
-        aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
-        aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
-        aSubterranean(_x,_y).clearObjects();
-        aSubterranean(_x,_y).height = -1;
-        
-        if (random.oneIn(baseTreeChance))
+      aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+      aLocalTile(_x,_y).clearObjects();
+      aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
+      
+      
+      aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+      aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+      aSubterranean(_x,_y).clearObjects();
+      aSubterranean(_x,_y).height = -1;
+      
+      if (random.oneIn(baseTreeChance))
+      {
+        //put tree
+        auto tree = new WorldObject_Tree;
+        tree->growth = 1;
+        aLocalTile(_x,_y).addObject(tree);
+      }
+      else if (random.oneIn(1000))
+      {
+        auto tree = new WorldObject_Tree;
+        tree->growth = 0;
+        aLocalTile(_x,_y).addObject(tree);
+      }
+      
+      else if ( baseBiome == MOUNTAIN )
+      {
+        if (random.oneIn(10))
         {
-          //put tree
-          auto tree = new WorldObject_Tree;
-          tree->growth = 1;
-          aLocalTile(_x,_y).addObject(tree);
-        }
-        else if (random.oneIn(1000))
-        {
-          auto tree = new WorldObject_Tree;
-          tree->growth = 0;
-          aLocalTile(_x,_y).addObject(tree);
-        }
-        
-        else if ( baseBiome == MOUNTAIN )
-        {
-          if (random.oneIn(10))
+          auto * rockyBoi = new WorldObject_Rock;
+          if ( random.oneIn(10) )
           {
-            auto * rockyBoi = new WorldObject_Rock;
-            if ( random.oneIn(10) )
-            {
-              rockyBoi->nGold = 100;
-            }
-            
-            aLocalTile(_x,_y).addObject(rockyBoi);
+            rockyBoi->nGold = 100;
           }
           
+          aLocalTile(_x,_y).addObject(rockyBoi);
         }
+        
       }
     }
   }
   
-  if ( baseBiome == GRASSLAND && random.oneIn(100) )
-  {
+  
   for ( int x = 10; x<20; ++x)
   {
     for ( int y=10;y<20; ++y)
@@ -170,7 +167,6 @@ bool World_Local::generate()
   
   auto sign = new WorldObject_Sign;
   aLocalTile(21,21).addObject(sign);
-  }
 
   //Generate global objects
   Vector <Tribe * > * vTribesHere = world.getTribesOn(globalX,globalY);

@@ -172,8 +172,6 @@ World world;
 #include "World_Local.cpp"
 World_Local * worldLocal;
 	
-#include "Creature.cpp"
-  
 #include "Character.cpp"
 #include "Character_Knowledge.cpp"
 
