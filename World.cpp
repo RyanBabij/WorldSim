@@ -58,8 +58,8 @@ World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
 	dailyCounter=0;
 	monthlyCounter=0;
   
-  localX = -1;
-  localY = -1;
+  //localX = -1;
+  //localY = -1;
   
   queryWorldX = -1;
   queryWorldY = -1;

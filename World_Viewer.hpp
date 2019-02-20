@@ -807,9 +807,11 @@ void switchTarget(World_Local* _worldLocal)
 						
             // First we must seed the RNG with the seed for this local tile.
 						Random r1;
-						r1.seed (world->aSeed(world->localX,world->localY));
+            //std::cout<<"wv locXY: "<<world->localX<<", "<<world->localY<<".\n";
+						r1.seed (localMap->seed);
             
-            const enumBiome localBaseBiome = world->aTerrain(world->localX,world->localY);
+            //const enumBiome localBaseBiome = world->aTerrain(world->localX,world->localY);
+            const enumBiome localBaseBiome = localMap->baseBiome;
 						
 						for (int localYTile = 0; localYTile<LOCAL_MAP_SIZE;++localYTile)
 						{

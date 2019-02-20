@@ -94,7 +94,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
     // The maximum global coordinate
   unsigned long int maximumX, maximumY;
   
-  int localX, localY; /* The current local map viewed by player */
+  //int localX, localY; /* The current local map viewed by player */
   
   /* The current tile that the player wants information on */
 	int queryWorldX, queryWorldY; 
@@ -193,6 +193,19 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
         return vWorldLocal(i);
       }
     }
+    
+    // The local map isn't in memory, therefore we need to load it up.
+    // For now we just generate it from scratch.
+    generateLocal(_x,_y);
+
+    for (int i=0;i<vWorldLocal.size();++i)
+    {
+      if (vWorldLocal(i)->globalX == _x && vWorldLocal(i)->globalY == _y )
+      {
+        return vWorldLocal(i);
+      }
+    }
+    
     return 0;
   }
   
