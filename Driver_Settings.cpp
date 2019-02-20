@@ -8,9 +8,9 @@
 	Gameplay settings and other global settings go here. Some of this stuff will probably end up in an .ini file.
 */
 
-#include <mutex>
+//#include <mutex>
 
-std::mutex render_mutex;
+//std::mutex render_mutex;
 
 // This is a guaranteed valid value for int for all implementations of C++.
 // Generally I think the actual maximum is much higher, but we'll figure
@@ -36,7 +36,7 @@ enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
 
 
   // STRINGS
-const std::string VERSION = "0.0.071 Win32 dev";
+const std::string VERSION = "0.0.072 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 

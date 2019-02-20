@@ -1088,7 +1088,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	
 	
 	// Multithreading this segment runs 23% faster. Saves about 0.1 seconds or something.
-  #define THREADED
+  //#define THREADED
 //#undef THREADED
 	
 	#ifndef THREADED
