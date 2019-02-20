@@ -352,30 +352,6 @@ class Menu_WorldGenerator: public GUI_Interface
     globalGuiManager.add(&textEntryFullBiome);
 		
 		guiManager.setFont(font);
-		
-      // This is a debug option to quickly make a default world for faster testing.
-    if ( QUICKSTART_GENERATOR )
-		{
-      //world.generateWorld("quickstart",65,65);
-      //world.generateTribes(); //Generate default tribe settings.
-			eventGenerate();
-      // // Simulate a decade immediately.
-			// for (int i=0;i<INITIAL_YEARS_SIMULATE;++i)
-			// {world.ticksBacklog+=31104000;
-			// }
-      
-      // // if (QUICKSTART_SIMULATOR)
-      // // {
-        // // menuWorldSimulator.init();
-        // // menuWorldSimulator.setFont(font);
-        // // menuWorldSimulator.active=true;
-        // // world.active=true;
-      // // }
-
-			// worldViewer.active=true;
-			// //active=true;
-		}
-
 
 	}
 	
@@ -511,6 +487,16 @@ class Menu_WorldGenerator: public GUI_Interface
 	
 	void render()
 	{
+   
+    //This is a quickstart option to quickly generate a world.
+    // For some reason generating a world too early can cause a crash on
+    // subsequent generate calls.
+    // Moving the quickstart to the first render call seems to resolve this.
+    if ( QUICKSTART_GENERATOR )
+		{
+      eventGenerate();
+      QUICKSTART_GENERATOR=false;
+		}
 		
     // if ( textEntryWorldName.selected == true )
     // { HOTKEYS_ENABLED=false; }

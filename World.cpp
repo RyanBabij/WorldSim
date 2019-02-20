@@ -1385,6 +1385,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   // saveFileManager.vSaveObjects.clear();
   // saveFileManager.vSaveObjects.push(this);
   // saveFileManager.saveFile(worldFilePath);
+  FileManager::writeString(NYA,worldFilePath);
 }
 
 

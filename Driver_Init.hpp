@@ -28,6 +28,8 @@ void init()
 	consoleMessage("CONSOLE MESSAGE TEST 1");
 	consoleMessage("CONSOLE MESSAGE TEST 2");
 	consoleMessage("CONSOLE MESSAGE TEST 3");
+  
+  playerCharacter = 0;
 	
 	globalKeyboard.init(); 
 
@@ -104,10 +106,6 @@ void init()
 	mouseInterfaceManager.add(&menuTitle);
 	//keyboardInterfaceManager.add(&menuTitle);
 	globalGuiManager.add(&menuTitle);
-  
-  
-  
-  playerCharacter = 0;
 	
 }
 

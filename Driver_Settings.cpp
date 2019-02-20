@@ -47,7 +47,7 @@ const bool FAST_COUT = false;
 /* DEBUG MENU SHORTCUTS */
 //bool AUTO_GENERATE_WORLD = true;
 //bool AUTO_NEW_SIMULATION = true;
-const bool QUICKSTART_GENERATOR = true; // Skip menu stuff and immediately generate a default world.
+bool QUICKSTART_GENERATOR = true; // Skip menu stuff and immediately generate a default world.
   //Quickly go straight into the simulator.
 const bool QUICKSTART_SIMULATOR = false; // Skip menu stuff and jump right into the game. (Will use defaults).
 
@@ -147,6 +147,8 @@ bool PAUSE_LOGIC = false; /* True will suspend logic. */
 const int CALENDAR_INITIAL_HOUR = 5;
 const int CALENDAR_INITIAL_MINUTE = 59;
 
-bool EMULATE_2_BUTTON_MIDDLE_CLICK = false; // Allows middle click with mice without middle click by pressing left and right click.
+bool EMULATE_2_BUTTON_MIDDLE_CLICK = true; // Allows middle click with mice without middle click by pressing left and right click.
+
+std::string NYA;
 
 #endif
