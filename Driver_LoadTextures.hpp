@@ -101,6 +101,11 @@ const std::string PATH_TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI = "Textures/World/Ter
 Texture TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI_GOLD;
 const std::string PATH_TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI_GOLD = "Textures/World/Terrain/Mountain/RockyboiGold.png";
 
+Texture TEX_WORLD_CREATURE_DEER_DEER;
+const std::string PATH_TEX_WORLD_CREATURE_DEER_DEER = "Textures/World/Creature/Deer/Deer.png";
+
+
+
 Texture TEX_WORLD_TERRAIN_DESERT_00;
 Texture TEX_WORLD_TERRAIN_DESERT_01;
 const std::string PATH_TEX_WORLD_TERRAIN_DESERT_00 = "Textures/World/Terrain/Desert/00.png";
@@ -223,6 +228,8 @@ void loadTextures()
   
   loadTextureVerbose(PATH_TEX_LOCAL_SIGN,&TEX_LOCAL_SIGN);
   loadTextureVerbose(PATH_TEX_GUI_CENTER_CAMERA,&TEX_GUI_CENTER_CAMERA);
+  
+  loadTextureVerbose(PATH_TEX_WORLD_CREATURE_DEER_DEER,&TEX_WORLD_CREATURE_DEER_DEER);
   
   
 
