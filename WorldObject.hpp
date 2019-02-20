@@ -32,6 +32,8 @@ class WorldObject: public HasTexture
     crate will block view of people who are sneaking. */
   bool blocksView;
   
+  /* True if characters and creatures cannot walk into this tile. */
+  bool blocksMovement;
 	
 	WorldObject();
 	virtual ~WorldObject() {}

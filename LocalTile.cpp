@@ -39,7 +39,7 @@ void LocalTile::clearObjects()
 
 
 
-    // Returns true is this tile has an object that can block line of sight. */
+    // Returns true is this tile has an object that can block line of sight.
 bool LocalTile::hasViewBlocker()
 {
   for ( int i=0; i<vObject.size();++i)
@@ -52,7 +52,18 @@ bool LocalTile::hasViewBlocker()
   return false;
 }
 
-
+    // Returns true is this tile has an object that can block movement.
+bool LocalTile::hasMovementBlocker()
+{
+  for ( int i=0; i<vObject.size();++i)
+  {
+    if (vObject(i)->blocksMovement)
+    {
+      return true;
+    }
+  }
+  return false;
+}
 
 
 

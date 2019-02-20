@@ -561,6 +561,13 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
 
   }
   
+  //Moving inside of map
+  
+  if ( aLocalTile(newX,newY).hasMovementBlocker() )
+  {
+    return false;
+  }
+  
   aLocalTile(_object->x,_object->y).removeObject(_object);
   
 

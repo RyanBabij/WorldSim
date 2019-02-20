@@ -17,6 +17,7 @@ WorldObject::WorldObject()
 	bulk=0;
   
   blocksView=false;
+  blocksMovement=false;
   
   worldX=-1; worldY=-1;
 }

@@ -56,6 +56,8 @@ class LocalTile: public HasTexture
   
     // Returns true is this tile has an object that can block line of sight. */
   bool hasViewBlocker();
+    // Returns true is this tile has an object that can block movement.
+  bool hasMovementBlocker();
 
 	
 };
