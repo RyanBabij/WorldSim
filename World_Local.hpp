@@ -39,6 +39,8 @@
 
 */
 
+#include "Creature.hpp"
+
 class World_Local: public LogicTickInterface, public IdleTickInterface
 {
 	private:
@@ -86,6 +88,9 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   // Vector of all tile coordinates.
 	Vector <HasXY*> vAllTiles;
 
+  
+  // Vector of all creatures in this map
+  Vector <Creature*> vCreature;
 
 
 	
@@ -99,6 +104,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   
   bool putObject (WorldObject* , int /* _x */, int /* _y */);
   bool moveObject (WorldObject* , int /* newX */, int /* newY */ );
+  bool wander (WorldObject* /* _object */);
   
 // LINE OF SIGHT
     
@@ -115,6 +121,9 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   
     // Trace 1 ray, and adds visible coords to vector.
   void rayTrace (int /* _x */, int /* _y */, int /* _x2 */, int /* _y2 */, Vector <HasXY*> * /* vVisibleTiles */ );
+  
+  // LOGIC
+  void incrementTicks(int nTicks);
 	
 };
 

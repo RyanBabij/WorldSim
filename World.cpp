@@ -690,16 +690,27 @@ void World::incrementTicks(int nTicks)
     //std::cout<<"Degrade influence.\n";
     degradeInfluence();
 		monthlyCounter-=2592000;
+    nTicks-=2592000;
 	}
   
 	while ( dailyCounter >= 86400 )
   {
 
 		dailyCounter-=86400;
+    nTicks-=86400;
 	}
-	
-	//std::cout<<"Incrementing the world by "<<nTicks<<" ticks.\n";
-	//std::cout<<"Date: "<<calendar.toString()<<".\n";
+  
+  // FOR NOW INCREMENT INDIVIDUAL TICKS THROW AWAY SOME IF THERE'S TOO MANY
+  if (nTicks > 10) { nTicks = 10; }
+  
+  while (nTicks-- > 0 )
+  {
+      // CHECK ALL LOADED MAPS
+      for (int i=0;i<vWorldLocal.size();++i)
+      {
+        vWorldLocal(i)->incrementTicks(1);
+      }
+  }
 
 	
 	//for ( int i=0;i<vCiv.size();++i)

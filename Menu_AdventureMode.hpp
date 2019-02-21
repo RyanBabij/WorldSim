@@ -38,6 +38,12 @@ class Menu_AdventureMode: public GUI_Interface
       /* Button to view inventory */
     GUI_Button buttonInventory;
     
+      /* Button to view manual */
+    GUI_Button buttonManual;
+    
+        //Render very basic manual for now. Future manual should have stuff like bestiary, alchemy instructions, crafting instructions, etc.
+    bool manualActive;
+    
   public:
   
 
@@ -74,7 +80,14 @@ class Menu_AdventureMode: public GUI_Interface
     buttonInventory.font = font;
 		buttonInventory.setColours(&cNormal,&cHighlight,0);
 		guiManager.add(&buttonInventory);
-
+    
+    buttonManual.active = true;
+    buttonManual.text = "MAN";
+    buttonManual.font = font;
+		buttonManual.setColours(&cNormal,&cHighlight,0);
+		guiManager.add(&buttonManual);
+    
+    manualActive=false;
 
     eventResize();
   }
@@ -109,6 +122,20 @@ class Menu_AdventureMode: public GUI_Interface
   
   
     guiManager.render();
+    
+		// DATE
+		//Renderer::placeColour4a(150,150,150,255,panelX2-208,panelY2-20,panelX2,panelY2-10);
+		std::string strDate = world.calendar.toString();
+		font8x8.drawText("DATE: "+strDate,panelX1,panelY1+220,panelX1+220,panelY1+230, true, true);
+    
+    
+    // Render manual page
+    if (manualActive)
+    {
+      Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-20);
+      linesDrawn = font8x8.drawText(ADVENTURE_MODE_MANUAL,panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
+    }
+    
   }
   
 	void logicTick()
@@ -122,6 +149,7 @@ class Menu_AdventureMode: public GUI_Interface
 			// If all submenus are already closed, bring up main menu.
 		if(_keyboard->isPressed(Keyboard::ESCAPE)) /* Flush console. */
 		{
+      manualActive=false;
 			_keyboard->keyUp(Keyboard::ESCAPE);	
 		}
     
@@ -142,6 +170,8 @@ class Menu_AdventureMode: public GUI_Interface
         worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
         world.updateMaps();
         playerCharacter->updateKnowledge();
+        
+        world.incrementTicksBacklog(1);
       }
       
       _keyboard->keyUp(Keyboard::RIGHT);
@@ -155,6 +185,8 @@ class Menu_AdventureMode: public GUI_Interface
         worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
         world.updateMaps();
         playerCharacter->updateKnowledge();
+        
+        world.incrementTicksBacklog(1);
       }
       
       _keyboard->keyUp(Keyboard::LEFT);
@@ -168,6 +200,8 @@ class Menu_AdventureMode: public GUI_Interface
         worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
         world.updateMaps();
         playerCharacter->updateKnowledge();
+        
+        world.incrementTicksBacklog(1);
       }
       _keyboard->keyUp(Keyboard::UP);
     }
@@ -180,8 +214,16 @@ class Menu_AdventureMode: public GUI_Interface
         worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
         world.updateMaps();
         playerCharacter->updateKnowledge();
+        
+        world.incrementTicksBacklog(1);
       }
       _keyboard->keyUp(Keyboard::DOWN);
+    }
+      // PERIOD = WAIT
+    if(_keyboard->isPressed(Keyboard::PERIOD))
+    {
+      world.incrementTicksBacklog(1);
+      _keyboard->keyUp(Keyboard::PERIOD);
     }
 
 		guiManager.keyboardEvent(_keyboard);
@@ -196,7 +238,16 @@ class Menu_AdventureMode: public GUI_Interface
 		if (buttonCenterCamera.clicked==true)
 		{
       std::cout<<"CENTER\n";
+      worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
 			buttonCenterCamera.unclick();
+		}
+    
+      // Toggle the manual view.
+		if (buttonManual.clicked==true)
+		{
+      std::cout<<"MANUAL\n";
+      manualActive = !manualActive;
+			buttonManual.unclick();
 		}
     
 		worldViewer.mouseEvent(_mouse);
@@ -208,6 +259,7 @@ class Menu_AdventureMode: public GUI_Interface
 		buttonCenterCamera.setPanel(panelX1,panelY1+304,panelX1+32,panelY1+320);
 		buttonSneak.setPanel(panelX1+33,panelY1+304,panelX1+65,panelY1+320);
 		buttonInventory.setPanel(panelX1+66,panelY1+304,panelX1+98,panelY1+320);
+		buttonManual.setPanel(panelX1+99,panelY1+304,panelX1+131,panelY1+320);
     
 		worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
 

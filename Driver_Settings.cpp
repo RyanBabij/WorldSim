@@ -36,7 +36,7 @@ enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
 
 
   // STRINGS
-const std::string VERSION = "0.0.075 Win32 dev";
+const std::string VERSION = "0.0.076 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -149,6 +149,11 @@ const int CALENDAR_INITIAL_MINUTE = 59;
 
 bool EMULATE_2_BUTTON_MIDDLE_CLICK = true; // Allows middle click with mice without middle click by pressing left and right click.
 
+// MORE STRINGS
+
 std::string NYA;
+
+const std::string ADVENTURE_MODE_MANUAL = "Manual will go here\n";
+//const std::string ADVENTURE_MODE_MANUAL = "Adventure mode manual. Click MAN again to close it.\nWelcome to Adventure Mode. This manual will be used to explain some basic stuff you can do in the game.\n\n INV - Access inventory\n SNK - Sneak. Your line of sight will increase and allow you to see around corners. However your movement speed will be halved.\n";
 
 #endif

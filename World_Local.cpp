@@ -143,7 +143,8 @@ bool World_Local::generate()
         {
           auto deer = new Creature_Deer;
           deer->init();
-          aLocalTile(_x,_y).addObject(deer);
+          putObject(deer,_x,_y);
+          vCreature.push(deer);
         }
         
         else if ( baseBiome == MOUNTAIN )
@@ -369,6 +370,8 @@ bool World_Local::putObject (WorldObject* _object, int _x, int _y)
 
   _object->worldX = globalX;
   _object->worldY = globalY;
+  _object->x = _x;
+  _object->y = _y;
   aLocalTile(_x,_y).addObject(_object);
   
   _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
@@ -377,6 +380,7 @@ bool World_Local::putObject (WorldObject* _object, int _x, int _y)
   return true;
 }
 
+  // We need to implement optional map-only restriction
 bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
 {
   
@@ -608,6 +612,36 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
           //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
   return true;
+}
+
+  // Move object in random direction
+  // For now objects don't leave their map.
+bool World_Local::wander (WorldObject* _object)
+{
+  if ( _object==0 ) { return false; }
+  
+  // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
+  
+  int newX = _object->x;
+  int newY = _object->y;
+  
+  int direction = random.randomInt(3);
+  
+  if ( direction==0 ) { ++newX; }
+  else if ( direction==1 ) { --newX; }
+  else if ( direction==2 ) { ++newY; }
+  else { --newY; }
+  
+  if ( aLocalTile.isSafe(newX,newY) && aLocalTile(newX,newY).hasMovementBlocker() == false )
+  {
+    aLocalTile(_object->x,_object->y).removeObject(_object);
+    putObject(_object,newX,newY);
+    return true;
+  }
+
+  
+
+  return false;
 }
 
 
@@ -931,6 +965,16 @@ bool World_Local::isBlockingView(int _x, int _y)
   return aLocalTile(_x,_y).hasViewBlocker();
 
 }
+
+	// Increments the map by nTicks ticks. Higher values may lead to abstraction.
+void World_Local::incrementTicks(int nTicks)
+{
+  for (int i=0;i<vCreature.size();++i)
+  {
+    wander(vCreature(i));
+  }
+}
+
 
 // void World_Local::getRandomTile (int* x, int* y)
 // {

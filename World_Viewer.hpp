@@ -856,12 +856,32 @@ void switchTarget(World_Local* _worldLocal)
                         }
                        
                       }
-                      else
+                      else /* DRAW VISIBLE TILES */
                       {
                         LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
                         
+                        
+                        
                         unsigned char lightValue = localTile->height*15;
                         glColor3ub(180+lightValue,180+lightValue,180+lightValue);
+                        
+                        int currentSecond = world->calendar.second;
+                        int sunsetCounter = currentSecond-50;
+                        
+                        int currentMinute = world->calendar.minute;
+                        
+                        if (currentMinute % 2 == 0)
+                        {
+                          if (currentSecond > 50 ) { glColor3ub(180-(sunsetCounter*8)+lightValue,180-(sunsetCounter*10)+lightValue,180-(sunsetCounter*10)+lightValue); }
+                        }
+                        else
+                        {
+                          glColor3ub(80+(lightValue/2),80+(lightValue/2),80+(lightValue/2));
+                          if (currentSecond > 50 ) { glColor3ub(80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*10)+(lightValue/2)); }
+                        }
+                         
+
+                        
                         Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
                         glColor3ub(255,255,255);
                         
