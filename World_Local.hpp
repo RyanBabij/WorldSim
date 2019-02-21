@@ -91,7 +91,9 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   
   // Vector of all creatures in this map
   Vector <Creature*> vCreature;
-
+  
+  //Vector of all characters on this map
+  Vector <Character*> vCharacter;
 
 	
 	void init(int /*x*/, int /*y*/);
@@ -105,6 +107,10 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   bool putObject (WorldObject* , int /* _x */, int /* _y */);
   bool moveObject (WorldObject* , int /* newX */, int /* newY */ );
   bool wander (WorldObject* /* _object */);
+  
+//SEARCH FUNCTIONS
+
+  Vector <Character*> * getAdjacentCharacters(int /* _x */, int /* _y */);
   
 // LINE OF SIGHT
     

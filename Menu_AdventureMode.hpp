@@ -44,6 +44,10 @@ class Menu_AdventureMode: public GUI_Interface
         //Render very basic manual for now. Future manual should have stuff like bestiary, alchemy instructions, crafting instructions, etc.
     bool manualActive;
     
+      // Render conversation menu
+    bool conversationActive;
+      Character* conversationCharacter;
+    
   public:
   
 
@@ -88,7 +92,9 @@ class Menu_AdventureMode: public GUI_Interface
 		guiManager.add(&buttonManual);
     
     manualActive=false;
-
+    conversationActive = false;
+      conversationCharacter=0;
+    
     eventResize();
   }
   
@@ -136,6 +142,14 @@ class Menu_AdventureMode: public GUI_Interface
       linesDrawn = font8x8.drawText(ADVENTURE_MODE_MANUAL,panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
     }
     
+    // Render conversation menu
+    if (conversationActive && conversationCharacter != 0)
+    {
+      Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-20);
+      linesDrawn = font8x8.drawText(playerCharacter->getFullName()+" talks to "+conversationCharacter->getFullName()+".\n(Press ESC to exit)",panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
+    }
+    
+    
   }
   
 	void logicTick()
@@ -150,6 +164,7 @@ class Menu_AdventureMode: public GUI_Interface
 		if(_keyboard->isPressed(Keyboard::ESCAPE)) /* Flush console. */
 		{
       manualActive=false;
+      conversationActive=false;
 			_keyboard->keyUp(Keyboard::ESCAPE);	
 		}
     
@@ -224,6 +239,50 @@ class Menu_AdventureMode: public GUI_Interface
     {
       world.incrementTicksBacklog(1);
       _keyboard->keyUp(Keyboard::PERIOD);
+    }
+    
+      // SPACE = TALK, INTERACT
+    if(_keyboard->isPressed(Keyboard::SPACE) && conversationActive==false)
+    {
+
+      World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
+      if ( wl != 0 )
+      {
+        // wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y-1);
+        // worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
+        // world.updateMaps();
+        // playerCharacter->updateKnowledge();
+        
+        
+        
+        Vector <Character*> * vNearbyCharacter = wl->getAdjacentCharacters(playerCharacter->x,playerCharacter->y);
+        
+        std::cout<<"Getting characters near "<<playerCharacter->x<<", "<<playerCharacter->y<<".\n";
+        
+        conversationCharacter = 0;
+        
+        if ( vNearbyCharacter != 0)
+        {
+          for (int i=0;i<vNearbyCharacter->size(); ++i)
+          {
+            std::cout<<(*vNearbyCharacter)(i)->getFullName()<<".\n";
+            if ((*vNearbyCharacter)(i)!=playerCharacter)
+            {
+              conversationCharacter = (*vNearbyCharacter)(i);
+            }
+          }
+        }
+        
+        if (conversationCharacter != 0)
+        {
+          std::cout<<playerCharacter->getFullName()<<" talks to "<<conversationCharacter->getFullName()<<".\n";
+          conversationActive=true;
+        }
+        
+        //world.incrementTicksBacklog(1);
+      }
+      
+      _keyboard->keyUp(Keyboard::SPACE);
     }
 
 		guiManager.keyboardEvent(_keyboard);

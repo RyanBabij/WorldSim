@@ -17,6 +17,26 @@
 	
 */
 
+  /* Raindrops that are rendered over screen to indicate rain.
+  Should start at top of screen and travel down. Should not render on sheltered tiles */
+  
+class RainDrop
+{
+  int x, y;
+  
+  RainDrop()
+  {
+    x=0;
+    y=0;
+  }
+  void drop()
+  {
+    ++y;
+  }
+  void render()
+  { }
+};
+
 class WorldViewer: public DisplayInterface, public MouseInterface
 {
 	public:
@@ -837,7 +857,7 @@ void switchTarget(World_Local* _worldLocal)
                       
                       //Very basic player line of sight check here (only if we're in Adventure mode)
                       
-                      if (playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == false )
+                      if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == false )
                       {
 
                         //Draw tile very dark to symbolise fog of war

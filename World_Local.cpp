@@ -194,9 +194,13 @@ bool World_Local::generate()
       int randX = Random::randInt(nX-1);
       int randY = Random::randInt(nY-1);
 
-      currentTribe->vCharacter(i2)->x=randX;
-      currentTribe->vCharacter(i2)->y=randY;
-      aLocalTile(randX,randY).addObject(currentTribe->vCharacter(i2));
+      //currentTribe->vCharacter(i2)->x=randX;
+      //currentTribe->vCharacter(i2)->y=randY;
+      
+      putObject(currentTribe->vCharacter(i2),randX,randY);
+      vCharacter.push(currentTribe->vCharacter(i2));
+      
+      //aLocalTile(randX,randY).addObject(currentTribe->vCharacter(i2));
       //aLocalTile(Random::randInt(nX-1),Random::randInt(nY-1)).addObject(c);
     
     }
@@ -959,6 +963,24 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
 		}
 
 }
+
+//SEARCH FUNCTIONS
+
+Vector <Character*> * World_Local::getAdjacentCharacters(int _x, int _y)
+{
+  auto vNearbyCharacters = new Vector <Character*>;
+  for (int i=0;i<vCharacter.size();++i)
+  {
+    if ( vCharacter(i) != 0 && vCharacter(i)->distanceTo(_x,_y) <= 1)
+    {
+      vNearbyCharacters->push(vCharacter(i));
+    }
+  }
+  
+  return vNearbyCharacters;
+}
+  
+  
 
 bool World_Local::isBlockingView(int _x, int _y)
 {

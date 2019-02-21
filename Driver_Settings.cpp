@@ -72,7 +72,8 @@ const int DEFAULT_NUMBER_TRIBES_HUMAN = 12;
 const int DEFAULT_NUMBER_TRIBES_ELVEN = 12;
 const int DEFAULT_NUMBER_CIVS = 0;
 
-bool FOG_OF_WAR = true;
+// Enable/disable fog rendering
+bool FOG_OF_WAR = false;
 
 /* Size of each local map in tiles. Size is LOCAL_MAP_SIZE * LOCAL_MAP_SIZE.
   Should be (n^2+1).
