@@ -173,6 +173,7 @@ World world;
 World_Local * worldLocal;
 	
 #include "Creature.cpp"
+#include "Creature_Deer.cpp"
   
 #include "Character.cpp"
 #include "Character_Knowledge.cpp"

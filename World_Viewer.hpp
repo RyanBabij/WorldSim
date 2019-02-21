@@ -844,7 +844,7 @@ void switchTarget(World_Local* _worldLocal)
                         
                         LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
                         
-                        unsigned char lightValue = 150;
+                        unsigned char lightValue = 120;
                         glColor3ub(180+lightValue,180+lightValue,180+lightValue);
                         Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
                         glColor3ub(255,255,255);
@@ -852,7 +852,7 @@ void switchTarget(World_Local* _worldLocal)
                         
                         for(int i=0;i<localMap->aLocalTile(localXTile,localYTile).vObject.size();++i)
                         {
-                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                          //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
                         }
                        
                       }

@@ -15,7 +15,7 @@
 #include "World_Local.hpp"
 
 
-
+#include "Creature_Deer.hpp"
 
 
 
@@ -138,6 +138,12 @@ bool World_Local::generate()
           auto tree = new WorldObject_Tree;
           tree->growth = 0;
           aLocalTile(_x,_y).addObject(tree);
+        }
+        else if (random.oneIn(1000) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
+        {
+          auto deer = new Creature_Deer;
+          deer->init();
+          aLocalTile(_x,_y).addObject(deer);
         }
         
         else if ( baseBiome == MOUNTAIN )

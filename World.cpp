@@ -1928,7 +1928,39 @@ void World::controlCharacter(Character* _character)
   worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
   
   playerCharacter->initialiseKnowledge();
+  //playerCharacter->updateKnowledge();
+  
+  // Jiggle character around to make sure they're not inside an object.
+  
+  World_Local* wl = (*this)(playerCharacter->worldX,playerCharacter->worldY);
+  if ( wl != 0 )
+  {
+    wl->moveObject(playerCharacter,playerCharacter->x+1,playerCharacter->y);
+    playerCharacter->updateKnowledge();
+  }
+  wl = (*this)(playerCharacter->worldX,playerCharacter->worldY);
+  if ( wl != 0 )
+  {
+    wl->moveObject(playerCharacter,playerCharacter->x-1,playerCharacter->y);
+    playerCharacter->updateKnowledge();
+  }
+  wl = (*this)(playerCharacter->worldX,playerCharacter->worldY);
+  if ( wl != 0 )
+  {
+    wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y+1);
+    playerCharacter->updateKnowledge();
+  }
+  wl = (*this)(playerCharacter->worldX,playerCharacter->worldY);
+  if ( wl != 0 )
+  {
+    wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y-1);
+    playerCharacter->updateKnowledge();
+  }
+  
+  worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
+  updateMaps();
   playerCharacter->updateKnowledge();
+  
   
 }
   
@@ -1989,7 +2021,7 @@ WorldTile * World::getTile (const int x, const int y )
 // This should be merged with control character.
 bool World::prepareAdventureMode( Character * _character )
 {
-  std::cout<<"World is preparing for Adventure Mode.\n";
+  //std::cout<<"World is preparing for Adventure Mode.\n";
   
   if ( _character == 0 )
   {
@@ -2005,8 +2037,8 @@ bool World::prepareAdventureMode( Character * _character )
     return false;
   }
   
-  std::cout<<"Generating local map: ("<<playerCharacter->tribe->worldX<<", "<<playerCharacter->tribe->worldY<<").\n";
-  generateLocal(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
+  //std::cout<<"Generating local map: ("<<playerCharacter->tribe->worldX<<", "<<playerCharacter->tribe->worldY<<").\n";
+  //generateLocal(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
   
   controlCharacter(_character);
   
