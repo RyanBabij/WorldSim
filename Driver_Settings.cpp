@@ -36,7 +36,7 @@ enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
 
 
   // STRINGS
-const std::string VERSION = "0.0.078 Win32 dev";
+const std::string VERSION = "0.0.079 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 

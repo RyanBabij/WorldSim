@@ -47,6 +47,9 @@ class Menu_AdventureMode: public GUI_Interface
       // Render conversation menu
     bool conversationActive;
       Character* conversationCharacter;
+      
+      //Render inventory menu
+    bool inventoryActive;
     
   public:
   
@@ -94,6 +97,8 @@ class Menu_AdventureMode: public GUI_Interface
     manualActive=false;
     conversationActive = false;
       conversationCharacter=0;
+    
+    inventoryActive=false;
     
     eventResize();
   }
@@ -158,6 +163,53 @@ class Menu_AdventureMode: public GUI_Interface
       Renderer::placeTexture4(panelX2-120, panelY2-160, panelX2-20, panelY2-60, &TEX_PORTRAIT_LING, true);
     }
     
+    // Render inventory menu
+    if (inventoryActive)
+    {
+      Renderer::placeColour4a(30,140,40,250,panelX1+235,panelY1+35,panelX2-15,panelY2-10);
+      Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-220);
+      Renderer::placeColour4a(150,150,250,250,panelX1+350,panelY2-210,panelX2-130,panelY2-20);
+      
+      
+      font8x8.drawText("Inventory", panelX1 + 250,panelY2-230,panelX1 + 450,panelY2-250,true,true);
+      font8x8.drawText("Storage", panelX1 + 650,panelY2-230,panelX1 + 850,panelY2-250,true,true);
+      
+      int inventoryY = panelY2-250;
+      
+      for (int row = 0;row<12;++row)
+      { int currentX = panelX1+250;
+        for (int i=0;i<10;++i)
+        {
+          Renderer::placeColour4a(120,120,120,250,currentX,inventoryY,currentX+32,inventoryY-32);
+          if ( row==0 )
+          {
+            font8x8.drawText(DataTools::toString(i),currentX,inventoryY,currentX+32,inventoryY-32,true,true);
+          }
+          currentX += 34;
+        }
+        inventoryY -= 34;
+        if ( row == 9) {inventoryY -= 5;}
+      }
+      
+      inventoryY = panelY2-250;
+      
+      for (int row = 0;row<12;++row)
+      { int currentX = panelX1+650;
+        for (int i=0;i<10;++i)
+        {
+          Renderer::placeColour4a(120,120,120,250,currentX,inventoryY,currentX+32,inventoryY-32);
+          if ( row==0 )
+          {
+            font8x8.drawText(DataTools::toString(i),currentX,inventoryY,currentX+32,inventoryY-32,true,true);
+          }
+          currentX += 34;
+        }
+        inventoryY -= 34;
+        if ( row == 9) {inventoryY -= 5;}
+      }
+
+      
+    }
     
   }
   
@@ -321,8 +373,15 @@ class Menu_AdventureMode: public GUI_Interface
       manualActive = !manualActive;
 			buttonManual.unclick();
 		}
+      // Toggle the inventory view.
+		if (buttonInventory.clicked==true)
+		{
+      std::cout<<"INVENTORY\n";
+      inventoryActive = !inventoryActive;
+			buttonInventory.unclick();
+		}
     
-      // Toggle the manual view.
+      // Toggle sneak.
 		if (buttonSneak.clicked==true)
 		{
       playerCharacter->isSneaking = !playerCharacter->isSneaking;
