@@ -36,7 +36,7 @@ enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
 
 
   // STRINGS
-const std::string VERSION = "0.0.076 Win32 dev";
+const std::string VERSION = "0.0.078 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -73,7 +73,7 @@ const int DEFAULT_NUMBER_TRIBES_ELVEN = 12;
 const int DEFAULT_NUMBER_CIVS = 0;
 
 // Enable/disable fog rendering
-bool FOG_OF_WAR = false;
+bool FOG_OF_WAR = true;
 
 /* Size of each local map in tiles. Size is LOCAL_MAP_SIZE * LOCAL_MAP_SIZE.
   Should be (n^2+1).
@@ -154,7 +154,6 @@ bool EMULATE_2_BUTTON_MIDDLE_CLICK = true; // Allows middle click with mice with
 
 std::string NYA;
 
-const std::string ADVENTURE_MODE_MANUAL = "Manual will go here\n";
-//const std::string ADVENTURE_MODE_MANUAL = "Adventure mode manual. Click MAN again to close it.\nWelcome to Adventure Mode. This manual will be used to explain some basic stuff you can do in the game.\n\n INV - Access inventory\n SNK - Sneak. Your line of sight will increase and allow you to see around corners. However your movement speed will be halved.\n";
+const std::string ADVENTURE_MODE_MANUAL = "Adventure mode manual. Click MAN again or press ESC to close it.\nWelcome to Adventure Mode. This manual will be used to explain some basic stuff you can do in the game.\n\n INV - Access inventory and equipment. (not currently implemented)\n SNK - Sneak. Your line of sight will increase and allow you to see around corners. However your movement speed will be halved. Sneaking will also reduce your visibility so that if you are next to fog (from the NPC's view), you can't be seen.\nSPT - Sprint (not implemented). You will travel twice as fast but will have low view distance.\n\nSPACE - Talk to adjacent NPC.";
 
 #endif

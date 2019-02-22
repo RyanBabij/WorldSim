@@ -146,6 +146,14 @@ const std::string PATH_TEX_LOCAL_FLOOR = "Textures/Local/Building/Floor.png";
 Texture TEX_LOCAL_SIGN;
 const std::string PATH_TEX_LOCAL_SIGN = "Textures/Local/Sign.png";
 
+  // PORTRAITS
+  
+Texture TEX_PORTRAIT_SNEK;
+const std::string PATH_TEX_PORTRAIT_SNEK = "Textures/Portrait/Snek.png";
+
+Texture TEX_PORTRAIT_LING;
+const std::string PATH_TEX_PORTRAIT_LING = "Textures/Portrait/Ling.png";
+
 void loadTextureVerbose(const std::string _path, Texture* _texture)
 {
 	std::cout<<"Loading: "<<_path<<".\n";
@@ -233,6 +241,8 @@ void loadTextures()
   loadTextureVerbose(PATH_TEX_WORLD_CREATURE_DEER_DEER,&TEX_WORLD_CREATURE_DEER_DEER);
   loadTextureVerbose(PATH_TEX_WORLD_CREATURE_DEER_DOE,&TEX_WORLD_CREATURE_DEER_DOE);
   
+  loadTextureVerbose(PATH_TEX_PORTRAIT_SNEK,&TEX_PORTRAIT_SNEK);
+  loadTextureVerbose(PATH_TEX_PORTRAIT_LING,&TEX_PORTRAIT_LING);
   
 
   Png pNYA;

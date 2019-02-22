@@ -65,6 +65,8 @@ World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
   queryWorldY = -1;
   
   worldFilePath = "";
+  
+  isRaining=false;
 }
 
   
@@ -218,7 +220,7 @@ Character* World::getRandomCharacter()
 }
 
     //Return a vector of coordinates visible from the given location.
-Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x, unsigned long int _y, const int RANGE)
+Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x, unsigned long int _y, const int RANGE, const bool isSneaking = false)
 {
   if (RANGE <= 0) { return 0; }
   
@@ -287,6 +289,17 @@ Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x
   for (int i=0;i<rayTraceCoordinates.size();++i)
   {
     rayTrace (_x,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
+    
+    // Very bad implementation of peeking. Should be optimised in future.
+    if (isSneaking)
+    {
+      rayTrace (_x+1,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
+      rayTrace (_x-1,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
+      rayTrace (_x,_y+1,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
+      rayTrace (_x,_y-1,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
+    }
+
+    
   }
   
   return vVisibleTiles;
@@ -711,6 +724,11 @@ void World::incrementTicks(int nTicks)
         vWorldLocal(i)->incrementTicks(1);
       }
   }
+  
+  if (calendar.minute%5==0)
+  { isRaining=true; }
+  else
+  { isRaining = false; }
 
 	
 	//for ( int i=0;i<vCiv.size();++i)
@@ -1327,6 +1345,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	
 	generated = true;
 	
+  isRaining=false;
 	
 	// Build and shuffle the tile vector
 	//Vector < Vector <HasXY> > vAllTiles;

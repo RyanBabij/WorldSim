@@ -65,6 +65,9 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   
   char idleCounter;
   Vector <HasXY2 <unsigned long int> * > vMovesToProcess;
+  Vector <HasXY2 <unsigned long int> * > vMovesToProcessSneak;
+  
+  bool isSneaking;
   
 		/* Right now each character has a biological mother and father. In the future we might also have guardians */
 	Character* father;

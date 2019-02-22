@@ -31,7 +31,7 @@ class Menu_AdventureMode: public GUI_Interface
       /* Button to center camera on current player */
     GUI_Button buttonCenterCamera;
     
-      /* Button to toggle sneaking */
+      /* Button to toggle sneaking - SNK */
     GUI_Button buttonSneak;
   
   
@@ -145,8 +145,17 @@ class Menu_AdventureMode: public GUI_Interface
     // Render conversation menu
     if (conversationActive && conversationCharacter != 0)
     {
-      Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-20);
-      linesDrawn = font8x8.drawText(playerCharacter->getFullName()+" talks to "+conversationCharacter->getFullName()+".\n(Press ESC to exit)",panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
+      Renderer::placeColour4a(30,140,40,250,panelX1+235,panelY1+35,panelX2-15,panelY2-10);
+      
+      Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-220);
+      linesDrawn = font8x8.drawText(playerCharacter->getFullName()+" talks to "+conversationCharacter->getFullName()+".\n\n["+playerCharacter->getFullName()+"]: COLONEL, WHAT'S A CONVERSATION SYSTEM DOING HERE?\n["+conversationCharacter->getFullName()+"]: Snake, remember what De Gaulle said \"The graveyards are full of indispensable men.\" Snake, you're all alone and surrounded by bad guys. Try to be careful and avoid getting into a fight whenever you can.\n["+playerCharacter->getFullName()+"]: I FEEL ASLEEP.\n\n(Press ESC to exit)",panelX1+250,panelY1+45,panelX2-25,panelY2-225,false,false);
+      
+      Renderer::placeColour4a(150,150,250,250,panelX1+350,panelY2-210,panelX2-130,panelY2-20);
+      linesDrawn = font8x8.drawText("Relationship: Solid",panelX1+355,panelY2-215,panelX2-135,panelY2-25,false,false);
+      
+      
+      Renderer::placeTexture4(panelX1+240, panelY2-160, panelX1+340, panelY2-60, &TEX_PORTRAIT_SNEK, true);
+      Renderer::placeTexture4(panelX2-120, panelY2-160, panelX2-20, panelY2-60, &TEX_PORTRAIT_LING, true);
     }
     
     
@@ -163,6 +172,9 @@ class Menu_AdventureMode: public GUI_Interface
 			// If all submenus are already closed, bring up main menu.
 		if(_keyboard->isPressed(Keyboard::ESCAPE)) /* Flush console. */
 		{
+      if ( conversationActive )
+      { world.incrementTicksBacklog(5); }
+      
       manualActive=false;
       conversationActive=false;
 			_keyboard->keyUp(Keyboard::ESCAPE);	
@@ -186,7 +198,9 @@ class Menu_AdventureMode: public GUI_Interface
         world.updateMaps();
         playerCharacter->updateKnowledge();
         
-        world.incrementTicksBacklog(1);
+        if (playerCharacter->isSneaking ) { world.incrementTicksBacklog(2); }
+        else { world.incrementTicksBacklog(1); }
+        
       }
       
       _keyboard->keyUp(Keyboard::RIGHT);
@@ -201,7 +215,8 @@ class Menu_AdventureMode: public GUI_Interface
         world.updateMaps();
         playerCharacter->updateKnowledge();
         
-        world.incrementTicksBacklog(1);
+        if (playerCharacter->isSneaking ) { world.incrementTicksBacklog(2); }
+        else { world.incrementTicksBacklog(1); }
       }
       
       _keyboard->keyUp(Keyboard::LEFT);
@@ -216,7 +231,8 @@ class Menu_AdventureMode: public GUI_Interface
         world.updateMaps();
         playerCharacter->updateKnowledge();
         
-        world.incrementTicksBacklog(1);
+        if (playerCharacter->isSneaking ) { world.incrementTicksBacklog(2); }
+        else { world.incrementTicksBacklog(1); }
       }
       _keyboard->keyUp(Keyboard::UP);
     }
@@ -230,7 +246,8 @@ class Menu_AdventureMode: public GUI_Interface
         world.updateMaps();
         playerCharacter->updateKnowledge();
         
-        world.incrementTicksBacklog(1);
+        if (playerCharacter->isSneaking ) { world.incrementTicksBacklog(2); }
+        else { world.incrementTicksBacklog(1); }
       }
       _keyboard->keyUp(Keyboard::DOWN);
     }
@@ -257,8 +274,6 @@ class Menu_AdventureMode: public GUI_Interface
         
         Vector <Character*> * vNearbyCharacter = wl->getAdjacentCharacters(playerCharacter->x,playerCharacter->y);
         
-        std::cout<<"Getting characters near "<<playerCharacter->x<<", "<<playerCharacter->y<<".\n";
-        
         conversationCharacter = 0;
         
         if ( vNearbyCharacter != 0)
@@ -278,8 +293,6 @@ class Menu_AdventureMode: public GUI_Interface
           std::cout<<playerCharacter->getFullName()<<" talks to "<<conversationCharacter->getFullName()<<".\n";
           conversationActive=true;
         }
-        
-        //world.incrementTicksBacklog(1);
       }
       
       _keyboard->keyUp(Keyboard::SPACE);
@@ -296,7 +309,7 @@ class Menu_AdventureMode: public GUI_Interface
     
 		if (buttonCenterCamera.clicked==true)
 		{
-      std::cout<<"CENTER\n";
+      Console("Centered view");
       worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
 			buttonCenterCamera.unclick();
 		}
@@ -307,6 +320,22 @@ class Menu_AdventureMode: public GUI_Interface
       std::cout<<"MANUAL\n";
       manualActive = !manualActive;
 			buttonManual.unclick();
+		}
+    
+      // Toggle the manual view.
+		if (buttonSneak.clicked==true)
+		{
+      playerCharacter->isSneaking = !playerCharacter->isSneaking;
+      
+      if ( playerCharacter->isSneaking )
+      { Console("Entered sneaking mode");
+        world.updateMaps();
+        playerCharacter->updateKnowledge();
+      }
+      else
+      { Console("Exited sneaking mode");
+      }
+			buttonSneak.unclick();
 		}
     
 		worldViewer.mouseEvent(_mouse);

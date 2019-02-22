@@ -22,6 +22,7 @@
   
 class RainDrop
 {
+  public:
   int x, y;
   
   RainDrop()
@@ -29,12 +30,85 @@ class RainDrop
     x=0;
     y=0;
   }
-  void drop()
+  void drop(int amount)
   {
-    ++y;
+    y-=amount;
   }
   void render()
-  { }
+  {
+
+		Renderer::placeColour4a(60,60,255,255,x,y,x+3,y+4);
+
+  }
+};
+
+class RainManager
+{
+  public:
+  
+  RandomNonStatic rand;
+  
+  Vector <RainDrop*> vRainDrop;
+  
+  World* world;
+  
+  int x1, x2;
+  int y1, y2;
+  int MAX_RAIN;
+  int RAIN_PER_FRAME;
+  
+  RainManager() { }
+  
+  void init (int _x1, int _y1, int _x2, int _y2, World* _world, int _maxRain=10000, double _rainPercentOfX=0.01)
+  {
+    x1=_x1;
+    y1=_y1;
+    x2=_x2;
+    y2=_y2;
+    MAX_RAIN = _maxRain;
+    RAIN_PER_FRAME = _rainPercentOfX*(x2-x1);
+    
+    world = _world;
+    
+    rand.seed();
+  }
+  
+
+  void render()
+  {
+    if (world==0) {return;}
+    
+    if ( world->isRaining &&  vRainDrop.size() < MAX_RAIN )
+    {
+      for (int i=0;i<RAIN_PER_FRAME;++i)
+      {
+      RainDrop* rain = new RainDrop;
+      rain->y = y2-rand.randomInt(20);
+      
+
+      rain->x = rand.randomInt(x2-x1);
+      rain->x+=x1;
+      vRainDrop.push(rain);
+      }
+    }
+    
+    Renderer::setColourMode();
+    glColor3ub(0,0,220);
+    for (int i=0;i<vRainDrop.size();++i)
+    {
+      vRainDrop(i)->drop(rand.randomInt(3)+18);
+      
+      if (vRainDrop(i)->y < y1)
+      {
+        delete vRainDrop(i);
+        vRainDrop.removeSlot(i);
+      }
+      
+      vRainDrop(i)->render();
+    }
+    glColor3ub(255,255,255);
+    Renderer::setTextureMode();
+  }
 };
 
 class WorldViewer: public DisplayInterface, public MouseInterface
@@ -85,6 +159,11 @@ class WorldViewer: public DisplayInterface, public MouseInterface
   bool demoMode;
   double demoScroll;
   
+  
+  //RAIN
+  
+  RainManager rainManager;
+  
 WorldViewer()
 {
   tileSize=8;
@@ -122,6 +201,8 @@ WorldViewer()
   
   demoMode = false;
   demoScroll = 0.1;
+  
+  rainManager.init(0,0,0,0,0);
 }
 	
   // Center the view on the middle of the world. Good for initializing.
@@ -419,6 +500,9 @@ void switchTarget(World_Local* _worldLocal)
 		
 		mainViewNX = mainViewX2-mainViewX1;
 		mainViewNY = mainViewY2-mainViewY1;
+    
+    
+    rainManager.init(_x1,_y1,_x2,_y2,world);
 		
 	}
 	
@@ -1115,7 +1199,8 @@ void switchTarget(World_Local* _worldLocal)
 		//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_01, false);
 		
 	}
-
+  rainManager.render();
+    
 		Renderer::restoreViewPort();
 		
 
@@ -1123,6 +1208,8 @@ void switchTarget(World_Local* _worldLocal)
 		
 		/* Now render the icons on the world map. */
 		renderWorldIcons();
+    
+
     
     
 			//Renderer::placeTexture4(mainViewX1+(mainViewNX/2)-32, mainViewY1+(mainViewNY/2)-32, mainViewX1+(mainViewNX/2)+32, mainViewY1+(mainViewNY/2)+32, &TEX_WORLD_TEST_00, false);

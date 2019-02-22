@@ -176,7 +176,10 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	
 	GuildCalendar calendar;
 	GuildDate lastDate; /* The date on the last logic tick. */
-	
+
+    // STATES
+	bool isRaining;
+  
 	World();
 	
 		// CHECK ALL CIV LOS ARRAYS, AND IF ANY OVERLAP, THEN MAKE THEM DISCOVER EACH OTHER.
@@ -300,7 +303,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
       Character* getRandomCharacter();
       
       // Return vector of coordinates visible from given coordinate.
-      Vector <HasXY2 <unsigned long int> *> * rayTraceLOS (unsigned long int _x, unsigned long int _y, const int RANGE);
+      Vector <HasXY2 <unsigned long int> *> * rayTraceLOS (unsigned long int _x, unsigned long int _y, const int RANGE, const bool /* isSneaking = false */);
       void rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned long int _x2, unsigned long int _y2, Vector <HasXY2 <unsigned long int> *> * vVisibleTiles);
 	
   /* WORLD QUERIES */

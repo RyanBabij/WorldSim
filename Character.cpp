@@ -72,6 +72,8 @@ Character::Character()
   worldY = -1;
   
   idleCounter=0;
+  
+  isSneaking=false;
 	
 	//enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, OLD_AGE=2 };
 	
@@ -122,6 +124,8 @@ void Character::init(const int _sex /* =0 */)
 	hunger=0;
 	
 	tribe=0;
+  
+  isSneaking=false;
 	
 	dateOfBirth.set(world.calendar);
 }
@@ -532,8 +536,10 @@ void Character::initialiseKnowledge()
     }
     
     // Add this tile for later processing when idle.
-    vMovesToProcess.push(new HasXY2 <unsigned long int> (fullX,fullY));
-    
+    if ( isSneaking )
+    { vMovesToProcessSneak.push(new HasXY2 <unsigned long int> (fullX,fullY)); }
+    else
+    { vMovesToProcess.push(new HasXY2 <unsigned long int> (fullX,fullY)); }
   }
   
     //Update knowledge with current instance.
@@ -543,7 +549,7 @@ void Character::initialiseKnowledge()
     ++idleCounter;
     if (idleCounter > 10) { idleCounter=10; }
     
-    if ( vMovesToProcess.size() == 0 ) { return; }
+    if ( vMovesToProcess.size() == 0 && vMovesToProcessSneak.size() == 0 ) { return; }
     if ( knowledge == 0 ) { return; }
     if ( tribe == 0 ) { return; }
     
@@ -554,27 +560,55 @@ void Character::initialiseKnowledge()
       //For now this simply wipes LOS from last turn.
     //knowledge->updateLOS();
     
-    vMovesToProcess.shuffle();
-    
-    auto moveToProcess = vMovesToProcess(0);
-
-    knowledge->addTile(moveToProcess->x,moveToProcess->y);
-    
-
-    Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(moveToProcess->x,moveToProcess->y,MAX_VIEW_RANGE);
-    
-    if ( vVisibleTiles!=0 )
+    if (vMovesToProcess.size() > 0)
     {
-      for (int i=0; i<vVisibleTiles->size(); ++i)
+      vMovesToProcess.shuffle();
+      
+      auto moveToProcess = vMovesToProcess(0);
+
+      knowledge->addTile(moveToProcess->x,moveToProcess->y);
+      
+
+      Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(moveToProcess->x,moveToProcess->y,MAX_VIEW_RANGE);
+      
+      if ( vVisibleTiles!=0 )
       {
-        //std::cout<<"ADDING\n";
-        knowledge->addTile((*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
-        delete (*vVisibleTiles)(i);
+        for (int i=0; i<vVisibleTiles->size(); ++i)
+        {
+          //std::cout<<"ADDING\n";
+          knowledge->addTile((*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
+          delete (*vVisibleTiles)(i);
+        }
       }
+      
+      delete moveToProcess;
+      vMovesToProcess.removeSlot(0);
     }
-    
-    delete moveToProcess;
-    vMovesToProcess.removeSlot(0);
+    else if ( vMovesToProcessSneak.size() > 0)
+    {
+      vMovesToProcessSneak.shuffle();
+      
+      auto moveToProcess = vMovesToProcessSneak(0);
+
+      knowledge->addTile(moveToProcess->x,moveToProcess->y);
+      
+
+      Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(moveToProcess->x,moveToProcess->y,MAX_VIEW_RANGE,true);
+      
+      if ( vVisibleTiles!=0 )
+      {
+        for (int i=0; i<vVisibleTiles->size(); ++i)
+        {
+          //std::cout<<"ADDING\n";
+          knowledge->addTile((*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
+          delete (*vVisibleTiles)(i);
+        }
+      }
+      
+      delete moveToProcess;
+      vMovesToProcessSneak.removeSlot(0);
+    }
+
     
   }
   
