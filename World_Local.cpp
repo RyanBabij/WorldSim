@@ -677,6 +677,19 @@ bool World_Local::wander (WorldObject* _object)
   return false;
 }
 
+bool World_Local::removeItem (Item* _item )
+{
+  if ( _item==0) {return false;}
+  vItem.remove(_item);
+  
+  if (aLocalTile.isSafe(_item->x,_item->y))
+  {
+    aLocalTile(_item->x,_item->y).removeObject(_item);
+  }
+  
+  return false;
+}
+
 
     //Return a vector of coordinates visible from the given location.
 Vector <HasXY*> * World_Local::rayTraceLOS (int _x, int _y, const int RANGE)

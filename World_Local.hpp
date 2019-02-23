@@ -105,6 +105,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   bool moveObject (WorldObject* , int /* newX */, int /* newY */ );
   bool wander (WorldObject* /* _object */);
   
+  bool removeItem (Item* /* _item */);
+  
 //SEARCH FUNCTIONS
 
   Vector <Character*> * getAdjacentCharacters(int /* _x */, int /* _y */);

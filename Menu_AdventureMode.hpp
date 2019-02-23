@@ -11,6 +11,12 @@
   This class contains the code for the Adventure Mode GUI.
 */
 
+//PLAYER INVENTORY
+// NPCs only have a list of items in their inventory.
+// However the player gets a grid which saves the position of items
+// The grid is 10*10. I think it's doubtful that a player will need more than
+// 100 inventory slots.
+
 class Menu_AdventureMode: public GUI_Interface
 {
   private:
@@ -54,6 +60,8 @@ class Menu_AdventureMode: public GUI_Interface
       Vector <Item*> vItemsOnFloor;
         // Carried item is an item selected by the mouse. The item will follow the cursor.
       Item* carriedItem;
+      
+      Item * inventoryGrid [10][10];
     
       // CTRL is modifier for inventory menu. Will add 1 of item to inventory, or transfer 1 of item to storage. Or drop 1 of item.
     bool holdingCTRL;
@@ -115,6 +123,15 @@ class Menu_AdventureMode: public GUI_Interface
     
     mouseX=0;
     mouseY=0;
+    
+    //Initialise inventory grid.
+    for (int _y=0;_y<10;++_y)
+    {
+      for (int _x=0;_x<10;++_x)
+      {
+        inventoryGrid[_x][_y]=0;
+      }
+    }
       
     eventResize();
   }
@@ -189,11 +206,8 @@ class Menu_AdventureMode: public GUI_Interface
       Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-220);
       Renderer::placeColour4a(150,150,250,250,panelX1+350,panelY2-210,panelX2-130,panelY2-20);
       
-      
       font8x8.drawText("Inventory", panelX1 + 250,panelY2-230,panelX1 + 450,panelY2-250,true,true);
       font8x8.drawText("Storage", panelX1 + 650,panelY2-230,panelX1 + 850,panelY2-250,true,true);
-      
-      //std::cout<<"Clicked item: "<<clickedItemSlot<<".\n";
 
       
       // render inventory slots
@@ -206,15 +220,18 @@ class Menu_AdventureMode: public GUI_Interface
         {
           Renderer::placeColour4a(120,120,120,250,currentX,inventoryY,currentX+32,inventoryY-32);
           
+          if (row < 10 && i < 10 && inventoryGrid[row][i]!=0)
+          {
+            //Renderer::placeColour4a(120,120,120,250,currentX,inventoryY,currentX+32,inventoryY-32);
+            Renderer::placeTexture4(currentX,inventoryY-32,currentX+32,inventoryY, inventoryGrid[row][i]->currentTexture(), false);
+          }
+          
             // floor inventory
           if (row == 10 || row == 11 )
           {
             if ( currentFloorItem < vItemsOnFloor.size() && vItemsOnFloor(currentFloorItem) != carriedItem )
             {
-              if ( clickedItemSlot - 100 != currentFloorItem )
-              {
-                Renderer::placeTexture4(currentX,inventoryY-32,currentX+32,inventoryY, vItemsOnFloor(currentFloorItem)->currentTexture(), false);
-              }
+              Renderer::placeTexture4(currentX,inventoryY-32,currentX+32,inventoryY, vItemsOnFloor(currentFloorItem)->currentTexture(), false);
               ++currentFloorItem;
             }
           }
@@ -392,6 +409,32 @@ class Menu_AdventureMode: public GUI_Interface
       
       _keyboard->keyUp(Keyboard::SPACE);
     }
+    
+      // I = TOGGLE INVENTORY
+    if(_keyboard->isPressed(Keyboard::I) || _keyboard->isPressed(Keyboard::i))
+    {
+      inventoryActive = !inventoryActive;
+      
+      // build list of items on the floor
+      if (inventoryActive)
+      {
+        vItemsOnFloor.clear();
+        World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
+        if ( wl != 0 )
+        {
+          for (int i=0;i<wl->vItem.size();++i)
+          {
+            if (wl->vItem(i)->x == playerCharacter->x && wl->vItem(i)->y == playerCharacter->y)
+            {
+              vItemsOnFloor.push(wl->vItem(i));
+            }
+          }
+        }
+      } 
+      
+      _keyboard->keyUp(Keyboard::I);
+      _keyboard->keyUp(Keyboard::i);
+    }
 
 		guiManager.keyboardEvent(_keyboard);
 		worldViewer.keyboardEvent(_keyboard);
@@ -423,20 +466,90 @@ class Menu_AdventureMode: public GUI_Interface
               //std::cout<<"CLICKED INVENTORY\n";
               //std::cout<<"SLOT: "<<row*10 + i<<".\n";
               clickedItemSlot = row*10 + i;
-              if (_mouse->ctrlPressed)
+              
+              if (clickedItemSlot < 100) // INVENTORY GRID
               {
-                //std::cout<<"CTRL CLICKED\n";
-                if ( clickedItemSlot-100 >= 0 && clickedItemSlot-100 < vItemsOnFloor.size() )
-                {
-                  carriedItem = vItemsOnFloor(clickedItemSlot-100);
-                }
-                //if (
+                //Swap carried item and inventory grid item.
+                Item * tempItem = carriedItem;
+                carriedItem = inventoryGrid[row][i];
+                inventoryGrid[row][i]=tempItem;
+                _mouse->isLeftClick=false;
               }
-              else
+              else if ( clickedItemSlot-100 >= 0) // PICKING ITEM OFF GROUND
               {
-                if ( clickedItemSlot-100 >= 0 && clickedItemSlot-100 < vItemsOnFloor.size() )
+                if (_mouse->ctrlPressed)
                 {
-                  carriedItem = vItemsOnFloor(clickedItemSlot-100);
+                  if (clickedItemSlot-100 < vItemsOnFloor.size() ) // If player clicked on full ground slot.
+                  {
+                    Item* tempItem = carriedItem;
+                    carriedItem = vItemsOnFloor(clickedItemSlot-100);
+                    vItemsOnFloor.removeSlot(clickedItemSlot-100);
+                    _mouse->isLeftClick=false;
+                    World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
+                    if ( wl != 0 )
+                    {
+                      wl->removeItem(carriedItem);
+                      // Put down carried item if necessary
+                      if (tempItem != 0)
+                      {
+                        // Put item on map.
+                        wl->putObject(tempItem,playerCharacter->x,playerCharacter->y);
+                        wl->vItem.push(tempItem);
+                      }
+                    }
+                  }
+                  else // If player clicked on empty ground slot
+                  {
+                    if (carriedItem != 0) // Drop item on ground
+                    {
+                      World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
+                      if ( wl != 0 )
+                      {
+                        // Put item on map.
+                        wl->putObject(carriedItem,playerCharacter->x,playerCharacter->y);
+                        wl->vItem.push(carriedItem);
+                        vItemsOnFloor.push(carriedItem);
+                        carriedItem=0;
+                      }
+                    }
+                  }
+                }
+                else
+                {
+                  if (clickedItemSlot-100 < vItemsOnFloor.size() ) // If player clicked on full ground slot.
+                  {
+                    Item* tempItem = carriedItem;
+                    carriedItem = vItemsOnFloor(clickedItemSlot-100);
+                    vItemsOnFloor.removeSlot(clickedItemSlot-100);
+                    _mouse->isLeftClick=false;
+                    World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
+                    if ( wl != 0 )
+                    {
+                      wl->removeItem(carriedItem);
+                      // Put down carried item if necessary
+                      if (tempItem != 0)
+                      {
+                        // Put item on map.
+                        wl->putObject(tempItem,playerCharacter->x,playerCharacter->y);
+                        wl->vItem.push(tempItem);
+                      }
+                    }
+                  }
+                  else // If player clicked on empty ground slot
+                  {
+                    if (carriedItem != 0) // Drop item on ground
+                    {
+                      World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
+                      if ( wl != 0 )
+                      {
+                        // Put item on map.
+                        wl->putObject(carriedItem,playerCharacter->x,playerCharacter->y);
+                        wl->vItem.push(carriedItem);
+                        vItemsOnFloor.push(carriedItem);
+                        carriedItem=0;
+                      }
+                    }
+                  }
                 }
               }
             }
