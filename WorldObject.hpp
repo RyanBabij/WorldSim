@@ -1,10 +1,16 @@
 #pragma once
-#ifndef GUILD_WORLDOBJECT_HPP
-#define GUILD_WORLDOBJECT_HPP
+#ifndef WORLDSIM_WORLDOBJECT_HPP
+#define WORLDSIM_WORLDOBJECT_HPP
 
 /* WorldObject.hpp
 	#include"WorldObject.hpp"
-	<DOCUMENTATION>
+
+  A World Object is an object which can have some physical presence on a map. Therefore
+  items, weapons, creatures and NPCs are all World Objects. This interface provides the
+  basic functions for providing information on the object's location and how to render it.
+  
+  WorldObject deals with local map objects. Objects on the global map are handled with
+  WorldObjectGlobal.
 */
 
 class WorldObject: public HasTexture

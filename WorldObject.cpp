@@ -6,7 +6,8 @@
 
 /* WorldObject.cpp
 	#include"WorldObject.cpp"
-	<DOCUMENTATION>
+
+  Implementation of WorldObject.hpp.
 */
 
 WorldObject::WorldObject()
@@ -30,10 +31,6 @@ std::string WorldObject::getName()
 int WorldObject::distanceTo (WorldObject* _obj) 
 {
 	return std::max(abs(x-_obj->x),abs(y-_obj->y));
-
-	//return (abs(x-_obj->x)+abs(y-_obj->y));
-
-	//return (sqrt(   ((abs((x-_obj->x)))*((abs((x-_obj->x))))+    ((abs((y-_obj->y)))*(abs((y-_obj->y))))    )));
 }
 
 int WorldObject::distanceFrom(WorldObject* _obj) { return distanceTo(_obj); } /* Alias. */

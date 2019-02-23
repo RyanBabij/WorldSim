@@ -37,6 +37,8 @@
 #include "WorldObject_Rock.cpp"
 #include "WorldObject_Sign.cpp"
 
+#include "Item.cpp"
+
 World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
 {
 	random.seed();
