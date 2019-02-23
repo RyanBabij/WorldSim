@@ -164,8 +164,11 @@ class Menu_AdventureMode: public GUI_Interface
     }
     
     // Render inventory menu
+    // Yes this will need to be moved into its own file at some point,
+    // but hey who cares as long as it works.
     if (inventoryActive)
     {
+      // background panels for inventory menu.
       Renderer::placeColour4a(30,140,40,250,panelX1+235,panelY1+35,panelX2-15,panelY2-10);
       Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-220);
       Renderer::placeColour4a(150,150,250,250,panelX1+350,panelY2-210,panelX2-130,panelY2-20);
@@ -174,13 +177,41 @@ class Menu_AdventureMode: public GUI_Interface
       font8x8.drawText("Inventory", panelX1 + 250,panelY2-230,panelX1 + 450,panelY2-250,true,true);
       font8x8.drawText("Storage", panelX1 + 650,panelY2-230,panelX1 + 850,panelY2-250,true,true);
       
+      // build list of items on the floor
+      Vector <Item*> vItemsHere;
+      World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
+      if ( wl != 0 )
+      {
+        for (int i=0;i<wl->vItem.size();++i)
+        {
+          if (wl->vItem(i)->x == playerCharacter->x && wl->vItem(i)->y == playerCharacter->y)
+          {
+            vItemsHere.push(wl->vItem(i));
+          }
+        }
+      }
+      
+      // render inventory slots
       int inventoryY = panelY2-250;
+      int currentFloorItem = 0;
       
       for (int row = 0;row<12;++row)
       { int currentX = panelX1+250;
         for (int i=0;i<10;++i)
         {
           Renderer::placeColour4a(120,120,120,250,currentX,inventoryY,currentX+32,inventoryY-32);
+          
+            // floor inventory
+          if (row == 10 || row == 11 )
+          {
+            if ( currentFloorItem < vItemsHere.size() && vItemsHere(currentFloorItem) != 0 )
+            {
+              Renderer::placeTexture4(currentX,inventoryY-32,currentX+32,inventoryY, vItemsHere(currentFloorItem)->currentTexture(), false);
+              
+              ++currentFloorItem;
+            }
+          }
+          
           if ( row==0 )
           {
             font8x8.drawText(DataTools::toString(i),currentX,inventoryY,currentX+32,inventoryY-32,true,true);
@@ -188,6 +219,7 @@ class Menu_AdventureMode: public GUI_Interface
           currentX += 34;
         }
         inventoryY -= 34;
+          // make a gap for floor inventory
         if ( row == 9) {inventoryY -= 5;}
       }
       

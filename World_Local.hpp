@@ -5,12 +5,8 @@
 #include <IdleTick/IdleTickInterface.hpp>
 #include <LogicTick/LogicTickInterface.hpp>
 
-/* World_Local.hpp
+/* WorldSim: World_Local.hpp
 	#include "World_Local.hpp"
-
-	Project: WorldSim
-	Created: 10/12/2017, 0272632857.
-	Updated: 10/12/2017, 0272632857.
 
 	Description:
 	The World stores local-level data, such as the position of local units.
@@ -32,14 +28,12 @@
   
   World_Local should have a custom texture allowing a kind of thumbnail view of the tile.
   
-  
-	Notes:
-
-	0272632857 - Added basic documentation.
 
 */
 
 #include "Creature.hpp"
+
+class Item;
 
 class World_Local: public LogicTickInterface, public IdleTickInterface
 {
@@ -89,11 +83,14 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	Vector <HasXY*> vAllTiles;
 
   
-  // Vector of all creatures in this map
+  // Vector of all Creatures on this map
   Vector <Creature*> vCreature;
   
-  //Vector of all characters on this map
+  //Vector of all Characters on this map
   Vector <Character*> vCharacter;
+  
+  //Vector of all Items on this map
+  Vector <Item*> vItem;
 
 	
 	void init(int /*x*/, int /*y*/);

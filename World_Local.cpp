@@ -4,12 +4,8 @@
 
 /* WorldSim: World_Local
 	#include "World_Local.cpp"
-
-
-	Description:
-	The World stores local-level data, such as the position of local units.
-
-
+  
+  Implementation of World_Local.hpp
 */
 
 #include "World_Local.hpp"
@@ -150,21 +146,34 @@ bool World_Local::generate()
         {
           auto itm = new Item_Sword;
           putObject(itm,_x,_y);
+          vItem.push(itm);
         }
         else if (random.oneIn(200))
         {
           auto itm = new Item_Longbow;
           putObject(itm,_x,_y);
+          vItem.push(itm);
         }
         else if (random.oneIn(300))
         {
           auto itm = new Item_Fishrod;
           putObject(itm,_x,_y);
+          vItem.push(itm);
         }
         else if (random.oneIn(400))
         {
+          auto itm2 = new Item_Sword;
+          putObject(itm2,_x,_y);
+          vItem.push(itm2);
+          auto itm3 = new Item_Longbow;
+          putObject(itm3,_x,_y);
+          vItem.push(itm3);
+          auto itm4 = new Item_Fishrod;
+          putObject(itm4,_x,_y);
+          vItem.push(itm4);  
           auto itm = new Item_Shovel;
           putObject(itm,_x,_y);
+          vItem.push(itm);
         }
         
         else if ( baseBiome == MOUNTAIN )

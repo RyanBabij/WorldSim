@@ -23,7 +23,7 @@ class Ammo
 class Item: public WorldObject
 {
 	public:
-	int x, y;
+	//int x, y;
   int count; /* How many of this object there is (for example ammo) */
   
   int type; /* The type of item. */
