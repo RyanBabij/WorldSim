@@ -25,6 +25,7 @@ Texture TEX_NEW_GAME_BACKGROUND;
 Texture TEX_GUI_INCREMENT;
 Texture TEX_GUI_DECREMENT;
 Texture TEX_GUI_EXPAND;
+Texture TEX_GUI_TILE_SELECTION;
 
 Texture TEX_GUI_CENTER_CAMERA;
 const std::string PATH_TEX_GUI_CENTER_CAMERA = "Textures/GUI/CenterCamera.png";
@@ -189,6 +190,7 @@ void loadTextures()
 	loadTextureVerbose("Textures/GUI/Increment.png",&TEX_GUI_INCREMENT);
 	loadTextureVerbose("Textures/GUI/Decrement.png",&TEX_GUI_DECREMENT);
 	loadTextureVerbose("Textures/GUI/Expand.png",&TEX_GUI_EXPAND);
+	loadTextureVerbose("Textures/GUI/HotbarSelection32.png",&TEX_GUI_TILE_SELECTION );
 	
 		// LOAD LOCAL OBJECT TEXTURES
 	loadTextureVerbose("Textures/NPC.png",&TEX_NPC);

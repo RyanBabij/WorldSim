@@ -62,6 +62,7 @@ class Menu_AdventureMode: public GUI_Interface
       Item* carriedItem;
       
       Item * inventoryGrid [10][10];
+      int selectedHotbar;
     
       // CTRL is modifier for inventory menu. Will add 1 of item to inventory, or transfer 1 of item to storage. Or drop 1 of item.
     bool holdingCTRL;
@@ -124,6 +125,8 @@ class Menu_AdventureMode: public GUI_Interface
     mouseX=0;
     mouseY=0;
     
+    selectedHotbar=0;
+    
     //Initialise inventory grid.
     for (int _y=0;_y<10;++_y)
     {
@@ -171,6 +174,21 @@ class Menu_AdventureMode: public GUI_Interface
 		//Renderer::placeColour4a(150,150,150,255,panelX2-208,panelY2-20,panelX2,panelY2-10);
 		std::string strDate = world.calendar.toString();
 		font8x8.drawText("DATE: "+strDate,panelX1,panelY1+220,panelX1+220,panelY1+230, true, true);
+    
+    //Draw hotbar
+    int currentX2 = panelX1 + 240;
+    for (int i=0;i<10;++i)
+    { Renderer::placeColour4a(120,120,120,250,currentX2,panelY1+5,currentX2+32,panelY1+37);
+      if ( inventoryGrid[i][0] != 0 )
+      { Renderer::placeTexture4(currentX2,panelY1+5,currentX2+32,panelY1+37, inventoryGrid[i][0]->currentTexture(), false);
+      }
+      
+      if ( i==selectedHotbar )
+      { Renderer::placeTexture4(currentX2,panelY1+5,currentX2+32,panelY1+37, &TEX_GUI_TILE_SELECTION, false);
+      }
+      
+      currentX2+=34;
+    }
     
     
     // Render manual page
@@ -220,10 +238,10 @@ class Menu_AdventureMode: public GUI_Interface
         {
           Renderer::placeColour4a(120,120,120,250,currentX,inventoryY,currentX+32,inventoryY-32);
           
-          if (row < 10 && i < 10 && inventoryGrid[row][i]!=0)
+          if (row < 10 && i < 10 && inventoryGrid[i][row]!=0)
           {
             //Renderer::placeColour4a(120,120,120,250,currentX,inventoryY,currentX+32,inventoryY-32);
-            Renderer::placeTexture4(currentX,inventoryY-32,currentX+32,inventoryY, inventoryGrid[row][i]->currentTexture(), false);
+            Renderer::placeTexture4(currentX,inventoryY-32,currentX+32,inventoryY, inventoryGrid[i][row]->currentTexture(), false);
           }
           
             // floor inventory
@@ -410,6 +428,58 @@ class Menu_AdventureMode: public GUI_Interface
       _keyboard->keyUp(Keyboard::SPACE);
     }
     
+    // Hotbar selection keys
+		if(_keyboard->isPressed(Keyboard::ONE))
+		{
+      selectedHotbar=0;
+			_keyboard->keyUp(Keyboard::ONE);	
+		}
+		if(_keyboard->isPressed(Keyboard::TWO))
+		{
+      selectedHotbar=1;
+			_keyboard->keyUp(Keyboard::TWO);	
+		}
+		if(_keyboard->isPressed(Keyboard::THREE))
+		{
+      selectedHotbar=2;
+			_keyboard->keyUp(Keyboard::THREE);	
+		}
+		if(_keyboard->isPressed(Keyboard::FOUR))
+		{
+      selectedHotbar=3;
+			_keyboard->keyUp(Keyboard::FOUR);	
+		}
+		if(_keyboard->isPressed(Keyboard::FIVE))
+		{
+      selectedHotbar=4;
+			_keyboard->keyUp(Keyboard::FIVE);	
+		}
+		if(_keyboard->isPressed(Keyboard::SIX))
+		{
+      selectedHotbar=5;
+			_keyboard->keyUp(Keyboard::SIX);	
+		}
+		if(_keyboard->isPressed(Keyboard::SEVEN))
+		{
+      selectedHotbar=6;
+			_keyboard->keyUp(Keyboard::SEVEN);	
+		}
+		if(_keyboard->isPressed(Keyboard::EIGHT))
+		{
+      selectedHotbar=7;
+			_keyboard->keyUp(Keyboard::EIGHT);	
+		}
+		if(_keyboard->isPressed(Keyboard::NINE))
+		{
+      selectedHotbar=8;
+			_keyboard->keyUp(Keyboard::NINE);	
+		}
+		if(_keyboard->isPressed(Keyboard::ZERO))
+		{
+      selectedHotbar=9;
+			_keyboard->keyUp(Keyboard::ZERO);	
+		}
+    
       // I = TOGGLE INVENTORY
     if(_keyboard->isPressed(Keyboard::I) || _keyboard->isPressed(Keyboard::i))
     {
@@ -447,6 +517,20 @@ class Menu_AdventureMode: public GUI_Interface
     mouseX = _mouse->x;
     mouseY = _mouse->y;
     
+    // Player can use CTRL+scroll to scroll the hotbar.
+		if(_mouse->isWheelDown && _mouse->ctrlPressed)
+		{
+      ++selectedHotbar;
+      if (selectedHotbar>9) {selectedHotbar=0;}
+			_mouse->isWheelDown=false;
+		}
+		if(_mouse->isWheelUp && _mouse->ctrlPressed)
+		{
+      --selectedHotbar;
+      if (selectedHotbar<0) {selectedHotbar=9;}
+			_mouse->isWheelUp=false;
+		}
+    
     if (inventoryActive)
     {
       if (_mouse->isLeftClick)
@@ -471,8 +555,8 @@ class Menu_AdventureMode: public GUI_Interface
               {
                 //Swap carried item and inventory grid item.
                 Item * tempItem = carriedItem;
-                carriedItem = inventoryGrid[row][i];
-                inventoryGrid[row][i]=tempItem;
+                carriedItem = inventoryGrid[i][row];
+                inventoryGrid[i][row]=tempItem;
                 _mouse->isLeftClick=false;
               }
               else if ( clickedItemSlot-100 >= 0) // PICKING ITEM OFF GROUND
@@ -572,9 +656,9 @@ class Menu_AdventureMode: public GUI_Interface
         }
         //clickedItemSlot = -1;
       }
-      if (_mouse->isRightClick)
-      {carriedItem = 0; clickedItemSlot=-1;
-      }
+      //if (_mouse->isRightClick)
+      //{carriedItem = 0; clickedItemSlot=-1;
+      //}
     }
     
     guiManager.mouseEvent(_mouse);
