@@ -725,12 +725,28 @@ void World::incrementTicks(int nTicks)
       {
         vWorldLocal(i)->incrementTicks(1);
       }
+      
+      if ( isRaining )
+      {
+        if (random.oneIn(150))
+        {
+          isRaining = !isRaining;
+        }
+      }
+      else
+      {
+        if (random.oneIn(400))
+        {
+          isRaining = !isRaining;
+        }
+      }
   }
   
-  if (calendar.minute%5==0)
-  { isRaining=true; }
-  else
-  { isRaining = false; }
+  
+  // if (calendar.minute%5==0)
+  // { isRaining=true; }
+  // else
+  // { isRaining = false; }
 
 	
 	//for ( int i=0;i<vCiv.size();++i)

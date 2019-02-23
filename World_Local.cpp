@@ -146,6 +146,26 @@ bool World_Local::generate()
           putObject(deer,_x,_y);
           vCreature.push(deer);
         }
+        else if (random.oneIn(100))
+        {
+          auto itm = new Item_Sword;
+          putObject(itm,_x,_y);
+        }
+        else if (random.oneIn(200))
+        {
+          auto itm = new Item_Longbow;
+          putObject(itm,_x,_y);
+        }
+        else if (random.oneIn(300))
+        {
+          auto itm = new Item_Fishrod;
+          putObject(itm,_x,_y);
+        }
+        else if (random.oneIn(400))
+        {
+          auto itm = new Item_Shovel;
+          putObject(itm,_x,_y);
+        }
         
         else if ( baseBiome == MOUNTAIN )
         {

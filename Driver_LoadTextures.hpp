@@ -137,6 +137,19 @@ const std::string PATH_TEX_WORLD_TERRAIN_ISLAND_00 = "Textures/World/Terrain/Isl
 Texture TEX_WORLD_TEST_00;
 const std::string PATH_TEX_WORLD_TEST_00 = "Textures/Test/00.png";
 
+  // ITEMS
+  
+Texture TEX_ITEM_SWORD;
+const std::string PATH_TEX_ITEM_SWORD = "Textures/Item/Sword.png";
+  
+Texture TEX_ITEM_LONGBOW;
+const std::string PATH_TEX_ITEM_LONGBOW = "Textures/Item/Longbow.png";
+
+Texture TEX_ITEM_FISHROD;
+const std::string PATH_TEX_ITEM_FISHROD = "Textures/Item/Fishrod.png";
+
+Texture TEX_ITEM_SHOVEL;
+const std::string PATH_TEX_ITEM_SHOVEL = "Textures/Item/Shovel.png";
 
   // LOCAL MAP
   
@@ -243,6 +256,12 @@ void loadTextures()
   
   loadTextureVerbose(PATH_TEX_PORTRAIT_SNEK,&TEX_PORTRAIT_SNEK);
   loadTextureVerbose(PATH_TEX_PORTRAIT_LING,&TEX_PORTRAIT_LING);
+  
+  // ITEMS
+  loadTextureVerbose(PATH_TEX_ITEM_SWORD,&TEX_ITEM_SWORD);
+  loadTextureVerbose(PATH_TEX_ITEM_LONGBOW,&TEX_ITEM_LONGBOW);
+  loadTextureVerbose(PATH_TEX_ITEM_FISHROD,&TEX_ITEM_FISHROD);
+  loadTextureVerbose(PATH_TEX_ITEM_SHOVEL,&TEX_ITEM_SHOVEL);
   
 
   Png pNYA;

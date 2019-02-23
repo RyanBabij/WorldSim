@@ -9,11 +9,32 @@
 
 */
 
+class Ammo
+{
+  public:
+  
+  std::string name;
+  int baseDamage;
+  
+};
+
+
+
 class Item: public WorldObject
 {
 	public:
 	int x, y;
   int count; /* How many of this object there is (for example ammo) */
+  
+  int type; /* The type of item. */
+  
+  int meleeDamage; /* Base damage if you hit someone with this. 0 = not possible. */
+  int throwDamage; /* Base damage if you throw this at someone. 0 = not possible */
+  
+  /* Ammunition might as well be hardcoded since there won't be too many different types. */
+  char ammunitionType;
+
+
   
   //Implementing full global coordinates to make life easier for now.
   // This datatype should be able to hold coordinates for any reasonably-sized world.
@@ -54,5 +75,78 @@ class Item: public WorldObject
 
 	virtual Texture* currentTexture();
 };
+
+class Item_Sword: public Item
+{
+  public:
+  
+  Item_Sword()
+  {
+    
+  }
+  std::string getName() { return "Sword"; }
+  
+  
+  Texture* currentTexture()
+  {
+    return &TEX_ITEM_SWORD;
+  }
+
+};
+
+class Item_Longbow: public Item
+{
+  public:
+  
+  Item_Longbow()
+  {
+    
+  }
+  std::string getName() { return "Longbow"; }
+  
+  
+  Texture* currentTexture()
+  {
+    return &TEX_ITEM_LONGBOW;
+  }
+
+};
+
+class Item_Fishrod: public Item
+{
+  public:
+  
+  Item_Fishrod()
+  {
+    
+  }
+  std::string getName() { return "Fishing rod"; }
+  
+  
+  Texture* currentTexture()
+  {
+    return &TEX_ITEM_FISHROD;
+  }
+
+};
+
+class Item_Shovel: public Item
+{
+  public:
+  
+  Item_Shovel()
+  {
+    
+  }
+  std::string getName() { return "Shovel"; }
+  
+  
+  Texture* currentTexture()
+  {
+    return &TEX_ITEM_SHOVEL;
+  }
+
+};
+
 
 #endif
