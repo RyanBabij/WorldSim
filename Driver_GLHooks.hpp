@@ -163,10 +163,20 @@ void GL_init(int nArgs, char ** arg)
 static void GL_specialUpFunc(const int key, const int x, const int y)
 {
 	globalKeyboard.specialKeyUp(key);
+  
+  if ( globalKeyboard.isPressed(Keyboard::LEFT_CTRL) == false && globalKeyboard.isPressed(Keyboard::RIGHT_CTRL) == false)
+  {
+    globalMouse.ctrlPressed=false;
+  }
 }
 static void GL_specialFunc(const int key, const int x, const int y)
 {
 	globalKeyboard.specialKeyDown(key);
+  
+  if ( globalKeyboard.isPressed(Keyboard::LEFT_CTRL) || globalKeyboard.isPressed(Keyboard::RIGHT_CTRL))
+  {
+    globalMouse.ctrlPressed=true;
+  }
   
   if (activeMenu == MENU_ADVENTUREMODE )
   {
@@ -221,6 +231,12 @@ bool waitingForKeyPress=true;
 
 static void GL_keyboardUpEvent(const unsigned char key, const int x, const int y)
 {
+  
+  // if ( key==Keyboard::LEFT_CTRL || key==Keyboard::RIGHT_CTRL)
+  // {
+    // globalMouse.ctrlPressed=false;
+  // }
+  
 	globalKeyboard.keyUp(key);
 	waitingForKeyPress=true;
 //mainRender.keyUp(key,x,y); waitingForKeyPress=true;
@@ -253,6 +269,11 @@ static void GL_keyboardEvent(const unsigned char key, const int x, const int y)
   else if (activeMenu == MENU_ADVENTUREMODE )
   {
     menuAdventureMode.keyboardEvent(&globalKeyboard);
+  }
+  
+  if ( key==Keyboard::LEFT_CTRL || key==Keyboard::RIGHT_CTRL)
+  {
+    globalMouse.ctrlPressed=true;
   }
   
   // NOTE:
