@@ -47,6 +47,9 @@ class Menu_AdventureMode: public GUI_Interface
       /* Button to view manual */
     GUI_Button buttonManual;
     
+      /* Button to view character sheet - CHR */
+    GUI_Button buttonCharacterSheet;
+    
         //Render very basic manual for now. Future manual should have stuff like bestiary, alchemy instructions, crafting instructions, etc.
     bool manualActive;
     
@@ -54,6 +57,9 @@ class Menu_AdventureMode: public GUI_Interface
     bool conversationActive;
       Character* conversationCharacter;
       
+      // Render character sheet
+    bool characterSheetActive;
+    
       //Render inventory menu
     bool inventoryActive;
       int clickedItemSlot;
@@ -112,6 +118,14 @@ class Menu_AdventureMode: public GUI_Interface
 		buttonManual.setColours(&cNormal,&cHighlight,0);
 		guiManager.add(&buttonManual);
     
+    buttonCharacterSheet.active = true;
+    buttonCharacterSheet.text = "CHR";
+    buttonCharacterSheet.font = font;
+		buttonCharacterSheet.setColours(&cNormal,&cHighlight,0);
+		guiManager.add(&buttonCharacterSheet);
+    
+    characterSheetActive=false;
+    
     manualActive=false;
     conversationActive = false;
       conversationCharacter=0;
@@ -164,8 +178,17 @@ class Menu_AdventureMode: public GUI_Interface
     Renderer::placeColour4a(200,200,250,250,panelX1,panelY1,panelX1+220,panelY1+220);
     linesDrawn = font8x8.drawText("Minimap",panelX1,panelY1,panelX1+220,panelY1+220,true,true);
     
-    Renderer::placeColour4a(150,150,250,250,panelX1,panelY1+220,panelX1+220,panelY1+320);
+    Renderer::placeColour4a(150,150,150,250,panelX1,panelY1+220,panelX1+220,panelY1+320);
     linesDrawn = font8x8.drawText("Action Menu",panelX1,panelY1+220,panelX1+220,panelY1+320,true,true);
+    
+    //BARS: Health, Stamina, Hunger, Thirst, Energy
+    
+    Renderer::placeColour4a(255,0,0,255,panelX1,panelY1+232,panelX1+220,panelY1+234);
+    Renderer::placeColour4a(0,0,255,255,panelX1,panelY1+229,panelX1+220,panelY1+231);
+    Renderer::placeColour4a(128,64,0,255,panelX1,panelY1+226,panelX1+220,panelY1+228);
+    Renderer::placeColour4a(128,128,255,255,panelX1,panelY1+223,panelX1+220,panelY1+225);
+    Renderer::placeColour4a(255,128,0,255,panelX1,panelY1+220,panelX1+220,panelY1+222);
+
   
   
     guiManager.render();
@@ -173,7 +196,7 @@ class Menu_AdventureMode: public GUI_Interface
 		// DATE
 		//Renderer::placeColour4a(150,150,150,255,panelX2-208,panelY2-20,panelX2,panelY2-10);
 		std::string strDate = world.calendar.toString();
-		font8x8.drawText("DATE: "+strDate,panelX1,panelY1+220,panelX1+220,panelY1+230, true, true);
+		font8x8.drawText("DATE: "+strDate,panelX1,panelY1+235,panelX1+220,panelY1+245, true, true);
     
     //Draw hotbar
     int currentX2 = panelX1 + 240;
@@ -198,16 +221,26 @@ class Menu_AdventureMode: public GUI_Interface
       linesDrawn = font8x8.drawText(ADVENTURE_MODE_MANUAL,panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
     }
     
+    //Render character sheet
+    if (characterSheetActive)
+    {
+      Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-20);
+      linesDrawn = font8x8.drawText("CHARACTER SHEET\nSkills:\nFishing: "+DataTools::toString((int)playerCharacter->skillFishing),panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
+    }
+    
     // Render conversation menu
     if (conversationActive && conversationCharacter != 0)
     {
-      Renderer::placeColour4a(30,140,40,250,panelX1+235,panelY1+35,panelX2-15,panelY2-10);
+      Renderer::placeColour4a(30,140,40,250,panelX1+235,panelY1+40,panelX2-15,panelY2-10);
       
-      Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-220);
-      linesDrawn = font8x8.drawText(playerCharacter->getFullName()+" talks to "+conversationCharacter->getFullName()+".\n\n["+playerCharacter->getFullName()+"]: COLONEL, WHAT'S A CONVERSATION SYSTEM DOING HERE?\n["+conversationCharacter->getFullName()+"]: Snake, remember what De Gaulle said \"The graveyards are full of indispensable men.\" Snake, you're all alone and surrounded by bad guys. Try to be careful and avoid getting into a fight whenever you can.\n["+playerCharacter->getFullName()+"]: I FEEL ASLEEP.\n\n(Press ESC to exit)",panelX1+250,panelY1+45,panelX2-25,panelY2-225,false,false);
+      Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-162,panelY2-220);
+      linesDrawn = font8x8.drawText(playerCharacter->getFullName()+" talks to "+conversationCharacter->getFullName()+".\n\n["+playerCharacter->getFullName()+"]: COLONEL, WHAT'S A CONVERSATION SYSTEM DOING HERE?\n["+conversationCharacter->getFullName()+"]: Snake, remember what De Gaulle said \"The graveyards are full of indispensable men.\" Snake, you're all alone and surrounded by bad guys. Try to be careful and avoid getting into a fight whenever you can.\n["+playerCharacter->getFullName()+"]: I FEEL ASLEEP.\n\n(Press ESC to exit)",panelX1+242,panelY1+42,panelX2-164,panelY2-222,false,false);
+      
+      Renderer::placeColour4a(150,150,250,250,panelX2-160,panelY1+40,panelX2-20,panelY2-220);
+      linesDrawn = font8x8.drawText("WE\nMORROWIND\nNOW",panelX2-158,panelY1+42,panelX2-22,panelY2-222,false,false);
       
       Renderer::placeColour4a(150,150,250,250,panelX1+350,panelY2-210,panelX2-130,panelY2-20);
-      linesDrawn = font8x8.drawText("Relationship: Solid",panelX1+355,panelY2-215,panelX2-135,panelY2-25,false,false);
+      linesDrawn = font8x8.drawText("Disposition: Solid",panelX1+355,panelY2-215,panelX2-135,panelY2-25,false,false);
       
       
       Renderer::placeTexture4(panelX1+240, panelY2-160, panelX1+340, panelY2-60, &TEX_PORTRAIT_SNEK, true);
@@ -307,6 +340,8 @@ class Menu_AdventureMode: public GUI_Interface
       
       manualActive=false;
       conversationActive=false;
+      characterSheetActive=false;
+      inventoryActive=false;
 			_keyboard->keyUp(Keyboard::ESCAPE);	
 		}
     
@@ -677,6 +712,14 @@ class Menu_AdventureMode: public GUI_Interface
       manualActive = !manualActive;
 			buttonManual.unclick();
 		}
+    
+      // Toggle the character sheet view.
+		if (buttonCharacterSheet.clicked==true)
+		{
+      std::cout<<"CHARACTER SHEET\n";
+      characterSheetActive = !characterSheetActive;
+			buttonCharacterSheet.unclick();
+		}
       // Toggle the inventory view.
 		if (buttonInventory.clicked==true)
 		{
@@ -729,6 +772,7 @@ class Menu_AdventureMode: public GUI_Interface
 		buttonSneak.setPanel(panelX1+33,panelY1+304,panelX1+65,panelY1+320);
 		buttonInventory.setPanel(panelX1+66,panelY1+304,panelX1+98,panelY1+320);
 		buttonManual.setPanel(panelX1+99,panelY1+304,panelX1+131,panelY1+320);
+		buttonCharacterSheet.setPanel(panelX1+132,panelY1+304,panelX1+164,panelY1+320);
     
 		worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
 

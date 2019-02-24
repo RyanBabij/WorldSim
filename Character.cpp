@@ -74,6 +74,9 @@ Character::Character()
   idleCounter=0;
   
   isSneaking=false;
+  
+  skillFishing=0;
+  skillMarksmanship=0;
 	
 	//enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, OLD_AGE=2 };
 	

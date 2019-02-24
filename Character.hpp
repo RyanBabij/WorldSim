@@ -50,7 +50,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	int health;
 	int hunger;
 	
-		/* Attributes 0-100 */
+		/* Governing attributes 0-100  (Might remove later) */
 	int strength;
 	int agility;
 	int charisma;
@@ -58,6 +58,11 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	int perception;
 	int endurance;
 	int courage;
+  
+    /* Skills */
+    
+  unsigned char skillFishing;
+  unsigned char skillMarksmanship;
 	
     // True if player has flagged this character as favourite.
   bool isFavourite;
