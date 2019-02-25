@@ -18,7 +18,18 @@
 
 #include "Item.hpp"
 
-Item::Item() { }
+Item::Item()
+{
+  count = 0;
+  type = 0;
+  meleeDamage = 0;
+  throwDamage = 0;
+  ammunitionType = 0;
+  
+  owner = 0;
+  
+
+}
 Item::~Item() {}
 
 

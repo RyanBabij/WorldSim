@@ -34,6 +34,8 @@ class Item: public WorldObject
   /* Ammunition might as well be hardcoded since there won't be too many different types. */
   char ammunitionType;
 
+  
+  Character* owner; /* Set to 0 if nobody owns it */
 
   
   //Implementing full global coordinates to make life easier for now.
@@ -89,6 +91,11 @@ class Item: public WorldObject
 	//	int distanceFrom(WorldObject*); /* Alias. */
     
   //int distanceTo(int /* _x */, int /* _y */); /* Same, using raw coordinates */
+  
+  virtual void interact (WorldObject* obj)
+  {
+    std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
+  }
     
 
 	virtual Texture* currentTexture();
@@ -176,6 +183,11 @@ class Item_Axe: public Item
   }
   std::string getName() { return "Axe"; }
   
+  
+  void interact(WorldObject* w)
+  {
+    std::cout<<"Oh lawd he choppin\n";
+  }
   
   Texture* currentTexture()
   {

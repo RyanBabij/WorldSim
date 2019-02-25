@@ -75,6 +75,8 @@ class Menu_AdventureMode: public GUI_Interface
       unsigned long int tileSelectAbsoluteX, tileSelectAbsoluteY;
       LocalTile* localTileSelected; /* LocalTile that the player last selected */
       int selectedItemSlot;
+        bool subItemSelectionActive;
+        Item* useItem; /* Item to use on target */
     
       // CTRL is modifier for inventory menu. Will add 1 of item to inventory, or transfer 1 of item to storage. Or drop 1 of item.
     bool holdingCTRL;
@@ -135,6 +137,8 @@ class Menu_AdventureMode: public GUI_Interface
     tileSelectAbsoluteY=-1;
     localTileSelected=0;
     selectedItemSlot=0;
+    subItemSelectionActive=false;
+    useItem=0;
     
     characterSheetActive=false;
     
@@ -369,6 +373,7 @@ class Menu_AdventureMode: public GUI_Interface
       characterSheetActive=false;
       inventoryActive=false;
       itemSelectionActive=false;
+      worldViewer.showHoveredTile = false;
 			_keyboard->keyUp(Keyboard::ESCAPE);	
 		}
     
@@ -582,14 +587,19 @@ class Menu_AdventureMode: public GUI_Interface
       itemSelectionActive = !itemSelectionActive;
       if ( selectedHotbar >= 0 && selectedHotbar < 10 && inventoryGrid[selectedHotbar][0] != 0 )
       {
-        Item* useItem = inventoryGrid[selectedHotbar][0];
-        std::cout<<"Using: "<<useItem->getName()<<".\n";
-        playerCharacter->useItem(useItem);
+        useItem = inventoryGrid[selectedHotbar][0];
+        
+        // Check here if item is self-use, or requires target.
+        
+        //std::cout<<"Using: "<<useItem->getName()<<".\n";
+        //playerCharacter->useItem(useItem);
       }
       
       worldViewer.showHoveredTile = itemSelectionActive;
+      localTileSelected=0;
+      subItemSelectionActive=false;
+      selectedItemSlot=0;
 
-      
       _keyboard->keyUp(Keyboard::E);
       _keyboard->keyUp(Keyboard::e);
     }
@@ -607,33 +617,65 @@ class Menu_AdventureMode: public GUI_Interface
     
     if (itemSelectionActive)
     {
-      if (_mouse->isLeftClick)
-      {
-        tileSelectAbsoluteX=worldViewer.hoveredAbsoluteX;
-        tileSelectAbsoluteY=worldViewer.hoveredAbsoluteY;
-        
-        if (world.isSafe(tileSelectAbsoluteX,tileSelectAbsoluteY))
-        {
-          localTileSelected=world(tileSelectAbsoluteX,tileSelectAbsoluteY);
-        }
-
-        _mouse->isLeftClick=false;
-      }
       
       // Scroll up and down item select
-      if (_mouse->isWheelDown)
+      if (subItemSelectionActive && _mouse->isWheelDown && localTileSelected != 0)
       {
         ++selectedItemSlot;
         if (selectedItemSlot>=localTileSelected->vObject.size()) {selectedItemSlot=0;}
         _mouse->isWheelDown=false;
       }
-      if (_mouse->isWheelUp)
+      if (subItemSelectionActive && _mouse->isWheelUp && localTileSelected != 0)
       {
         --selectedItemSlot;
         if (selectedItemSlot<0) { selectedItemSlot=localTileSelected->vObject.size()-1; }
         _mouse->isWheelUp=false;
       }
       
+      if (subItemSelectionActive && _mouse->isLeftClick)
+      {
+        
+        if(localTileSelected->vObject(selectedItemSlot) == 0)
+        {
+          subItemSelectionActive=false;
+          itemSelectionActive=false;
+          _mouse->isLeftClick=false;
+          worldViewer.showHoveredTile = false;
+          localTileSelected=0;
+          selectedItemSlot=0;
+          return false;
+        }
+        if ( useItem== 0)
+        {
+          std::cout<<"You punch the "<<localTileSelected->vObject(selectedItemSlot)->getName()<<".\n";
+        }
+        else
+        {
+          std::cout<<"You use the "<<useItem->getName()<<" on the "<<localTileSelected->vObject(selectedItemSlot)->getName()<<".\n";
+          useItem->interact(localTileSelected->vObject(selectedItemSlot));
+        }
+
+        
+        subItemSelectionActive=false;
+        itemSelectionActive=false;
+        worldViewer.showHoveredTile = false;
+        localTileSelected=0;
+        selectedItemSlot=0;
+        _mouse->isLeftClick=false;
+      }
+      if (subItemSelectionActive==false && _mouse->isLeftClick)
+      {
+        tileSelectAbsoluteX=worldViewer.hoveredAbsoluteX;
+        tileSelectAbsoluteY=worldViewer.hoveredAbsoluteY;
+        
+        if (world.isSafe(tileSelectAbsoluteX,tileSelectAbsoluteY) && world(tileSelectAbsoluteX,tileSelectAbsoluteY)->vObject.size() != 0)
+        {
+          localTileSelected=world(tileSelectAbsoluteX,tileSelectAbsoluteY);
+          subItemSelectionActive=true;
+        }
+        _mouse->isLeftClick=false;
+      }
+
     }
     
     // Player can use CTRL+scroll to scroll the hotbar.

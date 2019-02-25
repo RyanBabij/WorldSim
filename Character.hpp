@@ -120,13 +120,11 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   
   /* ITEM FUNCTIONS */
   
+    // For consumables or crafting/alchemy.
   void useItem(Item* item)
   {
   }
-  void useItem(Item_Axe* _axe, WorldObject_Tree* _tree)
-  {
-  }
-	
+
 	
 		/* SOCIAL FUNCTIONS
 			marry
