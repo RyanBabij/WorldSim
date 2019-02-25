@@ -69,6 +69,9 @@ class Menu_AdventureMode: public GUI_Interface
       
       Item * inventoryGrid [10][10];
       int selectedHotbar;
+      
+      //Render item selection
+    bool itemSelectionActive;
     
       // CTRL is modifier for inventory menu. Will add 1 of item to inventory, or transfer 1 of item to storage. Or drop 1 of item.
     bool holdingCTRL;
@@ -213,6 +216,13 @@ class Menu_AdventureMode: public GUI_Interface
       currentX2+=34;
     }
     
+    // Render item selection
+    if (itemSelectionActive)
+    {
+      //std::cout<<"Selecting tile: "<<worldViewer.hoveredXTileLocal<<", "<<worldViewer.hoveredYTileLocal<<".\n";
+      //Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-20);
+      //linesDrawn = font8x8.drawText(ADVENTURE_MODE_MANUAL,panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
+    }
     
     // Render manual page
     if (manualActive)
@@ -342,6 +352,7 @@ class Menu_AdventureMode: public GUI_Interface
       conversationActive=false;
       characterSheetActive=false;
       inventoryActive=false;
+      itemSelectionActive=false;
 			_keyboard->keyUp(Keyboard::ESCAPE);	
 		}
     
@@ -541,6 +552,24 @@ class Menu_AdventureMode: public GUI_Interface
       _keyboard->keyUp(Keyboard::i);
     }
 
+      // E = Use item. Currently context-sensitive. In future there might be a menu of choices.
+    if(_keyboard->isPressed(Keyboard::E) || _keyboard->isPressed(Keyboard::e))
+    {
+      itemSelectionActive = !itemSelectionActive;
+      if ( selectedHotbar >= 0 && selectedHotbar < 10 && inventoryGrid[selectedHotbar][0] != 0 )
+      {
+        Item* useItem = inventoryGrid[selectedHotbar][0];
+        std::cout<<"Using: "<<useItem->getName()<<".\n";
+        playerCharacter->useItem(useItem);
+      }
+      
+      worldViewer.showHoveredTile = itemSelectionActive;
+
+      
+      _keyboard->keyUp(Keyboard::E);
+      _keyboard->keyUp(Keyboard::e);
+    }
+    
 		guiManager.keyboardEvent(_keyboard);
 		worldViewer.keyboardEvent(_keyboard);
 		return false;

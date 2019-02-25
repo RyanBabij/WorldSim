@@ -105,7 +105,7 @@ void GL_init(int nArgs, char ** arg)
 	glEnable(GL_TEXTURE_2D);
 	
 	glBlendFunc (GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA); /* Transparency function */
-	glShadeModel(GL_FLAT); /* Stops shit from blurring. Alternative is GL_SMOOTH. */
+	glShadeModel(GL_FLAT); /* GL_FLAT or GL_SMOOTH Stops shit from blurring. Alternative is GL_SMOOTH. */
 	
 	/* I don't think this actually does anything. */
 	glDisable(GL_ALPHA_TEST);

@@ -152,6 +152,9 @@ const std::string PATH_TEX_ITEM_FISHROD = "Textures/Item/Fishrod.png";
 Texture TEX_ITEM_SHOVEL;
 const std::string PATH_TEX_ITEM_SHOVEL = "Textures/Item/Shovel.png";
 
+Texture TEX_ITEM_AXE;
+const std::string PATH_TEX_ITEM_AXE = "Textures/Item/Axe.png";
+
   // LOCAL MAP
   
 Texture TEX_LOCAL_FLOOR;
@@ -264,6 +267,7 @@ void loadTextures()
   loadTextureVerbose(PATH_TEX_ITEM_LONGBOW,&TEX_ITEM_LONGBOW);
   loadTextureVerbose(PATH_TEX_ITEM_FISHROD,&TEX_ITEM_FISHROD);
   loadTextureVerbose(PATH_TEX_ITEM_SHOVEL,&TEX_ITEM_SHOVEL);
+  loadTextureVerbose(PATH_TEX_ITEM_AXE,&TEX_ITEM_AXE);
   
 
   Png pNYA;

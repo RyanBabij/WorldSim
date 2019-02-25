@@ -66,6 +66,24 @@ class Item: public WorldObject
 	virtual std::string getName();
 	virtual std::string getExtendedInfo();
 	
+  
+  /* ITEM INTERACTIONS
+    List of stuff the item can do.
+  */
+  
+    // ATTACK
+    // Anything is a weapon if you're desperate enough.
+    int slashDamage; /* Causes direct damage. */
+    int bluntDamage; /* Bypasses armour values and causes limb damage. */
+    int pierceDamage; /* Increases critical chance (piercing vital organs), but limited by armour. */
+    float throwMultiplier; /* How well this weapon can be thrown. Most weapons are less effective when thrown. */
+  
+  // Fishing
+  // ChopTree
+  
+    //Cost is base action points required. -1 means the action is not possible. 0 means no cost.
+  int chopTreeCost;
+  int fishingCost;
 	
 	//int distanceTo(WorldObject*); /* Chebyshev (this one is distances where diagonal movement is allowed.) */
 	//	int distanceFrom(WorldObject*); /* Alias. */
@@ -144,6 +162,24 @@ class Item_Shovel: public Item
   Texture* currentTexture()
   {
     return &TEX_ITEM_SHOVEL;
+  }
+
+};
+
+class Item_Axe: public Item
+{
+  public:
+  
+  Item_Axe()
+  {
+    
+  }
+  std::string getName() { return "Axe"; }
+  
+  
+  Texture* currentTexture()
+  {
+    return &TEX_ITEM_AXE;
   }
 
 };

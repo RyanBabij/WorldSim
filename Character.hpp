@@ -14,8 +14,11 @@
 #include <Container/Table/TableInterface.hpp>
 
 #include "WorldObject.hpp"
+#include "WorldObject_Tree.hpp"
+#include "Item.hpp"
 
 class Tribe;
+class Item;
 
 class Character_Knowledge;
 class World_Local;
@@ -113,6 +116,16 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	void incrementTicks(int = 1);
 	
 	Texture* currentTexture ();
+  
+  
+  /* ITEM FUNCTIONS */
+  
+  void useItem(Item* item)
+  {
+  }
+  void useItem(Item_Axe* _axe, WorldObject_Tree* _tree)
+  {
+  }
 	
 	
 		/* SOCIAL FUNCTIONS

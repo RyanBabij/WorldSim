@@ -82,13 +82,10 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   // Vector of all tile coordinates.
 	Vector <HasXY*> vAllTiles;
 
-  
   // Vector of all Creatures on this map
   Vector <Creature*> vCreature;
-  
   //Vector of all Characters on this map
   Vector <Character*> vCharacter;
-  
   //Vector of all Items on this map
   Vector <Item*> vItem;
 

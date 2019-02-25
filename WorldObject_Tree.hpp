@@ -1,10 +1,11 @@
 #pragma once
-#ifndef GUILD_WORLDOBJECT_TREE_HPP
-#define GUILD_WORLDOBJECT_TREE_HPP
+#ifndef WORLDSIM_WORLDOBJECT_TREE_HPP
+#define WORLDSIM_WORLDOBJECT_TREE_HPP
 
 /* WorldObject.hpp
-	#include"WorldObject.hpp"
-	<DOCUMENTATION>
+	#include"WorldObject_Tree.hpp"
+
+  Trees can be harvested for wood. They are also an obstacle for movement and LOS.
 */
 
 class WorldObject_Tree: public WorldObject

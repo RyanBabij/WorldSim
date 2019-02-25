@@ -174,6 +174,11 @@ bool World_Local::generate()
           auto itm = new Item_Shovel;
           putObject(itm,_x,_y);
           vItem.push(itm);
+          auto itm5 = new Item_Axe;
+          putObject(itm5,_x,_y);
+          vItem.push(itm5);
+          
+          
         }
         
         else if ( baseBiome == MOUNTAIN )

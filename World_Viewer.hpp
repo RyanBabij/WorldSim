@@ -143,6 +143,9 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 	
 		/* The current tile that the mouse is hovering over. Set to -1 if the mouse is not hovering over a tile. */
 	int hoveredXTile, hoveredYTile;
+    int hoveredXTileLocal, hoveredYTileLocal;
+    int hoveredAbsoluteX, hoveredAbsoluteY;
+    bool showHoveredTile;
 	
 	int tilesToSkip;
 	
@@ -184,6 +187,12 @@ WorldViewer()
   
   hoveredXTile=0;
   hoveredYTile=0;
+  hoveredXTileLocal=0;
+  hoveredYTileLocal=0;
+  hoveredAbsoluteX=0;
+  hoveredAbsoluteY=0;
+  
+  showHoveredTile=false;
   
   tilesToSkip=0;
   
@@ -902,6 +911,7 @@ void switchTarget(World_Local* _worldLocal)
 					//if (tileSize > 4 && localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
           if ( localMap != 0)
 					{
+
 						
 						float currentSubY = currentY;
 						float nextSubY = currentY + pixelsPerLocalTile;
@@ -927,13 +937,15 @@ void switchTarget(World_Local* _worldLocal)
 								float nextPixel = currentX+pixelsPerLocalTile;
 								for (int localXTile = 0; localXTile<LOCAL_MAP_SIZE;++localXTile)
 								{
+                  
+
 									if ( nextPixel>=mainViewX1 && currentPixel <= mainViewX2 && floor(currentPixel) != floor(nextPixel) )
 									{
-                    
+
                     if ( subterraneanMode )
                     {
                       LocalTile* localTile = &localMap->aSubterranean(localXTile,localYTile);
-                      
+                        // There is deliberate overlap of 1 pixel to prevent artifacts when zooming out.
                       Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
                     }
                     else
@@ -1000,9 +1012,22 @@ void switchTarget(World_Local* _worldLocal)
                     }
                     
                     
-    
-										
-
+                    // UPDATE LOCAL TILE HOVERED AND ABSOLUTE COORDS
+                    // ALSO OPTIONALLY RENDER A SELECTION TEXTURE
+                    if ( lastMouseX > currentPixel && lastMouseX < ceil(nextPixel) && lastMouseY > currentSubY && lastMouseY < ceil(nextSubY) )
+                    {
+                      hoveredXTileLocal = localXTile;
+                      hoveredAbsoluteX = hoveredXTile * LOCAL_MAP_SIZE + localXTile;
+                      hoveredYTileLocal = localYTile;
+                      hoveredAbsoluteY = hoveredYTile * LOCAL_MAP_SIZE + localYTile;
+                      
+                      if ( showHoveredTile )
+                      {
+                        //The lines get overwritten if you don't -1. Do not add -1 anywhere else because it causes artifacts.
+                        Renderer::placeBorder4(255,0,0,currentPixel, currentSubY, ceil(nextPixel)-1, ceil(nextSubY)-1);
+                        Renderer::setTextureMode();
+                      }
+                    }
 									}
 									else
 									{
