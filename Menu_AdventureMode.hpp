@@ -72,6 +72,9 @@ class Menu_AdventureMode: public GUI_Interface
       
       //Render item selection
     bool itemSelectionActive;
+      unsigned long int tileSelectAbsoluteX, tileSelectAbsoluteY;
+      LocalTile* localTileSelected; /* LocalTile that the player last selected */
+      int selectedItemSlot;
     
       // CTRL is modifier for inventory menu. Will add 1 of item to inventory, or transfer 1 of item to storage. Or drop 1 of item.
     bool holdingCTRL;
@@ -126,6 +129,12 @@ class Menu_AdventureMode: public GUI_Interface
     buttonCharacterSheet.font = font;
 		buttonCharacterSheet.setColours(&cNormal,&cHighlight,0);
 		guiManager.add(&buttonCharacterSheet);
+    
+    itemSelectionActive=false;
+    tileSelectAbsoluteX=-1;
+    tileSelectAbsoluteY=-1;
+    localTileSelected=0;
+    selectedItemSlot=0;
     
     characterSheetActive=false;
     
@@ -217,8 +226,15 @@ class Menu_AdventureMode: public GUI_Interface
     }
     
     // Render item selection
-    if (itemSelectionActive)
+    if (itemSelectionActive && localTileSelected != 0)
     {
+      //std::cout<<"Items:\n";
+      Renderer::placeColour4a(120,120,120,255,panelX1+250,panelY2,panelX1+600,(panelY2)-(localTileSelected->vObject.size()*10));
+      Renderer::placeColour4a(180,180,180,255,panelX1+250,panelY2-(selectedItemSlot*10),panelX1+600,panelY2-((selectedItemSlot+1)*10));
+      for (int i=0;i<localTileSelected->vObject.size();++i)
+      {
+        font8x8.drawText(localTileSelected->vObject(i)->getName(),panelX1+250,(panelY2)-(i*10),panelX1+600,(panelY2)-(i*10)-10,false,true);
+      }
       //std::cout<<"Selecting tile: "<<worldViewer.hoveredXTileLocal<<", "<<worldViewer.hoveredYTileLocal<<".\n";
       //Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-20);
       //linesDrawn = font8x8.drawText(ADVENTURE_MODE_MANUAL,panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
@@ -364,7 +380,7 @@ class Menu_AdventureMode: public GUI_Interface
       activeMenu = MENU_WORLDSIMULATOR;
 		}
     
-    if(_keyboard->isPressed(Keyboard::RIGHT))
+    if(_keyboard->isPressed(Keyboard::RIGHT) || _keyboard->isPressed(Keyboard::D) || _keyboard->isPressed(Keyboard::d))
     {
       World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
       if ( wl != 0 )
@@ -380,8 +396,10 @@ class Menu_AdventureMode: public GUI_Interface
       }
       
       _keyboard->keyUp(Keyboard::RIGHT);
+      _keyboard->keyUp(Keyboard::D);
+      _keyboard->keyUp(Keyboard::d);
     }
-    if(_keyboard->isPressed(Keyboard::LEFT))
+    if(_keyboard->isPressed(Keyboard::LEFT) || _keyboard->isPressed(Keyboard::A) || _keyboard->isPressed(Keyboard::a))
     {
       World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
       if ( wl != 0 )
@@ -396,8 +414,10 @@ class Menu_AdventureMode: public GUI_Interface
       }
       
       _keyboard->keyUp(Keyboard::LEFT);
+      _keyboard->keyUp(Keyboard::A);
+      _keyboard->keyUp(Keyboard::a);
     }
-    if(_keyboard->isPressed(Keyboard::UP))
+    if(_keyboard->isPressed(Keyboard::UP) || _keyboard->isPressed(Keyboard::W) || _keyboard->isPressed(Keyboard::w))
     {
       World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
       if ( wl != 0 )
@@ -411,8 +431,10 @@ class Menu_AdventureMode: public GUI_Interface
         else { world.incrementTicksBacklog(1); }
       }
       _keyboard->keyUp(Keyboard::UP);
+      _keyboard->keyUp(Keyboard::W);
+      _keyboard->keyUp(Keyboard::w);
     }
-    if(_keyboard->isPressed(Keyboard::DOWN))
+    if(_keyboard->isPressed(Keyboard::DOWN) || _keyboard->isPressed(Keyboard::S) || _keyboard->isPressed(Keyboard::s))
     {
       World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
       if ( wl != 0 )
@@ -426,6 +448,8 @@ class Menu_AdventureMode: public GUI_Interface
         else { world.incrementTicksBacklog(1); }
       }
       _keyboard->keyUp(Keyboard::DOWN);
+      _keyboard->keyUp(Keyboard::S);
+      _keyboard->keyUp(Keyboard::s);
     }
       // PERIOD = WAIT
     if(_keyboard->isPressed(Keyboard::PERIOD))
@@ -581,6 +605,37 @@ class Menu_AdventureMode: public GUI_Interface
     mouseX = _mouse->x;
     mouseY = _mouse->y;
     
+    if (itemSelectionActive)
+    {
+      if (_mouse->isLeftClick)
+      {
+        tileSelectAbsoluteX=worldViewer.hoveredAbsoluteX;
+        tileSelectAbsoluteY=worldViewer.hoveredAbsoluteY;
+        
+        if (world.isSafe(tileSelectAbsoluteX,tileSelectAbsoluteY))
+        {
+          localTileSelected=world(tileSelectAbsoluteX,tileSelectAbsoluteY);
+        }
+
+        _mouse->isLeftClick=false;
+      }
+      
+      // Scroll up and down item select
+      if (_mouse->isWheelDown)
+      {
+        ++selectedItemSlot;
+        if (selectedItemSlot>=localTileSelected->vObject.size()) {selectedItemSlot=0;}
+        _mouse->isWheelDown=false;
+      }
+      if (_mouse->isWheelUp)
+      {
+        --selectedItemSlot;
+        if (selectedItemSlot<0) { selectedItemSlot=localTileSelected->vObject.size()-1; }
+        _mouse->isWheelUp=false;
+      }
+      
+    }
+    
     // Player can use CTRL+scroll to scroll the hotbar.
 		if(_mouse->isWheelDown && _mouse->ctrlPressed)
 		{
@@ -594,6 +649,8 @@ class Menu_AdventureMode: public GUI_Interface
       if (selectedHotbar<0) {selectedHotbar=9;}
 			_mouse->isWheelUp=false;
 		}
+    
+
     
     if (inventoryActive)
     {

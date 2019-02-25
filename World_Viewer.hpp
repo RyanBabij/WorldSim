@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef GUILD_WORLD_VIEWER_HPP
-#define GUILD_WORLD_VIEWER_HPP
+#ifndef WORLDSIM_WORLD_VIEWER_HPP
+#define WORLDSIM_WORLD_VIEWER_HPP
 
 #include <Device/Display/DisplayInterface.hpp>
 #include <Device/Mouse/MouseInterface.hpp>
@@ -11,9 +11,20 @@
 
 /* #include "World_Viewer.hpp"
 
-  Code for rendering the player's view of the world.
+  Code for rendering the player's view of the world. It is able to render the global
+  (world map) view, and additionally any local maps which have been loaded in.
   
-	I have a dream that one day I will be able to understand this code.
+  To do this it makes use of doubles. The main number tracks the global rendering
+  coordinates, and the mantissa tracks the local tile rendering coordinates.
+  
+  The World Viewer also takes mouse and keyboard input to control panning and zooming.
+  
+  It provides coordinates (both local and absolute) for the tile the mouse
+  is hovering over.
+  
+  It is quite messy and uses only basic OpenGL techniques. In future it could probably
+  be optimised to render much faster, for example using texture atlases, mipmapping
+  vertex buffering and on-demand rendering.
 	
 */
 
@@ -44,7 +55,7 @@ class RainDrop
 
 class RainManager
 {
-  public:
+  private:
   
   RandomNonStatic rand;
   
@@ -56,6 +67,8 @@ class RainManager
   int y1, y2;
   int MAX_RAIN;
   int RAIN_PER_FRAME;
+  
+  public:
   
   RainManager() { }
   
@@ -113,6 +126,20 @@ class RainManager
 
 class WorldViewer: public DisplayInterface, public MouseInterface
 {
+  private:
+  
+	/* Rendering coordinates. */
+	int mainViewX1, mainViewX2, mainViewY1, mainViewY2;
+	int mainViewNX, mainViewNY;
+  
+  //RAIN
+  RainManager rainManager;
+  double localTileMantissa;
+	
+		// Temp: Local tile to render.
+	int centerLocalX, centerLocalY;
+  double pixelsPerLocalTile;
+  
 	public:
 	
 	bool active;
@@ -124,7 +151,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
       This must be a double due to the required level of precision.
     */
   double centerTileX, centerTileY;
-  double localTileMantissa;
+
 	
 		/* Store the last position of the mouse, so we can figure out which tile the mouse is on. */
 	short int lastMouseX, lastMouseY;
@@ -132,9 +159,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 	World* world;
 	World_Local* worldLocal;
 	
-	/* Rendering coordinates. */
-	int mainViewX1, mainViewX2, mainViewY1, mainViewY2;
-	int mainViewNX, mainViewNY;
+
 	
 	bool panning;
 	float panX, panY; /* Stores the last mouse position when panning. Needs to be a double. */
@@ -144,7 +169,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 		/* The current tile that the mouse is hovering over. Set to -1 if the mouse is not hovering over a tile. */
 	int hoveredXTile, hoveredYTile;
     int hoveredXTileLocal, hoveredYTileLocal;
-    int hoveredAbsoluteX, hoveredAbsoluteY;
+    unsigned long int hoveredAbsoluteX, hoveredAbsoluteY;
     bool showHoveredTile;
 	
 	int tilesToSkip;
@@ -152,10 +177,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 	bool territoryView;
   bool tilesetMode;
   bool subterraneanMode;
-	
-		// Temp: Local tile to render.
-	int centerLocalX, centerLocalY;
-  double pixelsPerLocalTile;
+
 	
     // If true, game will randomly scroll around.
     // In the future, the title screen will probably be scrolling around a map.
@@ -163,9 +185,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
   double demoScroll;
   
   
-  //RAIN
-  
-  RainManager rainManager;
+
   
 WorldViewer()
 {
