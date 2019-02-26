@@ -1,12 +1,13 @@
 #pragma once
-#ifndef GUILD_WORLDOBJECT_TREE_CPP
-#define GUILD_WORLDOBJECT_TREE_CPP
+#ifndef WORLDSIM_WORLDOBJECT_TREE_CPP
+#define WORLDSIM_WORLDOBJECT_TREE_CPP
 
 #include"WorldObject_Tree.hpp"
 
-/* WorldObject.cpp
-	#include"WorldObject.cpp"
-	<DOCUMENTATION>
+/* WorldObject_Tree.cpp
+	#include"WorldObject_Tree.cpp"
+
+  Implementation of WorldObject_Tree.hpp.
 */
 
 WorldObject_Tree::WorldObject_Tree()
@@ -19,6 +20,8 @@ WorldObject_Tree::WorldObject_Tree()
   
   blocksView = true;
   blocksMovement = true;
+  
+  chopAmount = 100;
 }
 
 std::string WorldObject_Tree::getName()

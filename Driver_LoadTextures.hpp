@@ -155,6 +155,16 @@ const std::string PATH_TEX_ITEM_SHOVEL = "Textures/Item/Shovel.png";
 Texture TEX_ITEM_AXE;
 const std::string PATH_TEX_ITEM_AXE = "Textures/Item/Axe.png";
 
+  // FLORA
+  
+Texture TEX_FLORA_ADDERTONGUE;
+const std::string PATH_TEX_FLORA_ADDERTONGUE = "Textures/Flora/AdderTongue-32.png";
+
+  // OBJECTS
+
+Texture TEX_OBJECT_LOG;
+const std::string PATH_TEX_OBJECT_LOG = "Textures/Object/Log.png";
+
   // LOCAL MAP
   
 Texture TEX_LOCAL_FLOOR;
@@ -268,6 +278,12 @@ void loadTextures()
   loadTextureVerbose(PATH_TEX_ITEM_FISHROD,&TEX_ITEM_FISHROD);
   loadTextureVerbose(PATH_TEX_ITEM_SHOVEL,&TEX_ITEM_SHOVEL);
   loadTextureVerbose(PATH_TEX_ITEM_AXE,&TEX_ITEM_AXE);
+  
+  //FLORA
+  loadTextureVerbose(PATH_TEX_FLORA_ADDERTONGUE,&TEX_FLORA_ADDERTONGUE);
+  
+  //OBJECTS
+  loadTextureVerbose(PATH_TEX_OBJECT_LOG,&TEX_OBJECT_LOG);
   
 
   Png pNYA;

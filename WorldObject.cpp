@@ -21,6 +21,8 @@ WorldObject::WorldObject()
   blocksMovement=false;
   
   worldX=-1; worldY=-1;
+  
+  chopAmount = -1;
 }
 
 std::string WorldObject::getName()

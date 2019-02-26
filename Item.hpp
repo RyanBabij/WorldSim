@@ -18,6 +18,8 @@ class Ammo
   
 };
 
+class LocalTile;
+
 
 
 class Item: public WorldObject
@@ -36,7 +38,7 @@ class Item: public WorldObject
 
   
   Character* owner; /* Set to 0 if nobody owns it */
-
+  //Character* creator; /* Character who created this item */
   
   //Implementing full global coordinates to make life easier for now.
   // This datatype should be able to hold coordinates for any reasonably-sized world.
@@ -92,9 +94,29 @@ class Item: public WorldObject
     
   //int distanceTo(int /* _x */, int /* _y */); /* Same, using raw coordinates */
   
+  
+    // OBJECT INTERACTION
+    // In future these functions might need to be expanded to return multiple possibilities, for example
+    // "Stab target" and "Slash target". Or "Chop down door" and "Pry open door".
   virtual void interact (WorldObject* obj)
   {
     std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
+  }
+
+    // HOW LONG THIS TASK WILL TAKE. -1 MEANS YOU CAN'T DO IT. 0 MEANS NO TIME COST.
+  virtual int interactTime(WorldObject* _w)
+  {
+    return 0;
+  }
+    // Same but for LocalTile object. Used for interaction with terrain.
+  virtual int interactTime(LocalTile* _w)
+  {
+    return 0;
+  }
+  
+  virtual std::string getInteractName(WorldObject* _w)
+  {
+    return "Interact with "+_w->getName();
   }
     
 
@@ -187,6 +209,30 @@ class Item_Axe: public Item
   void interact(WorldObject* w)
   {
     std::cout<<"Oh lawd he choppin\n";
+    
+    if ( w->chopAmount > -1 )
+    {
+      std::cout<<"Chop is legal\n";
+    }
+    else
+    {
+      std::cout<<"You can't chop this\n";
+    }
+  }
+
+  
+  std::string getInteractName(WorldObject* _w)
+  {
+    return "Chop "+_w->getName();
+  }
+  
+  virtual int interactTime(WorldObject* _w)
+  {
+    if (_w->chopAmount > -1 )
+    {
+      return 5;
+    }
+    return -1;
   }
   
   Texture* currentTexture()

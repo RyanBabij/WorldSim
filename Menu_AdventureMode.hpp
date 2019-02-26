@@ -235,9 +235,25 @@ class Menu_AdventureMode: public GUI_Interface
       //std::cout<<"Items:\n";
       Renderer::placeColour4a(120,120,120,255,panelX1+250,panelY2,panelX1+600,(panelY2)-(localTileSelected->vObject.size()*10));
       Renderer::placeColour4a(180,180,180,255,panelX1+250,panelY2-(selectedItemSlot*10),panelX1+600,panelY2-((selectedItemSlot+1)*10));
-      for (int i=0;i<localTileSelected->vObject.size();++i)
+      
+// localTileSelected->vObject(selectedItemSlot)->getName()<<".    
+// useItem
+      if ( useItem != 0 )
       {
-        font8x8.drawText(localTileSelected->vObject(i)->getName(),panelX1+250,(panelY2)-(i*10),panelX1+600,(panelY2)-(i*10)-10,false,true);
+        for (int i=0;i<localTileSelected->vObject.size();++i)
+        {
+          //font8x8.drawText(localTileSelected->vObject(i)->getName(),panelX1+250,(panelY2)-(i*10),panelX1+600,(panelY2)-(i*10)-10,false,true);
+          font8x8.drawText(useItem->getInteractName(localTileSelected->vObject(i)),panelX1+250,(panelY2)-(i*10),panelX1+500,(panelY2)-(i*10)-10,false,true);
+          font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vObject(i)))+" sec)",panelX1+500,(panelY2)-(i*10),panelX1+600,(panelY2)-(i*10)-10,false,true);
+        }
+      }
+      else
+      {
+        for (int i=0;i<localTileSelected->vObject.size();++i)
+        {
+          font8x8.drawText("PUNCH " + localTileSelected->vObject(i)->getName(),panelX1+250,(panelY2)-(i*10),panelX1+600,(panelY2)-(i*10)-10,false,true);
+          //font8x8.drawText(useItem->getInteractName(localTileSelected->vObject(i)),panelX1+250,(panelY2)-(i*10),panelX1+600,(panelY2)-(i*10)-10,false,true);
+        }
       }
       //std::cout<<"Selecting tile: "<<worldViewer.hoveredXTileLocal<<", "<<worldViewer.hoveredYTileLocal<<".\n";
       //Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-20);

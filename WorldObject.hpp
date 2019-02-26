@@ -40,6 +40,9 @@ class WorldObject: public HasTexture
   
   /* True if characters and creatures cannot walk into this tile. */
   bool blocksMovement;
+  
+    // INTERACTIONS
+  int chopAmount; /* -1 if chopping is not possible. */
 	
 	WorldObject();
 	virtual ~WorldObject() {}
@@ -56,6 +59,45 @@ class WorldObject: public HasTexture
     
 
 	virtual Texture* currentTexture();
+};
+
+
+
+class WorldObject_Log: public WorldObject
+{
+	public:
+  
+  int growth;
+	
+  WorldObject_Log()
+  {
+    x=0; y=0;
+    weight=0;
+    bulk=0;
+    
+    growth=0;
+    
+    blocksView = false;
+    blocksMovement = false;
+  }
+	virtual ~WorldObject_Log() {}
+  
+  
+	virtual std::string getName()
+  {
+    return "Log";
+  }
+
+  Texture* currentTexture()
+  {
+    if ( growth==0 )
+    {
+      return &TEX_WORLD_TERRAIN_FOREST_SAPLING;
+    }
+    return &TEX_WORLD_TERRAIN_FOREST_TREE;
+  }
+
+  
 };
 
 #endif
