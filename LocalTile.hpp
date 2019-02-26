@@ -58,6 +58,8 @@ class LocalTile: public HasTexture
   bool hasViewBlocker();
     // Returns true is this tile has an object that can block movement.
   bool hasMovementBlocker();
+  
+  std::string getName();
 
 	
 };

@@ -16,6 +16,7 @@
 class WorldObject: public HasTexture
 {
 	public:
+  
 	int x, y;
   
   //Implementing full global coordinates to make life easier for now.
@@ -63,41 +64,5 @@ class WorldObject: public HasTexture
 
 
 
-class WorldObject_Log: public WorldObject
-{
-	public:
-  
-  int growth;
-	
-  WorldObject_Log()
-  {
-    x=0; y=0;
-    weight=0;
-    bulk=0;
-    
-    growth=0;
-    
-    blocksView = false;
-    blocksMovement = false;
-  }
-	virtual ~WorldObject_Log() {}
-  
-  
-	virtual std::string getName()
-  {
-    return "Log";
-  }
-
-  Texture* currentTexture()
-  {
-    if ( growth==0 )
-    {
-      return &TEX_WORLD_TERRAIN_FOREST_SAPLING;
-    }
-    return &TEX_WORLD_TERRAIN_FOREST_TREE;
-  }
-
-  
-};
 
 #endif

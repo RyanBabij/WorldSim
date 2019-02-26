@@ -26,12 +26,20 @@ WorldObject_Tree::WorldObject_Tree()
 
 std::string WorldObject_Tree::getName()
 {
+  if ( chopAmount == 0 )
+  {
+    return "Tree stump";
+  }
 	return "Tree";
 }
 
 
 Texture* WorldObject_Tree::currentTexture()
 {
+  if (chopAmount==0)
+  { return &TEX_OBJECT_STUMP;
+  }
+  
   if ( growth==0 )
   {
     return &TEX_WORLD_TERRAIN_FOREST_SAPLING;

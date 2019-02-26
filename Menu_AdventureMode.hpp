@@ -74,7 +74,7 @@ class Menu_AdventureMode: public GUI_Interface
     bool itemSelectionActive;
       unsigned long int tileSelectAbsoluteX, tileSelectAbsoluteY;
       LocalTile* localTileSelected; /* LocalTile that the player last selected */
-      int selectedItemSlot;
+      int selectedItemSlot; /* 0 = interact with terrain */
         bool subItemSelectionActive;
         Item* useItem; /* Item to use on target */
     
@@ -232,32 +232,40 @@ class Menu_AdventureMode: public GUI_Interface
     // Render item selection
     if (itemSelectionActive && localTileSelected != 0)
     {
-      //std::cout<<"Items:\n";
-      Renderer::placeColour4a(120,120,120,255,panelX1+250,panelY2,panelX1+600,(panelY2)-(localTileSelected->vObject.size()*10));
+      // Render background and selection panels.
+      Renderer::placeColour4a(120,120,120,255,panelX1+250,panelY2,panelX1+600,(panelY2)-((localTileSelected->vObject.size()+1)*10));
       Renderer::placeColour4a(180,180,180,255,panelX1+250,panelY2-(selectedItemSlot*10),panelX1+600,panelY2-((selectedItemSlot+1)*10));
       
-// localTileSelected->vObject(selectedItemSlot)->getName()<<".    
-// useItem
+
       if ( useItem != 0 )
       {
+        int j=0;
+        //font8x8.drawText("Do nothing",panelX1+250,(panelY2)-(j*10),panelX1+600,(panelY2)-(j*10)-10,false,true);
+        //++j;
+        font8x8.drawText(useItem->getInteractName(localTileSelected),panelX1+250,(panelY2)-(j*10),panelX1+600,(panelY2)-(j*10)-10,false,true);
+        ++j;
         for (int i=0;i<localTileSelected->vObject.size();++i)
         {
           //font8x8.drawText(localTileSelected->vObject(i)->getName(),panelX1+250,(panelY2)-(i*10),panelX1+600,(panelY2)-(i*10)-10,false,true);
-          font8x8.drawText(useItem->getInteractName(localTileSelected->vObject(i)),panelX1+250,(panelY2)-(i*10),panelX1+500,(panelY2)-(i*10)-10,false,true);
-          font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vObject(i)))+" sec)",panelX1+500,(panelY2)-(i*10),panelX1+600,(panelY2)-(i*10)-10,false,true);
+          font8x8.drawText(useItem->getInteractName(localTileSelected->vObject(i)),panelX1+250,(panelY2)-((i+j)*10),panelX1+500,(panelY2)-((i+j)*10)-10,false,true);
+          font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vObject(i)))+" sec)",panelX1+500,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
         }
+
       }
       else
       {
+        int j=0;
+        //font8x8.drawText("Do nothing",panelX1+250,(panelY2)-(j*10),panelX1+600,(panelY2)-(j*10)-10,false,true);
+        //++j;
+        font8x8.drawText("PUNCH " + localTileSelected->getName(),panelX1+250,(panelY2)-(j*10),panelX1+600,(panelY2)-(j*10)-10,false,true);
+        ++j;
         for (int i=0;i<localTileSelected->vObject.size();++i)
         {
-          font8x8.drawText("PUNCH " + localTileSelected->vObject(i)->getName(),panelX1+250,(panelY2)-(i*10),panelX1+600,(panelY2)-(i*10)-10,false,true);
+          font8x8.drawText("PUNCH " + localTileSelected->vObject(i)->getName(),panelX1+250,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
           //font8x8.drawText(useItem->getInteractName(localTileSelected->vObject(i)),panelX1+250,(panelY2)-(i*10),panelX1+600,(panelY2)-(i*10)-10,false,true);
         }
       }
-      //std::cout<<"Selecting tile: "<<worldViewer.hoveredXTileLocal<<", "<<worldViewer.hoveredYTileLocal<<".\n";
-      //Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-20);
-      //linesDrawn = font8x8.drawText(ADVENTURE_MODE_MANUAL,panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
+
     }
     
     // Render manual page
@@ -638,20 +646,29 @@ class Menu_AdventureMode: public GUI_Interface
       if (subItemSelectionActive && _mouse->isWheelDown && localTileSelected != 0)
       {
         ++selectedItemSlot;
-        if (selectedItemSlot>=localTileSelected->vObject.size()) {selectedItemSlot=0;}
+        if (selectedItemSlot>localTileSelected->vObject.size()) {selectedItemSlot=0;}
         _mouse->isWheelDown=false;
       }
       if (subItemSelectionActive && _mouse->isWheelUp && localTileSelected != 0)
       {
         --selectedItemSlot;
-        if (selectedItemSlot<0) { selectedItemSlot=localTileSelected->vObject.size()-1; }
+        if (selectedItemSlot<0) { selectedItemSlot=localTileSelected->vObject.size(); }
         _mouse->isWheelUp=false;
       }
       
       if (subItemSelectionActive && _mouse->isLeftClick)
       {
-        
-        if(localTileSelected->vObject(selectedItemSlot) == 0)
+        if (selectedItemSlot == 0)
+        {
+          subItemSelectionActive=false;
+          itemSelectionActive=false;
+          _mouse->isLeftClick=false;
+          worldViewer.showHoveredTile = false;
+          localTileSelected=0;
+          selectedItemSlot=0;
+          return false;
+        }
+        else if(localTileSelected->vObject(selectedItemSlot-1) == 0)
         {
           subItemSelectionActive=false;
           itemSelectionActive=false;
@@ -663,12 +680,12 @@ class Menu_AdventureMode: public GUI_Interface
         }
         if ( useItem== 0)
         {
-          std::cout<<"You punch the "<<localTileSelected->vObject(selectedItemSlot)->getName()<<".\n";
+          std::cout<<"You punch the "<<localTileSelected->vObject(selectedItemSlot-1)->getName()<<".\n";
         }
         else
         {
-          std::cout<<"You use the "<<useItem->getName()<<" on the "<<localTileSelected->vObject(selectedItemSlot)->getName()<<".\n";
-          useItem->interact(localTileSelected->vObject(selectedItemSlot));
+          std::cout<<"You use the "<<useItem->getName()<<" on the "<<localTileSelected->vObject(selectedItemSlot-1)->getName()<<".\n";
+          useItem->interact(localTileSelected->vObject(selectedItemSlot-1));
         }
 
         
@@ -684,10 +701,11 @@ class Menu_AdventureMode: public GUI_Interface
         tileSelectAbsoluteX=worldViewer.hoveredAbsoluteX;
         tileSelectAbsoluteY=worldViewer.hoveredAbsoluteY;
         
-        if (world.isSafe(tileSelectAbsoluteX,tileSelectAbsoluteY) && world(tileSelectAbsoluteX,tileSelectAbsoluteY)->vObject.size() != 0)
+        if (world.isSafe(tileSelectAbsoluteX,tileSelectAbsoluteY))
         {
           localTileSelected=world(tileSelectAbsoluteX,tileSelectAbsoluteY);
           subItemSelectionActive=true;
+          selectedItemSlot=0;
         }
         _mouse->isLeftClick=false;
       }
@@ -722,19 +740,19 @@ class Menu_AdventureMode: public GUI_Interface
         { int currentX = panelX1+250;
           for (int i=0;i<10;++i)
           {
-            //Renderer::placeColour4a(120,120,120,250,currentX,inventoryY,currentX+32,inventoryY-32);
             if (_mouse->x >= currentX && _mouse->x <= currentX+32
               && _mouse->y >=inventoryY-32 && _mouse->y <= inventoryY)
             {
-              //std::cout<<"CLICKED INVENTORY\n";
-              //std::cout<<"SLOT: "<<row*10 + i<<".\n";
               clickedItemSlot = row*10 + i;
               
               if (clickedItemSlot < 100) // INVENTORY GRID
               {
+                if ( carriedItem != 0 ) { carriedItem->owner = playerCharacter; }
+                
                 //Swap carried item and inventory grid item.
                 Item * tempItem = carriedItem;
                 carriedItem = inventoryGrid[i][row];
+                if ( carriedItem != 0 ) { carriedItem->owner = playerCharacter; }
                 inventoryGrid[i][row]=tempItem;
                 _mouse->isLeftClick=false;
               }
@@ -744,8 +762,10 @@ class Menu_AdventureMode: public GUI_Interface
                 {
                   if (clickedItemSlot-100 < vItemsOnFloor.size() ) // If player clicked on full ground slot.
                   {
+                    if ( carriedItem != 0 ) { carriedItem->owner = playerCharacter; }
                     Item* tempItem = carriedItem;
                     carriedItem = vItemsOnFloor(clickedItemSlot-100);
+                    if ( carriedItem != 0 ) { carriedItem->owner = playerCharacter; }
                     vItemsOnFloor.removeSlot(clickedItemSlot-100);
                     _mouse->isLeftClick=false;
                     World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
@@ -758,6 +778,7 @@ class Menu_AdventureMode: public GUI_Interface
                         // Put item on map.
                         wl->putObject(tempItem,playerCharacter->x,playerCharacter->y);
                         wl->vItem.push(tempItem);
+                        tempItem->owner = 0;
                       }
                     }
                   }
@@ -772,6 +793,7 @@ class Menu_AdventureMode: public GUI_Interface
                         wl->putObject(carriedItem,playerCharacter->x,playerCharacter->y);
                         wl->vItem.push(carriedItem);
                         vItemsOnFloor.push(carriedItem);
+                        carriedItem->owner = 0;
                         carriedItem=0;
                       }
                     }
@@ -795,6 +817,7 @@ class Menu_AdventureMode: public GUI_Interface
                         // Put item on map.
                         wl->putObject(tempItem,playerCharacter->x,playerCharacter->y);
                         wl->vItem.push(tempItem);
+                        tempItem->owner=0;
                       }
                     }
                   }
@@ -809,6 +832,7 @@ class Menu_AdventureMode: public GUI_Interface
                         wl->putObject(carriedItem,playerCharacter->x,playerCharacter->y);
                         wl->vItem.push(carriedItem);
                         vItemsOnFloor.push(carriedItem);
+                        carriedItem->owner=0;
                         carriedItem=0;
                       }
                     }

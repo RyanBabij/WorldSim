@@ -133,6 +133,15 @@ void Character::init(const int _sex /* =0 */)
 	dateOfBirth.set(world.calendar);
 }
 
+  //ITEM FUNCTIONS
+  
+void Character::giveItem(Item* _item)
+{
+  if (_item==0) { return; }
+  world(worldX,worldY)->putObject(_item,x,y);
+  world(worldX,worldY)->vItem.push(_item);
+}
+
 std::string Character::getFullName() const
 {
 	return firstName + " " + lastName;

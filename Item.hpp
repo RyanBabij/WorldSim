@@ -18,9 +18,7 @@ class Ammo
   
 };
 
-class LocalTile;
-
-
+#include "LocalTile.hpp"
 
 class Item: public WorldObject
 {
@@ -98,7 +96,14 @@ class Item: public WorldObject
     // OBJECT INTERACTION
     // In future these functions might need to be expanded to return multiple possibilities, for example
     // "Stab target" and "Slash target". Or "Chop down door" and "Pry open door".
+    // The good thing about this approach is that it can list out all possible interactions between objects,
+    // which I think is better than making the player guess what everything does.
+    // There are different types of objects, such as Items, WorldObjects and LocalTiles.
   virtual void interact (WorldObject* obj)
+  {
+    std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
+  }
+  virtual void interact (LocalTile* obj)
   {
     std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
   }
@@ -113,11 +118,17 @@ class Item: public WorldObject
   {
     return 0;
   }
-  
+    // Describe the interaction. For example: "Chop down tree.
   virtual std::string getInteractName(WorldObject* _w)
   {
     return "Interact with "+_w->getName();
   }
+  virtual std::string getInteractName(LocalTile* _w)
+  {
+    return "Interact with "+_w->getName();
+  }
+  
+
     
 
 	virtual Texture* currentTexture();
@@ -206,24 +217,21 @@ class Item_Axe: public Item
   std::string getName() { return "Axe"; }
   
   
-  void interact(WorldObject* w)
+  void interact(WorldObject* w);
+
+  virtual void interact (LocalTile* obj)
   {
-    std::cout<<"Oh lawd he choppin\n";
-    
-    if ( w->chopAmount > -1 )
-    {
-      std::cout<<"Chop is legal\n";
-    }
-    else
-    {
-      std::cout<<"You can't chop this\n";
-    }
+    std::cout<<"You chop the "<<obj->getName()<<".\n";
   }
 
   
   std::string getInteractName(WorldObject* _w)
   {
     return "Chop "+_w->getName();
+  }
+  std::string getInteractName(LocalTile* _w)
+  {
+    return "Chop the "+_w->getName();
   }
   
   virtual int interactTime(WorldObject* _w)
@@ -240,6 +248,32 @@ class Item_Axe: public Item
     return &TEX_ITEM_AXE;
   }
 
+};
+
+
+class Item_Log: public Item
+{
+	public:
+  
+	
+  Item_Log()
+  {
+
+  }
+	virtual ~Item_Log() {}
+  
+  
+	virtual std::string getName()
+  {
+    return "Log";
+  }
+
+  Texture* currentTexture()
+  {
+    return &TEX_OBJECT_LOG;
+  }
+
+  
 };
 
 

@@ -124,6 +124,11 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   void useItem(Item* item)
   {
   }
+  
+    // For now this should just drop item at player's feet because
+    // Inventory is not fully implemented.
+  void giveItem(Item* _item);
+
 
 	
 		/* SOCIAL FUNCTIONS

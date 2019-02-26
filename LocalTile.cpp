@@ -71,7 +71,38 @@ bool LocalTile::hasMovementBlocker()
 
 
 
-
+  std::string LocalTile::getName()
+  {
+    if ( baseTerrain == NOTHING )
+    {
+      return "Nothing";
+    }
+    else if ( baseTerrain == OCEAN )
+    {
+      return "Ocean";
+    }
+    else if (baseTerrain == FOREST)
+    {
+      return "Forest";
+    }
+    else if (baseTerrain == DESERT)
+    {
+      return "Desert";
+    }
+    else if (baseTerrain == UNDERGROUND)
+    {
+      return "Underground";
+    }
+    
+    else if ( baseTerrain == GRASSLAND )
+    {
+      return "Grass";
+    }
+    else
+    {
+      return "Ground";
+    }
+  }
 
 
     /* INHERITED FUNCTIONS */

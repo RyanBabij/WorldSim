@@ -38,4 +38,6 @@ std::string Item::getExtendedInfo() { return "N/A"; }
 
 Texture* Item::currentTexture() { return 0; }
 
+#include "Item_All.cpp"
+
 #endif
