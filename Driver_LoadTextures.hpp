@@ -166,6 +166,10 @@ const std::string PATH_TEX_OBJECT_LOG = "Textures/Object/Log.png";
 Texture TEX_OBJECT_FISH;
 const std::string PATH_TEX_OBJECT_FISH = "Textures/Object/Fish-32.png";
 
+Texture TEX_OBJECT_CAMPFIRE [5];
+const std::string PATH_TEX_OBJECT_CAMPFIRE [5] = { "Textures/Object/Campfire-64-1.png", "Textures/Object/Campfire-64-2.png", "Textures/Object/Campfire-64-3.png", "Textures/Object/Campfire-64-4.png", "Textures/Object/Campfire-64-5.png" };
+
+
   // FLORA
   
 Texture TEX_FLORA_ADDERTONGUE;
@@ -287,6 +291,14 @@ void loadTextures()
   loadTextureVerbose(PATH_TEX_ITEM_AXE,&TEX_ITEM_AXE);
   loadTextureVerbose(PATH_TEX_OBJECT_LOG,&TEX_OBJECT_LOG);
   loadTextureVerbose(PATH_TEX_OBJECT_FISH,&TEX_OBJECT_FISH);
+  
+  for (int i=0;i<5;++i)
+  {
+    loadTextureVerbose(PATH_TEX_OBJECT_CAMPFIRE[i],&TEX_OBJECT_CAMPFIRE[i]);
+  }
+  
+  
+  //Campfire-64-1.png
   
   //FLORA
   loadTextureVerbose(PATH_TEX_FLORA_ADDERTONGUE,&TEX_FLORA_ADDERTONGUE);

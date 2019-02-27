@@ -156,6 +156,7 @@ Timer frameRateTimer;
 Timer pollRateTimer;
 Timer logicRateTimer;
 Timer physicsRateTimer;
+Timer animationTimer;
 /* Use this for checking algo speeds. */
 Timer debugTimer;
 

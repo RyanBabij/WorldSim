@@ -291,6 +291,23 @@ class Item_Log: public Item
   }
 	virtual ~Item_Log() {}
   
+  virtual void interact (LocalTile* obj);
+
+
+  std::string getInteractName(LocalTile* _w)
+  {
+    return "Light a fire on the "+_w->getName();
+  }
+  
+  virtual int interactTime(WorldObject* _w)
+  {
+    return -1;
+  }
+  
+  virtual int interactTime(LocalTile* _w)
+  {
+    return 30;
+  }
   
 	virtual std::string getName()
   {
@@ -329,6 +346,36 @@ class Item_Fish: public Item
 
   
 };
+
+class Item_Campfire: public Item
+{
+  private:
+  
+  int animIndex;
+  
+	public:
+  
+	
+  Item_Campfire()
+  {
+    animIndex = 0;
+  }
+	virtual ~Item_Campfire() {}
+  
+  
+	virtual std::string getName()
+  {
+    return "Campfire";
+  }
+
+  Texture* currentTexture()
+  {
+    return &TEX_OBJECT_CAMPFIRE[CURRENT_ANIMATION_FRAME%5];
+  }
+
+  
+};
+
 
 
 #endif

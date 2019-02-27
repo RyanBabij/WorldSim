@@ -22,7 +22,7 @@
       
       if (owner!=0)
       {
-        std::cout<<"You chop down the tree.\n";
+        Console("You chop down the tree.");
         //Just make a log and give to owner for now.
         auto _log = new Item_Log;
         owner->giveItem(_log);
@@ -41,25 +41,28 @@
 
   void Item_Fishrod::interact (LocalTile* _tile)
   {
-    if (_tile->getName() == "Ocean")
+    //if (_tile->getName() == "Ocean")
+    if (true)
     {
-      std::cout<<"You cast your rod and wait...\n";
-      
-
-      
       if (Random::oneIn(3))
       {
-        std::cout<<"You catch a fish.\n";
+        Console("You catch a fishy.");
         auto fishy = new Item_Fish;
         owner->giveItem(fishy);
       }
       else
       {
-        std::cout<<"Nothing bites.\n";
+        Console("Nothing bites");
       }
     }
-    std::cout<<"You start fishing.\n";
+
   }
 
+  void Item_Log::interact (LocalTile* obj)
+  {
+    Console (Stream() << "The "<<obj->getName()<<" is lit fam.");
+    auto lit = new Item_Campfire;
+    owner->giveItem(lit);
+  }
 
 #endif

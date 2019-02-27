@@ -36,7 +36,7 @@ enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
 
 
   // STRINGS
-const std::string VERSION = "0.0.091 Win32 dev";
+const std::string VERSION = "0.0.093 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -97,12 +97,15 @@ const bool OUTPUT_FRAMERATE = false;
 const int OUTPUT_FRAMERATE_SAMPLE_SIZE = 50;
 
 const bool LIMIT_FRAMERATE = true;
-const double FRAMERATE = 60;
+const double FRAMERATE = 30;
 const double POLLSPERSECOND = 30;
 
 double LOGIC_PER_SECOND = 1;
 const double PHYSICS_PER_SECOND = 10;
 
+double ANIMATION_PER_SECOND = 10;
+const int UANIMATIONSPERSECOND = 1000000/ANIMATION_PER_SECOND;
+int CURRENT_ANIMATION_FRAME = 0; /* 0 - 99 */
 
 	// SLOW FRAMERATE CAN BE ACTIVATED TO GET EXTRA CYCLES FOR GAMEPLAY.
 int SLOW_FRAMERATE = 1000000/2;

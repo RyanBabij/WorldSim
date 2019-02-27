@@ -61,6 +61,8 @@ void init()
 	logicRateTimer.start();
 	physicsRateTimer.init();
 	physicsRateTimer.start();
+  animationTimer.init();
+  animationTimer.start();
 	debugTimer.init();
 	debugTimer.start();
 

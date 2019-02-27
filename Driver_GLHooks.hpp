@@ -360,6 +360,17 @@ void GL_idle()
 		pollRateTimer.init();
 	}
 	
+	animationTimer.update();
+	if(animationTimer.totalUSeconds>UANIMATIONSPERSECOND)
+	{
+		animationTimer.start();
+
+    ++CURRENT_ANIMATION_FRAME == 100? CURRENT_ANIMATION_FRAME=0 : 0;
+
+    
+		animationTimer.init();
+	}
+  
 	// if(LIMIT_FRAMERATE==true && BUSY_WAIT==true)
 	// {
 	
