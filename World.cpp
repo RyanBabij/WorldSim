@@ -666,6 +666,7 @@ void World::incrementTicksBacklog(long long unsigned int nTicks)
 	// Increments the world by nTicks ticks. Higher values may lead to abstraction.
 void World::incrementTicks(int nTicks)
 {
+
 	//ticksBacklog+=nTicks;
 	dailyCounter+=nTicks;
 	monthlyCounter+=nTicks;

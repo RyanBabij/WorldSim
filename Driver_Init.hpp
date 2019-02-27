@@ -18,6 +18,8 @@ NameGen ng;
 
 void init()
 {	
+  Random::seed();
+
 	//Makes cout faster but less reliable
 	if ( FAST_COUT )
 	{

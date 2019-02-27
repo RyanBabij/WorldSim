@@ -13,6 +13,7 @@
 LocalTile::LocalTile()
 {
   hasFloor = false;
+  nFish=-1;
 }
 
 LocalTile::~LocalTile()

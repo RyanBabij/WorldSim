@@ -139,6 +139,7 @@ QuitChecker quitChecker;
 #include <stdio.h>
 #include <Math/Random/GlobalRandom.hpp>
 /* No need for a globalRandom object. Just use Random:: */
+
 #include <Graphics/Font/Font.hpp>
 
 // This is the global font for now.

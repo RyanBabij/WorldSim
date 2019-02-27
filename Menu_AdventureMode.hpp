@@ -660,25 +660,42 @@ class Menu_AdventureMode: public GUI_Interface
       {
         if (selectedItemSlot == 0)
         {
-          subItemSelectionActive=false;
-          itemSelectionActive=false;
-          _mouse->isLeftClick=false;
-          worldViewer.showHoveredTile = false;
-          localTileSelected=0;
-          selectedItemSlot=0;
-          return false;
+          std::cout<<"INTERACT: GROUND\n";
+          
+          if ( localTileSelected==0 )
+          {
+            
+          }
+          
+          if (useItem == 0 )
+          {
+            std::cout<<"You punch the "<<localTileSelected->getName()<<".\n";
+          }
+          else
+          {
+            std::cout<<"You use the "<<useItem->getName()<<" on the "<<localTileSelected->getName()<<".\n";
+            useItem->interact(localTileSelected);
+          }
+          
+          // subItemSelectionActive=false;
+          // itemSelectionActive=false;
+          // _mouse->isLeftClick=false;
+          // worldViewer.showHoveredTile = false;
+          // localTileSelected=0;
+          // selectedItemSlot=0;
+          //return false;
         }
         else if(localTileSelected->vObject(selectedItemSlot-1) == 0)
         {
-          subItemSelectionActive=false;
-          itemSelectionActive=false;
-          _mouse->isLeftClick=false;
-          worldViewer.showHoveredTile = false;
-          localTileSelected=0;
-          selectedItemSlot=0;
-          return false;
+          // subItemSelectionActive=false;
+          // itemSelectionActive=false;
+          // _mouse->isLeftClick=false;
+          // worldViewer.showHoveredTile = false;
+          // localTileSelected=0;
+          // selectedItemSlot=0;
+          //return false;
         }
-        if ( useItem== 0)
+        else if ( useItem== 0)
         {
           std::cout<<"You punch the "<<localTileSelected->vObject(selectedItemSlot-1)->getName()<<".\n";
         }
@@ -688,7 +705,7 @@ class Menu_AdventureMode: public GUI_Interface
           useItem->interact(localTileSelected->vObject(selectedItemSlot-1));
         }
 
-        
+          // Reset the interact menu.
         subItemSelectionActive=false;
         itemSelectionActive=false;
         worldViewer.showHoveredTile = false;

@@ -163,6 +163,9 @@ const std::string PATH_TEX_ITEM_AXE = "Textures/Item/Axe.png";
 Texture TEX_OBJECT_LOG;
 const std::string PATH_TEX_OBJECT_LOG = "Textures/Object/Log.png";
 
+Texture TEX_OBJECT_FISH;
+const std::string PATH_TEX_OBJECT_FISH = "Textures/Object/Fish-32.png";
+
   // FLORA
   
 Texture TEX_FLORA_ADDERTONGUE;
@@ -283,6 +286,7 @@ void loadTextures()
   loadTextureVerbose(PATH_TEX_ITEM_SHOVEL,&TEX_ITEM_SHOVEL);
   loadTextureVerbose(PATH_TEX_ITEM_AXE,&TEX_ITEM_AXE);
   loadTextureVerbose(PATH_TEX_OBJECT_LOG,&TEX_OBJECT_LOG);
+  loadTextureVerbose(PATH_TEX_OBJECT_FISH,&TEX_OBJECT_FISH);
   
   //FLORA
   loadTextureVerbose(PATH_TEX_FLORA_ADDERTONGUE,&TEX_FLORA_ADDERTONGUE);

@@ -39,5 +39,27 @@
     }
   }
 
+  void Item_Fishrod::interact (LocalTile* _tile)
+  {
+    if (_tile->getName() == "Ocean")
+    {
+      std::cout<<"You cast your rod and wait...\n";
+      
+
+      
+      if (Random::oneIn(3))
+      {
+        std::cout<<"You catch a fish.\n";
+        auto fishy = new Item_Fish;
+        owner->giveItem(fishy);
+      }
+      else
+      {
+        std::cout<<"Nothing bites.\n";
+      }
+    }
+    std::cout<<"You start fishing.\n";
+  }
+
 
 #endif

@@ -940,7 +940,7 @@ void switchTarget(World_Local* _worldLocal)
 						if (subTileSize < 1) { subTileSize = 1; }
 						
             // First we must seed the RNG with the seed for this local tile.
-						Random r1;
+						RandomNonStatic r1;
             //std::cout<<"wv locXY: "<<world->localX<<", "<<world->localY<<".\n";
 						r1.seed (localMap->seed);
             
@@ -1259,6 +1259,7 @@ void switchTarget(World_Local* _worldLocal)
     
 			//Renderer::placeTexture4(mainViewX1+(mainViewNX/2)-32, mainViewY1+(mainViewNY/2)-32, mainViewX1+(mainViewNX/2)+32, mainViewY1+(mainViewNY/2)+32, &TEX_WORLD_TEST_00, false);
 		normaliseCoordinates();
+
 		
 	}
 

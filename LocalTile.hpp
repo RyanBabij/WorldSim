@@ -38,6 +38,11 @@ class LocalTile: public HasTexture
   
   bool isUphill [8]; /* Clockwise starting north */
   
+  
+  /* INTERACTION STUFF */
+  int nFish; /* How many fish this tile has. Set to -1 if fishing is not possible here */
+  
+  
     // Vector of objects on this tile.
   Vector <WorldObject*> vObject;
   

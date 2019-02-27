@@ -180,6 +180,35 @@ class Item_Fishrod: public Item
   }
   std::string getName() { return "Fishing rod"; }
   
+  virtual void interact (LocalTile* _tile);
+  
+
+  void interact(WorldObject* _w)
+  {
+    std::cout<<"You hook the "+_w->getName();
+  }
+  
+  std::string getInteractName(WorldObject* _w)
+  {
+    return "Fish in "+_w->getName();
+  }
+  std::string getInteractName(LocalTile* _w)
+  {
+    return "Cast fishing rod: "+_w->getName();
+  }
+  
+  virtual int interactTime(WorldObject* _w)
+  {
+    return -1;
+  }
+  virtual int interactTime(LocalTile* _w)
+  {
+    if ( _w->getName() == "Ocean")
+    {
+      return 30;
+    }
+    return -1;
+  }
   
   Texture* currentTexture()
   {
@@ -271,6 +300,31 @@ class Item_Log: public Item
   Texture* currentTexture()
   {
     return &TEX_OBJECT_LOG;
+  }
+
+  
+};
+
+class Item_Fish: public Item
+{
+	public:
+  
+	
+  Item_Fish()
+  {
+
+  }
+	virtual ~Item_Fish() {}
+  
+  
+	virtual std::string getName()
+  {
+    return "Fish";
+  }
+
+  Texture* currentTexture()
+  {
+    return &TEX_OBJECT_FISH;
   }
 
   
