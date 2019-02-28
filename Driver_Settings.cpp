@@ -36,7 +36,7 @@ enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
 
 
   // STRINGS
-const std::string VERSION = "0.0.093 Win32 dev";
+const std::string VERSION = "0.0.094 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -62,13 +62,15 @@ long long int INITIAL_YEARS_SIMULATE = 0;
   // Default setting on the GUI
 const int DEFAULT_WORLD_SIZE_SLOT = 2; /* 0 = 129, 1 = 257, 513, 1025, 2049, 4097. You can set it lower for easier debugging. */
 
-const int DEFAULT_NUMBER_TRIBES_DWARVEN = 12;
-const int DEFAULT_NUMBER_TRIBES_HUMAN = 12;
-const int DEFAULT_NUMBER_TRIBES_ELVEN = 12;
+const int DEFAULT_NUMBER_TRIBES_DWARVEN = 0;
+const int DEFAULT_NUMBER_TRIBES_HUMAN = 6;
+const int DEFAULT_NUMBER_TRIBES_ELVEN = 0;
 const int DEFAULT_NUMBER_CIVS = 0;
 
 // Enable/disable fog rendering
 bool FOG_OF_WAR = true;
+
+  // SCALING
 
 /* Size of each local map in tiles. Size is LOCAL_MAP_SIZE * LOCAL_MAP_SIZE.
   Should be (n^2+1).
@@ -80,6 +82,9 @@ const int LOCAL_MAP_SIZE = 65;
 //const int LOCAL_MAP_SIZE = 129;
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 const int MAX_VIEW_RANGE = 80;
+
+  // CHARACTER STUFF
+const int MAX_HUNGER = 500;
 
 // The number of local maps to hold in memory at once. Minimum should be 4.
 // (One for the player's current map, and three neighboring maps).

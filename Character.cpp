@@ -175,8 +175,12 @@ void Character::incrementTicks(int nTicks)
 {
 	secondsCounter+=nTicks;
 	
+  hunger+=nTicks;
+  
+  if (hunger > MAX_HUNGER) { hunger = MAX_HUNGER; isAlive=false; }
+  
 	while(secondsCounter>=86400)
-	{
+	{ 
 		++daysCounter;
 		secondsCounter-=86400;
 	}
@@ -628,8 +632,14 @@ void Character::initialiseKnowledge()
 
 
 Texture* Character::currentTexture ()
-{	
+{
+  if ( isAlive == false ) { return &TEX_NPC_DED; }
 	return &TEX_NPC;
+}
+
+std::string Character::getName()
+{
+  return "Character";
 }
 
 // COUT OPERATOR

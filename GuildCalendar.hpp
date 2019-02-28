@@ -5,12 +5,6 @@
 /* WorldSim: GuildCalendar.hpp
   #include "GuildCalendar.hpp"
 
-  Guild implementation of a calendar.
-
-    For now, making a dynamic calendar class seems like too much trouble, so I'll just hardcode one.
-
-    Check DD for specifics and lore.
-
     I'm going with the following simple approach:
 
     60 seconds per minute.
@@ -18,6 +12,8 @@
     24 hours per day.
     30 days per month.
     12 months per year.
+    
+    Some scaling can be implemented by lowering seconds per minute.
 */
 
 class GuildCalendar
@@ -27,15 +23,19 @@ class GuildCalendar
 	
 	int year, month, day, hour, minute, second;
 	Vector <std::string> vMonthName;
+  
+  int secondsPerMinute;
 	
 	GuildCalendar()
 	{
 		year=0;
 		month=0;
 		day=0;
-		hour=0;
-		minute=0;
+		hour=6;
+		minute=30;
 		second=0;
+    
+    secondsPerMinute=2;
 	}
 	
 	void set(const int _year, const int _month, const int _day, const int _hour, const int _minute, const int _second)
@@ -82,11 +82,11 @@ class GuildCalendar
 	void normalise()
 	{
 		/* Turn excess seconds into minutes. */
-		if(second>=60)
+		if(second>=secondsPerMinute)
 		{
-			int nMinutes = second/60;
+			int nMinutes = second/secondsPerMinute;
 			minute+=nMinutes;
-			second-=(nMinutes*60);
+			second-=(nMinutes*secondsPerMinute);
 		}
 		/* Turn excess minutes into hours. */
 		if(minute>=60)

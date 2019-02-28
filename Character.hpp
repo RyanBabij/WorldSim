@@ -51,7 +51,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	int money; /* Gold coins or some shit. */
 	
 	int health;
-	int hunger;
+	int hunger; /* 500 = MAX_HUNGER */
 	
 		/* Governing attributes 0-100  (Might remove later) */
 	int strength;
@@ -169,6 +169,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 		*/
 	std::string getBiography();
 	std::string getFullName() const;
+	std::string getName();
 
   
     // LOCATION

@@ -368,7 +368,6 @@ void Tribe_Human::combat (Tribe* _target)
 
 void Tribe_Human::incrementTicks ( int nTicks )
 {
-
 	for (auto & v: vCharacter)
 	{
 		if(v->isAlive==false)
@@ -400,6 +399,16 @@ void Tribe_Human::incrementTicks ( int nTicks )
 	for (int i=0;i<vCharacter.size();++i)
 	{
 		Character* c = vCharacter(i);
+    
+    if (playerCharacter != 0 && playerCharacter->tribe == this )
+    {
+      //std::cout<<"My name: "<<playerCharacter->getFullName()<<".\n";
+
+    }
+      //std::cout<<"Incrementing: "<<c->getFullName()<<".\n";
+    
+    //if ( c == playerCharacter ) { std::cout<<"PLAYER\n"; }
+    //else { std::cout<<"AY\n"; }
 		c->incrementTicks(nTicks);
 	}
 	

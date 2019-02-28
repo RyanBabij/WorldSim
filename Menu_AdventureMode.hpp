@@ -198,10 +198,12 @@ class Menu_AdventureMode: public GUI_Interface
     linesDrawn = font8x8.drawText("Action Menu",panelX1,panelY1+220,panelX1+220,panelY1+320,true,true);
     
     //BARS: Health, Stamina, Hunger, Thirst, Energy
+    double barWidth = 220;
+    double hungerWidth = (MAX_HUNGER-playerCharacter->hunger)*(barWidth/MAX_HUNGER);
     
     Renderer::placeColour4a(255,0,0,255,panelX1,panelY1+232,panelX1+220,panelY1+234);
     Renderer::placeColour4a(0,0,255,255,panelX1,panelY1+229,panelX1+220,panelY1+231);
-    Renderer::placeColour4a(128,64,0,255,panelX1,panelY1+226,panelX1+220,panelY1+228);
+    Renderer::placeColour4a(128,64,0,255,panelX1,panelY1+226,panelX1+hungerWidth,panelY1+228);
     Renderer::placeColour4a(128,128,255,255,panelX1,panelY1+223,panelX1+220,panelY1+225);
     Renderer::placeColour4a(255,128,0,255,panelX1,panelY1+220,panelX1+220,panelY1+222);
 
@@ -414,6 +416,9 @@ class Menu_AdventureMode: public GUI_Interface
       World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
       if ( wl != 0 )
       {
+        if ( playerCharacter->isAlive )
+        {
+        
         wl->moveObject(playerCharacter,playerCharacter->x+1,playerCharacter->y);
         worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
         world.updateMaps();
@@ -421,6 +426,11 @@ class Menu_AdventureMode: public GUI_Interface
         
         if (playerCharacter->isSneaking ) { world.incrementTicksBacklog(2); }
         else { world.incrementTicksBacklog(1); }
+        }
+        else
+        {
+          Console ("BOI U DED, U AINT GOIN NOWHERE");
+        }
         
       }
       
@@ -433,6 +443,8 @@ class Menu_AdventureMode: public GUI_Interface
       World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
       if ( wl != 0 )
       {
+        if (playerCharacter->isAlive)
+        {
         wl->moveObject(playerCharacter,playerCharacter->x-1,playerCharacter->y);
         worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
         world.updateMaps();
@@ -440,6 +452,11 @@ class Menu_AdventureMode: public GUI_Interface
         
         if (playerCharacter->isSneaking ) { world.incrementTicksBacklog(2); }
         else { world.incrementTicksBacklog(1); }
+        }
+        else
+        {
+          Console ("BOI U DED, U AINT GOIN NOWHERE");
+        }
       }
       
       _keyboard->keyUp(Keyboard::LEFT);
@@ -451,6 +468,8 @@ class Menu_AdventureMode: public GUI_Interface
       World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
       if ( wl != 0 )
       {
+        if (playerCharacter->isAlive)
+        {
         wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y+1);
         worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
         world.updateMaps();
@@ -458,6 +477,11 @@ class Menu_AdventureMode: public GUI_Interface
         
         if (playerCharacter->isSneaking ) { world.incrementTicksBacklog(2); }
         else { world.incrementTicksBacklog(1); }
+        }
+        else
+        {
+          Console ("BOI U DED, U AINT GOIN NOWHERE");
+        }
       }
       _keyboard->keyUp(Keyboard::UP);
       _keyboard->keyUp(Keyboard::W);
@@ -468,6 +492,8 @@ class Menu_AdventureMode: public GUI_Interface
       World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
       if ( wl != 0 )
       {
+        if (playerCharacter->isAlive)
+        {
         wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y-1);
         worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
         world.updateMaps();
@@ -475,6 +501,11 @@ class Menu_AdventureMode: public GUI_Interface
         
         if (playerCharacter->isSneaking ) { world.incrementTicksBacklog(2); }
         else { world.incrementTicksBacklog(1); }
+        }
+        else
+        {
+          Console ("BOI U DED, U AINT GOIN NOWHERE");
+        }
       }
       _keyboard->keyUp(Keyboard::DOWN);
       _keyboard->keyUp(Keyboard::S);
@@ -483,6 +514,8 @@ class Menu_AdventureMode: public GUI_Interface
       // PERIOD = WAIT
     if(_keyboard->isPressed(Keyboard::PERIOD))
     {
+      std::cout<<"Player tribe: "<<playerCharacter->tribe<<".\n";
+      std::cout<<"Player tribe: "<<playerCharacter->tribe->getName()<<".\n";
       world.incrementTicksBacklog(1);
       _keyboard->keyUp(Keyboard::PERIOD);
     }

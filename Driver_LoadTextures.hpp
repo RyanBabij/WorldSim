@@ -31,6 +31,7 @@ Texture TEX_GUI_CENTER_CAMERA;
 const std::string PATH_TEX_GUI_CENTER_CAMERA = "Textures/GUI/CenterCamera.png";
 
 Texture TEX_NPC;
+Texture TEX_NPC_DED;
 
 Texture TEX_TEST_404;
 const std::string PATH_TEX_TEST_404 = "Textures/Test/404.png";
@@ -218,6 +219,7 @@ void loadTextures()
 	
 		// LOAD LOCAL OBJECT TEXTURES
 	loadTextureVerbose("Textures/NPC.png",&TEX_NPC);
+	loadTextureVerbose("Textures/NPC-ded.png",&TEX_NPC_DED);
 	
 		// LOAD WORLD OBJECT TEXTURES
 	loadTextureVerbose(PATH_TEX_WORLD_UNIT_NOMAD_01,&TEX_WORLD_UNIT_NOMAD_01);

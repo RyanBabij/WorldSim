@@ -999,21 +999,32 @@ void switchTarget(World_Local* _worldLocal)
                         
                         
                         unsigned char lightValue = localTile->height*15;
-                        glColor3ub(180+lightValue,180+lightValue,180+lightValue);
+                        
                         
                         int currentSecond = world->calendar.second;
                         int sunsetCounter = currentSecond-50;
                         
                         int currentMinute = world->calendar.minute;
+                        int currentHour = world->calendar.hour;
                         
-                        if (currentMinute % 2 == 0)
+                          // NIGHT
+                        if (currentHour < 6 || currentHour > 19)
                         {
-                          if (currentSecond > 50 ) { glColor3ub(180-(sunsetCounter*8)+lightValue,180-(sunsetCounter*10)+lightValue,180-(sunsetCounter*10)+lightValue); }
+                          glColor3ub(50+lightValue,50+lightValue,50+lightValue);
+                        }
+                        else if (currentHour == 6) // SUNRISE
+                        {
+                          glColor3ub(110+lightValue,100+lightValue,120+lightValue);
+                        }
+                        else if (currentHour == 19) // SUNSET
+                        {
+                          glColor3ub(130+lightValue,100+lightValue,100+lightValue);
                         }
                         else
                         {
-                          glColor3ub(80+(lightValue/2),80+(lightValue/2),80+(lightValue/2));
-                          if (currentSecond > 50 ) { glColor3ub(80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*10)+(lightValue/2)); }
+                          glColor3ub(180+lightValue,180+lightValue,180+lightValue);
+                          //glColor3ub(80+(lightValue/2),80+(lightValue/2),80+(lightValue/2));
+                          //if (currentSecond > 50 ) { glColor3ub(80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*10)+(lightValue/2)); }
                         }
                          
 
