@@ -42,15 +42,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	public:
   
 	int globalX, globalY; /* The local world's position in the world. */
-  
-	World_Local();
-  
-  virtual ~World_Local()
-  {
-    
-  }
-  
-  
+
   // Local RNG
   RandomNonStatic random;
 	
@@ -82,6 +74,9 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   // Vector of all tile coordinates.
 	Vector <HasXY*> vAllTiles;
 
+  // Sparse objects are stored in Vectors. This makes it easier to search through them quickly
+  // and saves memory. However it can makes things like finding the closest one take a bit longer.
+  
   // Vector of all Creatures on this map
   Vector <Creature*> vCreature;
   //Vector of all Characters on this map
@@ -89,6 +84,11 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   //Vector of all Items on this map
   Vector <Item*> vItem;
 
+  
+  
+	World_Local();
+  
+  virtual ~World_Local();
 	
 	void init(int /*x*/, int /*y*/);
 	

@@ -31,11 +31,11 @@ class GuildCalendar
 		year=0;
 		month=0;
 		day=0;
-		hour=6;
-		minute=30;
+		hour=CALENDAR_INITIAL_HOUR;
+		minute=CALENDAR_INITIAL_MINUTE;
 		second=0;
     
-    secondsPerMinute=2;
+    secondsPerMinute=CALENDAR_SECONDS_PER_MINUTE;
 	}
 	
 	void set(const int _year, const int _month, const int _day, const int _hour, const int _minute, const int _second)

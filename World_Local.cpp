@@ -26,6 +26,10 @@ World_Local::World_Local()
 	generated=false;
 }
 
+World_Local::~World_Local()
+{
+}
+
 void World_Local::init(int _x, int _y)
 {
   globalX = _x;
@@ -122,45 +126,7 @@ bool World_Local::generate()
         aSubterranean(_x,_y).clearObjects();
         aSubterranean(_x,_y).height = -1;
         
-        if (random.oneIn(baseTreeChance))
-        {
-          //put tree
-          auto tree = new WorldObject_Tree;
-          tree->growth = 1;
-          aLocalTile(_x,_y).addObject(tree);
-        }
-        else if (random.oneIn(1000))
-        {
-          auto tree = new WorldObject_Tree;
-          tree->growth = 0;
-          aLocalTile(_x,_y).addObject(tree);
-        }
-        else if (random.oneIn(1000) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
-        {
-          auto deer = new Creature_Deer;
-          deer->init();
-          putObject(deer,_x,_y);
-          vCreature.push(deer);
-        }
-        else if (random.oneIn(100))
-        {
-          auto itm = new Item_Sword;
-          putObject(itm,_x,_y);
-          vItem.push(itm);
-        }
-        else if (random.oneIn(200))
-        {
-          auto itm = new Item_Longbow;
-          putObject(itm,_x,_y);
-          vItem.push(itm);
-        }
-        else if (random.oneIn(300))
-        {
-          auto itm = new Item_Fishrod;
-          putObject(itm,_x,_y);
-          vItem.push(itm);
-        }
-        else if (random.oneIn(400))
+        if (random.oneIn(200)) /* Put down some testing objects */
         {
           auto itm2 = new Item_Sword;
           putObject(itm2,_x,_y);
@@ -180,6 +146,27 @@ bool World_Local::generate()
           
           
         }
+        else if (random.oneIn(baseTreeChance))
+        {
+          //put tree
+          auto tree = new WorldObject_Tree;
+          tree->growth = 1;
+          aLocalTile(_x,_y).addObject(tree);
+        }
+        else if (random.oneIn(1000))
+        {
+          auto tree = new WorldObject_Tree;
+          tree->growth = 0;
+          aLocalTile(_x,_y).addObject(tree);
+        }
+        else if (random.oneIn(1000) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
+        {
+          auto deer = new Creature_Deer;
+          deer->init();
+          putObject(deer,_x,_y);
+          vCreature.push(deer);
+        }
+
         
         else if ( baseBiome == MOUNTAIN )
         {

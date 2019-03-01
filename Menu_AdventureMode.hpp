@@ -69,6 +69,7 @@ class Menu_AdventureMode: public GUI_Interface
       
       Item * inventoryGrid [10][10];
       int selectedHotbar;
+      int hoveredInventoryX, hoveredInventoryY;
       
       //Render item selection
     bool itemSelectionActive;
@@ -149,6 +150,8 @@ class Menu_AdventureMode: public GUI_Interface
     inventoryActive=false;
       clickedItemSlot=-1;
       carriedItem=0;
+      hoveredInventoryX=-1;
+      hoveredInventoryY=-1;
       
     holdingCTRL = false;
     
@@ -172,6 +175,11 @@ class Menu_AdventureMode: public GUI_Interface
   
   void render()
   {
+    /* Render adventure mode interface.
+    Yes it is very messy at the moment, however it works fine and is just a GUI
+    so it doesn't matter too much. */
+    
+    
 		/* Preview world view. */
 		worldViewer.render();
     
@@ -238,7 +246,6 @@ class Menu_AdventureMode: public GUI_Interface
       Renderer::placeColour4a(120,120,120,255,panelX1+250,panelY2,panelX1+600,(panelY2)-((localTileSelected->vObject.size()+1)*10));
       Renderer::placeColour4a(180,180,180,255,panelX1+250,panelY2-(selectedItemSlot*10),panelX1+600,panelY2-((selectedItemSlot+1)*10));
       
-
       if ( useItem != 0 )
       {
         int j=0;
@@ -312,10 +319,9 @@ class Menu_AdventureMode: public GUI_Interface
       Renderer::placeColour4a(30,140,40,250,panelX1+235,panelY1+35,panelX2-15,panelY2-10);
       Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-220);
       Renderer::placeColour4a(150,150,250,250,panelX1+350,panelY2-210,panelX2-130,panelY2-20);
-      
-      font8x8.drawText("Inventory", panelX1 + 250,panelY2-230,panelX1 + 450,panelY2-250,true,true);
-      font8x8.drawText("Storage", panelX1 + 650,panelY2-230,panelX1 + 850,panelY2-250,true,true);
 
+      hoveredInventoryX=-1;
+      hoveredInventoryY=-1;
       
       // render inventory slots
       int inventoryY = panelY2-250;
@@ -326,6 +332,13 @@ class Menu_AdventureMode: public GUI_Interface
         for (int i=0;i<10;++i)
         {
           Renderer::placeColour4a(120,120,120,250,currentX,inventoryY,currentX+32,inventoryY-32);
+          
+          if (mouseX >= currentX && mouseX <= currentX+32
+              && mouseY >=inventoryY-32 && mouseY <= inventoryY)
+              {
+                hoveredInventoryX = i;
+                hoveredInventoryY = row;
+              }
           
           if (row < 10 && i < 10 && inventoryGrid[i][row]!=0)
           {
@@ -370,6 +383,31 @@ class Menu_AdventureMode: public GUI_Interface
         inventoryY -= 34;
         if ( row == 9) {inventoryY -= 5;}
       }
+      
+      // Render text
+      // We render the stats for 2 items: The item the player has selected,
+      // and the item the player is hovering over. This allow easy comparison
+      // of 2 items.
+      std::string carriedItemStats = "";
+      if ( carriedItem )
+      {
+        carriedItemStats = carriedItem->getName();
+      }
+      std::string hoveredItemStats = "";
+      if ( hoveredInventoryX >= 0 && hoveredInventoryX < 10
+       && hoveredInventoryY >= 0 && hoveredInventoryX < 10)
+      {
+        if (inventoryGrid[hoveredInventoryX][hoveredInventoryY] )
+        {
+        hoveredItemStats = inventoryGrid[hoveredInventoryX][hoveredInventoryY]->getName();
+        }
+
+      }
+      
+      font8x8.drawText("Inventory", panelX1 + 250,panelY2-230,panelX1 + 450,panelY2-250,true,true);
+      font8x8.drawText("Storage", panelX1 + 650,panelY2-230,panelX1 + 850,panelY2-250,true,true);
+      font8x8.drawText("Carried stats:\n "+carriedItemStats, panelX1+350,panelY2-210,panelX1+(panelNX/2) ,panelY2-25,false,false);
+      font8x8.drawText("Hovered stats\n "+hoveredItemStats, panelX1+(panelNX/2),panelY2-210,panelX2-130,panelY2-25,false,false);
 
       // Render carried item
       if ( carriedItem != 0)
@@ -709,24 +747,9 @@ class Menu_AdventureMode: public GUI_Interface
             std::cout<<"You use the "<<useItem->getName()<<" on the "<<localTileSelected->getName()<<".\n";
             useItem->interact(localTileSelected);
           }
-          
-          // subItemSelectionActive=false;
-          // itemSelectionActive=false;
-          // _mouse->isLeftClick=false;
-          // worldViewer.showHoveredTile = false;
-          // localTileSelected=0;
-          // selectedItemSlot=0;
-          //return false;
         }
         else if(localTileSelected->vObject(selectedItemSlot-1) == 0)
         {
-          // subItemSelectionActive=false;
-          // itemSelectionActive=false;
-          // _mouse->isLeftClick=false;
-          // worldViewer.showHoveredTile = false;
-          // localTileSelected=0;
-          // selectedItemSlot=0;
-          //return false;
         }
         else if ( useItem== 0)
         {
@@ -787,7 +810,9 @@ class Menu_AdventureMode: public GUI_Interface
         int currentFloorItem = 0;
         
         for (int row = 0;row<12;++row)
-        { int currentX = panelX1+250;
+        {
+          int currentX = panelX1+250;
+          
           for (int i=0;i<10;++i)
           {
             if (_mouse->x >= currentX && _mouse->x <= currentX+32
@@ -913,6 +938,20 @@ class Menu_AdventureMode: public GUI_Interface
       //{carriedItem = 0; clickedItemSlot=-1;
       //}
     }
+    
+      // Default action for selected item.
+    if (_mouse->isLeftClick && selectedHotbar >= 0 && selectedHotbar < 10)
+    {
+      //std::cout<<"DEFAULT USE ITEM\n";
+      if (inventoryGrid[selectedHotbar][0] != 0)
+      {
+      }
+      else
+      {
+      }
+    }
+    
+    
     
     guiManager.mouseEvent(_mouse);
     

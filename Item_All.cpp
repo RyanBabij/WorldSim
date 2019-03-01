@@ -41,10 +41,11 @@
 
   void Item_Fishrod::interact (LocalTile* _tile)
   {
+    // For testing you can catch a fish on any tile.
     //if (_tile->getName() == "Ocean")
     if (true)
     {
-      if (Random::oneIn(3))
+      if (Random::flip())
       {
         Console("You catch a fishy.");
         auto fishy = new Item_Fish;
@@ -63,6 +64,17 @@
     Console (Stream() << "The "<<obj->getName()<<" is lit fam.");
     auto lit = new Item_Campfire;
     owner->giveItem(lit);
+  }
+  
+  void Item_Fish::interact (WorldObject* _item)
+  {
+      // Check if we can cook with this object
+    if ( _item->canCook )
+    {
+      
+      Console ("You cook the fish");
+      isCooked=true;
+    }
   }
 
 #endif

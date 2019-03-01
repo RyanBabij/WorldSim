@@ -38,6 +38,16 @@ class Item: public WorldObject
   Character* owner; /* Set to 0 if nobody owns it */
   //Character* creator; /* Character who created this item */
   
+  
+    // CONSUMABLE PROPERTIES
+  int consumeTime; /* How long it takes to eat this. 0 = no time cost. -1 = you can't consume it. */
+  int hungerRestore; /* -1 = you can't eat it. 0 = you can eat it but get no hunger restored */
+  
+    // INTERACTION PROPERTIES (currently Item specialisation isn't implemented,
+    // so Items can only interact with WorldObject).
+
+  
+  
   //Implementing full global coordinates to make life easier for now.
   // This datatype should be able to hold coordinates for any reasonably-sized world.
   //long unsigned int fullX, fullY;
@@ -324,12 +334,17 @@ class Item_Log: public Item
 
 class Item_Fish: public Item
 {
+  bool isCooked;
+  
 	public:
   
+
 	
   Item_Fish()
   {
-
+    consumeTime = 5;
+    hungerRestore = 200;
+    isCooked = false;
   }
 	virtual ~Item_Fish() {}
   
@@ -338,9 +353,15 @@ class Item_Fish: public Item
   {
     return "Fish";
   }
+  
+  virtual void interact (WorldObject*);
 
   Texture* currentTexture()
   {
+    if (isCooked)
+    {
+      return &TEX_ITEM_FOOD_COOKED_FISH;
+    }
     return &TEX_OBJECT_FISH;
   }
 
@@ -349,16 +370,14 @@ class Item_Fish: public Item
 
 class Item_Campfire: public Item
 {
-  private:
-  
-  int animIndex;
+
   
 	public:
   
 	
   Item_Campfire()
   {
-    animIndex = 0;
+    canCook=true;
   }
 	virtual ~Item_Campfire() {}
   

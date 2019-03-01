@@ -17,16 +17,16 @@
 // that out later.
 #define PORTABLE_INT_MAX 32767
 
-/* MENU ENUMS
 
-  A game only has a handful of "primary" menus (title screen, load game, save game, pause menu, etc), therefore it's practical to manage menu switching by using a global variable,
-  allowing any menu to easily switch the "primary" menu.
-*/
+  // SYSTEM STRINGS
+const std::string VERSION = "0.0.095 Win32 dev";
+const std::string G_WINDOW_TITLE = "WorldSim";
+const std::string SAVE_FOLDER_PATH = "savedata";
 
+  // MAIN MENU ENUMS
 enum enumMenu { MENU_UNKNOWN, MENU_TITLE, MENU_OPTIONS, MENU_LOADGAME, MENU_WORLDGENERATOR, MENU_WORLDSIMULATOR, MENU_ADVENTUREMODE };
 // Should be MENU_TITLE but I'm bypassing it for now because the main menu has no function atm.
 enumMenu activeMenu = MENU_WORLDGENERATOR;
-
 
   // RACE ENUM
 enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
@@ -34,19 +34,9 @@ enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
   // BASE TERRAIN ENUM (I DON'T KNOW IF THIS IS BEING USED)
 enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
 
+  //DEBUG SETTINGS
 
-  // STRINGS
-const std::string VERSION = "0.0.094 Win32 dev";
-const std::string G_WINDOW_TITLE = "WorldSim";
-const std::string SAVE_FOLDER_PATH = "savedata";
-
-  // BOOLEANS
-
-  // MAKES COUT MUCH FASTER BUT DOES NOT GUARANTEE ORDER OR COMPLETION BEFORE EXIT/CRASH.
-const bool FAST_COUT = false;
-/* DEBUG MENU SHORTCUTS */
-//bool AUTO_GENERATE_WORLD = true;
-//bool AUTO_NEW_SIMULATION = true;
+bool FOG_OF_WAR = true; // Enable/disable fog rendering
 bool QUICKSTART_GENERATOR = true; // Skip menu stuff and immediately generate a default world.
   //Quickly go straight into the simulator.
 const bool QUICKSTART_SIMULATOR = false; // Skip menu stuff and jump right into the game. (Will use defaults).
@@ -54,7 +44,7 @@ const bool QUICKSTART_SIMULATOR = false; // Skip menu stuff and jump right into 
 int worldPop = 0;
 int lastline = 0;
 
-  // DEFAULT WORLD WHICH IS AUTO-GENERATED.
+  // DEFAULT WORLD SETTINGS
 
 const int QUICKSTART_WORLD_SIZE = 129; /* Please set to (power of 2)+1. */
 long long int INITIAL_YEARS_SIMULATE = 0;
@@ -67,8 +57,13 @@ const int DEFAULT_NUMBER_TRIBES_HUMAN = 6;
 const int DEFAULT_NUMBER_TRIBES_ELVEN = 0;
 const int DEFAULT_NUMBER_CIVS = 0;
 
-// Enable/disable fog rendering
-bool FOG_OF_WAR = true;
+/* Calendar setting when new game is started. */
+const int CALENDAR_INITIAL_HOUR = 8;
+const int CALENDAR_INITIAL_MINUTE = 0;
+  /* Determines speed of day/night cycle and other time scaling */
+  /* In future there might just be some time speed multiplier */
+  /* Or less hours in a day */
+const int CALENDAR_SECONDS_PER_MINUTE = 2;
 
   // SCALING
 
@@ -102,28 +97,22 @@ const bool OUTPUT_FRAMERATE = false;
 const int OUTPUT_FRAMERATE_SAMPLE_SIZE = 50;
 
 const bool LIMIT_FRAMERATE = true;
-const double FRAMERATE = 30;
-const double POLLSPERSECOND = 30;
-
+const double FRAMERATE = 60; // SETTING IT TO A REASONABLE VALUE CAN GREATLY REDUCE STRESS ON GPU
+const double POLLSPERSECOND = 30; // NOT CURRENTLY IMPLEMENTED
 double LOGIC_PER_SECOND = 1;
 const double PHYSICS_PER_SECOND = 10;
-
-double ANIMATION_PER_SECOND = 10;
-const int UANIMATIONSPERSECOND = 1000000/ANIMATION_PER_SECOND;
-int CURRENT_ANIMATION_FRAME = 0; /* 0 - 99 */
+double ANIMATION_PER_SECOND = 10; // SETS SPEED OF ANIMATIONS
 
 	// SLOW FRAMERATE CAN BE ACTIVATED TO GET EXTRA CYCLES FOR GAMEPLAY.
 int SLOW_FRAMERATE = 1000000/2;
 	// TURNS ON SLOW FRAMERATE
 bool SLOW_FRAMERATE_ACTIVE = false;
-
 int UFRAMERATE = 1000000/FRAMERATE;
 const int UPOLLSPERSECOND = 1000000/POLLSPERSECOND;
 int U_LOGIC_PER_SECOND = 1000000/LOGIC_PER_SECOND;
 const int U_PHYSICS_PER_SECOND = 1000000/PHYSICS_PER_SECOND;
-
-const char THOUSANDS_DELIMITER = ',';
-const char DECIMAL_DELIMITER = '.';
+const int UANIMATIONSPERSECOND = 1000000/ANIMATION_PER_SECOND;
+int CURRENT_ANIMATION_FRAME = 0; /* 0 - 99 */
 
 
   // RENDER AND FRAME STUFF
@@ -139,21 +128,24 @@ const int BUSY_WAIT_USEC = 2000;
 const bool RELINQUISH_CPU = true;
 const unsigned int RELINQUISH_CPU_MSEC = 1; /* Previous value: 1. Anywhere from 10-100 seems to be okay. 1000 = 1 second? */
 
-bool QUIT_FLAG = false;
 
+
+// GLOBAL FLAGS
+
+bool QUIT_FLAG = false;
 bool DONT_RENDER = false; /* In debugging, rendering can be disabled by pressing R. */
 bool LIMIT_LOGIC = true; /* Press S. */
-
 bool FORCE_LOGIC_FRAME = false; /* True will trigger next logic frame immediately. */
 bool PAUSE_LOGIC = false; /* True will suspend logic. */
-
-/* Calendar setting when new game is started. */
-const int CALENDAR_INITIAL_HOUR = 5;
-const int CALENDAR_INITIAL_MINUTE = 59;
+  // MAKES COUT MUCH FASTER BUT DOES NOT GUARANTEE ORDER OR COMPLETION BEFORE EXIT/CRASH.
+const bool FAST_COUT = false;
 
 bool EMULATE_2_BUTTON_MIDDLE_CLICK = true; // Allows middle click with mice without middle click by pressing left and right click.
 
 // MORE STRINGS
+
+const char THOUSANDS_DELIMITER = ',';
+const char DECIMAL_DELIMITER = '.';
 
 std::string NYA;
 

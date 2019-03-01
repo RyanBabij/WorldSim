@@ -28,7 +28,10 @@ Item::Item()
   
   owner = 0;
   
-
+  consumeTime=-1;
+  hungerRestore=-1;
+  
+  canCook=false;
 }
 Item::~Item() {}
 

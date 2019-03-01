@@ -170,6 +170,11 @@ const std::string PATH_TEX_OBJECT_FISH = "Textures/Object/Fish-32.png";
 Texture TEX_OBJECT_CAMPFIRE [5];
 const std::string PATH_TEX_OBJECT_CAMPFIRE [5] = { "Textures/Object/Campfire-64-1.png", "Textures/Object/Campfire-64-2.png", "Textures/Object/Campfire-64-3.png", "Textures/Object/Campfire-64-4.png", "Textures/Object/Campfire-64-5.png" };
 
+  // FOOD
+  
+Texture TEX_ITEM_FOOD_COOKED_FISH;
+const std::string PATH_TEX_ITEM_FOOD_COOKED_FISH = "Textures/Item/Food/CookedFish.png";
+
 
   // FLORA
   
@@ -299,6 +304,8 @@ void loadTextures()
     loadTextureVerbose(PATH_TEX_OBJECT_CAMPFIRE[i],&TEX_OBJECT_CAMPFIRE[i]);
   }
   
+  // FOOD
+  loadTextureVerbose(PATH_TEX_ITEM_FOOD_COOKED_FISH,&TEX_ITEM_FOOD_COOKED_FISH);
   
   //Campfire-64-1.png
   

@@ -43,6 +43,7 @@ class WorldObject: public HasTexture
   bool blocksMovement;
   
     // INTERACTIONS
+  bool canCook; /* This object can be used for cooking. */
   int chopAmount; /* -1 if chopping is not possible. */
 	
 	WorldObject();
