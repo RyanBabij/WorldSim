@@ -128,42 +128,27 @@ bool World_Local::generate()
         
         if (random.oneIn(200)) /* Put down some testing objects */
         {
-          auto itm2 = new Item_Sword;
-          putObject(itm2,_x,_y);
-          vItem.push(itm2);
-          auto itm3 = new Item_Longbow;
-          putObject(itm3,_x,_y);
-          vItem.push(itm3);
-          auto itm4 = new Item_Fishrod;
-          putObject(itm4,_x,_y);
-          vItem.push(itm4);  
-          auto itm = new Item_Shovel;
-          putObject(itm,_x,_y);
-          vItem.push(itm);
-          auto itm5 = new Item_Axe;
-          putObject(itm5,_x,_y);
-          vItem.push(itm5);
+          put(new Item_Sword, _x, _y);
+          put(new Item_Longbow, _x, _y);
+          put(new Item_Fishrod, _x, _y);
+          put(new Item_Shovel, _x, _y);
+          put(new Item_Axe, _x, _y);
           
           
         }
         else if (random.oneIn(baseTreeChance))
         {
-          //put tree
-          auto tree = new WorldObject_Tree;
-          tree->growth = 1;
-          aLocalTile(_x,_y).addObject(tree);
+          aLocalTile(_x,_y).add(new WorldObject_Tree(1));
         }
         else if (random.oneIn(1000))
         {
-          auto tree = new WorldObject_Tree;
-          tree->growth = 0;
-          aLocalTile(_x,_y).addObject(tree);
+          aLocalTile(_x,_y).add(new WorldObject_Tree);
         }
         else if (random.oneIn(1000) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
         {
           auto deer = new Creature_Deer;
           deer->init();
-          putObject(deer,_x,_y);
+          put(deer,_x,_y);
           vCreature.push(deer);
         }
 
@@ -178,7 +163,7 @@ bool World_Local::generate()
               rockyBoi->nGold = 100;
             }
             
-            aLocalTile(_x,_y).addObject(rockyBoi);
+            aLocalTile(_x,_y).add(rockyBoi);
           }
           
         }
@@ -197,7 +182,7 @@ bool World_Local::generate()
   }
   
   auto sign = new WorldObject_Sign;
-  aLocalTile(21,21).addObject(sign);
+  aLocalTile(21,21).add(sign);
   }
 
   //Generate global objects
@@ -218,7 +203,7 @@ bool World_Local::generate()
       //currentTribe->vCharacter(i2)->x=randX;
       //currentTribe->vCharacter(i2)->y=randY;
       
-      putObject(currentTribe->vCharacter(i2),randX,randY);
+      put(currentTribe->vCharacter(i2),randX,randY);
       vCharacter.push(currentTribe->vCharacter(i2));
       
       //aLocalTile(randX,randY).addObject(currentTribe->vCharacter(i2));
@@ -312,13 +297,13 @@ bool World_Local::generateTestMap()
         //put tree
         auto tree = new WorldObject_Tree;
         tree->growth = 1;
-        aLocalTile(_x,_y).addObject(tree);
+        aLocalTile(_x,_y).add(tree);
       }
       else if (random.oneIn(1000))
       {
         auto tree = new WorldObject_Tree;
         tree->growth = 0;
-        aLocalTile(_x,_y).addObject(tree);
+        aLocalTile(_x,_y).add(tree);
       }
       
 
@@ -340,7 +325,7 @@ bool World_Local::generateTestMap()
     //RANDOMLY PLACE THE TRIBE CHARACTERS HERE
     Character * c = new Character;
 
-    aLocalTile(0,0).addObject(c);
+    aLocalTile(0,0).add(c);
     
   }
   delete vTribesHere;
@@ -388,7 +373,7 @@ bool World_Local::saveToFile(std::string _path)
 }
 
 
-bool World_Local::putObject (WorldObject* _object, int _x, int _y)
+bool World_Local::put (WorldObject* _object, int _x, int _y)
 {
   if ( aLocalTile.isSafe(_x,_y) == false )
   { return false; }
@@ -397,7 +382,7 @@ bool World_Local::putObject (WorldObject* _object, int _x, int _y)
   _object->worldY = globalY;
   _object->x = _x;
   _object->y = _y;
-  aLocalTile(_x,_y).addObject(_object);
+  aLocalTile(_x,_y).add(_object);
   
   _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
   _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
@@ -431,13 +416,13 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
       {
         if (world.isSafe(globalX-nMaps,globalY))
         {
-          aLocalTile(_object->x,_object->y).removeObject(_object);
+          aLocalTile(_object->x,_object->y).remove(_object);
           _object->x=newX;
           _object->y=newY;
           _object->worldX = globalX-nMaps;
           _object->worldY = globalY;
           
-          world(globalX-nMaps,globalY)->putObject(_object,newX,newY);
+          world(globalX-nMaps,globalY)->put(_object,newX,newY);
           
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
@@ -483,12 +468,12 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
       {
         if (world.isSafe(globalX+nMaps,globalY))
         {
-          aLocalTile(_object->x,_object->y).removeObject(_object);
+          aLocalTile(_object->x,_object->y).remove(_object);
           _object->x=newX;
           _object->y=newY;
           _object->worldX = globalX+nMaps;
           _object->worldY = globalY;
-          world(globalX+nMaps,globalY)->putObject(_object,newX,newY);
+          world(globalX+nMaps,globalY)->put(_object,newX,newY);
           
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
@@ -525,12 +510,12 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
       {
         if (world.isSafe(globalX,globalY-nMaps))
         {
-          aLocalTile(_object->x,_object->y).removeObject(_object);
+          aLocalTile(_object->x,_object->y).remove(_object);
           _object->x=newX;
           _object->y=newY;
           _object->worldX = globalX;
           _object->worldY = globalY-nMaps;
-          world(globalX,globalY-nMaps)->putObject(_object,newX,newY);
+          world(globalX,globalY-nMaps)->put(_object,newX,newY);
           
           
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
@@ -568,12 +553,12 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
       {
         if (world.isSafe(globalX,globalY+nMaps))
         {
-          aLocalTile(_object->x,_object->y).removeObject(_object);
+          aLocalTile(_object->x,_object->y).remove(_object);
           _object->x=newX;
           _object->y=newY;
           _object->worldX = globalX;
           _object->worldY = globalY+nMaps;
-          world(globalX,globalY+nMaps)->putObject(_object,newX,newY);
+          world(globalX,globalY+nMaps)->put(_object,newX,newY);
           
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
@@ -607,7 +592,7 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
     return false;
   }
   
-  aLocalTile(_object->x,_object->y).removeObject(_object);
+  aLocalTile(_object->x,_object->y).remove(_object);
   
 
 
@@ -619,7 +604,7 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
   _object->worldX = globalX;
   _object->worldY = globalY;
   
-  aLocalTile(newX,newY).addObject(_object);
+  aLocalTile(newX,newY).add(_object);
   
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
@@ -659,8 +644,8 @@ bool World_Local::wander (WorldObject* _object)
   
   if ( aLocalTile.isSafe(newX,newY) && aLocalTile(newX,newY).hasMovementBlocker() == false )
   {
-    aLocalTile(_object->x,_object->y).removeObject(_object);
-    putObject(_object,newX,newY);
+    aLocalTile(_object->x,_object->y).remove(_object);
+    put(_object,newX,newY);
     return true;
   }
 
@@ -669,14 +654,45 @@ bool World_Local::wander (WorldObject* _object)
   return false;
 }
 
-bool World_Local::removeItem (Item* _item )
+bool World_Local::put (Item* _item, int _x, int _y)
+{
+  if ( aLocalTile.isSafe(_x,_y) == false )
+  { return false; }
+
+  _item->worldX = globalX;
+  _item->worldY = globalY;
+  _item->x = _x;
+  _item->y = _y;
+  aLocalTile(_x,_y).add(_item);
+  _item->fullX = _item->worldX * LOCAL_MAP_SIZE + _item->x;
+  _item->fullY = _item->worldY * LOCAL_MAP_SIZE + _item->y;
+  vItem.push(_item);
+  
+  return true;
+}
+
+bool World_Local::remove (WorldObject* _object )
+{
+  if ( _object==0) {return false;}
+  vObjectGeneric.remove(_object);
+  //vObject.remove(_object);
+  
+  if (aLocalTile.isSafe(_object->x,_object->y))
+  {
+    aLocalTile(_object->x,_object->y).remove(_object);
+  }
+  
+  return false;
+}
+
+bool World_Local::remove (Item* _item )
 {
   if ( _item==0) {return false;}
   vItem.remove(_item);
   
   if (aLocalTile.isSafe(_item->x,_item->y))
   {
-    aLocalTile(_item->x,_item->y).removeObject(_item);
+    aLocalTile(_item->x,_item->y).remove(_item);
   }
   
   return false;

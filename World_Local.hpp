@@ -63,26 +63,29 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
     //The base designated biome for this tile. Will influence generation.
   enumBiome baseBiome;
 	
+    // This should be moved into LocalTile.
 	ArrayS2 <bool> aIsLand;
   
   
     /* LOCAL MAP ARRAYS */
-  ArrayS2 <LocalTile> aLocalTile;
-    //Underground map
-  ArrayS2 <LocalTile> aSubterranean;
+  ArrayS2 <LocalTile> aLocalTile; // Array of all tiles on map.
+  ArrayS2 <LocalTile> aSubterranean;  // Array of underground layer. Used for caves, tunnels, mines.
   
   // Vector of all tile coordinates.
+  // This is used to do things like loop through every coordinate once in random order
+  // (using shuffle).
 	Vector <HasXY*> vAllTiles;
 
-  // Sparse objects are stored in Vectors. This makes it easier to search through them quickly
-  // and saves memory. However it can makes things like finding the closest one take a bit longer.
-  
+    // Lists of all objects of type on this map.
+    // Useful for counting or looping through each object of type.
   // Vector of all Creatures on this map
   Vector <Creature*> vCreature;
   //Vector of all Characters on this map
   Vector <Character*> vCharacter;
   //Vector of all Items on this map
   Vector <Item*> vItem;
+  // Vector of all non-categorised objects on this map.
+  Vector <WorldObject*> vObjectGeneric;
 
   
   
@@ -98,11 +101,21 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	
 	bool saveToFile(std::string /* path */);
   
-  bool putObject (WorldObject* , int /* _x */, int /* _y */);
+    // PUT FUNCTION
+    // Overloaded put function automatically sorts object into
+    // relevant lists.
+  bool put (WorldObject* , int /* _x */, int /* _y */);
+    bool put (Item* , int /* _x */, int /* _y */);
+    
+  bool remove (WorldObject*);
+    bool remove (Item*);
+  
+  
   bool moveObject (WorldObject* , int /* newX */, int /* newY */ );
   bool wander (WorldObject* /* _object */);
   
-  bool removeItem (Item* /* _item */);
+
+  //bool removeItem (Item* /* _item */);
   
 //SEARCH FUNCTIONS
 

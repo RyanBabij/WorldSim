@@ -12,6 +12,9 @@
 
 //std::mutex render_mutex;
 
+#include <limits.h> // We need ULONG_MAX for absolute coords.
+#define ABSOLUTE_COORDINATE_NULL ULONG_MAX // Used as null-value for absolute coordinates, which can't use negative value.
+
 // This is a guaranteed valid value for int for all implementations of C++.
 // Generally I think the actual maximum is much higher, but we'll figure
 // that out later.
@@ -19,7 +22,7 @@
 
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.095 Win32 dev";
+const std::string VERSION = "0.0.096 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 

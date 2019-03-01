@@ -209,8 +209,8 @@ WorldViewer()
   hoveredYTile=0;
   hoveredXTileLocal=0;
   hoveredYTileLocal=0;
-  hoveredAbsoluteX=0;
-  hoveredAbsoluteY=0;
+  hoveredAbsoluteX=ABSOLUTE_COORDINATE_NULL;
+  hoveredAbsoluteY=ABSOLUTE_COORDINATE_NULL;
   
   showHoveredTile=false;
   
@@ -719,6 +719,14 @@ void switchTarget(World_Local* _worldLocal)
       
       centerTileX += demoScroll;
     }
+    
+    
+    // Reset hovered tile coords, so we can tell if the mouse is over the worldviewer.
+    
+    hoveredXTileLocal = -1;
+    hoveredAbsoluteX = ABSOLUTE_COORDINATE_NULL;
+    hoveredYTileLocal = -1;
+    hoveredAbsoluteY = ABSOLUTE_COORDINATE_NULL;
 
 			/* 0223554692
 				SO I GUESS THIS PART MODIFIES THE SCREEN SO I CAN SIMPLY DRAW FROM (0,0).

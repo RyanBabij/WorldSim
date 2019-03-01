@@ -19,6 +19,9 @@ A tile is 5km by 5km, ie, 5,000 * 5000 tiles. */
 //class Tribe;
 //#include "Tribe.hpp"
 
+class Item;
+class Creature;
+
 class LocalTile: public HasTexture
 {
 	public:
@@ -44,11 +47,26 @@ class LocalTile: public HasTexture
   
   
     // Vector of objects on this tile.
+    // This list includes all subclasses.
+    // The reason there are so many duplicates is performance.
   Vector <WorldObject*> vObject;
+      // Vector of non-specialised WorldObjects.
+      Vector <WorldObject*> vObjectGeneric;
+      // Vector of Items on this tile
+      Vector <Item*> vItem;
+      // Vector of Characters on this tile.
+      Vector <Character*> vCharacter;
+      // Vector of Creatures on this tile.
+      Vector <Creature*> vCreature;
   
+  // Generic add/remove automatically sorts into appropriate lists.
   
-  void addObject(WorldObject*);
-  void removeObject(WorldObject*);
+  void add(WorldObject*);
+    void add(Item*);
+  
+  void remove(WorldObject*);
+    void remove(Item*);
+
   
   void clearObjects();
   

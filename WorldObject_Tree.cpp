@@ -9,17 +9,25 @@
 
   Implementation of WorldObject_Tree.hpp.
 */
-
-WorldObject_Tree::WorldObject_Tree()
+WorldObject_Tree::WorldObject_Tree(int _growth = 0)
 {
 	x=0; y=0;
 	weight=0;
 	bulk=0;
   
-  growth=0;
+  growth=_growth;
   
-  blocksView = true;
-  blocksMovement = true;
+  if (_growth == 0)
+  {
+    blocksView = false;
+    blocksMovement = false;
+  }
+  else
+  {
+    blocksView = true;
+    blocksMovement = true;
+  }
+
   
   chopAmount = 100;
 }

@@ -21,7 +21,7 @@ class WorldObject_Tree: public WorldObject
     // Determines the stage of growth the tree is at: Sapling, young tree, tree.
   int growth;
 	
-	WorldObject_Tree();
+	WorldObject_Tree(int /* _growth = 0 */);
 	virtual ~WorldObject_Tree() {}
   
   

@@ -20,14 +20,35 @@ LocalTile::~LocalTile()
 {
 }
 
-void LocalTile::addObject(WorldObject* obj)
+  // Push object to master list and generic object list.
+void LocalTile::add(WorldObject* _object)
 {
-  vObject.push(obj);
+  vObject.push(_object);
+  vObjectGeneric.push(_object);
 }
-void LocalTile::removeObject(WorldObject* obj)
+  // Push object to Item list and master list.
+void LocalTile::add(Item* _item)
 {
-  vObject.erase(obj);
+  vItem.push(_item);
+  vObject.push(_item);
 }
+
+
+  // Remove object from master list and generic object list.
+void LocalTile::remove(WorldObject* _object)
+{
+  vObject.erase(_object);
+  vObjectGeneric.erase(_object);
+}
+  // Remove object from Item list and master list.
+void LocalTile::remove(Item* _item)
+{
+  vItem.erase(_item);
+  vObject.erase(_item);
+}
+
+
+
 
 void LocalTile::clearObjects()
 {

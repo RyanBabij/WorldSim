@@ -75,6 +75,12 @@ class Menu_AdventureMode: public GUI_Interface
     bool itemSelectionActive;
       unsigned long int tileSelectAbsoluteX, tileSelectAbsoluteY;
       LocalTile* localTileSelected; /* LocalTile that the player last selected */
+      
+      // Vectors of each object on selected tile, broken down by type.
+      //Vector <Item*> vSelectedTileItems;
+      //Vector <Character*> vSelectedTileCharacter;
+      
+      
       int selectedItemSlot; /* 0 = interact with terrain */
         bool subItemSelectionActive;
         Item* useItem; /* Item to use on target */
@@ -242,6 +248,10 @@ class Menu_AdventureMode: public GUI_Interface
     // Render item selection
     if (itemSelectionActive && localTileSelected != 0)
     {
+      // Fuck this I'm outta here
+      itemSelectionActive=false;
+      return;
+      
       // Render background and selection panels.
       Renderer::placeColour4a(120,120,120,255,panelX1+250,panelY2,panelX1+600,(panelY2)-((localTileSelected->vObject.size()+1)*10));
       Renderer::placeColour4a(180,180,180,255,panelX1+250,panelY2-(selectedItemSlot*10),panelX1+600,panelY2-((selectedItemSlot+1)*10));
@@ -253,11 +263,22 @@ class Menu_AdventureMode: public GUI_Interface
         //++j;
         font8x8.drawText(useItem->getInteractName(localTileSelected),panelX1+250,(panelY2)-(j*10),panelX1+600,(panelY2)-(j*10)-10,false,true);
         ++j;
-        for (int i=0;i<localTileSelected->vObject.size();++i)
+        
+        // New system: WorldObject interactions should be broken down by type: Item, Character, Creature, Generic.
+        
+        
+        for (int i=0;i<localTileSelected->vItem.size();++i)
+        {
+          font8x8.drawText("ITM: "+useItem->getInteractName(localTileSelected->vItem(i)),panelX1+250,(panelY2)-((i+j)*10),panelX1+500,(panelY2)-((i+j)*10)-10,false,true);
+          font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vItem(i)))+" sec)",panelX1+500,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
+        }
+        
+        
+        for (int i=0;i<localTileSelected->vObjectGeneric.size();++i)
         {
           //font8x8.drawText(localTileSelected->vObject(i)->getName(),panelX1+250,(panelY2)-(i*10),panelX1+600,(panelY2)-(i*10)-10,false,true);
-          font8x8.drawText(useItem->getInteractName(localTileSelected->vObject(i)),panelX1+250,(panelY2)-((i+j)*10),panelX1+500,(panelY2)-((i+j)*10)-10,false,true);
-          font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vObject(i)))+" sec)",panelX1+500,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
+          font8x8.drawText("GEN: "+useItem->getInteractName(localTileSelected->vObjectGeneric(i)),panelX1+250,(panelY2)-((i+j)*10),panelX1+500,(panelY2)-((i+j)*10)-10,false,true);
+          font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vObjectGeneric(i)))+" sec)",panelX1+500,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
         }
 
       }
@@ -846,12 +867,12 @@ class Menu_AdventureMode: public GUI_Interface
                     World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
                     if ( wl != 0 )
                     {
-                      wl->removeItem(carriedItem);
+                      wl->remove(carriedItem);
                       // Put down carried item if necessary
                       if (tempItem != 0)
                       {
                         // Put item on map.
-                        wl->putObject(tempItem,playerCharacter->x,playerCharacter->y);
+                        wl->put(tempItem,playerCharacter->x,playerCharacter->y);
                         wl->vItem.push(tempItem);
                         tempItem->owner = 0;
                       }
@@ -865,7 +886,7 @@ class Menu_AdventureMode: public GUI_Interface
                       if ( wl != 0 )
                       {
                         // Put item on map.
-                        wl->putObject(carriedItem,playerCharacter->x,playerCharacter->y);
+                        wl->put(carriedItem,playerCharacter->x,playerCharacter->y);
                         wl->vItem.push(carriedItem);
                         vItemsOnFloor.push(carriedItem);
                         carriedItem->owner = 0;
@@ -885,12 +906,12 @@ class Menu_AdventureMode: public GUI_Interface
                     World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
                     if ( wl != 0 )
                     {
-                      wl->removeItem(carriedItem);
+                      wl->remove(carriedItem);
                       // Put down carried item if necessary
                       if (tempItem != 0)
                       {
                         // Put item on map.
-                        wl->putObject(tempItem,playerCharacter->x,playerCharacter->y);
+                        wl->put(tempItem,playerCharacter->x,playerCharacter->y);
                         wl->vItem.push(tempItem);
                         tempItem->owner=0;
                       }
@@ -904,7 +925,7 @@ class Menu_AdventureMode: public GUI_Interface
                       if ( wl != 0 )
                       {
                         // Put item on map.
-                        wl->putObject(carriedItem,playerCharacter->x,playerCharacter->y);
+                        wl->put(carriedItem,playerCharacter->x,playerCharacter->y);
                         wl->vItem.push(carriedItem);
                         vItemsOnFloor.push(carriedItem);
                         carriedItem->owner=0;
@@ -939,15 +960,18 @@ class Menu_AdventureMode: public GUI_Interface
       //}
     }
     
-      // Default action for selected item.
-    if (_mouse->isLeftClick && selectedHotbar >= 0 && selectedHotbar < 10)
+      // Default action for selected item. Check to make sure we are clicking somewhere valid.
+    if (_mouse->isLeftClick && selectedHotbar >= 0 && selectedHotbar < 10 && worldViewer.hoveredAbsoluteX != ABSOLUTE_COORDINATE_NULL && worldViewer.hoveredAbsoluteY != ABSOLUTE_COORDINATE_NULL
+     && _mouse->x > panelX1+220 )
     {
-      //std::cout<<"DEFAULT USE ITEM\n";
+      
       if (inventoryGrid[selectedHotbar][0] != 0)
       {
+        std::cout<<"DEFAULT USE ITEM: "<<inventoryGrid[selectedHotbar][0]->getName()<<".\n";
       }
       else
       {
+        std::cout<<"Default hand action\n";
       }
     }
     
