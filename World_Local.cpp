@@ -149,7 +149,6 @@ bool World_Local::generate()
           auto deer = new Creature_Deer;
           deer->init();
           put(deer,_x,_y);
-          vCreature.push(deer);
         }
 
         
@@ -381,14 +380,72 @@ bool World_Local::put (WorldObject* _object, int _x, int _y)
   _object->worldX = globalX;
   _object->worldY = globalY;
   _object->x = _x;
-  _object->y = _y;
-  aLocalTile(_x,_y).add(_object);
-  
+  _object->y = _y;  
   _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
   _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
+  aLocalTile(_x,_y).add(_object);
+  vObjectGeneric.push(_object);
+  return true;
+}
+
+bool World_Local::put (Item* _item, int _x, int _y)
+{
+  if ( aLocalTile.isSafe(_x,_y) == false )
+  { return false; }
+
+  _item->worldX = globalX;
+  _item->worldY = globalY;
+  _item->x = _x;
+  _item->y = _y;
+  _item->fullX = _item->worldX * LOCAL_MAP_SIZE + _item->x;
+  _item->fullY = _item->worldY * LOCAL_MAP_SIZE + _item->y;
+  aLocalTile(_x,_y).add(_item);
+  vItem.push(_item);
+  return true;
+}
+bool World_Local::put (Character* _character, int _x, int _y)
+{
+  if ( aLocalTile.isSafe(_x,_y) == false )
+  { return false; }
+
+  _character->worldX = globalX;
+  _character->worldY = globalY;
+  _character->x = _x;
+  _character->y = _y;
+  _character->fullX = _character->worldX * LOCAL_MAP_SIZE + _character->x;
+  _character->fullY = _character->worldY * LOCAL_MAP_SIZE + _character->y;
+  aLocalTile(_x,_y).add(_character);
+  vCharacter.push(_character);
   
   return true;
 }
+bool World_Local::put (Creature* _creature, int _x, int _y)
+{
+  if ( aLocalTile.isSafe(_x,_y) == false )
+  { return false; }
+
+  _creature->worldX = globalX;
+  _creature->worldY = globalY;
+  _creature->x = _x;
+  _creature->y = _y;
+  _creature->fullX = _creature->worldX * LOCAL_MAP_SIZE + _creature->x;
+  _creature->fullY = _creature->worldY * LOCAL_MAP_SIZE + _creature->y;
+  aLocalTile(_x,_y).add(_creature);
+  vCreature.push(_creature);
+  
+  return true;
+}
+// bool World_Local::put (Creature_Deer* _creature, int _x, int _y)
+// {
+  // if ( aLocalTile.isSafe(_x,_y) == false )
+  // { return false; }
+
+  // std::cout<<"ADDING DEER\n";
+
+  
+  // return true;
+// }
+
 
   // We need to implement optional map-only restriction
 bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
@@ -654,28 +711,72 @@ bool World_Local::wander (WorldObject* _object)
   return false;
 }
 
-bool World_Local::put (Item* _item, int _x, int _y)
+  // Move object in random direction
+  // For now objects don't leave their map.
+bool World_Local::wander (Character* _object)
 {
-  if ( aLocalTile.isSafe(_x,_y) == false )
-  { return false; }
-
-  _item->worldX = globalX;
-  _item->worldY = globalY;
-  _item->x = _x;
-  _item->y = _y;
-  aLocalTile(_x,_y).add(_item);
-  _item->fullX = _item->worldX * LOCAL_MAP_SIZE + _item->x;
-  _item->fullY = _item->worldY * LOCAL_MAP_SIZE + _item->y;
-  vItem.push(_item);
+  if ( _object==0 ) { return false; }
   
-  return true;
+  // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
+  
+  int newX = _object->x;
+  int newY = _object->y;
+  
+  int direction = random.randomInt(3);
+  
+  if ( direction==0 ) { ++newX; }
+  else if ( direction==1 ) { --newX; }
+  else if ( direction==2 ) { ++newY; }
+  else { --newY; }
+  
+  if ( aLocalTile.isSafe(newX,newY) && aLocalTile(newX,newY).hasMovementBlocker() == false )
+  {
+    aLocalTile(_object->x,_object->y).remove(_object);
+    put(_object,newX,newY);
+    return true;
+  }
+
+  
+
+  return false;
 }
+
+  // Move object in random direction
+  // For now objects don't leave their map.
+bool World_Local::wander (Creature* _object)
+{
+  if ( _object==0 ) { return false; }
+
+  // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
+  
+  int newX = _object->x;
+  int newY = _object->y;
+  
+  int direction = random.randomInt(3);
+  
+  if ( direction==0 ) { ++newX; }
+  else if ( direction==1 ) { --newX; }
+  else if ( direction==2 ) { ++newY; }
+  else { --newY; }
+  
+  if ( aLocalTile.isSafe(newX,newY) && aLocalTile(newX,newY).hasMovementBlocker() == false )
+  {
+    //aLocalTile(_object->x,_object->y).remove(_object);
+    remove(_object);
+    put(_object,newX,newY);
+    return true;
+  }
+
+  
+
+  return false;
+}
+
 
 bool World_Local::remove (WorldObject* _object )
 {
   if ( _object==0) {return false;}
   vObjectGeneric.remove(_object);
-  //vObject.remove(_object);
   
   if (aLocalTile.isSafe(_object->x,_object->y))
   {
@@ -697,7 +798,30 @@ bool World_Local::remove (Item* _item )
   
   return false;
 }
-
+bool World_Local::remove (Character* _character )
+{
+  if ( _character == 0 ) {return false;}
+  vCharacter.remove(_character);
+  
+  if (aLocalTile.isSafe(_character->x,_character->y))
+  {
+    aLocalTile(_character->x,_character->y).remove(_character);
+  }
+  
+  return false;
+}
+bool World_Local::remove (Creature* _creature )
+{
+  if ( _creature == 0 ) {return false;}
+  vCreature.remove(_creature);
+  
+  if (aLocalTile.isSafe(_creature->x,_creature->y))
+  {
+    aLocalTile(_creature->x,_creature->y).remove(_creature);
+  }
+  
+  return false;
+}
 
     //Return a vector of coordinates visible from the given location.
 Vector <HasXY*> * World_Local::rayTraceLOS (int _x, int _y, const int RANGE)
@@ -1041,10 +1165,12 @@ bool World_Local::isBlockingView(int _x, int _y)
 	// Increments the map by nTicks ticks. Higher values may lead to abstraction.
 void World_Local::incrementTicks(int nTicks)
 {
+  Vector <Creature*> vToMove;
   for (int i=0;i<vCreature.size();++i)
-  {
-    wander(vCreature(i));
-  }
+  { vToMove.push(vCreature(i)); }
+  for (int i=0;i<vToMove.size();++i)
+  { wander(vToMove(i)); }
+
 }
 
 

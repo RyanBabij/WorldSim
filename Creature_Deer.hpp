@@ -15,9 +15,12 @@ class Creature_Deer: public Creature
 	public:
 
 	Creature_Deer();
-	virtual ~Creature_Deer();
+  ~Creature_Deer();
+  
+	void init( int _sex = 0);
   
 	virtual Texture* currentTexture();
+  virtual std::string getName();
 };
 
 #endif

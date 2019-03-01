@@ -248,12 +248,10 @@ class Menu_AdventureMode: public GUI_Interface
     // Render item selection
     if (itemSelectionActive && localTileSelected != 0)
     {
-      // Fuck this I'm outta here
-      itemSelectionActive=false;
-      return;
+      int nInteractions = localTileSelected->vItem.size() + localTileSelected->vCharacter.size() + localTileSelected->vCreature.size() + localTileSelected->vObjectGeneric.size() + 1;
       
       // Render background and selection panels.
-      Renderer::placeColour4a(120,120,120,255,panelX1+250,panelY2,panelX1+600,(panelY2)-((localTileSelected->vObject.size()+1)*10));
+      Renderer::placeColour4a(120,120,120,255,panelX1+250,panelY2,panelX1+600,(panelY2)-(nInteractions*10));
       Renderer::placeColour4a(180,180,180,255,panelX1+250,panelY2-(selectedItemSlot*10),panelX1+600,panelY2-((selectedItemSlot+1)*10));
       
       if ( useItem != 0 )
@@ -272,7 +270,21 @@ class Menu_AdventureMode: public GUI_Interface
           font8x8.drawText("ITM: "+useItem->getInteractName(localTileSelected->vItem(i)),panelX1+250,(panelY2)-((i+j)*10),panelX1+500,(panelY2)-((i+j)*10)-10,false,true);
           font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vItem(i)))+" sec)",panelX1+500,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
         }
+        j+=localTileSelected->vItem.size();
         
+        for (int i=0;i<localTileSelected->vCharacter.size();++i)
+        {
+          font8x8.drawText("CHR: "+useItem->getInteractName(localTileSelected->vCharacter(i)),panelX1+250,(panelY2)-((i+j)*10),panelX1+500,(panelY2)-((i+j)*10)-10,false,true);
+          font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vCharacter(i)))+" sec)",panelX1+500,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
+        }
+        j+=localTileSelected->vCharacter.size();
+        
+        for (int i=0;i<localTileSelected->vCreature.size();++i)
+        {
+          font8x8.drawText("CRE: "+useItem->getInteractName(localTileSelected->vCreature(i)),panelX1+250,(panelY2)-((i+j)*10),panelX1+500,(panelY2)-((i+j)*10)-10,false,true);
+          font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vCreature(i)))+" sec)",panelX1+500,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
+        }
+        j+=localTileSelected->vCreature.size();
         
         for (int i=0;i<localTileSelected->vObjectGeneric.size();++i)
         {

@@ -6,6 +6,8 @@
 
 #include <WorldGenerator/Biome.hpp>
 
+#include "Creature.hpp"
+
 /*
 	Local tile data gets stored here. Render stuff can't go here because that depends on neighboring tiles.
 */
@@ -33,6 +35,17 @@ void LocalTile::add(Item* _item)
   vObject.push(_item);
 }
 
+void LocalTile::add(Character* _character)
+{
+  vCharacter.push(_character);
+  vObject.push(_character);
+}
+void LocalTile::add(Creature* _creature)
+{
+  vCreature.push(_creature);
+  vObject.push(_creature);
+}
+
 
   // Remove object from master list and generic object list.
 void LocalTile::remove(WorldObject* _object)
@@ -45,6 +58,18 @@ void LocalTile::remove(Item* _item)
 {
   vItem.erase(_item);
   vObject.erase(_item);
+}
+  // Remove object from Character list and master list.
+void LocalTile::remove(Character* _character)
+{
+  vCharacter.erase(_character);
+  vObject.erase(_character);
+}
+  // Remove object from Creature list and master list.
+void LocalTile::remove(Creature* _creature)
+{
+  vCreature.erase(_creature);
+  vObject.erase(_creature);
 }
 
 

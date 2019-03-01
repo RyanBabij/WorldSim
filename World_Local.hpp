@@ -32,6 +32,7 @@
 */
 
 #include "Creature.hpp"
+#include "Creature_Deer.hpp"
 
 class Item;
 
@@ -102,17 +103,27 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	bool saveToFile(std::string /* path */);
   
     // PUT FUNCTION
-    // Overloaded put function automatically sorts object into
-    // relevant lists.
+    // Overloaded put function automatically sorts object into relevant lists.
+    // It's important to account for all categories otherwise it will implicitly
+    // overload to a generic. And you will never see it again.
   bool put (WorldObject* , int /* _x */, int /* _y */);
     bool put (Item* , int /* _x */, int /* _y */);
+    bool put (Character* , int /* _x */, int /* _y */);
+    bool put (Creature* , int /* _x */, int /* _y */);
     
   bool remove (WorldObject*);
     bool remove (Item*);
+    bool remove (Character*);
+    bool remove (Creature*);
   
   
   bool moveObject (WorldObject* , int /* newX */, int /* newY */ );
+  
+  
+  
   bool wander (WorldObject* /* _object */);
+    bool wander (Character* /* _object */);
+    bool wander (Creature* /* _object */);
   
 
   //bool removeItem (Item* /* _item */);

@@ -63,9 +63,13 @@ class LocalTile: public HasTexture
   
   void add(WorldObject*);
     void add(Item*);
+    void add(Character*);
+    void add(Creature*);
   
   void remove(WorldObject*);
     void remove(Item*);
+    void remove(Character*);
+    void remove(Creature*);
 
   
   void clearObjects();
