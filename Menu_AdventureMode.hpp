@@ -441,7 +441,7 @@ class Menu_AdventureMode: public GUI_Interface
       }
       std::string hoveredItemStats = "";
       if ( hoveredInventoryX >= 0 && hoveredInventoryX < 10
-       && hoveredInventoryY >= 0 && hoveredInventoryX < 10)
+       && hoveredInventoryY >= 0 && hoveredInventoryY < 10)
       {
         if (inventoryGrid[hoveredInventoryX][hoveredInventoryY] )
         {
