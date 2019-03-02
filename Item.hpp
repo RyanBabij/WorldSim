@@ -1,11 +1,18 @@
 #pragma once
-#ifndef WORLDSIM_ITEM_CPP
-#define WORLDSIM_ITEM_CPP
+#ifndef WORLDSIM_ITEM_HPP
+#define WORLDSIM_ITEM_HPP
 
 /* Item.cpp
-	#include"Item.cpp"
+	#include"Item.hpp"
   
-  Implementation of Item.hpp.
+  An item is an object which can be picked up and manipulated. Items are reliant on
+  actors (Creatures/Characters) to be moved or used.
+  
+  Items cannot interfere with movement or line of sight.
+  
+  In the future stacking should be implemented for identical objects.
+  
+  Only items can be stored in an inventory.
 
 */
 
@@ -19,6 +26,7 @@ class Ammo
 };
 
 #include "LocalTile.hpp"
+//#include "Character.hpp"
 
 class Item: public WorldObject
 {
@@ -260,9 +268,16 @@ class Item_Axe: public Item
 
   virtual void interact (LocalTile* obj)
   {
-    std::cout<<"You chop the "<<obj->getName()<<".\n";
+    std::cout<<"You chop the TILE "<<obj->getName()<<".\n";
   }
-
+  virtual void interact (Item* obj)
+  {
+    std::cout<<"You chop the ITM "<<obj->getName()<<".\n";
+  }
+  virtual void interact (Character* obj)
+  {
+    //std::cout<<"You chop the CHARACTER "<<obj->getName()<<".\n";
+  }
   
   std::string getInteractName(WorldObject* _w)
   {

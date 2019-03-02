@@ -9,7 +9,7 @@
 
   Implementation of WorldObject_Tree.hpp.
 */
-WorldObject_Tree::WorldObject_Tree(int _growth = 0)
+WorldObject_Tree::WorldObject_Tree(int _growth /* =0 */)
 {
 	x=0; y=0;
 	weight=0;

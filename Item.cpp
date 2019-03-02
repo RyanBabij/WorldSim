@@ -1,19 +1,11 @@
 #pragma once
-#ifndef WORLDSIM_ITEM_HPP
-#define WORLDSIM_ITEM_HPP
+#ifndef WORLDSIM_ITEM_CPP
+#define WORLDSIM_ITEM_CPP
 
 /* Item.hpp
 	#include"Item.hpp"
   
-  An item is an object which can be picked up and manipulated. Items are reliant on
-  actors (Creatures/Characters) to be moved or used.
-  
-  Items cannot interfere with movement or line of sight.
-  
-  In the future stacking should be implemented for identical objects.
-  
-  Only items can be stored in an inventory.
-
+  Implementation of Item.hpp
 */
 
 #include "Item.hpp"

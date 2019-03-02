@@ -32,14 +32,15 @@ class Tribe_Human;
 class Tribe_Dwarven;
 class Tribe_Elf;
 
-#include "WorldTile.cpp"
-#include "LocalTile.cpp"
+#include "WorldTile.hpp"
+#include "LocalTile.hpp"
 
 #include "GuildCalendar.hpp"
 
-#include "World_Local.hpp"
+class World_Local;
 
-#include "WorldObjectGlobal.hpp"
+class WorldObjectGlobal;
+
 
 
 #include "World_Landmass.hpp"
@@ -187,72 +188,14 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	
 
   // Return a World_Local object for this local map. Will generate a local map if necessary. Returns null pointer for invalid request.
-	inline World_Local* operator() (const int _x, const int _y)
-	{
-    for (int i=0;i<vWorldLocal.size();++i)
-    {
-      if (vWorldLocal(i)->globalX == _x && vWorldLocal(i)->globalY == _y )
-      {
-        return vWorldLocal(i);
-      }
-    }
-    
-    // The local map isn't in memory, therefore we need to load it up.
-    // For now we just generate it from scratch.
-    generateLocal(_x,_y);
+	inline World_Local* operator() (const int _x, const int _y);
 
-    for (int i=0;i<vWorldLocal.size();++i)
-    {
-      if (vWorldLocal(i)->globalX == _x && vWorldLocal(i)->globalY == _y )
-      {
-        return vWorldLocal(i);
-      }
-    }
-    
-    return 0;
-  }
   
   //New operator: Gets tiles using global coordinates.
   // IT DOES NOT RETURN WORLD_LOCAL LIKE THE OTHER FUNCTION
   // Yeah this is a confusing overload which needs to be fixed in the future.
   // This will generate a local map if necessary.
-	inline LocalTile* operator() (unsigned long int _x, unsigned long int _y)
-	{
-    //std::cout<<"WORLD ABSOLUTE QUERY\n";
-    
-    // CONVERT COORDINATES TO RELATIVE.
-    int gX = 0;
-    int gY = 0;
-    int lX = 0;
-    int lY = 0;
-    
-    if ( absoluteToRelative(_x,_y,&gX,&gY,&lX,&lY) == false )
-    {
-      return 0;
-    }
-    
-    // Check if local map is already loaded.
-    for (int i=0;i<vWorldLocal.size();++i)
-    {
-      if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY )
-      {
-        return &vWorldLocal(i)->aLocalTile(lX,lY);
-      }
-    }
-    // The local map isn't in memory, therefore we need to load it up.
-    // For now we just generate it from scratch.
-    generateLocal(gX,gY);
-
-    for (int i=0;i<vWorldLocal.size();++i)
-    {
-      if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY )
-      {
-        return &vWorldLocal(i)->aLocalTile(lX,lY);
-      }
-    }
-    
-    return 0;
-  }
+	inline LocalTile* operator() (unsigned long int _x, unsigned long int _y);
   
   // COORDINATE CONVERSIONS
   

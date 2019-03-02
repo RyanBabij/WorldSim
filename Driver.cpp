@@ -160,9 +160,6 @@ Timer animationTimer;
 /* Use this for checking algo speeds. */
 Timer debugTimer;
 
-#include "Character.hpp"
-Character * playerCharacter; /* Global link to the player character (null if player hasn't selected a character) */
-
 /* Instead of having a global worldViewer, I think it would be better to have lots of local worldviewers, as currently I have a problem with the various menus interfering with the global worldViewer. */
 #include "World_Viewer.hpp"
 WorldViewer worldViewer;
@@ -173,24 +170,37 @@ World world;
 
 #include "World_Local.cpp"
 World_Local * worldLocal;
+
+#include "WorldTile.cpp"
+#include "LocalTile.cpp"
 	
 #include "Creature.cpp"
-#include "Creature_Deer.cpp"
+  #include "Creature_Deer.cpp"
   
 #include "Character.cpp"
-#include "Character_Knowledge.cpp"
+  #include "Character_Knowledge.cpp"
+
+#include "Civ.cpp"
+  #include "Civ_Dwarven.cpp"
+  
+#include "Settlement.cpp"
+  #include "Settlement_Dwarven.cpp"
 
 #include "Tribe.cpp"
-#include "Tribe_Dwarven.cpp"
-#include "Tribe_Human.cpp"
-	
-#include "Civ.cpp"
-#include "Civ_Dwarven.cpp"
-
-#include "Settlement.cpp"
+  #include "Tribe_Dwarven.cpp"
+  #include "Tribe_Human.cpp"
+  #include "Tribe_Elf.cpp"
+  
+#include "WorldObject.cpp"
+  #include "WorldObject_Tree.cpp"
+  #include "WorldObject_Rock.cpp"
+  #include "WorldObject_Sign.cpp"
   
 #include "WorldObjectGlobal.cpp"
-#include "WorldObjectGlobal_TribalArtifact.cpp"
+  #include "WorldObjectGlobal_TribalArtifact.cpp"
+  
+
+#include "Item.cpp"
 
 
 #include <Math/Geometry/Geometry.hpp>

@@ -21,6 +21,7 @@ A tile is 5km by 5km, ie, 5,000 * 5000 tiles. */
 
 class Item;
 class Creature;
+class Character;
 
 class LocalTile: public HasTexture
 {

@@ -31,8 +31,9 @@
 
 */
 
-#include "Creature.hpp"
-#include "Creature_Deer.hpp"
+// #include "Creature.hpp"
+// #include "Creature_Deer.hpp"
+class Creature;
 
 class Item;
 

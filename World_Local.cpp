@@ -10,8 +10,13 @@
 
 #include "World_Local.hpp"
 
+#include "WorldObject.hpp"
+  #include "WorldObject_Tree.hpp"
+  #include "WorldObject_Rock.hpp"
+  #include "WorldObject_Sign.hpp"
 
-#include "Creature_Deer.hpp"
+#include "Creature.hpp"
+  #include "Creature_Deer.hpp"
 
 
 

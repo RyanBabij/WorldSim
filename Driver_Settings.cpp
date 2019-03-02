@@ -20,9 +20,12 @@
 // that out later.
 #define PORTABLE_INT_MAX 32767
 
+class Character;
+Character * playerCharacter = 0; /* Global link to the player character (null if player hasn't selected a character) */
+
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.097 Win32 dev";
+const std::string VERSION = "0.0.098 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -42,7 +45,7 @@ enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
 bool FOG_OF_WAR = true; // Enable/disable fog rendering
 bool QUICKSTART_GENERATOR = true; // Skip menu stuff and immediately generate a default world.
   //Quickly go straight into the simulator.
-const bool QUICKSTART_SIMULATOR = false; // Skip menu stuff and jump right into the game. (Will use defaults).
+const bool QUICKSTART_SIMULATOR = false; // Skip menu stuff and jump right into the game. (Will use defaults). 
 
 int worldPop = 0;
 int lastline = 0;

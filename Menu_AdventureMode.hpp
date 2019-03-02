@@ -50,7 +50,8 @@ class Menu_AdventureMode: public GUI_Interface
       /* Button to view character sheet - CHR */
     GUI_Button buttonCharacterSheet;
     
-        //Render very basic manual for now. Future manual should have stuff like bestiary, alchemy instructions, crafting instructions, etc.
+        //Render very basic manual for now. Future manual should have stuff like bestiary, alchemy instructions,
+        // crafting instructions, etc.
     bool manualActive;
     
       // Render conversation menu
@@ -75,6 +76,7 @@ class Menu_AdventureMode: public GUI_Interface
     bool itemSelectionActive;
       unsigned long int tileSelectAbsoluteX, tileSelectAbsoluteY;
       LocalTile* localTileSelected; /* LocalTile that the player last selected */
+      int nInteractions; /* number of interactions currently in the menu */
       
       // Vectors of each object on selected tile, broken down by type.
       //Vector <Item*> vSelectedTileItems;
@@ -85,7 +87,8 @@ class Menu_AdventureMode: public GUI_Interface
         bool subItemSelectionActive;
         Item* useItem; /* Item to use on target */
     
-      // CTRL is modifier for inventory menu. Will add 1 of item to inventory, or transfer 1 of item to storage. Or drop 1 of item.
+      // CTRL is modifier for inventory menu. Will add 1 of item to inventory, or transfer 1 of item to storage. Or
+      // drop 1 of item.
     bool holdingCTRL;
     
     int mouseX, mouseY;
@@ -146,6 +149,7 @@ class Menu_AdventureMode: public GUI_Interface
     selectedItemSlot=0;
     subItemSelectionActive=false;
     useItem=0;
+    nInteractions=0;
     
     characterSheetActive=false;
     
@@ -248,7 +252,7 @@ class Menu_AdventureMode: public GUI_Interface
     // Render item selection
     if (itemSelectionActive && localTileSelected != 0)
     {
-      int nInteractions = localTileSelected->vItem.size() + localTileSelected->vCharacter.size() + localTileSelected->vCreature.size() + localTileSelected->vObjectGeneric.size() + 1;
+      nInteractions = localTileSelected->vItem.size() + localTileSelected->vCharacter.size() + localTileSelected->vCreature.size() + localTileSelected->vObjectGeneric.size() + 1;
       
       // Render background and selection panels.
       Renderer::placeColour4a(120,120,120,255,panelX1+250,panelY2,panelX1+600,(panelY2)-(nInteractions*10));
@@ -474,6 +478,102 @@ class Menu_AdventureMode: public GUI_Interface
 			_keyboard->keyUp(Keyboard::ESCAPE);	
 		}
     
+      // SPACE = TALK, INTERACT
+    if(_keyboard->isPressed(Keyboard::SPACE) && conversationActive==false)
+    {
+
+      World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
+      if ( wl != 0 )
+      {
+        // wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y-1);
+        // worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
+        // world.updateMaps();
+        // playerCharacter->updateKnowledge();
+        
+        
+        
+        Vector <Character*> * vNearbyCharacter = wl->getAdjacentCharacters(playerCharacter->x,playerCharacter->y);
+        
+        conversationCharacter = 0;
+        
+        if ( vNearbyCharacter != 0)
+        {
+          for (int i=0;i<vNearbyCharacter->size(); ++i)
+          {
+            std::cout<<(*vNearbyCharacter)(i)->getFullName()<<".\n";
+            if ((*vNearbyCharacter)(i)!=playerCharacter)
+            {
+              conversationCharacter = (*vNearbyCharacter)(i);
+            }
+          }
+        }
+        
+        if (conversationCharacter != 0)
+        {
+          std::cout<<playerCharacter->getFullName()<<" talks to "<<conversationCharacter->getFullName()<<".\n";
+          conversationActive=true;
+        }
+      }
+      
+      _keyboard->keyUp(Keyboard::SPACE);
+    }
+    
+      // I = TOGGLE INVENTORY
+    if(_keyboard->isPressed(Keyboard::I) || _keyboard->isPressed(Keyboard::i))
+    {
+      inventoryActive = !inventoryActive;
+      
+      // build list of items on the floor
+      if (inventoryActive)
+      {
+        vItemsOnFloor.clear();
+        World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
+        if ( wl != 0 )
+        {
+          for (int i=0;i<wl->vItem.size();++i)
+          {
+            if (wl->vItem(i)->x == playerCharacter->x && wl->vItem(i)->y == playerCharacter->y)
+            {
+              vItemsOnFloor.push(wl->vItem(i));
+            }
+          }
+        }
+      } 
+      
+      _keyboard->keyUp(Keyboard::I);
+      _keyboard->keyUp(Keyboard::i);
+    }
+
+      // E = Use item. Currently context-sensitive. In future there might be a menu of choices.
+    if(_keyboard->isPressed(Keyboard::E) || _keyboard->isPressed(Keyboard::e))
+    {
+      itemSelectionActive = !itemSelectionActive;
+      if ( selectedHotbar >= 0 && selectedHotbar < 10 && inventoryGrid[selectedHotbar][0] != 0 )
+      {
+        useItem = inventoryGrid[selectedHotbar][0];
+        
+        // Check here if item is self-use, or requires target.
+        
+        //std::cout<<"Using: "<<useItem->getName()<<".\n";
+        //playerCharacter->useItem(useItem);
+      }
+      
+      worldViewer.showHoveredTile = itemSelectionActive;
+      localTileSelected=0;
+      subItemSelectionActive=false;
+      selectedItemSlot=0;
+
+      _keyboard->keyUp(Keyboard::E);
+      _keyboard->keyUp(Keyboard::e);
+    }
+    
+      // Disable keyboard if we're in a menu.
+    if (itemSelectionActive || subItemSelectionActive || manualActive || conversationActive || inventoryActive)
+    {
+      _keyboard->clearAll();
+      return true;
+    }
+    
       // TAB will switch between adventure mode and god mode.
       // Make sure to relinquish control of character.
 		if(_keyboard->isPressed(Keyboard::TAB))
@@ -591,46 +691,6 @@ class Menu_AdventureMode: public GUI_Interface
       _keyboard->keyUp(Keyboard::PERIOD);
     }
     
-      // SPACE = TALK, INTERACT
-    if(_keyboard->isPressed(Keyboard::SPACE) && conversationActive==false)
-    {
-
-      World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
-      if ( wl != 0 )
-      {
-        // wl->moveObject(playerCharacter,playerCharacter->x,playerCharacter->y-1);
-        // worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
-        // world.updateMaps();
-        // playerCharacter->updateKnowledge();
-        
-        
-        
-        Vector <Character*> * vNearbyCharacter = wl->getAdjacentCharacters(playerCharacter->x,playerCharacter->y);
-        
-        conversationCharacter = 0;
-        
-        if ( vNearbyCharacter != 0)
-        {
-          for (int i=0;i<vNearbyCharacter->size(); ++i)
-          {
-            std::cout<<(*vNearbyCharacter)(i)->getFullName()<<".\n";
-            if ((*vNearbyCharacter)(i)!=playerCharacter)
-            {
-              conversationCharacter = (*vNearbyCharacter)(i);
-            }
-          }
-        }
-        
-        if (conversationCharacter != 0)
-        {
-          std::cout<<playerCharacter->getFullName()<<" talks to "<<conversationCharacter->getFullName()<<".\n";
-          conversationActive=true;
-        }
-      }
-      
-      _keyboard->keyUp(Keyboard::SPACE);
-    }
-    
     // Hotbar selection keys
 		if(_keyboard->isPressed(Keyboard::ONE))
 		{
@@ -683,55 +743,6 @@ class Menu_AdventureMode: public GUI_Interface
 			_keyboard->keyUp(Keyboard::ZERO);	
 		}
     
-      // I = TOGGLE INVENTORY
-    if(_keyboard->isPressed(Keyboard::I) || _keyboard->isPressed(Keyboard::i))
-    {
-      inventoryActive = !inventoryActive;
-      
-      // build list of items on the floor
-      if (inventoryActive)
-      {
-        vItemsOnFloor.clear();
-        World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
-        if ( wl != 0 )
-        {
-          for (int i=0;i<wl->vItem.size();++i)
-          {
-            if (wl->vItem(i)->x == playerCharacter->x && wl->vItem(i)->y == playerCharacter->y)
-            {
-              vItemsOnFloor.push(wl->vItem(i));
-            }
-          }
-        }
-      } 
-      
-      _keyboard->keyUp(Keyboard::I);
-      _keyboard->keyUp(Keyboard::i);
-    }
-
-      // E = Use item. Currently context-sensitive. In future there might be a menu of choices.
-    if(_keyboard->isPressed(Keyboard::E) || _keyboard->isPressed(Keyboard::e))
-    {
-      itemSelectionActive = !itemSelectionActive;
-      if ( selectedHotbar >= 0 && selectedHotbar < 10 && inventoryGrid[selectedHotbar][0] != 0 )
-      {
-        useItem = inventoryGrid[selectedHotbar][0];
-        
-        // Check here if item is self-use, or requires target.
-        
-        //std::cout<<"Using: "<<useItem->getName()<<".\n";
-        //playerCharacter->useItem(useItem);
-      }
-      
-      worldViewer.showHoveredTile = itemSelectionActive;
-      localTileSelected=0;
-      subItemSelectionActive=false;
-      selectedItemSlot=0;
-
-      _keyboard->keyUp(Keyboard::E);
-      _keyboard->keyUp(Keyboard::e);
-    }
-    
 		guiManager.keyboardEvent(_keyboard);
 		worldViewer.keyboardEvent(_keyboard);
 		return false;
@@ -745,22 +756,34 @@ class Menu_AdventureMode: public GUI_Interface
     
     if (itemSelectionActive)
     {
+      // Right-click to cancel out of menus.
+      if (subItemSelectionActive && (localTileSelected == 0 || _mouse->isRightClick))
+      {
+        subItemSelectionActive=false;
+        localTileSelected=0;
+      }
+      else if (subItemSelectionActive==false && _mouse->isRightClick)
+      {
+        itemSelectionActive=false;
+        localTileSelected=0;
+        worldViewer.showHoveredTile = false;
+      }
       
       // Scroll up and down item select
-      if (subItemSelectionActive && _mouse->isWheelDown && localTileSelected != 0)
+      else if (subItemSelectionActive && _mouse->isWheelDown)
       {
         ++selectedItemSlot;
-        if (selectedItemSlot>localTileSelected->vObject.size()) {selectedItemSlot=0;}
+        if (selectedItemSlot>=nInteractions) {selectedItemSlot=0;}
         _mouse->isWheelDown=false;
       }
-      if (subItemSelectionActive && _mouse->isWheelUp && localTileSelected != 0)
+      else if (subItemSelectionActive && _mouse->isWheelUp)
       {
         --selectedItemSlot;
-        if (selectedItemSlot<0) { selectedItemSlot=localTileSelected->vObject.size(); }
+        if (selectedItemSlot<0) { selectedItemSlot=nInteractions-1; }
         _mouse->isWheelUp=false;
       }
-      
-      if (subItemSelectionActive && _mouse->isLeftClick)
+
+      else if (subItemSelectionActive && _mouse->isLeftClick)
       {
         if (selectedItemSlot == 0)
         {
@@ -788,10 +811,39 @@ class Menu_AdventureMode: public GUI_Interface
         {
           std::cout<<"You punch the "<<localTileSelected->vObject(selectedItemSlot-1)->getName()<<".\n";
         }
-        else
+        else // Using item on item.
         {
-          std::cout<<"You use the "<<useItem->getName()<<" on the "<<localTileSelected->vObject(selectedItemSlot-1)->getName()<<".\n";
-          useItem->interact(localTileSelected->vObject(selectedItemSlot-1));
+
+          
+          // We need to find the correct vector. This could certainly be cleaner, for example
+          // using WorldObject* master list and then just searching sub vectors,
+          // but this works well enough.
+          const int actionSlot = selectedItemSlot-1;
+          const int nItemOptions = localTileSelected->vItem.size();
+          const int nCharacterOptions = localTileSelected->vCharacter.size();
+          const int nCreatureOptions = localTileSelected->vCreature.size();
+          
+          // Use Item on Item
+          if (actionSlot < nItemOptions )
+          {
+            useItem->interact(localTileSelected->vItem(actionSlot));
+          }
+          // Use Item on Character
+          else if (actionSlot < nItemOptions + nCharacterOptions )
+          {
+            useItem->interact(localTileSelected->vCharacter(actionSlot-nItemOptions));
+          }
+          // Use Item on Creature
+          else if (actionSlot < nItemOptions + nCharacterOptions + nCreatureOptions )
+          {
+            useItem->interact(localTileSelected->vCreature(actionSlot-nItemOptions-nCharacterOptions));
+          }
+          // Use Item on WorldObject
+          else //This is a generic object interaction
+          {
+            useItem->interact
+            (localTileSelected->vObjectGeneric(actionSlot-nItemOptions-nCharacterOptions-nCreatureOptions));
+          }
         }
 
           // Reset the interact menu.
@@ -802,7 +854,7 @@ class Menu_AdventureMode: public GUI_Interface
         selectedItemSlot=0;
         _mouse->isLeftClick=false;
       }
-      if (subItemSelectionActive==false && _mouse->isLeftClick)
+      else if (subItemSelectionActive==false && _mouse->isLeftClick)
       {
         tileSelectAbsoluteX=worldViewer.hoveredAbsoluteX;
         tileSelectAbsoluteY=worldViewer.hoveredAbsoluteY;
