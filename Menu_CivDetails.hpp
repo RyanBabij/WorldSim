@@ -50,8 +50,15 @@ class Menu_CivDetails: public GUI_Interface
 		guiManager.setFont(_font);
 		//menuTribeDetails.setFont(_font);
 	}
+  
+  
+    // This is some bad overloading.
+  void init()
+  {
+    init(0);
+  }
 	
-	void init(Civ* _selectedCiv=0)
+	void init(Civ* _selectedCiv)
 	{
     selectedCiv = _selectedCiv;
     

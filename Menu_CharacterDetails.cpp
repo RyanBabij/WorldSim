@@ -48,8 +48,15 @@ class Menu_CharacterDetails: public GUI_Interface
 		font = _font;
 		guiManager.setFont(_font);
 	}
+  
+  
+  // This is some bad overloading.
+  void init()
+  {
+    init(0);
+  }
 	
-	void init(Character* _character=0)
+	void init(Character* _character)
 	{
 		if ( _character != 0 || selectedCharacter== 0)
 		{

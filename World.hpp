@@ -11,7 +11,7 @@
 */
 
 #include <Graphics/Png/Png.hpp>
-#include <File/Filemanager.hpp>
+#include <File/FileManager.hpp>
 #include <Container/ArrayS2/ArrayS2.hpp>
 #include <map>
 

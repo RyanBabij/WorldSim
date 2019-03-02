@@ -25,7 +25,7 @@ Character * playerCharacter = 0; /* Global link to the player character (null if
 
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.098 Win32 dev";
+const std::string VERSION = "0.0.099 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
