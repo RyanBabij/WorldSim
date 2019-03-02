@@ -77,4 +77,10 @@
     }
   }
 
+  void Item_Fish::interact (Character* _character)
+  {
+    Console ("You eat the fish");
+    owner->consume(this);
+  }
+  
 #endif

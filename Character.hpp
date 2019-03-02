@@ -75,6 +75,9 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   Vector <HasXY2 <unsigned long int> * > vMovesToProcess;
   Vector <HasXY2 <unsigned long int> * > vMovesToProcessSneak;
   
+  Vector <Item*> vInventory;
+  
+  
   bool isSneaking;
   
 		/* Right now each character has a biological mother and father. In the future we might also have guardians */
@@ -128,7 +131,10 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
     // For now this should just drop item at player's feet because
     // Inventory is not fully implemented.
   void giveItem(Item* _item);
-
+    // food or potion can be consumed.
+  void consume(Item* _item);
+  
+  void removeFromInventoryGrid(Item* _item); /* Player-only function */
 
 	
 		/* SOCIAL FUNCTIONS

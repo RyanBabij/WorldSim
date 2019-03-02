@@ -41,7 +41,7 @@ void init()
 	/* Load font */
 	Png fontPng;
 	int fileSize;
-	unsigned char* fileData = FileManager::getFile("Textures/Font/8x8/8x8_Transparent.png",&fileSize);	
+	unsigned char* fileData = FileManager::getFile("Textures/Font/8x8/8x8_Transparent-White.png",&fileSize);	
 	fontPng.load(fileData,fileSize);
 	if(font8x8.loadData(fontPng.data,8,8)==false)
 	{ std::cout<<"Error: Font did not load.\n"; }

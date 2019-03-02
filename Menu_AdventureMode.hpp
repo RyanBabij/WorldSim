@@ -68,7 +68,7 @@ class Menu_AdventureMode: public GUI_Interface
         // Carried item is an item selected by the mouse. The item will follow the cursor.
       Item* carriedItem;
       
-      Item * inventoryGrid [10][10];
+
       int selectedHotbar;
       int hoveredInventoryX, hoveredInventoryY;
       
@@ -210,10 +210,19 @@ class Menu_AdventureMode: public GUI_Interface
 		}
 
     Renderer::placeColour4a(200,200,250,250,panelX1,panelY1,panelX1+220,panelY1+220);
-    linesDrawn = font8x8.drawText("Minimap",panelX1,panelY1,panelX1+220,panelY1+220,true,true);
+    font8x8.drawText("Minimap",panelX1,panelY1,panelX1+220,panelY1+220,true,true);
     
     Renderer::placeColour4a(150,150,150,250,panelX1,panelY1+220,panelX1+220,panelY1+320);
-    linesDrawn = font8x8.drawText("Action Menu",panelX1,panelY1+220,panelX1+220,panelY1+320,true,true);
+    font8x8.drawText("Action Menu",panelX1,panelY1+220,panelX1+220,panelY1+320,true,true);
+    
+    if (playerCharacter->hunger > MAX_HUNGER - 100)
+    {
+      font8x8.drawText("HUNGRY",panelX1+230,panelY1+220,panelX1+400,panelY1+230,false,true,255,0,0);
+    }
+    if (playerCharacter->isAlive == false)
+    {
+      font8x8.drawText("DED",panelX1+230,panelY1+210,panelX1+400,panelY1+220,false,true,255,0,0);
+    }
     
     //BARS: Health, Stamina, Hunger, Thirst, Energy
     double barWidth = 220;
@@ -831,6 +840,7 @@ class Menu_AdventureMode: public GUI_Interface
           // Use Item on Character
           else if (actionSlot < nItemOptions + nCharacterOptions )
           {
+            std::cout<<"char int\n";
             useItem->interact(localTileSelected->vCharacter(actionSlot-nItemOptions));
           }
           // Use Item on Creature

@@ -112,13 +112,22 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
     bool put (Character* , int /* _x */, int /* _y */);
     bool put (Creature* , int /* _x */, int /* _y */);
     
+    // Remove object from world, but don't delete it.
+    // For example if somebody picks it up.
   bool remove (WorldObject*);
     bool remove (Item*);
     bool remove (Character*);
     bool remove (Creature*);
+    // Remove object from world and delete it.
+    // For example if it is consumed.
+  bool erase(WorldObject*);
+    bool erase (Item*);
+    bool erase (Character*);
+    bool erase (Creature*);
   
   
   bool moveObject (WorldObject* , int /* newX */, int /* newY */ );
+    bool moveObject (Character* , int /* newX */, int /* newY */ );
   
   
   

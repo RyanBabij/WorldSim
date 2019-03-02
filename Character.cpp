@@ -142,6 +142,35 @@ void Character::giveItem(Item* _item)
   //world(worldX,worldY)->vItem.push(_item);
 }
 
+void Character::consume(Item* _item)
+{
+  Console("NUM NUM NUM");
+  hunger-=_item->hungerRestore;
+  if (hunger<0) { hunger=0; }
+  world(worldX,worldY)->erase(_item);
+  
+    // We should probably consider ways to avoid this check, because it is rarely true.
+    // However the only possibility I can think of is making the player their own special class.
+  if (this == playerCharacter)
+  {
+    removeFromInventoryGrid(_item);
+  }
+}
+
+void Character::removeFromInventoryGrid(Item* _item) /* Player-only function */
+{
+    for (int _y=0;_y<10;++_y)
+    {
+      for (int _x=0;_x<10;++_x)
+      {
+        if (inventoryGrid[_x][_y]==_item)
+        {
+          inventoryGrid[_x][_y]=0;
+        }
+      }
+    }
+}
+
 std::string Character::getFullName() const
 {
 	return firstName + " " + lastName;

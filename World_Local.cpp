@@ -138,6 +138,10 @@ bool World_Local::generate()
           put(new Item_Fishrod, _x, _y);
           put(new Item_Shovel, _x, _y);
           put(new Item_Axe, _x, _y);
+          put(new Item_Fish, _x, _y);
+          put(new Item_Fish, _x, _y);
+          put(new Item_Campfire, _x, _y);
+          
           
           
         }
@@ -668,14 +672,71 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
   
   aLocalTile(newX,newY).add(_object);
   
+  _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
+  _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
+  //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
+  
+  //std::cout<<"World conversion:";
+  
+  world(_object->fullX,_object->fullY);
+  
+  
+  int gX = 0;
+  int gY = 0;
+  int lX = 0;
+  int lY = 0;
+  world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
+  //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
+  return true;
+}
+  //Yeah this is a mess.
+bool World_Local::moveObject (Character* _object, int newX, int newY )
+{
+  
+  // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
+  
+  if ( aLocalTile.isSafe(newX,newY) == false )
+  {
+    // Moving between maps.
+    
+      //LEFT
+    if ( newX < 0 )
+    {
+      int nMaps = 0;
+      while ( newX < 0 )
+      {
+        newX += LOCAL_MAP_SIZE-1;
+        ++nMaps;
+      }
+      ++newX;
+      
+      //PUT OBJECT
+      if (nMaps > 0 )
+      {
+        if (world.isSafe(globalX-nMaps,globalY))
+        {
+          aLocalTile(_object->x,_object->y).remove(_object);
+          _object->x=newX;
+          _object->y=newY;
+          _object->worldX = globalX-nMaps;
+          _object->worldY = globalY;
+          
+          world(globalX-nMaps,globalY)->put(_object,newX,newY);
+          
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
           //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
           
           //std::cout<<"World conversion:";
-          
           world(_object->fullX,_object->fullY);
           
+          
+          
+          
+          //std::cout<<"Conversion test:\n";
+          
+          
+          //void absoluteToRelative (const int _absoluteX, const int _absoluteY, int * _globalX, int * _globalY, int * _localX, int * _localY)
           
           int gX = 0;
           int gY = 0;
@@ -683,6 +744,182 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           int lY = 0;
           world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
           //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
+          
+          return false;
+          
+        }
+      }
+    }
+      //RIGHT
+    else if (newX > LOCAL_MAP_SIZE-1)
+    {
+      int nMaps = 0;
+      while ( newX > LOCAL_MAP_SIZE-1 )
+      {
+        newX -= LOCAL_MAP_SIZE-1;
+        ++nMaps;
+      }
+      --newX;
+      //std::cout<<"NEWX: "<<newX<<".\n";
+      
+      //PUT OBJECT
+      if (nMaps > 0 )
+      {
+        if (world.isSafe(globalX+nMaps,globalY))
+        {
+          aLocalTile(_object->x,_object->y).remove(_object);
+          _object->x=newX;
+          _object->y=newY;
+          _object->worldX = globalX+nMaps;
+          _object->worldY = globalY;
+          world(globalX+nMaps,globalY)->put(_object,newX,newY);
+          
+          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
+          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
+          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
+          
+          //std::cout<<"World conversion:";
+          world(_object->fullX,_object->fullY);
+          
+          int gX = 0;
+          int gY = 0;
+          int lX = 0;
+          int lY = 0;
+          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
+          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
+          
+          return false;
+          
+        }
+      }
+    }
+      //DOWN
+    if ( newY < 0 )
+    {
+      int nMaps = 0;
+      while ( newY < 0 )
+      {
+        newY += LOCAL_MAP_SIZE-1;
+        ++nMaps;
+      }
+      ++newY;
+      
+      //PUT OBJECT
+      if (nMaps > 0 )
+      {
+        if (world.isSafe(globalX,globalY-nMaps))
+        {
+          aLocalTile(_object->x,_object->y).remove(_object);
+          _object->x=newX;
+          _object->y=newY;
+          _object->worldX = globalX;
+          _object->worldY = globalY-nMaps;
+          world(globalX,globalY-nMaps)->put(_object,newX,newY);
+          
+          
+          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
+          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
+          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
+          
+          //std::cout<<"World conversion:";
+          world(_object->fullX,_object->fullY);
+          
+          int gX = 0;
+          int gY = 0;
+          int lX = 0;
+          int lY = 0;
+          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
+          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
+          
+          return false;
+          
+        }
+      }
+    }
+      //UP
+    else if (newY > LOCAL_MAP_SIZE-1)
+    {
+      int nMaps = 0;
+      while ( newY > LOCAL_MAP_SIZE-1 )
+      {
+        newY -= LOCAL_MAP_SIZE-1;
+        ++nMaps;
+      }
+      --newY;
+
+      //PUT OBJECT
+      if (nMaps > 0 )
+      {
+        if (world.isSafe(globalX,globalY+nMaps))
+        {
+          aLocalTile(_object->x,_object->y).remove(_object);
+          _object->x=newX;
+          _object->y=newY;
+          _object->worldX = globalX;
+          _object->worldY = globalY+nMaps;
+          world(globalX,globalY+nMaps)->put(_object,newX,newY);
+          
+          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
+          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
+          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
+          
+          
+          //std::cout<<"World conversion:";
+          world(_object->fullX,_object->fullY);
+          
+          int gX = 0;
+          int gY = 0;
+          int lX = 0;
+          int lY = 0;
+          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
+          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
+          
+          return false;
+          
+        }
+      }
+    }
+      
+    return false;
+
+  }
+  
+  //Moving inside of map
+  
+  if ( aLocalTile(newX,newY).hasMovementBlocker() )
+  {
+    return false;
+  }
+  
+  aLocalTile(_object->x,_object->y).remove(_object);
+  
+
+
+
+
+  
+  _object->x=newX;
+  _object->y=newY;
+  _object->worldX = globalX;
+  _object->worldY = globalY;
+  
+  aLocalTile(newX,newY).add(_object);
+  
+  _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
+  _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
+  //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
+  
+  //std::cout<<"World conversion:";
+  
+  world(_object->fullX,_object->fullY);
+  
+  
+  int gX = 0;
+  int gY = 0;
+  int lX = 0;
+  int lY = 0;
+  world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
+  //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
   return true;
 }
 
@@ -825,6 +1062,57 @@ bool World_Local::remove (Creature* _creature )
     aLocalTile(_creature->x,_creature->y).remove(_creature);
   }
   
+  return false;
+}
+
+bool World_Local::erase (WorldObject* _object )
+{
+  if ( _object==0) {return false;}
+  vObjectGeneric.remove(_object);
+  
+  if (aLocalTile.isSafe(_object->x,_object->y))
+  {
+    aLocalTile(_object->x,_object->y).remove(_object);
+  }
+  delete _object;
+  return false;
+}
+
+bool World_Local::erase (Item* _item )
+{
+  if ( _item==0) {return false;}
+  vItem.remove(_item);
+  
+  if (aLocalTile.isSafe(_item->x,_item->y))
+  {
+    aLocalTile(_item->x,_item->y).remove(_item);
+  }
+  delete _item;
+    
+  return false;
+}
+bool World_Local::erase (Character* _character )
+{
+  if ( _character == 0 ) {return false;}
+  vCharacter.remove(_character);
+  
+  if (aLocalTile.isSafe(_character->x,_character->y))
+  {
+    aLocalTile(_character->x,_character->y).remove(_character);
+  }
+  delete _character;
+  return false;
+}
+bool World_Local::erase (Creature* _creature )
+{
+  if ( _creature == 0 ) {return false;}
+  vCreature.remove(_creature);
+  
+  if (aLocalTile.isSafe(_creature->x,_creature->y))
+  {
+    aLocalTile(_creature->x,_creature->y).remove(_creature);
+  }
+  delete _creature;
   return false;
 }
 

@@ -28,6 +28,8 @@ class Ammo
 #include "LocalTile.hpp"
 //#include "Character.hpp"
 
+class Character;
+
 class Item: public WorldObject
 {
 	public:
@@ -104,6 +106,7 @@ class Item: public WorldObject
     //Cost is base action points required. -1 means the action is not possible. 0 means no cost.
   int chopTreeCost;
   int fishingCost;
+  
 	
 	//int distanceTo(WorldObject*); /* Chebyshev (this one is distances where diagonal movement is allowed.) */
 	//	int distanceFrom(WorldObject*); /* Alias. */
@@ -124,6 +127,11 @@ class Item: public WorldObject
   virtual void interact (LocalTile* obj)
   {
     std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
+  }
+  virtual void interact (Character* obj)
+  {
+    std::cout<<"Char interact\n";
+    //std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
   }
 
     // HOW LONG THIS TASK WILL TAKE. -1 MEANS YOU CAN'T DO IT. 0 MEANS NO TIME COST.
@@ -369,7 +377,8 @@ class Item_Fish: public Item
     return "Fish";
   }
   
-  virtual void interact (WorldObject*);
+  virtual void interact (WorldObject*); /* cook */
+  virtual void interact (Character*); /* eat */
 
   Texture* currentTexture()
   {

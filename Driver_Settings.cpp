@@ -20,9 +20,15 @@
 // that out later.
 #define PORTABLE_INT_MAX 32767
 
+
+  // Player stuff.
+  // The player is a character object, however he has a few special attributes which are handled differently.
+  // For efficiency these are handled globally to prevent making a class which is only inherited by a single
+  // character.
 class Character;
 Character * playerCharacter = 0; /* Global link to the player character (null if player hasn't selected a character) */
-
+class Item;
+Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
 const std::string VERSION = "0.0.099 Win32 dev";
@@ -85,7 +91,7 @@ int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 const int MAX_VIEW_RANGE = 80;
 
   // CHARACTER STUFF
-const int MAX_HUNGER = 500;
+const int MAX_HUNGER = 150;
 
 // The number of local maps to hold in memory at once. Minimum should be 4.
 // (One for the player's current map, and three neighboring maps).
