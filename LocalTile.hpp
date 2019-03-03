@@ -37,6 +37,7 @@ class LocalTile: public HasTexture
     //Base terrain can be overlaid with a floor.
     // For now just a bool.
   bool hasFloor;
+  bool isWall;
   
   int height;
   

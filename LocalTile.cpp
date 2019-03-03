@@ -15,6 +15,7 @@
 LocalTile::LocalTile()
 {
   hasFloor = false;
+  isWall=false;
   nFish=-1;
 }
 

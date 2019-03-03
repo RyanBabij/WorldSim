@@ -327,6 +327,10 @@ class Item_Log: public Item
   virtual void interact (LocalTile* obj);
 
 
+  
+  // We need to have 2 interactions:
+  // Light a fire
+  // Build a wall
   std::string getInteractName(LocalTile* _w)
   {
     return "Light a fire on the "+_w->getName();

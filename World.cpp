@@ -1190,23 +1190,28 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	worldGenTimer.init();
 	worldGenTimer.start();
 	
-	// lock for entire scope
-	//std::lock_guard<std::mutex> guard(render_mutex);
-	
 
-	
-	/* WIPE OLD WORLD. */
-	
-	// Timer threadTimer;
-	// threadTimer.init();
-	// threadTimer.start();
-	
-	
 	// Multithreading this segment runs 23% faster. Saves about 0.1 seconds or something.
-  //#define THREADED
-//#undef THREADED
-	
-	#ifndef THREADED
+  //#define THREAD_WORLD_INIT
+  #if defined THREAD_ALL || defined THREAD_WORLD_INIT 
+
+      // Lambdas look much nicer with threads.
+    std::thread t3( [this,x,y] { aWorldObject.init(x,y,0); });
+    std::thread t4( [this,x,y] { aTopoMap.init(x,y,3,0); });
+    std::thread t5( [this,x,y] { aTerrain.init(x,y,NOTHING); });
+    std::thread t6( [this,x,y] { aSeed.init(x,y,0); });
+    std::thread t7( [this,x,y] { aLandmassID.init(x,y,-1); });
+    std::thread t8( [this,x,y] { aIsLand.init(x,y,true); });
+    std::thread t9( [this,x,y] { aBiomeID.init(x,y,-1); });
+    std::thread t10( [this,x,y] { aWorldTile.initClass(x,y); });
+
+    std::thread t11( [this] { vWorldObjectGlobal.deleteAll(); });
+    std::thread t12( [this] { vLandmass.deleteAll(); });
+    std::thread t13( [this] { vBiome.deleteAll(); });
+    std::thread t14( [this] { vTribe.clear(); });
+    
+  #else
+
 		//aHeightMap.init(x,y,0);
 		aWorldObject.init(x,y,0);
 		aTopoMap.init(x,y,3,0);
@@ -1217,26 +1222,19 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 		aLandmassID.init(x,y,-1);
 		aBiomeID.init(x,y,-1);
 		aIsLand.init(x,y,true);
+    aWorldTile.initClass(x,y);
+    
+	// vTribe does not need to be deleted, because all Tribe objects are in vWorldObjectGlobal
+  // However, the vector must be cleared.
+    vWorldObjectGlobal.deleteAll();
+    vLandmass.deleteAll();
+    vBiome.deleteAll();
+    vTribe.clear();
 
-	#else
-//		std::thread t1 (&ArrayS2 <unsigned char>::init, &this->aHeightMap, x,y,0);
-		WorldObject* const woNull = 0;
-		std::thread t2 (&ArrayS2 <WorldObject*>::init, &this->aWorldObject, x,y,woNull);
-		std::thread t3 (ArrayS2 <enumBiome>::init, &this->aTerrain, x,y,NOTHING);
-		std::thread t4 (&ArrayS3 <unsigned char>::init, &this->aTopoMap, x,y,3,0);
-		
-		//std::map<Tribe*,int> * const influenceNull = 0;
-		
-		//std::thread t5 (&ArrayS2 <std::map<Tribe*,int> *>::init, &this->aInfluence, x,y,influenceNull);
-		std::thread t6 (&ArrayS2 <int>::init, &this->aSeed, x,y,0);
-		std::thread t7 (&ArrayS2 <int>::init, &this->aLandmassID, x,y,-1);
-		
-		
-		std::thread t8 (&ArrayS2 <bool>::init, &this->aIsLand, x,y,true);
-		std::thread t9 (&ArrayS2 <int>::init, &this->aBiomeID, x,y,-1);
 	#endif
-	
-	aWorldTile.initClass(x,y);
+
+  
+	//
 //	aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 //	aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
   
@@ -1268,24 +1266,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	wg.landSmoothing=0.88;
 	
 
-	// vTribe does not need to be deleted, because all Tribe objects are in vWorldObjectGlobal
-  // However, the vector must be cleared.
-	vWorldObjectGlobal.deleteAll();
-	vLandmass.deleteAll();
-	vBiome.deleteAll();
-  vLandmass.deleteAll();
-  vTribe.clear();
-	// for (int _y=0; _y<nY; ++_y)
-	// {
-		// for ( int _x=0;_x<nX;++_x)
-		// {
-			// std::string strTileSavePath = strSavePath+"/"+DataTools::toString(_x)+".dat";
-			// //FileManager::createFile(strSavePath+"/"+DataTools::toString(_x)+"x"+DataTools::toString(_y));
-			// //std::cout<<"Writing file: "<<strTileSavePath<<".\n";
-			// FileManager::createFile(strSavePath+"/"+DataTools::toString(_x)+"x"+DataTools::toString(_y)+".dat");
-		// }
-	// }
-	
+
 	// Create master file.
   worldFilePath = strSavePath+"/main.dat";
   
@@ -1299,20 +1280,23 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   //FileManager::writeString(DataTools::toString(landmassSeed)+"\n"+name+"\n"+DataTools::toString(nX)+"\n"+DataTools::toString(nY)+"\n",worldFilePath);
 	
   
-	#ifdef THREADED
-	//	t1.join();   // thread waits for the thread t to finish
-		t2.join();
+  #if defined THREAD_ALL || defined THREAD_WORLD_INIT 
 		t3.join();
 		t4.join();
-		//t5.join();
+		t5.join();
 		t6.join();
 		t7.join();
 		t8.join();
 		t9.join();
+		t10.join();
+		t11.join();
+		t12.join();
+		t13.join();
+		t14.join();
 	#endif
 
 
-	wg.generate(); /* SMALL MEM LEAK */
+	wg.generate(); 
 	
 		// We could remove this later by using a pointer.
 	aTerrain = wg.aTerrainType;

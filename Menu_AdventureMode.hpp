@@ -17,6 +17,50 @@
 // The grid is 10*10. I think it's doubtful that a player will need more than
 // 100 inventory slots.
 
+// Finally getting around to breaking the Menu_AdventureMode into some submenus.
+// Currently interactions are 1:1. I want an item to have multiple possible interactions with an object.
+// For example log->ground could be "build campfire" or "build wall".
+class InteractManager: public GUI_Interface
+{
+  public:
+  
+  unsigned long int x,y; /* Tile which the player wants to interact on */
+  
+  //Item * _sourceItem; /* Item the player is using. 0 = unarmed */
+  
+    // All interactions need to be kept sorted into their object categories.
+  Vector <WorldObject*> vGeneric;
+    Vector <Item*> vItem;
+    Vector <Character*> vCharacter;
+    Vector <Creature*> vCreature;
+  
+  InteractManager()
+  {
+    x=ABSOLUTE_COORDINATE_NULL;
+    y=ABSOLUTE_COORDINATE_NULL;
+  }
+  
+  // Character will use sourceItem on target.
+  // Note that this could actually be useful for AI, getting a list of possible actions.
+  // However for now this will be player only.
+  void addInteraction(Character * _character, Item* _sourceItem, WorldObject* _target)
+  {
+  }
+  
+   
+    // GUI INTERFACE
+   
+	bool /* GUI_Interface */ mouseEvent (Mouse* _mouse)
+	{
+    return false;
+  }
+  
+  void /* GUI_Interface */ render()
+  {
+  }
+  
+};
+
 class Menu_AdventureMode: public GUI_Interface
 {
   private:
@@ -365,6 +409,9 @@ class Menu_AdventureMode: public GUI_Interface
       Renderer::placeColour4a(30,140,40,250,panelX1+235,panelY1+35,panelX2-15,panelY2-10);
       Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-220);
       Renderer::placeColour4a(150,150,250,250,panelX1+350,panelY2-210,panelX2-130,panelY2-20);
+      
+        // Put items on player to interact
+      Renderer::placeTexture4(panelX1+350,panelY2-210,panelX2-130,panelY2-20, &TEX_NPC, false);
 
       hoveredInventoryX=-1;
       hoveredInventoryY=-1;

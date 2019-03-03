@@ -325,6 +325,8 @@ void loadTextures()
         (pNYA.getPixel3D(_nyaX,_nyaY,0) == 0) ? NYA+="*" : NYA+=" ";  
     } NYA+="\n";}
     
+  std::cout<<"FINISH TEX\n";
+    
 }
 
 #endif
