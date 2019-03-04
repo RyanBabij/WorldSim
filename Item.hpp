@@ -145,6 +145,11 @@ class Item: public WorldObject
     return 0;
   }
     // Describe the interaction. For example: "Chop down tree.
+    // Note, this should be updated to be a vector, because an object can in some cases do multiple things to an object
+  virtual Vector <std::string>* getInteractNames(WorldObject* _w)
+  {
+    return 0;
+  }
   virtual std::string getInteractName(WorldObject* _w)
   {
     return "Interact with "+_w->getName();
@@ -170,6 +175,16 @@ class Item_Sword: public Item
   }
   std::string getName() { return "Sword"; }
   
+  virtual Vector <std::string>* getInteractNames(WorldObject* _w)
+  {
+    if (_w==0) { return 0; }
+    
+    auto vInteract = new Vector <std::string>;
+    vInteract->push("Stab "+_w->getName());
+    vInteract->push("Slash "+_w->getName());
+    
+    return vInteract;
+  }
   
   Texture* currentTexture()
   {

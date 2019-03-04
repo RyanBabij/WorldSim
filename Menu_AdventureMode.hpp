@@ -25,8 +25,9 @@ class InteractManager: public GUI_Interface
   public:
   
   unsigned long int x,y; /* Tile which the player wants to interact on */
+  LocalTile* localSelected;
   
-  //Item * _sourceItem; /* Item the player is using. 0 = unarmed */
+  Item * sourceItem; /* Item the player is using. 0 = unarmed */
   
     // All interactions need to be kept sorted into their object categories.
   Vector <WorldObject*> vGeneric;
@@ -38,6 +39,8 @@ class InteractManager: public GUI_Interface
   {
     x=ABSOLUTE_COORDINATE_NULL;
     y=ABSOLUTE_COORDINATE_NULL;
+    localSelected=0;
+    sourceItem=0;
   }
   
   // Character will use sourceItem on target.
@@ -45,21 +48,76 @@ class InteractManager: public GUI_Interface
   // However for now this will be player only.
   void addInteraction(Character * _character, Item* _sourceItem, WorldObject* _target)
   {
+    std::cout<<"Add interact WorldObject\n";
   }
-  
+  void addInteraction(Character * _character, Item* _sourceItem, Item* _target)
+  {
+    std::cout<<"Add interact Item\n";
+  }
+  void addInteraction(Character * _character, Item* _sourceItem, Character* _target)
+  {
+    std::cout<<"Add interact Character\n";
+  }
+  void addInteraction(Character * _character, Item* _sourceItem, Creature* _target)
+  {
+    std::cout<<"Add interact Creature\n";
+  }
    
     // GUI INTERFACE
    
 	bool /* GUI_Interface */ mouseEvent (Mouse* _mouse)
 	{
+    //std::cout<<"InteractManager::mosueEvent()\n";
     return false;
+  }
+  
+  
+  void build(Item* _sourceItem, unsigned long int _x, unsigned long int _y)
+  {
+    vGeneric.clear();
+    vItem.clear();
+    vCharacter.clear();
+    vCreature.clear();
+    
+    x=_x;
+    y=_y;
+    localSelected=world(x,y);
+    sourceItem = _sourceItem;
+    
+      std::cout<<"Building interactions for: "<<x<<", "<<y<<".\n";
+    if (sourceItem ==0 ) // HAND INTERACTIONS
+    {
+      
+    }
+    else  
+    {
+
+      
+      for (int i=0; i<localSelected->vObject.size();++i)
+      {
+        auto vInteract = sourceItem->getInteractNames(localSelected->vObject(i));
+
+        if ( vInteract !=0 )
+        {
+          for (int i2=0;i2<vInteract->size();++i2)
+          {
+            std::cout<<"Interact: "<<(*vInteract)(i2)<<".\n";
+          }
+        }
+      }
+    }
+
+
+    
   }
   
   void /* GUI_Interface */ render()
   {
+    //std::cout<<"InteractManager::render()\n";
   }
   
 };
+InteractManager interactManager;
 
 class Menu_AdventureMode: public GUI_Interface
 {
@@ -364,6 +422,10 @@ class Menu_AdventureMode: public GUI_Interface
           //font8x8.drawText(useItem->getInteractName(localTileSelected->vObject(i)),panelX1+250,(panelY2)-(i*10),panelX1+600,(panelY2)-(i*10)-10,false,true);
         }
       }
+      
+      
+      // New system: interactManager
+      interactManager.render();
 
     }
     
@@ -920,9 +982,16 @@ class Menu_AdventureMode: public GUI_Interface
         {
           localTileSelected=world(tileSelectAbsoluteX,tileSelectAbsoluteY);
           subItemSelectionActive=true;
+          //interactManager.clear();
+          interactManager.build(useItem, tileSelectAbsoluteX,tileSelectAbsoluteY);
           selectedItemSlot=0;
         }
         _mouse->isLeftClick=false;
+      }
+      
+      if (subItemSelectionActive)
+      {
+        interactManager.mouseEvent(_mouse);
       }
 
     }
@@ -1178,6 +1247,7 @@ class Menu_AdventureMode: public GUI_Interface
     
 		worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
 
+    interactManager.setPanel(panelX1,panelY1,panelX2,panelY2);
 
 	}
 	
