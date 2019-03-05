@@ -17,11 +17,34 @@
 // The grid is 10*10. I think it's doubtful that a player will need more than
 // 100 inventory slots.
 
+// Stores the description, index, and interaction id
+
+
+
 // Finally getting around to breaking the Menu_AdventureMode into some submenus.
 // Currently interactions are 1:1. I want an item to have multiple possible interactions with an object.
 // For example log->ground could be "build campfire" or "build wall".
 class InteractManager: public GUI_Interface
 {
+  int selectedInteraction;
+  Wildcat::Font* font;
+  
+  struct Interaction /* Stores the description of the interaction and all indexing */
+  {
+    std::string description;
+    int vType; /* 0 = generic, 1 = Item, 2 = Character, 3 = Creature */
+    int vIndex; /* Index in the vector of the object. */
+    int interactID; /* Indicates the subtype of interaction (stab/slash/etc). */
+    
+    Interaction( std::string _description, int _vType, int _vIndex, int _interactID )
+    {
+      description=_description;
+      vType = _vType;
+      vIndex = _vIndex;
+      interactID = _interactID;
+    }
+  };
+  
   public:
   
   unsigned long int x,y; /* Tile which the player wants to interact on */
@@ -35,12 +58,19 @@ class InteractManager: public GUI_Interface
     Vector <Character*> vCharacter;
     Vector <Creature*> vCreature;
   
+  Vector <Interaction*> vInteraction;
+  
+  //Index lookup.
+  
   InteractManager()
   {
     x=ABSOLUTE_COORDINATE_NULL;
     y=ABSOLUTE_COORDINATE_NULL;
     localSelected=0;
     sourceItem=0;
+    selectedInteraction = 0;
+    
+    font = &font8x8;
   }
   
   // Character will use sourceItem on target.
@@ -67,11 +97,28 @@ class InteractManager: public GUI_Interface
    
 	bool /* GUI_Interface */ mouseEvent (Mouse* _mouse)
 	{
-    //std::cout<<"InteractManager::mosueEvent()\n";
+
+      // Scroll up and down interaction select
+      if (_mouse->isWheelDown)
+      {
+        ++selectedInteraction;
+        if (selectedInteraction>=vInteraction.size()) {selectedInteraction=0;}
+        _mouse->isWheelDown=false;
+        _mouse->isWheelUp=false;
+      }
+      else if (_mouse->isWheelUp)
+      {
+        --selectedInteraction;
+        if (selectedInteraction<0) { selectedInteraction=vInteraction.size()-1; }
+        _mouse->isWheelDown=false;
+        _mouse->isWheelUp=false;
+      }
+    
+    
     return false;
   }
   
-  
+  // Take the current tile and copy all objects
   void build(Item* _sourceItem, unsigned long int _x, unsigned long int _y)
   {
     vGeneric.clear();
@@ -87,21 +134,87 @@ class InteractManager: public GUI_Interface
       std::cout<<"Building interactions for: "<<x<<", "<<y<<".\n";
     if (sourceItem ==0 ) // HAND INTERACTIONS
     {
+      // ADD TERRAIN INTERACTION
+      vInteraction.push( new Interaction ("Punch ground",-1,0,0) );
+      
+      for (int i=0; i<localSelected->vObjectGeneric.size();++i)
+      {
+        vGeneric.push(localSelected->vObjectGeneric(i));
+        vInteraction.push( new Interaction ("Punch",0,i,0) );
+      }
+      for (int i=0; i<localSelected->vItem.size();++i)
+      {
+        vGeneric.push(localSelected->vItem(i));
+        vInteraction.push( new Interaction ("Punch",0,i,0) );
+      }
+      for (int i=0; i<localSelected->vCharacter.size();++i)
+      {
+        vGeneric.push(localSelected->vCharacter(i));
+        vInteraction.push( new Interaction ("Punch",0,i,0) );
+      }
+      for (int i=0; i<localSelected->vCreature.size();++i)
+      {
+        vGeneric.push(localSelected->vCreature(i));
+        vInteraction.push( new Interaction ("Punch",0,i,0) );
+      }
       
     }
     else  
     {
-
+      // ADD TERRAIN INTERACTION
+      vInteraction.push( new Interaction ("Punch ground",-1,0,0) );
       
-      for (int i=0; i<localSelected->vObject.size();++i)
+      
+      for (int i=0; i<localSelected->vObjectGeneric.size();++i)
       {
-        auto vInteract = sourceItem->getInteractNames(localSelected->vObject(i));
+        auto vInteract = sourceItem->getInteractNames(localSelected->vObjectGeneric(i));
+        auto target = localSelected->vObjectGeneric(i);
 
         if ( vInteract !=0 )
         {
           for (int i2=0;i2<vInteract->size();++i2)
           {
-            std::cout<<"Interact: "<<(*vInteract)(i2)<<".\n";
+            vGeneric.push(localSelected->vObjectGeneric(i2));
+            vInteraction.push( new Interaction ((*vInteract)(i2),0,i,i2) );
+          }
+        }
+      }
+      for (int i=0; i<localSelected->vItem.size();++i)
+      {
+        auto vInteract = sourceItem->getInteractNames(localSelected->vItem(i));
+
+        if ( vInteract !=0 )
+        {
+          for (int i2=0;i2<vInteract->size();++i2)
+          {
+            vItem.push(localSelected->vItem(i2));
+            vInteraction.push( new Interaction ((*vInteract)(i2),1,i,i2) );
+          }
+        }
+      }
+      for (int i=0; i<localSelected->vCharacter.size();++i)
+      {
+        auto vInteract = sourceItem->getInteractNames(localSelected->vCharacter(i));
+
+        if ( vInteract !=0 )
+        {
+          for (int i2=0;i2<vInteract->size();++i2)
+          {
+            vCharacter.push(localSelected->vCharacter(i2));
+            vInteraction.push( new Interaction ((*vInteract)(i2),2,i,i2) );
+          }
+        }
+      }
+      for (int i=0; i<localSelected->vCreature.size();++i)
+      {
+        auto vInteract = sourceItem->getInteractNames(localSelected->vCreature(i));
+
+        if ( vInteract !=0 )
+        {
+          for (int i2=0;i2<vInteract->size();++i2)
+          {
+            vCreature.push(localSelected->vCreature(i2));
+            vInteraction.push( new Interaction ((*vInteract)(i2),3,i,i2) );
           }
         }
       }
@@ -114,6 +227,25 @@ class InteractManager: public GUI_Interface
   void /* GUI_Interface */ render()
   {
     //std::cout<<"InteractManager::render()\n";
+    
+    // Render background and selection panels.
+    Renderer::placeColour4a(120,120,120,255,panelX1+250,panelY2,panelX1+600,(panelY2)-(vInteraction.size()*10));
+    Renderer::placeColour4a(180,180,180,255,panelX1+250,panelY2-(selectedInteraction*10),panelX1+600,panelY2-((selectedInteraction+1)*10));
+    
+    for (int i=0;i<vInteraction.size();++i)
+    {
+      
+      
+      font8x8.drawText(vInteraction(i)->description,panelX1+250,(panelY2)-(i*10),panelX1+500,(panelY2)-(i*10)-10,false,true);
+          //font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vItem(i)))+" sec)",panelX1+500,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
+
+      //std::cout<<vInteraction(i)->description<<".\n";
+    }
+    
+    // for (int i=0;i<vGeneric.size();++i)
+    // {
+      // std::cout<<vGeneric(i)->getName()<<".\n";
+    // }
   }
   
 };
@@ -363,69 +495,11 @@ class Menu_AdventureMode: public GUI_Interface
     // Render item selection
     if (itemSelectionActive && localTileSelected != 0)
     {
-      nInteractions = localTileSelected->vItem.size() + localTileSelected->vCharacter.size() + localTileSelected->vCreature.size() + localTileSelected->vObjectGeneric.size() + 1;
-      
-      // Render background and selection panels.
-      Renderer::placeColour4a(120,120,120,255,panelX1+250,panelY2,panelX1+600,(panelY2)-(nInteractions*10));
-      Renderer::placeColour4a(180,180,180,255,panelX1+250,panelY2-(selectedItemSlot*10),panelX1+600,panelY2-((selectedItemSlot+1)*10));
-      
-      if ( useItem != 0 )
-      {
-        int j=0;
-        //font8x8.drawText("Do nothing",panelX1+250,(panelY2)-(j*10),panelX1+600,(panelY2)-(j*10)-10,false,true);
-        //++j;
-        font8x8.drawText(useItem->getInteractName(localTileSelected),panelX1+250,(panelY2)-(j*10),panelX1+600,(panelY2)-(j*10)-10,false,true);
-        ++j;
-        
-        // New system: WorldObject interactions should be broken down by type: Item, Character, Creature, Generic.
-        
-        
-        for (int i=0;i<localTileSelected->vItem.size();++i)
-        {
-          font8x8.drawText("ITM: "+useItem->getInteractName(localTileSelected->vItem(i)),panelX1+250,(panelY2)-((i+j)*10),panelX1+500,(panelY2)-((i+j)*10)-10,false,true);
-          font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vItem(i)))+" sec)",panelX1+500,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
-        }
-        j+=localTileSelected->vItem.size();
-        
-        for (int i=0;i<localTileSelected->vCharacter.size();++i)
-        {
-          font8x8.drawText("CHR: "+useItem->getInteractName(localTileSelected->vCharacter(i)),panelX1+250,(panelY2)-((i+j)*10),panelX1+500,(panelY2)-((i+j)*10)-10,false,true);
-          font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vCharacter(i)))+" sec)",panelX1+500,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
-        }
-        j+=localTileSelected->vCharacter.size();
-        
-        for (int i=0;i<localTileSelected->vCreature.size();++i)
-        {
-          font8x8.drawText("CRE: "+useItem->getInteractName(localTileSelected->vCreature(i)),panelX1+250,(panelY2)-((i+j)*10),panelX1+500,(panelY2)-((i+j)*10)-10,false,true);
-          font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vCreature(i)))+" sec)",panelX1+500,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
-        }
-        j+=localTileSelected->vCreature.size();
-        
-        for (int i=0;i<localTileSelected->vObjectGeneric.size();++i)
-        {
-          //font8x8.drawText(localTileSelected->vObject(i)->getName(),panelX1+250,(panelY2)-(i*10),panelX1+600,(panelY2)-(i*10)-10,false,true);
-          font8x8.drawText("GEN: "+useItem->getInteractName(localTileSelected->vObjectGeneric(i)),panelX1+250,(panelY2)-((i+j)*10),panelX1+500,(panelY2)-((i+j)*10)-10,false,true);
-          font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vObjectGeneric(i)))+" sec)",panelX1+500,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
-        }
-
-      }
-      else
-      {
-        int j=0;
-        //font8x8.drawText("Do nothing",panelX1+250,(panelY2)-(j*10),panelX1+600,(panelY2)-(j*10)-10,false,true);
-        //++j;
-        font8x8.drawText("PUNCH " + localTileSelected->getName(),panelX1+250,(panelY2)-(j*10),panelX1+600,(panelY2)-(j*10)-10,false,true);
-        ++j;
-        for (int i=0;i<localTileSelected->vObject.size();++i)
-        {
-          font8x8.drawText("PUNCH " + localTileSelected->vObject(i)->getName(),panelX1+250,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
-          //font8x8.drawText(useItem->getInteractName(localTileSelected->vObject(i)),panelX1+250,(panelY2)-(i*10),panelX1+600,(panelY2)-(i*10)-10,false,true);
-        }
-      }
-      
       
       // New system: interactManager
       interactManager.render();
+
+      nInteractions = localTileSelected->vItem.size() + localTileSelected->vCharacter.size() + localTileSelected->vCreature.size() + localTileSelected->vObjectGeneric.size() + 1;
 
     }
     
@@ -874,33 +948,27 @@ class Menu_AdventureMode: public GUI_Interface
     
     if (itemSelectionActive)
     {
-      // Right-click to cancel out of menus.
-      if (subItemSelectionActive && (localTileSelected == 0 || _mouse->isRightClick))
-      {
-        subItemSelectionActive=false;
-        localTileSelected=0;
-      }
-      else if (subItemSelectionActive==false && _mouse->isRightClick)
+      // Right click to cancel out of item selection.
+      if (subItemSelectionActive==false && _mouse->isRightClick)
       {
         itemSelectionActive=false;
         localTileSelected=0;
         worldViewer.showHoveredTile = false;
       }
-      
-      // Scroll up and down item select
-      else if (subItemSelectionActive && _mouse->isWheelDown)
+      // Right click to cancel out of interaction selection.
+      else if (subItemSelectionActive && (_mouse->isRightClick || localTileSelected == 0) )
       {
-        ++selectedItemSlot;
-        if (selectedItemSlot>=nInteractions) {selectedItemSlot=0;}
-        _mouse->isWheelDown=false;
+        subItemSelectionActive=false;
+        _mouse->isRightClick=false;
+        _mouse->isLeftClick=false;
+        localTileSelected=0;
       }
-      else if (subItemSelectionActive && _mouse->isWheelUp)
+      else if (subItemSelectionActive)
       {
-        --selectedItemSlot;
-        if (selectedItemSlot<0) { selectedItemSlot=nInteractions-1; }
-        _mouse->isWheelUp=false;
+        interactManager.mouseEvent(_mouse);
       }
 
+      
       else if (subItemSelectionActive && _mouse->isLeftClick)
       {
         if (selectedItemSlot == 0)
@@ -989,10 +1057,7 @@ class Menu_AdventureMode: public GUI_Interface
         _mouse->isLeftClick=false;
       }
       
-      if (subItemSelectionActive)
-      {
-        interactManager.mouseEvent(_mouse);
-      }
+
 
     }
     
