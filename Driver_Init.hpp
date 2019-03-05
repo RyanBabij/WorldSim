@@ -14,6 +14,7 @@ Initialize main menus, start timers, initialise any important data.
 #include <NameGen/NameGen.hpp>
 NameGen ng;
 
+#include "Recipe_Init.cpp"
 
 
 void init()
@@ -37,6 +38,9 @@ void init()
 
 	/* Load textures (Tex pointers from Driver_TextureList.hpp). */
 	loadTextures();
+  
+  /* Load up recipes (Recipe_Init.cpp) */
+  initRecipes();
 	
 	/* Load font */
 	Png fontPng;

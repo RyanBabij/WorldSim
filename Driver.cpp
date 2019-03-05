@@ -201,7 +201,7 @@ World_Local * worldLocal;
   
 
 #include "Item.cpp"
-
+#include "Recipe.cpp"
 
 #include <Math/Geometry/Geometry.hpp>
 

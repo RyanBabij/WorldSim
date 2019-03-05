@@ -20,25 +20,37 @@
 // Stores the description, index, and interaction id
 
 
-// A recipe is any collection of objects which can be consumed to make another object.
-// Usually there are three types of recipes: Alchemy, crafting and cooking.
-// class Recipe
-// {
-  // public:
+#include "Recipe.hpp"
+
+class Menu_Crafting: public GUI_Interface
+{
+  Vector <Recipe*> vRecipe;
   
-  // Recipe()
-  // {
-  // }
-  // ~Recipe()
-  // {
-  // }
-  // void addRequirement()
-  // {
-  // }
-// };
-
-
-// Recipe recipeWall;
+  public:
+  
+  Menu_Crafting()
+  {
+  }
+  ~Menu_Crafting()
+  {
+  }
+  
+  void build()
+  {
+  }
+  
+  void /* GUI_Interface */ render()
+  {
+    Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-20);
+      //linesDrawn = font8x8.drawText(ADVENTURE_MODE_MANUAL,panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
+  }
+  
+	bool /* GUI_Interface */ mouseEvent (Mouse* _mouse)
+	{
+    return false;
+  }
+  
+};
 
 
 // Finally getting around to breaking the Menu_AdventureMode into some submenus.
@@ -326,15 +338,21 @@ class Menu_AdventureMode: public GUI_Interface
     GUI_Button buttonInventory;
     
       /* Button to view manual */
+    // Very basic manual for now. Future manual should have stuff like bestiary, alchemy instructions,
+    // crafting instructions, etc.
     GUI_Button buttonManual;
+      bool manualActive;
     
       /* Button to view character sheet - CHR */
     GUI_Button buttonCharacterSheet;
     
-        //Render very basic manual for now. Future manual should have stuff like bestiary, alchemy instructions,
-        // crafting instructions, etc.
-    bool manualActive;
-    
+      /* Button to view craftomg menu - CFT */
+    GUI_Button buttonCrafting;
+      bool craftingMenuActive;
+      Menu_Crafting menuCrafting;
+
+
+
       // Render conversation menu
     bool conversationActive;
       Character* conversationCharacter;
@@ -422,6 +440,15 @@ class Menu_AdventureMode: public GUI_Interface
     buttonCharacterSheet.font = font;
 		buttonCharacterSheet.setColours(&cNormal,&cHighlight,0);
 		guiManager.add(&buttonCharacterSheet);
+
+    buttonCrafting.active = true;
+    buttonCrafting.text = "CFT";
+    buttonCrafting.font = font;
+		buttonCrafting.setColours(&cNormal,&cHighlight,0);
+		guiManager.add(&buttonCrafting);
+    
+    
+    craftingMenuActive=false;
     
     itemSelectionActive=false;
     tileSelectAbsoluteX=-1;
@@ -556,6 +583,13 @@ class Menu_AdventureMode: public GUI_Interface
       Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-20);
       linesDrawn = font8x8.drawText(ADVENTURE_MODE_MANUAL,panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
     }
+    
+    // Render crafting menu
+    if (craftingMenuActive)
+    {
+      menuCrafting.render();
+    }
+    
     
     //Render character sheet
     if (characterSheetActive)
@@ -713,6 +747,7 @@ class Menu_AdventureMode: public GUI_Interface
       characterSheetActive=false;
       inventoryActive=false;
       itemSelectionActive=false;
+      craftingMenuActive=false;
       worldViewer.showHoveredTile = false;
 			_keyboard->keyUp(Keyboard::ESCAPE);	
 		}
@@ -1053,17 +1088,35 @@ class Menu_AdventureMode: public GUI_Interface
     }
     
     // Player can use CTRL+scroll to scroll the hotbar.
+    // Exit from interaction menu because otherwise I don't feel like doing it the proper way right now.
 		if(_mouse->isWheelDown && _mouse->ctrlPressed)
 		{
       ++selectedHotbar;
       if (selectedHotbar>9) {selectedHotbar=0;}
 			_mouse->isWheelDown=false;
+			_mouse->isWheelUp=false;
+      
+      // Reset the interact menu.
+      subItemSelectionActive=false;
+      itemSelectionActive=false;
+      worldViewer.showHoveredTile = false;
+      localTileSelected=0;
+      selectedItemSlot=0;
+      
 		}
 		if(_mouse->isWheelUp && _mouse->ctrlPressed)
 		{
       --selectedHotbar;
       if (selectedHotbar<0) {selectedHotbar=9;}
+			_mouse->isWheelDown=false;
 			_mouse->isWheelUp=false;
+      
+      // Reset the interact menu.
+      subItemSelectionActive=false;
+      itemSelectionActive=false;
+      worldViewer.showHoveredTile = false;
+      localTileSelected=0;
+      selectedItemSlot=0;
 		}
     
 
@@ -1247,6 +1300,18 @@ class Menu_AdventureMode: public GUI_Interface
       characterSheetActive = !characterSheetActive;
 			buttonCharacterSheet.unclick();
 		}
+    
+      // Toggle the crafting menu.
+		if (buttonCrafting.clicked==true)
+		{
+      std::cout<<"CRAFTING\n";
+      craftingMenuActive = !craftingMenuActive;
+			buttonCrafting.unclick();
+		}
+    
+    
+    
+    
       // Toggle the inventory view.
 		if (buttonInventory.clicked==true)
 		{
@@ -1300,10 +1365,12 @@ class Menu_AdventureMode: public GUI_Interface
 		buttonInventory.setPanel(panelX1+66,panelY1+304,panelX1+98,panelY1+320);
 		buttonManual.setPanel(panelX1+99,panelY1+304,panelX1+131,panelY1+320);
 		buttonCharacterSheet.setPanel(panelX1+132,panelY1+304,panelX1+164,panelY1+320);
+		buttonCrafting.setPanel(panelX1+165,panelY1+304,panelX1+197,panelY1+320);
     
 		worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
 
     interactManager.setPanel(panelX1,panelY1,panelX2,panelY2);
+    menuCrafting.setPanel(panelX1,panelY1,panelX2,panelY2);
 
 	}
 	
