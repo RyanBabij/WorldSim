@@ -20,10 +20,31 @@
 // Stores the description, index, and interaction id
 
 
+// A recipe is any collection of objects which can be consumed to make another object.
+// Usually there are three types of recipes: Alchemy, crafting and cooking.
+// class Recipe
+// {
+  // public:
+  
+  // Recipe()
+  // {
+  // }
+  // ~Recipe()
+  // {
+  // }
+  // void addRequirement()
+  // {
+  // }
+// };
+
+
+// Recipe recipeWall;
+
 
 // Finally getting around to breaking the Menu_AdventureMode into some submenus.
 // Currently interactions are 1:1. I want an item to have multiple possible interactions with an object.
 // For example log->ground could be "build campfire" or "build wall".
+// This should also allow us to more easily sort interactions by priority.
 class InteractManager: public GUI_Interface
 {
   int selectedInteraction;
@@ -32,7 +53,7 @@ class InteractManager: public GUI_Interface
   struct Interaction /* Stores the description of the interaction and all indexing */
   {
     std::string description;
-    int vType; /* 0 = generic, 1 = Item, 2 = Character, 3 = Creature */
+    int vType; /* 0 = generic, 1 = Item, 2 = Character, 3 = Creature, 4 = terrain */
     int vIndex; /* Index in the vector of the object. */
     int interactID; /* Indicates the subtype of interaction (stab/slash/etc). */
     
@@ -73,28 +94,7 @@ class InteractManager: public GUI_Interface
     font = &font8x8;
   }
   
-  // Character will use sourceItem on target.
-  // Note that this could actually be useful for AI, getting a list of possible actions.
-  // However for now this will be player only.
-  void addInteraction(Character * _character, Item* _sourceItem, WorldObject* _target)
-  {
-    std::cout<<"Add interact WorldObject\n";
-  }
-  void addInteraction(Character * _character, Item* _sourceItem, Item* _target)
-  {
-    std::cout<<"Add interact Item\n";
-  }
-  void addInteraction(Character * _character, Item* _sourceItem, Character* _target)
-  {
-    std::cout<<"Add interact Character\n";
-  }
-  void addInteraction(Character * _character, Item* _sourceItem, Creature* _target)
-  {
-    std::cout<<"Add interact Creature\n";
-  }
-   
     // GUI INTERFACE
-   
 	bool /* GUI_Interface */ mouseEvent (Mouse* _mouse)
 	{
 
@@ -114,17 +114,68 @@ class InteractManager: public GUI_Interface
         _mouse->isWheelUp=false;
       }
     
+      else if (_mouse->isLeftClick)
+      {
+        if (sourceItem == 0)
+        {
+          std::cout<<"FALCON PAUNCH\n";
+          
+          // if ( localTileSelected==0 )
+          // {
+            
+          // }
+          
+          // if (useItem == 0 )
+          // {
+            // std::cout<<"You punch the "<<localTileSelected->getName()<<".\n";
+          // }
+          // else
+          // {
+            // std::cout<<"You use the "<<useItem->getName()<<" on the "<<localTileSelected->getName()<<".\n";
+            // useItem->interact(localTileSelected);
+          // }
+        }
+        else
+        {
+          std::cout<<"Using interaction: "<<vInteraction(selectedInteraction)->description<<".\n";
+          
+          
+          Interaction* _interaction = vInteraction(selectedInteraction);
+          int selectedVector = _interaction->vType;
+          int selectedIndex = _interaction->vIndex;
+          int interactionType = _interaction->interactID;
+          
+          if ( selectedVector == 0 ) /* generic */
+          {
+            sourceItem->interact(vGeneric(selectedIndex),interactionType);
+          }
+          else if ( selectedVector == 1 ) /* Item */
+          {
+            sourceItem->interact(vItem(selectedIndex),interactionType);
+          }
+          else if ( selectedVector == 4 ) /* Terrain */
+          {
+            std::cout<<"Terrain interaction\n";
+            sourceItem->interact(localSelected,interactionType);
+          }
+        }
+        
+        _mouse->isLeftClick=false;
+        return true;
+      }
     
     return false;
   }
   
   // Take the current tile and copy all objects
-  void build(Item* _sourceItem, unsigned long int _x, unsigned long int _y)
+  // Return false if there's nothing to interact with.
+  bool build(Item* _sourceItem, unsigned long int _x, unsigned long int _y)
   {
     vGeneric.clear();
     vItem.clear();
     vCharacter.clear();
     vCreature.clear();
+    vInteraction.clear();
     
     x=_x;
     y=_y;
@@ -135,7 +186,7 @@ class InteractManager: public GUI_Interface
     if (sourceItem ==0 ) // HAND INTERACTIONS
     {
       // ADD TERRAIN INTERACTION
-      vInteraction.push( new Interaction ("Punch ground",-1,0,0) );
+      vInteraction.push( new Interaction ("Punch ground",4,0,0) );
       
       for (int i=0; i<localSelected->vObjectGeneric.size();++i)
       {
@@ -162,8 +213,14 @@ class InteractManager: public GUI_Interface
     else  
     {
       // ADD TERRAIN INTERACTION
-      vInteraction.push( new Interaction ("Punch ground",-1,0,0) );
-      
+        auto vInteractTerrain = sourceItem->getInteractNames(localSelected);
+        if ( vInteractTerrain !=0 )
+        {
+          for (int i2=0;i2<vInteractTerrain->size();++i2)
+          {
+            vInteraction.push( new Interaction ((*vInteractTerrain)(i2),4,0,i2) );
+          }
+        }
       
       for (int i=0; i<localSelected->vObjectGeneric.size();++i)
       {
@@ -221,33 +278,23 @@ class InteractManager: public GUI_Interface
     }
 
 
-    
+    return (vInteraction.size() > 0);
   }
   
   void /* GUI_Interface */ render()
   {
-    //std::cout<<"InteractManager::render()\n";
-    
     // Render background and selection panels.
     Renderer::placeColour4a(120,120,120,255,panelX1+250,panelY2,panelX1+600,(panelY2)-(vInteraction.size()*10));
     Renderer::placeColour4a(180,180,180,255,panelX1+250,panelY2-(selectedInteraction*10),panelX1+600,panelY2-((selectedInteraction+1)*10));
     
     for (int i=0;i<vInteraction.size();++i)
     {
-      
-      
       font8x8.drawText(vInteraction(i)->description,panelX1+250,(panelY2)-(i*10),panelX1+500,(panelY2)-(i*10)-10,false,true);
           //font8x8.drawText("("+DataTools::toString(useItem->interactTime(localTileSelected->vItem(i)))+" sec)",panelX1+500,(panelY2)-((i+j)*10),panelX1+600,(panelY2)-((i+j)*10)-10,false,true);
-
-      //std::cout<<vInteraction(i)->description<<".\n";
     }
-    
-    // for (int i=0;i<vGeneric.size();++i)
-    // {
-      // std::cout<<vGeneric(i)->getName()<<".\n";
-    // }
   }
   
+
 };
 InteractManager interactManager;
 
@@ -740,14 +787,9 @@ class Menu_AdventureMode: public GUI_Interface
     if(_keyboard->isPressed(Keyboard::E) || _keyboard->isPressed(Keyboard::e))
     {
       itemSelectionActive = !itemSelectionActive;
-      if ( selectedHotbar >= 0 && selectedHotbar < 10 && inventoryGrid[selectedHotbar][0] != 0 )
+      if ( selectedHotbar >= 0 && selectedHotbar < 10 )
       {
         useItem = inventoryGrid[selectedHotbar][0];
-        
-        // Check here if item is self-use, or requires target.
-        
-        //std::cout<<"Using: "<<useItem->getName()<<".\n";
-        //playerCharacter->useItem(useItem);
       }
       
       worldViewer.showHoveredTile = itemSelectionActive;
@@ -965,81 +1007,15 @@ class Menu_AdventureMode: public GUI_Interface
       }
       else if (subItemSelectionActive)
       {
-        interactManager.mouseEvent(_mouse);
-      }
-
-      
-      else if (subItemSelectionActive && _mouse->isLeftClick)
-      {
-        if (selectedItemSlot == 0)
+        if(interactManager.mouseEvent(_mouse))
         {
-          std::cout<<"INTERACT: GROUND\n";
-          
-          if ( localTileSelected==0 )
-          {
-            
-          }
-          
-          if (useItem == 0 )
-          {
-            std::cout<<"You punch the "<<localTileSelected->getName()<<".\n";
-          }
-          else
-          {
-            std::cout<<"You use the "<<useItem->getName()<<" on the "<<localTileSelected->getName()<<".\n";
-            useItem->interact(localTileSelected);
-          }
-        }
-        else if(localTileSelected->vObject(selectedItemSlot-1) == 0)
-        {
-        }
-        else if ( useItem== 0)
-        {
-          std::cout<<"You punch the "<<localTileSelected->vObject(selectedItemSlot-1)->getName()<<".\n";
-        }
-        else // Using item on item.
-        {
-
-          
-          // We need to find the correct vector. This could certainly be cleaner, for example
-          // using WorldObject* master list and then just searching sub vectors,
-          // but this works well enough.
-          const int actionSlot = selectedItemSlot-1;
-          const int nItemOptions = localTileSelected->vItem.size();
-          const int nCharacterOptions = localTileSelected->vCharacter.size();
-          const int nCreatureOptions = localTileSelected->vCreature.size();
-          
-          // Use Item on Item
-          if (actionSlot < nItemOptions )
-          {
-            useItem->interact(localTileSelected->vItem(actionSlot));
-          }
-          // Use Item on Character
-          else if (actionSlot < nItemOptions + nCharacterOptions )
-          {
-            std::cout<<"char int\n";
-            useItem->interact(localTileSelected->vCharacter(actionSlot-nItemOptions));
-          }
-          // Use Item on Creature
-          else if (actionSlot < nItemOptions + nCharacterOptions + nCreatureOptions )
-          {
-            useItem->interact(localTileSelected->vCreature(actionSlot-nItemOptions-nCharacterOptions));
-          }
-          // Use Item on WorldObject
-          else //This is a generic object interaction
-          {
-            useItem->interact
-            (localTileSelected->vObjectGeneric(actionSlot-nItemOptions-nCharacterOptions-nCreatureOptions));
-          }
-        }
-
           // Reset the interact menu.
-        subItemSelectionActive=false;
-        itemSelectionActive=false;
-        worldViewer.showHoveredTile = false;
-        localTileSelected=0;
-        selectedItemSlot=0;
-        _mouse->isLeftClick=false;
+          subItemSelectionActive=false;
+          itemSelectionActive=false;
+          worldViewer.showHoveredTile = false;
+          localTileSelected=0;
+          selectedItemSlot=0;
+        }
       }
       else if (subItemSelectionActive==false && _mouse->isLeftClick)
       {
@@ -1048,11 +1024,26 @@ class Menu_AdventureMode: public GUI_Interface
         
         if (world.isSafe(tileSelectAbsoluteX,tileSelectAbsoluteY))
         {
-          localTileSelected=world(tileSelectAbsoluteX,tileSelectAbsoluteY);
-          subItemSelectionActive=true;
-          //interactManager.clear();
-          interactManager.build(useItem, tileSelectAbsoluteX,tileSelectAbsoluteY);
-          selectedItemSlot=0;
+          if (interactManager.build(useItem, tileSelectAbsoluteX,tileSelectAbsoluteY))
+          {
+            localTileSelected=world(tileSelectAbsoluteX,tileSelectAbsoluteY);
+            subItemSelectionActive=true;
+            //interactManager.clear();
+
+            selectedItemSlot=0;
+          }
+          else
+          {
+            if ( useItem != 0 )
+            {
+              Console("Nothing to use the "+useItem->getName()+" on here.");
+            }
+            else
+            {
+              Console("Nothing to use here.");
+            }
+            
+          }
         }
         _mouse->isLeftClick=false;
       }

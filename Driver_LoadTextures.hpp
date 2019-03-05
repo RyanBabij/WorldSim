@@ -152,6 +152,9 @@ const std::string PATH_TEX_WORLD_TEST_00 = "Textures/Test/00.png";
 
 Texture TEX_OBJECT_STUMP;
 const std::string PATH_TEX_OBJECT_STUMP = "Textures/Object/Stump32.png";
+
+Texture TEX_OBJECT_PLANK;
+const std::string PATH_TEX_OBJECT_PLANK = "Textures/Object/Plank.png";
   
   // ITEMS
   
@@ -371,6 +374,7 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   
   //OBJECTS
   loadTextureVerbose(PATH_TEX_OBJECT_STUMP,&TEX_OBJECT_STUMP);
+  loadTextureVerbose(PATH_TEX_OBJECT_PLANK,&TEX_OBJECT_PLANK);
   
 
   Png pNYA;

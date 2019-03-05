@@ -120,11 +120,11 @@ class Item: public WorldObject
     // The good thing about this approach is that it can list out all possible interactions between objects,
     // which I think is better than making the player guess what everything does.
     // There are different types of objects, such as Items, WorldObjects and LocalTiles.
-  virtual void interact (WorldObject* obj)
+  virtual void interact (WorldObject* obj, int interactionType=0)
   {
     std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
   }
-  virtual void interact (LocalTile* obj)
+  virtual void interact (LocalTile* obj, int interactionType=0)
   {
     std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
   }
@@ -150,6 +150,26 @@ class Item: public WorldObject
   {
     return 0;
   }
+    virtual Vector <std::string>* getInteractNames(Item* _w)
+    {
+      return 0;
+    }
+    virtual Vector <std::string>* getInteractNames(Character* _w)
+    {
+      return 0;
+    }
+    virtual Vector <std::string>* getInteractNames(Creature* _w)
+    {
+      return 0;
+    }
+  virtual Vector <std::string>* getInteractNames(LocalTile* _w)
+  {
+    return 0;
+  }
+
+  
+  
+  
   virtual std::string getInteractName(WorldObject* _w)
   {
     return "Interact with "+_w->getName();
@@ -175,17 +195,12 @@ class Item_Sword: public Item
   }
   std::string getName() { return "Sword"; }
   
-  virtual Vector <std::string>* getInteractNames(WorldObject* _w)
-  {
-    if (_w==0) { return 0; }
-    
-    auto vInteract = new Vector <std::string>;
-    vInteract->push("Stab "+_w->getName());
-    vInteract->push("Slash "+_w->getName());
-    
-    return vInteract;
-  }
-  
+  virtual Vector <std::string>* getInteractNames(WorldObject* _w);
+    virtual Vector <std::string>* getInteractNames(Item* _w);
+    virtual Vector <std::string>* getInteractNames(Character* _w);
+    virtual Vector <std::string>* getInteractNames(Creature* _w);
+  virtual Vector <std::string>* getInteractNames(LocalTile* _w);
+
   Texture* currentTexture()
   {
     return &TEX_ITEM_SWORD;
@@ -221,10 +236,10 @@ class Item_Fishrod: public Item
   }
   std::string getName() { return "Fishing rod"; }
   
-  virtual void interact (LocalTile* _tile);
+  virtual void interact (LocalTile* _tile, int interactionType = 0);
   
 
-  void interact(WorldObject* _w)
+  void interact(WorldObject* _w, int interactType=0)
   {
     std::cout<<"You hook the "+_w->getName();
   }
@@ -287,9 +302,16 @@ class Item_Axe: public Item
   std::string getName() { return "Axe"; }
   
   
-  void interact(WorldObject* w);
+  void interact(WorldObject* w, int interactType=0);
+  
+  
+  virtual Vector <std::string>* getInteractNames(WorldObject* _w);
+    virtual Vector <std::string>* getInteractNames(Item* _w);
+    virtual Vector <std::string>* getInteractNames(Character* _w);
+    virtual Vector <std::string>* getInteractNames(Creature* _w);
+  virtual Vector <std::string>* getInteractNames(LocalTile* _w);
 
-  virtual void interact (LocalTile* obj)
+  virtual void interact (LocalTile* obj, int interactionType = 0)
   {
     std::cout<<"You chop the TILE "<<obj->getName()<<".\n";
   }
@@ -339,7 +361,13 @@ class Item_Log: public Item
   }
 	virtual ~Item_Log() {}
   
-  virtual void interact (LocalTile* obj);
+  virtual void interact (LocalTile* obj, int interactionType = 0);
+  
+  virtual Vector <std::string>* getInteractNames(WorldObject* _w);
+    virtual Vector <std::string>* getInteractNames(Item* _w);
+    virtual Vector <std::string>* getInteractNames(Character* _w);
+    virtual Vector <std::string>* getInteractNames(Creature* _w);
+  virtual Vector <std::string>* getInteractNames(LocalTile* _w);
 
 
   
@@ -396,7 +424,7 @@ class Item_Fish: public Item
     return "Fish";
   }
   
-  virtual void interact (WorldObject*); /* cook */
+  virtual void interact (WorldObject*, int interactType=0); /* cook */
   virtual void interact (Character*); /* eat */
 
   Texture* currentTexture()
@@ -436,6 +464,23 @@ class Item_Campfire: public Item
   }
 
   
+};
+
+
+class Item_Plank: public Item
+{
+  public:
+  
+  Item_Plank()
+  {
+  }
+  virtual ~Item_Plank()
+  {
+  }
+  Texture* currentTexture()
+  {
+    return &TEX_OBJECT_PLANK;
+  }
 };
 
 
