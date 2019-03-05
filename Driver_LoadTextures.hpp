@@ -4,6 +4,11 @@
 
 #include <string>
 
+#define THREADED_TEXTURE_LOADING
+#if defined THREAD_ALL || defined THREADED_TEXTURE_LOADING
+  #include <thread>
+#endif
+
 #include <Graphics/Texture/TextureLoader.hpp>
 #include <Graphics/Texture/Texture.hpp>
 
@@ -16,16 +21,20 @@
 	Requires OpenGL headers.
 */
 
+void SetColor(int value){
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),  value);
+}
 
-Texture TEX_TITLE;
-Texture TEX_OPTIONS_BACKGROUND;
-Texture TEX_LOAD_GAME_BACKGROUND;
-Texture TEX_NEW_GAME_BACKGROUND;
 
-Texture TEX_GUI_INCREMENT;
-Texture TEX_GUI_DECREMENT;
-Texture TEX_GUI_EXPAND;
-Texture TEX_GUI_TILE_SELECTION;
+static Texture TEX_TITLE;
+static Texture TEX_OPTIONS_BACKGROUND;
+static Texture TEX_LOAD_GAME_BACKGROUND;
+static Texture TEX_NEW_GAME_BACKGROUND;
+
+static Texture TEX_GUI_INCREMENT;
+static Texture TEX_GUI_DECREMENT;
+static Texture TEX_GUI_EXPAND;
+static Texture TEX_GUI_TILE_SELECTION;
 
 Texture TEX_GUI_CENTER_CAMERA;
 const std::string PATH_TEX_GUI_CENTER_CAMERA = "Textures/GUI/CenterCamera.png";
@@ -206,44 +215,93 @@ void loadTextureVerbose(const std::string _path, Texture* _texture)
 	{ std::cout<<"Error loading "<<_path<<".\n"; }
 }
 
-void loadTextures()
+void preloadTextureVerbose(const std::string _path, Texture* _texture)
+{
+
+	
+	if(loadTextureNearestNeighbour(_path,_texture)==false)
+	{
+	SetColor(4);
+    std::cout<<"Loading: "<<_path<<": FAIL.\n";
+  SetColor(7);
+  }
+  else
+  {
+    std::cout<<"Loading: "<<_path<<": SUCCESS.\n";
+  }
+
+}
+
+
+void loadTextures() // Testing some multithreading here. Probably shouldn't because a texture atlas would be better
 {
   
-		// LOAD MENU TEXTURES
-	//loadTextureVerbose("Textures/Menu/TitleImage-CR.png",&TEX_TITLE);
-	loadTextureVerbose("Textures/Menu/Title.png",&TEX_TITLE);
-	loadTextureVerbose("Textures/Menu/Black.png",&TEX_OPTIONS_BACKGROUND);
-	loadTextureVerbose("Textures/Menu/Black.png",&TEX_LOAD_GAME_BACKGROUND);
-	loadTextureVerbose("Textures/Menu/Black.png",&TEX_NEW_GAME_BACKGROUND);
-	
-		// LOAD GUI TEXTURES
-	loadTextureVerbose("Textures/GUI/Increment.png",&TEX_GUI_INCREMENT);
-	loadTextureVerbose("Textures/GUI/Decrement.png",&TEX_GUI_DECREMENT);
-	loadTextureVerbose("Textures/GUI/Expand.png",&TEX_GUI_EXPAND);
-	loadTextureVerbose("Textures/GUI/HotbarSelection32.png",&TEX_GUI_TILE_SELECTION );
-	
-		// LOAD LOCAL OBJECT TEXTURES
-	loadTextureVerbose("Textures/NPC.png",&TEX_NPC);
-	loadTextureVerbose("Textures/NPC-ded.png",&TEX_NPC_DED);
-	
-		// LOAD WORLD OBJECT TEXTURES
-	loadTextureVerbose(PATH_TEX_WORLD_UNIT_NOMAD_01,&TEX_WORLD_UNIT_NOMAD_01);
-	loadTextureVerbose(PATH_TEX_WORLD_UNIT_DWARF_01,&TEX_WORLD_UNIT_DWARF_01);
-	loadTextureVerbose(PATH_TEX_WORLD_UNIT_ELF_01,&TEX_WORLD_UNIT_ELF_01);
+//#undef THREADED_TEXTURE_LOADING
+#if defined THREAD_ALL || defined THREADED_TEXTURE_LOADING
+  std::thread t1( []
+  {
+#endif
+      // LOAD MENU TEXTURES
+    //loadTextureVerbose("Textures/Menu/TitleImage-CR.png",&TEX_TITLE);
+    preloadTextureVerbose("Textures/Menu/Title.png",&TEX_TITLE);
+    preloadTextureVerbose("Textures/Menu/Black.png",&TEX_OPTIONS_BACKGROUND);
+    preloadTextureVerbose("Textures/Menu/Black.png",&TEX_LOAD_GAME_BACKGROUND);
+    preloadTextureVerbose("Textures/Menu/Black.png",&TEX_NEW_GAME_BACKGROUND);
+    
+    preloadTextureVerbose(PATH_TEX_WORLD_SETTLEMENT_DWARFFORT_01,&TEX_WORLD_SETTLEMENT_DWARFFORT_01);
+    preloadTextureVerbose(PATH_TEX_WORLD_SETTLEMENT_TOWN_URBAN01,&TEX_WORLD_SETTLEMENT_TOWN_URBAN01);
+#if defined THREAD_ALL || defined THREADED_TEXTURE_LOADING
+  });
   
-	loadTextureVerbose(PATH_TEX_WORLD_SETTLEMENT_DWARFFORT_01,&TEX_WORLD_SETTLEMENT_DWARFFORT_01);
-	loadTextureVerbose(PATH_TEX_WORLD_SETTLEMENT_TOWN_URBAN01,&TEX_WORLD_SETTLEMENT_TOWN_URBAN01);
-	
-		// LOAD WORLD TERRAIN TEXTURES
-	// loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_GRASS_00,&TEX_WORLD_TERRAIN_GRASS_00);
-	// loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_GRASS_01,&TEX_WORLD_TERRAIN_GRASS_01);
-	// loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_GRASS_02,&TEX_WORLD_TERRAIN_GRASS_02);
-	// loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_GRASS_03,&TEX_WORLD_TERRAIN_GRASS_03);
-	// loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_GRASS_04,&TEX_WORLD_TERRAIN_GRASS_04);
-	// loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_GRASS_05,&TEX_WORLD_TERRAIN_GRASS_05);
+  std::thread t2( []
+  {
+#endif
+      // LOAD GUI TEXTURES
+    preloadTextureVerbose("Textures/GUI/Increment.png",&TEX_GUI_INCREMENT);
+    preloadTextureVerbose("Textures/GUI/Decrement.png",&TEX_GUI_DECREMENT);
+    preloadTextureVerbose("Textures/GUI/Expand.png",&TEX_GUI_EXPAND);
+    preloadTextureVerbose("Textures/GUI/HotbarSelection32.png",&TEX_GUI_TILE_SELECTION );
+    
+      // LOAD LOCAL OBJECT TEXTURES
+    preloadTextureVerbose("Textures/NPC.png",&TEX_NPC);
+    preloadTextureVerbose("Textures/NPC-ded.png",&TEX_NPC_DED);
+    
+  // LOAD WORLD OBJECT TEXTURES
+    preloadTextureVerbose(PATH_TEX_WORLD_UNIT_NOMAD_01,&TEX_WORLD_UNIT_NOMAD_01);
+    preloadTextureVerbose(PATH_TEX_WORLD_UNIT_DWARF_01,&TEX_WORLD_UNIT_DWARF_01);
+    preloadTextureVerbose(PATH_TEX_WORLD_UNIT_ELF_01,&TEX_WORLD_UNIT_ELF_01);
+#if defined THREAD_ALL || defined THREADED_TEXTURE_LOADING
+  });
+#endif
+    
+    
+#if defined THREAD_ALL || defined THREADED_TEXTURE_LOADING
+  t1.join();
+  t2.join();
+#endif
+
+  bindNearestNeighbour(&TEX_TITLE);
+  bindNearestNeighbour(&TEX_OPTIONS_BACKGROUND);
+  bindNearestNeighbour(&TEX_LOAD_GAME_BACKGROUND);
+  bindNearestNeighbour(&TEX_NEW_GAME_BACKGROUND);
+  
+  bindNearestNeighbour(&TEX_GUI_INCREMENT);
+  bindNearestNeighbour(&TEX_GUI_DECREMENT);
+  bindNearestNeighbour(&TEX_GUI_EXPAND);
+  bindNearestNeighbour(&TEX_GUI_TILE_SELECTION);
+  
+  bindNearestNeighbour(&TEX_NPC);
+  bindNearestNeighbour(&TEX_NPC_DED);
+  
+  bindNearestNeighbour(&TEX_WORLD_UNIT_NOMAD_01);
+  bindNearestNeighbour(&TEX_WORLD_UNIT_DWARF_01);
+  bindNearestNeighbour(&TEX_WORLD_UNIT_ELF_01);
+  
+  bindNearestNeighbour(&TEX_WORLD_SETTLEMENT_DWARFFORT_01);
+  bindNearestNeighbour(&TEX_WORLD_SETTLEMENT_TOWN_URBAN01);
+
 	
 	loadTextureRotate(PATH_TEX_WORLD_TERRAIN_GRASS_05,&TEX_WORLD_TERRAIN_GRASS_00,&TEX_WORLD_TERRAIN_GRASS_01,&TEX_WORLD_TERRAIN_GRASS_02,&TEX_WORLD_TERRAIN_GRASS_03);
-	
 	loadTextureRotate(PATH_TEX_WORLD_TERRAIN_COAST_01,&TEX_WORLD_TERRAIN_COAST_00,&TEX_WORLD_TERRAIN_COAST_01,&TEX_WORLD_TERRAIN_COAST_02,&TEX_WORLD_TERRAIN_COAST_03);
 	loadTextureRotate(PATH_TEX_WORLD_TERRAIN_COAST_CORNER_00,&TEX_WORLD_TERRAIN_COAST_CORNER_00,&TEX_WORLD_TERRAIN_COAST_CORNER_01,&TEX_WORLD_TERRAIN_COAST_CORNER_02,&TEX_WORLD_TERRAIN_COAST_CORNER_03);
 	loadTextureRotate(PATH_TEX_WORLD_TERRAIN_COAST_PENINSULA_00,&TEX_WORLD_TERRAIN_COAST_PENINSULA_00,&TEX_WORLD_TERRAIN_COAST_PENINSULA_01,&TEX_WORLD_TERRAIN_COAST_PENINSULA_02,&TEX_WORLD_TERRAIN_COAST_PENINSULA_03);
@@ -252,8 +310,7 @@ void loadTextures()
 	//loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_COAST_01,&TEX_WORLD_TERRAIN_COAST_01);
 	
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_ISLAND_00,&TEX_WORLD_TERRAIN_ISLAND_00);
-	
-	
+
 	loadTextureVerbose(PATH_TEX_ALCHEMY,&TEX_ALCHEMY);
 	
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_OCEAN_00,&TEX_WORLD_TERRAIN_OCEAN_00);
