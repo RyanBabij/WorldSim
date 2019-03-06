@@ -283,7 +283,8 @@ int main(int nArgs, char ** arg)
 		return 0;
 	}
   
-	std::cout<<"\nWorldSim by Garosoft (garosoft.org) "<<VERSION<<". Warning: This is not a stable release.\n";
+  
+	std::cout<<"\nWorldSim "<<VERSION<<". Warning: This is not a stable release.\n";
 
 	GL_init(nArgs, arg);
 	

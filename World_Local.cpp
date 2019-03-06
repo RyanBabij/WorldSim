@@ -141,6 +141,9 @@ bool World_Local::generate()
           put(new Item_Fish, _x, _y);
           put(new Item_Fish, _x, _y);
           put(new Item_Campfire, _x, _y);
+          put(new Item_Log, _x, _y);
+          put(new Item_Plank, _x, _y);
+          put(new Item_Plank, _x, _y);
           
           
           

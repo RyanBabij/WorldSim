@@ -33,6 +33,11 @@ std::string Item::getExtendedInfo() { return "N/A"; }
 
 Texture* Item::currentTexture() { return 0; }
 
+void Item::addToRecipeManager()
+{
+  recipeManager.addToRecipes(this);
+}
+
 #include "Item_All.cpp"
 
 #endif

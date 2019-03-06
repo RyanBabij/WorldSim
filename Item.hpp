@@ -29,6 +29,8 @@ class Ammo
 //#include "Character.hpp"
 
 class Character;
+class Recipe;
+
 
 class Item: public WorldObject
 {
@@ -107,6 +109,12 @@ class Item: public WorldObject
   int chopTreeCost;
   int fishingCost;
   
+  // Used so Player can easily see what recipes an object is used for.
+  virtual bool canUseInRecipe(Recipe* _recipe)
+  {
+    std::cout<<"1\n";
+    return false;
+  }
 	
 	//int distanceTo(WorldObject*); /* Chebyshev (this one is distances where diagonal movement is allowed.) */
 	//	int distanceFrom(WorldObject*); /* Alias. */
@@ -168,6 +176,15 @@ class Item: public WorldObject
   }
 
   
+    // Useful for checking recipe requirements.
+  bool sameType (WorldObject _obj)
+  {
+    return false;
+  }
+  bool sameType (Item* _item)
+  {
+    return true;
+  }
   
   
   virtual std::string getInteractName(WorldObject* _w)
@@ -179,6 +196,8 @@ class Item: public WorldObject
     return "Interact with "+_w->getName();
   }
   
+  
+  virtual void addToRecipeManager();
 
     
 
@@ -466,6 +485,7 @@ class Item_Campfire: public Item
   
 };
 
+#include "Recipe.hpp"
 
 class Item_Plank: public Item
 {
@@ -477,10 +497,34 @@ class Item_Plank: public Item
   virtual ~Item_Plank()
   {
   }
+  
+  // Used so Player can easily see what recipes an object is used for.
+  virtual bool canUseInRecipe(Recipe* _recipe)
+  {
+    if (_recipe==0) { return false; }
+    std::cout<<"2\n";
+    if (_recipe->canUse(this) > 0 )
+    {
+      std::cout<<"Return true\n";
+      return true;
+    }
+    std::cout<<"Return false\n";
+    return false;
+  }
+  // Used so Player can easily see what recipes an object is used for.
+  virtual bool canUseInRecipe(Recipe_Wall* _recipe)
+  {
+    std::cout<<"3\n";
+    return true;
+  }
+  
   Texture* currentTexture()
   {
     return &TEX_OBJECT_PLANK;
   }
+  
+  
+  virtual void addToRecipeManager();
 };
 
 

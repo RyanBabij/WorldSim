@@ -24,6 +24,7 @@
 
 class Menu_Crafting: public GUI_Interface
 {
+  Vector <Item*> vItem;
   Vector <Recipe*> vRecipe;
   
   public:
@@ -37,6 +38,33 @@ class Menu_Crafting: public GUI_Interface
   
   void build()
   {
+    
+    
+    
+    //check inventory grid.
+    for (int _y=0;_y<10;++_y)
+    {
+      for (int _x=0;_x<10;++_x)
+      {
+        if (inventoryGrid[_x][_y]!=0)
+        {
+          std::cout<<"We have item.\n";
+          vItem.push(inventoryGrid[_x][_y]);
+          
+          recipeManager.addToRecipes(inventoryGrid[_x][_y]);
+          inventoryGrid[_x][_y]->addToRecipeManager();
+          
+          if ( inventoryGrid[_x][_y]->canUseInRecipe(&recipeWall) )
+          {
+            std::cout<<"Can build wall\n";
+          }
+        }
+      }
+    }
+    std::cout<<"Can make "<<recipeManager.getTotals()<<" walls.\n";
+      
+    
+    
   }
   
   void /* GUI_Interface */ render()
@@ -1306,6 +1334,7 @@ class Menu_AdventureMode: public GUI_Interface
 		{
       std::cout<<"CRAFTING\n";
       craftingMenuActive = !craftingMenuActive;
+      menuCrafting.build();
 			buttonCrafting.unclick();
 		}
     

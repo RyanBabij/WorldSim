@@ -258,4 +258,11 @@
     return vInteract;
   }
   
+  //Plank
+  
+void Item_Plank::addToRecipeManager()
+{
+  recipeManager.addToRecipes(this);
+}
+  
 #endif
