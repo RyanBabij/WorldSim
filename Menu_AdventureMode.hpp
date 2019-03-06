@@ -48,28 +48,42 @@ class Menu_Crafting: public GUI_Interface
       {
         if (inventoryGrid[_x][_y]!=0)
         {
-          std::cout<<"We have item.\n";
+          //std::cout<<"We have item.\n";
           vItem.push(inventoryGrid[_x][_y]);
           
-          recipeManager.addToRecipes(inventoryGrid[_x][_y]);
+          //recipeManager.addToRecipes(inventoryGrid[_x][_y]);
           inventoryGrid[_x][_y]->addToRecipeManager();
           
-          if ( inventoryGrid[_x][_y]->canUseInRecipe(&recipeWall) )
-          {
-            std::cout<<"Can build wall\n";
-          }
+          // if ( inventoryGrid[_x][_y]->canUseInRecipe(&recipeWall) )
+          // {
+            // std::cout<<"Can build wall\n";
+          // }
         }
       }
     }
-    std::cout<<"Can make "<<recipeManager.getTotals()<<" walls.\n";
+    //std::cout<<"Can make "<<recipeManager.getTotals()<<" walls.\n";
+    
+    vRecipe.clear();
       
-    
-    
+    auto vValidRecipe = recipeManager.getValidRecipes();
+      // Render the valid recipes.
+    for (int i=0;i<vValidRecipe->size();++i)
+    {
+      vRecipe.push((*vValidRecipe)(i));
+    }
+
   }
   
   void /* GUI_Interface */ render()
   {
     Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-20);
+    font8x8.drawText("Available recipes:",panelX1+250,(panelY2-40),panelX1+500,(panelY2-50),false,true);
+    
+    
+    for (int i=0;i<vRecipe.size();++i)
+    {
+      font8x8.drawText(vRecipe(i)->getName(),panelX1+250,(panelY2-50)-(i*10),panelX1+500,(panelY2-50)-(i*10)-10,false,true);
+    }
       //linesDrawn = font8x8.drawText(ADVENTURE_MODE_MANUAL,panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
   }
   

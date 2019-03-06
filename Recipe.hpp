@@ -73,7 +73,7 @@ class Recipe
     return 0;
   }
   
-  std::string getName()
+  virtual std::string getName()
   {
     return "Generic recipe";
   }
@@ -91,7 +91,7 @@ class Recipe_Wall: public Recipe
     return 3;
   }
   
-  std::string getName()
+  virtual std::string getName() override
   {
     return "Wooden Wall";
   }
@@ -105,7 +105,8 @@ class Recipe_Wall: public Recipe
   
   virtual int getTotal() override
   {
-    return vPlank.size();
+    // 5 planks to make a wall.
+    return (vPlank.size()/5);
   }
 };
 Recipe_Wall recipeWall;
@@ -143,6 +144,16 @@ class RecipeManager
   int getTotals()
   {
     return recipeWall.getTotal();
+  }
+  
+  Vector <Recipe*> * getValidRecipes()
+  {
+    vValidList.clear();
+    if ( recipeWall.getTotal() > 0 )
+    {
+      vValidList.push(&recipeWall);
+    }
+    return &vValidList;
   }
   
   // int canMakeRecipe(Recipe_Wall* _recipe, Vector <Item*> vInventory)

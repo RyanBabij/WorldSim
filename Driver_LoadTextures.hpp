@@ -397,8 +397,6 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
         (pNYA.getPixel3D(_nyaX,_nyaY,0) == 0) ? NYA+="*" : NYA+=" ";  
     } NYA+="\n";}
     
-  std::cout<<"FINISH TEX\n";
-    
 }
 
 #endif
