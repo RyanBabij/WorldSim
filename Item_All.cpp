@@ -264,5 +264,42 @@ void Item_Plank::addToRecipeManager()
 {
   recipeManager.addToRecipes(this);
 }
+
+  //WALL
+  
+  Vector <std::string>* Item_Wall::getInteractNames(LocalTile* _w)
+  {
+    if (_w==0) { return 0; }
+    
+    auto vInteract = new Vector <std::string>;
+    vInteract->push("Build wall north");
+    vInteract->push("Build wall east");
+    vInteract->push("Build wall south");
+    vInteract->push("Build wall west");
+    
+    return vInteract;
+  }
+  void Item_Wall::interact (LocalTile* obj, int interactionType /* =0 */)
+  {
+    Console ("We're building a wall, and the Elves are going to pay for it");
+    
+    if ( interactionType==0) /* North */
+    {
+      obj->bWall = 0b01000000;
+    }
+    else if (interactionType==1) /* East */
+    {
+      obj->bWall = 0b00001000;
+    }
+    else if (interactionType==2) /* South */
+    {
+      obj->bWall = 0b00000010;
+    }
+    else /* West */
+    {
+      obj->bWall = 0b00010000;
+    }
+
+  }
   
 #endif

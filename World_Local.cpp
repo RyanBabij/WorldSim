@@ -144,6 +144,11 @@ bool World_Local::generate()
           put(new Item_Log, _x, _y);
           put(new Item_Plank, _x, _y);
           put(new Item_Plank, _x, _y);
+          put(new Item_Wall, _x, _y);
+          put(new Item_Wall, _x, _y);
+          put(new Item_Wall, _x, _y);
+          put(new Item_Wall, _x, _y);
+          put(new Item_Wall, _x, _y);
           
           
           

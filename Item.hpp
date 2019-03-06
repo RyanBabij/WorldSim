@@ -527,6 +527,24 @@ class Item_Plank: public Item
   virtual void addToRecipeManager();
 };
 
-
+class Item_Wall: public Item
+{
+  public:
+  
+  Item_Wall()
+  {
+  }
+  virtual ~Item_Wall()
+  {
+  }
+  
+  Vector <std::string>* getInteractNames(LocalTile* _w);
+  virtual void interact (LocalTile* obj, int interactionType = 0);
+  
+  Texture* currentTexture()
+  {
+    return &TEX_WALL_GREYBRICK_SOUTH;
+  }
+};
 
 #endif

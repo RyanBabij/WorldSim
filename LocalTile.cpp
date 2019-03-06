@@ -15,7 +15,7 @@
 LocalTile::LocalTile()
 {
   hasFloor = false;
-  isWall=false;
+  bWall=0;
   nFish=-1;
 }
 
@@ -90,9 +90,13 @@ void LocalTile::clearObjects()
     // Returns true is this tile has an object that can block line of sight.
 bool LocalTile::hasViewBlocker()
 {
+  if (bWall != 0)
+  {
+    return true;
+  }
   for ( int i=0; i<vObject.size();++i)
   {
-    if (vObject(i)->blocksView)
+    if (vObject(i)->blocksView )
     {
       return true;
     }

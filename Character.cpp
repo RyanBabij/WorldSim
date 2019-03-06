@@ -603,7 +603,7 @@ void Character::initialiseKnowledge()
     //Update the LOS backlog during idle time.
     
       //For now this simply wipes LOS from last turn.
-    //knowledge->updateLOS();
+    knowledge->updateLOS();
     
     if (vMovesToProcess.size() > 0)
     {

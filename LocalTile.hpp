@@ -37,7 +37,14 @@ class LocalTile: public HasTexture
     //Base terrain can be overlaid with a floor.
     // For now just a bool.
   bool hasFloor;
-  bool isWall;
+  
+    // Walls block movement across them
+    // Bitfield is used to determine the wall orientation.
+    // 000
+    // 0 0 Where a 1 indicates movement is blocked.
+    // 000
+    // The bitfield is used for both pathfinding and rendering.
+  unsigned char bWall;
   
   int height;
   

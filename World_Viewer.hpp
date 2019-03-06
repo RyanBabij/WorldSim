@@ -1040,6 +1040,28 @@ void switchTarget(World_Local* _worldLocal)
                         Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
                         glColor3ub(255,255,255);
                         
+                        // Draw wall if necessary.
+                        
+                        if ( localTile->bWall == 0b01000000) // NORTH
+                        {
+                          
+                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 180);
+                        }
+                        else if ( localTile->bWall == 0b00010000) // WEST
+                        {
+                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 270);
+                          //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, false);
+                        }
+                        else if ( localTile->bWall == 0b00001000) // EAST
+                        {
+                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 90);
+                        }
+                        else if ( localTile->bWall == 0b00000010) // SOUTH
+                        {
+                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, false);
+                        }
+                      
+                        
                         
                         for(int i=0;i<localMap->aLocalTile(localXTile,localYTile).vObject.size();++i)
                         {
