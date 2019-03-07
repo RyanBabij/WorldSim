@@ -891,13 +891,65 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
     return false;
 
   }
+  LocalTile* destination = &aLocalTile(newX,newY);
   
-  //Moving inside of map
-  
-  if ( aLocalTile(newX,newY).hasMovementBlocker() )
+  if ( destination->hasMovementBlocker() )
   {
     return false;
   }
+  
+  if (aLocalTile.isSafe(_object->x,_object->y)==false)
+  {
+    return false;
+  }
+  
+  LocalTile* source = &aLocalTile(_object->x,_object->y);
+  
+  //Moving inside of map
+  // I'm sure you can do some fancy bitwise stuff here but I can't think of it right now.
+  // It'll probably have to be done in future when pathfinding is optimised.
+  //char combinedCollision = source->bWall | destination->bWall;
+  
+  // Check walls
+  // Left
+  if ( newX < _object->x)
+  {
+    if ( (source->bWall & 0b00010000) == 0b00010000
+    ||   (destination->bWall & 0b00001000) == 0b00001000 )
+    {
+      return false;
+    }
+  }
+  //right
+  else if (newX > _object->x)
+  {
+    if ( (destination->bWall & 0b00010000) == 0b00010000
+    ||   (source->bWall & 0b00001000) == 0b00001000 )
+    {
+      return false;
+    }
+  }
+  //north
+  else if (newY > _object->y)
+  {
+    if ( (destination->bWall & 0b00000010) == 0b00000010
+    ||   (source->bWall & 0b01000000) == 0b01000000 )
+    {
+      return false;
+    }
+  }
+  //south
+  else if (newY < _object->y)
+  {
+    if ( (source->bWall & 0b00000010) == 0b00000010
+    ||   (destination->bWall & 0b01000000) == 0b01000000 )
+    {
+      return false;
+    }
+  }
+  
+  
+  //if ( aLocalTile(newX,newY).bW
   
   aLocalTile(_object->x,_object->y).remove(_object);
   

@@ -310,19 +310,19 @@ void Item_Plank::addToRecipeManager()
     }
     else if (interactionType==4) /* NE */
     {
-      obj->bWall = 0b00100000;
+      obj->bWall = 0b01101000;
     }
     else if (interactionType==5) /* SE */
     {
-      obj->bWall = 0b00000001;
+      obj->bWall = 0b00001011;
     }
     else if (interactionType==6) /* SW */
     {
-      obj->bWall = 0b00000100;
+      obj->bWall = 0b00010110;
     }
     else if (interactionType==7) /* NW */
     {
-      obj->bWall = 0b10000000;
+      obj->bWall = 0b11010000;
     }
     else /* Demolish */
     {

@@ -44,6 +44,8 @@ class LocalTile: public HasTexture
     // 0 0 Where a 1 indicates movement is blocked.
     // 000
     // The bitfield is used for both pathfinding and rendering.
+    // The bitfield blocks movement FROM and TO this tile.
+    // Basically this makes it possible to make one-way areas. Might be useful for traps or ledges.
   unsigned char bWall;
   
   int height;

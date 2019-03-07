@@ -114,6 +114,7 @@ bool LocalTile::hasMovementBlocker()
       return true;
     }
   }
+
   return false;
 }
 
