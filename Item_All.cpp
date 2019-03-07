@@ -276,6 +276,11 @@ void Item_Plank::addToRecipeManager()
     vInteract->push("Build wall east");
     vInteract->push("Build wall south");
     vInteract->push("Build wall west");
+    vInteract->push("Build wall NE");
+    vInteract->push("Build wall SE");
+    vInteract->push("Build wall SW");
+    vInteract->push("Build wall NW");
+    vInteract->push("Demolish wall");
     
     return vInteract;
   }
@@ -295,11 +300,30 @@ void Item_Plank::addToRecipeManager()
     {
       obj->bWall = 0b00000010;
     }
-    else /* West */
+    else if (interactionType==3) /* West */
     {
       obj->bWall = 0b00010000;
     }
-
+    else if (interactionType==4) /* NE */
+    {
+      obj->bWall = 0b00100000;
+    }
+    else if (interactionType==5) /* SE */
+    {
+      obj->bWall = 0b00000001;
+    }
+    else if (interactionType==6) /* SW */
+    {
+      obj->bWall = 0b00000100;
+    }
+    else if (interactionType==7) /* NW */
+    {
+      obj->bWall = 0b10000000;
+    }
+    else /* West */
+    {
+      obj->bWall = 0b00000000;
+    }
   }
   
 #endif
