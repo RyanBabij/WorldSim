@@ -27,10 +27,15 @@ class Menu_Crafting: public GUI_Interface
   Vector <Item*> vItem;
   Vector <Recipe*> vRecipe;
   
+  int selectedRecipe;
+  
   public:
   
   Menu_Crafting()
   {
+    selectedRecipe=0;
+    vItem.reserve(100);
+    vRecipe.reserve(100);
   }
   ~Menu_Crafting()
   {
@@ -38,7 +43,7 @@ class Menu_Crafting: public GUI_Interface
   
   void build()
   {
-    
+    selectedRecipe=0;
     
     
     //check inventory grid.
@@ -79,16 +84,37 @@ class Menu_Crafting: public GUI_Interface
     Renderer::placeColour4a(150,150,250,250,panelX1+240,panelY1+40,panelX2-20,panelY2-20);
     font8x8.drawText("Available recipes:",panelX1+250,(panelY2-40),panelX1+500,(panelY2-50),false,true);
     
-    
+    if (vRecipe.size() > 0)
+    {
+      Renderer::placeColour4a(180,180,180,255,panelX1+250,(panelY2-50)-(selectedRecipe*10),panelX1+600,(panelY2-50)-((selectedRecipe+1)*10));
+    }
+
+    std::cout<<"vRecipe size: "<<vRecipe.size()<<".\n";
     for (int i=0;i<vRecipe.size();++i)
     {
-      font8x8.drawText(vRecipe(i)->getName(),panelX1+250,(panelY2-50)-(i*10),panelX1+500,(panelY2-50)-(i*10)-10,false,true);
+      font8x8.drawText(vRecipe(i)->getName(),panelX1+250,(panelY2-50)-(i*10),panelX1+500,(panelY2-50)-((i+1)*10),false,true);
+      std::cout<<"Recipt: "<<vRecipe(i)->getName()<<".\n";
     }
       //linesDrawn = font8x8.drawText(ADVENTURE_MODE_MANUAL,panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
   }
   
 	bool /* GUI_Interface */ mouseEvent (Mouse* _mouse)
 	{
+    // Scroll up and down interaction select
+    if (_mouse->isWheelDown)
+    {
+      ++selectedRecipe;
+      if (selectedRecipe>=vRecipe.size()) {selectedRecipe=0;}
+      _mouse->isWheelDown=false;
+      _mouse->isWheelUp=false;
+    }
+    else if (_mouse->isWheelUp)
+    {
+      --selectedRecipe;
+      if (selectedRecipe<0) { selectedRecipe=vRecipe.size()-1; }
+      _mouse->isWheelDown=false;
+      _mouse->isWheelUp=false;
+    }
     return false;
   }
   
@@ -1064,6 +1090,11 @@ class Menu_AdventureMode: public GUI_Interface
     //int itemClicked = 0; /* 0-99 == Inventory. 100-119 == Ground */
     mouseX = _mouse->x;
     mouseY = _mouse->y;
+    
+    if (craftingMenuActive)
+    {
+      menuCrafting.mouseEvent(_mouse);
+    }
     
     if (itemSelectionActive)
     {

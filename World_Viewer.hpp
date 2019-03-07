@@ -610,6 +610,7 @@ void switchTarget(World_Local* _worldLocal)
 	}
   
   // Take the given pixels and calculate what tile they are. This is in absolute coordinates.
+  // I need to add a version which can do relative coords.
   void toTileCoords(int pixelX, int pixelY, unsigned long int * absX, unsigned long int * absY)
   {
     if (absX==0 || absY==0) {return;}
@@ -621,9 +622,7 @@ void switchTarget(World_Local* _worldLocal)
     
     int pixelDistanceX = pixelX - firstPixelX;
     int pixelDistanceY = pixelY - firstPixelY;
-    
-    //std::cout<<"Pixeldistance xy: "<<pixelDistanceX<<", "<<pixelDistanceY<<".\n";
-    
+
     if ( pixelDistanceX < 0 || pixelDistanceY < 0 )
     {
       *absX=0;
@@ -888,6 +887,8 @@ void switchTarget(World_Local* _worldLocal)
             }
 						else
 						{
+              // Cool feature where we keep track of the average colour of a texture and just draw that colour
+              // in colour mode. Could also be adapted for distant rendering.
 							if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==false)
 							{
 								//enderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
@@ -993,10 +994,8 @@ void switchTarget(World_Local* _worldLocal)
 						// RENDER THE LOCAL TILE
             // Should be it's own function
 					//if (tileSize > 4 && localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
-          if ( localMap != 0)
+          if ( localMap != 0 && tileSize > 4)
 					{
-
-						
 						float currentSubY = currentY;
 						float nextSubY = currentY + pixelsPerLocalTile;
 						
@@ -1005,7 +1004,6 @@ void switchTarget(World_Local* _worldLocal)
 						
             // First we must seed the RNG with the seed for this local tile.
 						RandomNonStatic r1;
-            //std::cout<<"wv locXY: "<<world->localX<<", "<<world->localY<<".\n";
 						r1.seed (localMap->seed);
             
             //const enumBiome localBaseBiome = world->aTerrain(world->localX,world->localY);
@@ -1013,19 +1011,14 @@ void switchTarget(World_Local* _worldLocal)
 						
 						for (int localYTile = 0; localYTile<LOCAL_MAP_SIZE;++localYTile)
 						{
-							
 							if ( nextSubY>=mainViewY1 && currentSubY <= mainViewY2 && floor(currentSubY) != floor(nextSubY) )
 							{
-							
 								float currentPixel = currentX;
 								float nextPixel = currentX+pixelsPerLocalTile;
 								for (int localXTile = 0; localXTile<LOCAL_MAP_SIZE;++localXTile)
 								{
-                  
-
 									if ( nextPixel>=mainViewX1 && currentPixel <= mainViewX2 && floor(currentPixel) != floor(nextPixel) )
 									{
-
                     if ( subterraneanMode )
                     {
                       LocalTile* localTile = &localMap->aSubterranean(localXTile,localYTile);
@@ -1034,18 +1027,33 @@ void switchTarget(World_Local* _worldLocal)
                     }
                     else
                     {
-                      
                       //Very basic player line of sight check here (only if we're in Adventure mode)
-                      
-                      if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == false )
+                      // Unseen tiles
+                      if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == 0 )
                       {
-
                         //Draw tile very dark to symbolise fog of war
+                        //LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
                         
+                        //unsigned char lightValue = 10;
+                        //glColor3ub(lightValue,lightValue,lightValue);
+                        //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                        //glColor3ub(255,255,255);
+                        
+                        
+                        for(int i=0;i<localMap->aLocalTile(localXTile,localYTile).vObject.size();++i)
+                        {
+                          //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                        }
+                       
+                      }
+                      //Previously seen tiles
+                      else if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == 1 )
+                      {
+                        //Draw tile very dark to symbolise fog of war
                         LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
                         
-                        unsigned char lightValue = 120;
-                        glColor3ub(180+lightValue,180+lightValue,180+lightValue);
+                        unsigned char lightValue = 80;
+                        glColor3ub(lightValue,lightValue,lightValue);
                         Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
                         glColor3ub(255,255,255);
                         
@@ -1060,10 +1068,7 @@ void switchTarget(World_Local* _worldLocal)
                       {
                         LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
                         
-                        
-                        
                         unsigned char lightValue = localTile->height*15;
-                        
                         
                         int currentSecond = world->calendar.second;
                         int sunsetCounter = currentSecond-50;

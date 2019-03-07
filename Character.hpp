@@ -187,7 +187,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
     // KNOWLEDGE
     
     //returns true if the Character has seen this tile.
-  bool hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */ );
+  char hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */ );
   
   
 	/* TABLE INTERFACE */

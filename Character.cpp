@@ -206,7 +206,7 @@ void Character::incrementTicks(int nTicks)
 	
   hunger+=nTicks;
   
-  if (hunger > MAX_HUNGER) { hunger = MAX_HUNGER; isAlive=false; }
+  if (hunger > MAX_HUNGER) { hunger = MAX_HUNGER; /* isAlive=false; */ }
   
 	while(secondsCounter>=86400)
 	{ 
@@ -509,7 +509,7 @@ void Character::initialiseKnowledge()
   }
 }
   
-  bool Character::hasSeen( World_Local* _map, int _x, int _y )
+  char Character::hasSeen( World_Local* _map, int _x, int _y )
   {
     if (knowledge==0) { return false; }
     

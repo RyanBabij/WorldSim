@@ -60,6 +60,7 @@ class Recipe
     // Every item must be listed here in order to specialise the base class.
   virtual int canUse (Item *) { return -1; }
   virtual int canUse (Item_Plank *) { return -1; }
+  virtual int canUse (Item_Fish *) { return -1; }
   
   
   /* These should probably be in recipe manager. */
@@ -67,6 +68,7 @@ class Recipe
   virtual void countUp(WorldObject*) {}
   virtual void countUp(Item*) {}
   virtual void countUp(Item_Plank*) {}
+  virtual void countUp(Item_Fish*) {}
   
   virtual int getTotal()
   {
@@ -106,10 +108,43 @@ class Recipe_Wall: public Recipe
   virtual int getTotal() override
   {
     // 5 planks to make a wall.
-    return (vPlank.size()/5);
+    return (vPlank.size()/2);
   }
 };
 Recipe_Wall recipeWall;
+
+class Recipe_GrilledFish: public Recipe
+{
+  public:
+  Vector <Item_Fish*> vFish;
+
+  virtual int canUse (Item_Fish * _object) override /* return the amount of object needed. -1 means this object can't be used */
+  {
+    std::cout<<"Item_Fish\n";
+    return 3;
+  }
+  
+  virtual std::string getName() override
+  {
+    return "Grilled fish";
+  }
+  
+  virtual void countUp(WorldObject* _object) override {}
+  virtual void countUp(Item* _item) override {}
+  virtual void countUp(Item_Fish* _plank) override
+  {
+    std::cout<<"Addfish\n";
+    vFish.push(_plank);
+  }
+  
+  virtual int getTotal() override
+  {
+    std::cout<<"FISH: "<<vFish.size()<<"\n";
+    // 5 planks to make a wall.
+    return vFish.size();
+  }
+};
+Recipe_GrilledFish recipeGrilledFish;
 
 // Inventory manager can give 2 types of information. What recipes can be made with current items. And also what reciped
 // an item can be used in.
@@ -140,10 +175,15 @@ class RecipeManager
     std::cout<<"Adding plank\n";
     recipeWall.countUp(_plank);
   }
+  void addToRecipes(Item_Fish* _fish)
+  {
+    recipeGrilledFish.countUp(_fish);
+  }
   
   int getTotals()
   {
     return recipeWall.getTotal();
+    return recipeGrilledFish.getTotal();
   }
   
   Vector <Recipe*> * getValidRecipes()
@@ -152,6 +192,10 @@ class RecipeManager
     if ( recipeWall.getTotal() > 0 )
     {
       vValidList.push(&recipeWall);
+    }
+    if ( recipeGrilledFish.getTotal() > 0 )
+    {
+      vValidList.push(&recipeGrilledFish);
     }
     return &vValidList;
   }

@@ -455,7 +455,7 @@ class Item_Fish: public Item
     return &TEX_OBJECT_FISH;
   }
 
-  
+  virtual void addToRecipeManager();
 };
 
 class Item_Campfire: public Item

@@ -32,7 +32,7 @@ void Character_Knowledge::addTile( World_Local* _map, int _x, int _y)
     if ( vMapsVisited(i) == _map )
     {
       // Flip fog bit
-      (*vaTileVisited(i))(_x,_y) = 1;
+      (*vaTileVisited(i))(_x,_y) = 2;
       return;
     }
   }
@@ -72,7 +72,7 @@ void Character_Knowledge::addTile( unsigned long int _x, unsigned long int _y)
     if ( vMapsVisited(i) == _map )
     {
       // Flip fog bit
-      (*vaTileVisited(i))(_lX,_lY) = 1;
+      (*vaTileVisited(i))(_lX,_lY) = 2;
       return;
     }
   }
@@ -112,7 +112,7 @@ void Character_Knowledge::updateLOS()
 {
   for ( int i=0; i<vMapsVisited.size(); ++i)
   {
-    (*vaTileVisited(i)).fill(0);
+    (*vaTileVisited(i)).replaceFill(2,1);
   }
 }
 

@@ -202,7 +202,11 @@
     owner->consume(this);
   }
   
-  
+  void Item_Fish::addToRecipeManager()
+  {
+    recipeManager.addToRecipes(this);
+  }
+
   
   // SWORD
   
