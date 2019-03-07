@@ -320,10 +320,32 @@ void Item_Plank::addToRecipeManager()
     {
       obj->bWall = 0b10000000;
     }
-    else /* West */
+    else /* Demolish */
     {
       obj->bWall = 0b00000000;
     }
   }
   
+  //FLOOR
+  Vector <std::string>* Item_Floor::getInteractNames(LocalTile* _w)
+  {
+    if (_w==0) { return 0; }
+    
+    auto vInteract = new Vector <std::string>;
+    vInteract->push("Build floor");
+    vInteract->push("Demolish floor");
+    
+    return vInteract;
+  }
+  void Item_Floor::interact (LocalTile* obj, int interactionType /* =0 */)
+  {
+    if ( interactionType==0) /* Build floor */
+    {
+      obj->hasFloor = 2;
+    }
+    else /* Demolish floor */
+    {
+      obj->hasFloor = 0;
+    }
+  }
 #endif

@@ -86,27 +86,22 @@ class RainManager
     rand.seed();
   }
   
-
-  void render()
+  void updateRain()
   {
-    if (world==0) {return;}
-    
+    // This should be moved out of the render call and threaded.
     if ( world->isRaining &&  vRainDrop.size() < MAX_RAIN )
     {
       for (int i=0;i<RAIN_PER_FRAME;++i)
       {
-      RainDrop* rain = new RainDrop;
-      rain->y = y2-rand.randomInt(20);
-      
+        RainDrop* rain = new RainDrop;
+        rain->y = y2-rand.randomInt(20);
+        
 
-      rain->x = rand.randomInt(x2-x1);
-      rain->x+=x1;
-      vRainDrop.push(rain);
+        rain->x = rand.randomInt(x2-x1);
+        rain->x+=x1;
+        vRainDrop.push(rain);
       }
     }
-    
-    Renderer::setColourMode();
-    glColor3ub(0,0,220);
     for (int i=0;i<vRainDrop.size();++i)
     {
       vRainDrop(i)->drop(rand.randomInt(3)+18);
@@ -116,12 +111,13 @@ class RainManager
         delete vRainDrop(i);
         vRainDrop.removeSlot(i);
       }
-      
-      vRainDrop(i)->render();
     }
-    glColor3ub(255,255,255);
-    Renderer::setTextureMode();
+
   }
+  
+
+  void render();
+
 };
 
 class WorldViewer: public DisplayInterface, public MouseInterface
@@ -135,10 +131,6 @@ class WorldViewer: public DisplayInterface, public MouseInterface
   //RAIN
   RainManager rainManager;
   double localTileMantissa;
-	
-		// Temp: Local tile to render.
-	int centerLocalX, centerLocalY;
-  double pixelsPerLocalTile;
   
 	public:
 	
@@ -151,6 +143,16 @@ class WorldViewer: public DisplayInterface, public MouseInterface
       This must be a double due to the required level of precision.
     */
   double centerTileX, centerTileY;
+  
+  /* The first tile rendered, and the pixel coordinates where it is rendered */
+  /* We store this for other functions to use. */
+  int firstTileX, firstTileY;
+  unsigned long int firstTileAbsX, firstTileAbsY; /* (0,0) absolute of the above */
+  int firstPixelX, firstPixelY;
+  
+		// Temp: Local tile to render.
+	int centerLocalX, centerLocalY;
+  double pixelsPerLocalTile;
 
 	
 		/* Store the last position of the mouse, so we can figure out which tile the mouse is on. */
@@ -220,6 +222,13 @@ WorldViewer()
   
   centerLocalX=LOCAL_MAP_SIZE/2;
   centerLocalY=LOCAL_MAP_SIZE/2;
+  
+  firstTileX=0;
+  firstTileY=0;
+  firstPixelX=0;
+  firstPixelY=0;
+  firstTileAbsX=0;
+  firstTileAbsY=0;
   
   tilesetMode = true;
   subterraneanMode = false;
@@ -599,6 +608,32 @@ void switchTarget(World_Local* _worldLocal)
 			*_pixelY = -1000;
 		}
 	}
+  
+  // Take the given pixels and calculate what tile they are. This is in absolute coordinates.
+  void toTileCoords(int pixelX, int pixelY, unsigned long int * absX, unsigned long int * absY)
+  {
+    if (absX==0 || absY==0) {return;}
+    if (pixelX<0 || pixelY<0 || pixelsPerLocalTile == 0)
+    {
+      *absX=ABSOLUTE_COORDINATE_NULL;
+      *absY=ABSOLUTE_COORDINATE_NULL;
+    }
+    
+    int pixelDistanceX = pixelX - firstPixelX;
+    int pixelDistanceY = pixelY - firstPixelY;
+    
+    //std::cout<<"Pixeldistance xy: "<<pixelDistanceX<<", "<<pixelDistanceY<<".\n";
+    
+    if ( pixelDistanceX < 0 || pixelDistanceY < 0 )
+    {
+      *absX=0;
+      *absY=0;
+      return;
+    }
+    
+    *absX = firstTileAbsX + ((double)pixelDistanceX/pixelsPerLocalTile);
+    *absY = firstTileAbsY + ((double)pixelDistanceY/pixelsPerLocalTile);
+  }
 	
 	
 		/* HERE I RENDER THE GRAPHICAL ICONS WHICH ARE PRESENT ON THE WORLD MAP, FOR EXAMPLE: CITIES AND ARMIES. */
@@ -728,13 +763,14 @@ void switchTarget(World_Local* _worldLocal)
     hoveredYTileLocal = -1;
     hoveredAbsoluteY = ABSOLUTE_COORDINATE_NULL;
 
-			/* 0223554692
-				SO I GUESS THIS PART MODIFIES THE SCREEN SO I CAN SIMPLY DRAW FROM (0,0).
-				I THINK IT ALSO PREVENTS ACCIDENTALLY RENDERING OVER OTHER PARTS OF THE SCREEN.
-			*/
 		Renderer::saveViewPort();
 
 		Renderer::resizeViewPort(mainViewX1,mainViewY1,mainViewX2,mainViewY2);
+    
+    /* The World Viewer is passed centre coordinates because typically the camera needs to be centered on something.
+    However from this we must calculate what coordinates to start rendering from in the top-left.
+    Therefore we take the centre coordinates and work back to the top-left. This is done for both the tile (array)
+    coordinates, and the rendering (pixel) coordinates. */
 		
 		float centerTileXDecimal = centerTileX - (int)centerTileX;
 		float centerTileYDecimal = centerTileY - (int)centerTileY;
@@ -769,6 +805,25 @@ void switchTarget(World_Local* _worldLocal)
 			tileY-=tilesToSkip;
 			pixelTileY-=tileSize;
 		}
+    
+    //We need to store the top-left coordinates for other functions to use.
+    firstTileX=tileX;
+    firstTileY=tileY;
+    
+    if (world->isSafe(tileX,tileY))
+    {
+      firstTileAbsX=tileX*LOCAL_MAP_SIZE;
+      firstTileAbsY=tileY*LOCAL_MAP_SIZE;
+    }
+    else
+    {
+      firstTileAbsX=ABSOLUTE_COORDINATE_NULL;
+      firstTileAbsY=ABSOLUTE_COORDINATE_NULL;
+    }
+    
+
+    firstPixelX=pixelTileX;
+    firstPixelY=pixelTileY;
 
 			/* UPDATE HOVERED TILE COORDS. */
 			/* MAKE SURE MOUSE IS WITHIN THE RENDERING VIEW */
@@ -936,6 +991,7 @@ void switchTarget(World_Local* _worldLocal)
           }
           
 						// RENDER THE LOCAL TILE
+            // Should be it's own function
 					//if (tileSize > 4 && localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
           if ( localMap != 0)
 					{
@@ -1320,5 +1376,47 @@ void switchTarget(World_Local* _worldLocal)
 
 	
 };
+WorldViewer worldViewer;
+
+
+void RainManager::render()
+{
+  if (world==0) {return;}
+  
+  updateRain();
+  
+  if (worldViewer.pixelsPerLocalTile < 1)
+  { return;
+  }
+  
+  unsigned long int bX,bY;
+  worldViewer.toTileCoords(0,0,&bX,&bY);
+
+  Renderer::setColourMode();
+  glColor3ub(0,0,220);
+  for (int i=0;i<vRainDrop.size();++i)
+  {
+    
+    int rX = vRainDrop(i)->x;
+    int rY = vRainDrop(i)->y;
+    unsigned long int aX,aY;
+    
+    worldViewer.toTileCoords(rX,rY,&aX,&aY);
+
+    if ( world->isGenerated(aX,aY) )
+    {
+      if ( (*world)(aX,aY)->hasFloor == 0 )
+      {
+        vRainDrop(i)->render();
+      }
+    }
+    else
+    {
+      vRainDrop(i)->render();
+    }
+  }
+  glColor3ub(255,255,255);
+  Renderer::setTextureMode();
+}
 
 #endif

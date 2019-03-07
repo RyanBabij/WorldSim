@@ -161,6 +161,10 @@ const std::string PATH_TEX_OBJECT_PLANK = "Textures/Object/Plank.png";
     const std::string PATH_TEX_WALL_GREYBRICK_SOUTH = "Textures/Object/Wall/BrickWall-S.png";
     Texture TEX_WALL_GREYBRICK_SE;
     const std::string PATH_TEX_WALL_GREYBRICK_SE = "Textures/Object/Wall/BrickWall-SE-inside.png";
+    
+    //FLOOR
+    Texture TEX_FLOOR_WOOD;
+    const std::string PATH_TEX_FLOOR_WOOD = "Textures/Object/Floor/Floor-Wood.png";
   
   // ITEMS
   
@@ -386,6 +390,8 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   loadTextureVerbose(PATH_TEX_WALL_GREYBRICK_SOUTH,&TEX_WALL_GREYBRICK_SOUTH);
   loadTextureVerbose(PATH_TEX_WALL_GREYBRICK_SE,&TEX_WALL_GREYBRICK_SE);
   
+    // FLOOR
+  loadTextureVerbose(PATH_TEX_FLOOR_WOOD,&TEX_FLOOR_WOOD);
   
   //loadTextureMipmapRotate("Textures/Object/Wall/BrickWall-S.png", &TEX_WALL_GREYBRICK_SOUTH, &TEX_WALL_GREYBRICK_WEST, &TEX_WALL_GREYBRICK_NORTH, &TEX_WALL_GREYBRICK_EAST);
   //loadTextureMipmapRotate("Textures/Wall/Brick/window.png", &TEX_WINDOW_SOUTH, &TEX_WINDOW_WEST, &TEX_WINDOW_NORTH, &TEX_WINDOW_EAST);

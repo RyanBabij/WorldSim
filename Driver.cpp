@@ -162,7 +162,6 @@ Timer debugTimer;
 
 /* Instead of having a global worldViewer, I think it would be better to have lots of local worldviewers, as currently I have a problem with the various menus interfering with the global worldViewer. */
 #include "World_Viewer.hpp"
-WorldViewer worldViewer;
 
 	/* WORLD HAS BEEN MOVED INTO GLOBAL SCOPE BECAUSE EVERYTHING NEEDS TO REFER TO IT */
 #include "World.cpp"

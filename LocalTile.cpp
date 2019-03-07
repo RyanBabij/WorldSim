@@ -161,9 +161,12 @@ bool LocalTile::hasMovementBlocker()
 
 Texture* LocalTile::currentTexture()
 {
-  if ( hasFloor )
+  if ( hasFloor==1 )
   {
     return &TEX_LOCAL_FLOOR;
+  }
+  else if (hasFloor==2)
+  { return &TEX_FLOOR_WOOD;
   }
   
 	//enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13};

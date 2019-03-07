@@ -202,6 +202,9 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
     // Pass absolute coordinates and recieve world and local relative coordinates.
   bool absoluteToRelative (const unsigned long int _absoluteX, const unsigned long int _absoluteY, int * _globalX, int * _globalY, int * _localX, int * _localY);
   
+    // Returns true if the tile is in a map that is loaded.
+  bool isGenerated(unsigned long int _absoluteX, unsigned long int _absoluteY);
+  
 
 /* TICK LOGIC */
 /* I want this to be the new method of incrementing time in the world. It will dynamically abstract things based on the amount of turns to simulate. Each tick is one second. */

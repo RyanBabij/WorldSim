@@ -547,4 +547,24 @@ class Item_Wall: public Item
   }
 };
 
+class Item_Floor: public Item
+{
+  public:
+  
+  Item_Floor()
+  {
+  }
+  virtual ~Item_Floor()
+  {
+  }
+  
+  Vector <std::string>* getInteractNames(LocalTile* _w);
+  virtual void interact (LocalTile* obj, int interactionType = 0);
+  
+  Texture* currentTexture()
+  {
+    return &TEX_FLOOR_WOOD;
+  }
+};
+
 #endif

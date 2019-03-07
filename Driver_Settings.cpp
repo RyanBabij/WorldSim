@@ -31,7 +31,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.112 Win32 dev";
+const std::string VERSION = "0.0.113 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -91,7 +91,7 @@ int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 const int MAX_VIEW_RANGE = 80;
 
   // CHARACTER STUFF
-const int MAX_HUNGER = 150;
+const int MAX_HUNGER = 300;
 
 // The number of local maps to hold in memory at once. Minimum should be 4.
 // (One for the player's current map, and three neighboring maps).

@@ -144,6 +144,7 @@ inline LocalTile* World::operator() (unsigned long int _x, unsigned long int _y)
   // COORDINATE CONVERSIONS
   
     // Pass absolute coordinates and recieve world and local relative coordinates.
+    // This currently doesn't work if tileX or tileY are negative.
 bool World::absoluteToRelative (const unsigned long int _absoluteX, const unsigned long int _absoluteY, int * _globalX, int * _globalY, int * _localX, int * _localY)
 {
   if ( _globalX == 0 || _globalY == 0 || _localX == 0 || _localY == 0 )
@@ -174,6 +175,23 @@ bool World::absoluteToRelative (const unsigned long int _absoluteX, const unsign
   { *_localY = _absoluteY % LOCAL_MAP_SIZE; } 
   return true;
 
+}
+
+  // Return true if the map for this tile has been generated
+bool World::isGenerated(unsigned long int _absoluteX, unsigned long int _absoluteY)
+{
+  int gX,gY,lX,lY;
+  if (absoluteToRelative(_absoluteX,_absoluteY,&gX,&gY,&lX,&lY))
+  {
+    for (int i=0;i<vWorldLocal.size();++i)
+    {
+      if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY )
+      {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 void World::nameRegions()

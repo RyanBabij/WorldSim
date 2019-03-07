@@ -36,7 +36,7 @@ class LocalTile: public HasTexture
   enumBiome baseTerrain;
     //Base terrain can be overlaid with a floor.
     // For now just a bool.
-  bool hasFloor;
+  unsigned char hasFloor;
   
     // Walls block movement across them
     // Bitfield is used to determine the wall orientation.

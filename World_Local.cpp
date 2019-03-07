@@ -148,7 +148,7 @@ bool World_Local::generate()
           put(new Item_Wall, _x, _y);
           put(new Item_Wall, _x, _y);
           put(new Item_Wall, _x, _y);
-          put(new Item_Wall, _x, _y);
+          put(new Item_Floor, _x, _y);
           
           
           
