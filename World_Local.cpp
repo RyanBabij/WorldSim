@@ -1520,7 +1520,12 @@ void World_Local::incrementTicks(int nTicks)
 {
   Vector <Creature*> vToMove;
   for (int i=0;i<vCreature.size();++i)
-  { vToMove.push(vCreature(i)); }
+  {
+    if (vCreature(i)->isAlive)
+    {
+      vToMove.push(vCreature(i));
+    }
+  }
   for (int i=0;i<vToMove.size();++i)
   { wander(vToMove(i)); }
 

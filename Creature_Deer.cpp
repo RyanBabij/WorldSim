@@ -32,10 +32,20 @@ void Creature_Deer::init(const int _sex  /*=0*/ )
 
 Texture* Creature_Deer::currentTexture()
 {
+
   if ( isMale )
-  {  return &TEX_WORLD_CREATURE_DEER_DEER;
+  {
+    if (isAlive)
+    {
+      return &TEX_WORLD_CREATURE_DEER_DEER;
+    }
+    return &TEX_WORLD_CREATURE_DEER_DEER_DED;
   }
-  return &TEX_WORLD_CREATURE_DEER_DOE;
+  if (isAlive)
+  {
+    return &TEX_WORLD_CREATURE_DEER_DOE;
+  }
+  return &TEX_WORLD_CREATURE_DEER_DOE_DED;
 }
 std::string Creature_Deer::getName()
 {

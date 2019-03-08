@@ -114,9 +114,13 @@ const std::string PATH_TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI_GOLD = "Textures/Worl
 
 Texture TEX_WORLD_CREATURE_DEER_DEER;
 const std::string PATH_TEX_WORLD_CREATURE_DEER_DEER = "Textures/World/Creature/Deer/Deer.png";
+Texture TEX_WORLD_CREATURE_DEER_DEER_DED;
+const std::string PATH_TEX_WORLD_CREATURE_DEER_DEER_DED = "Textures/World/Creature/Deer/Deer-ded.png";
 
 Texture TEX_WORLD_CREATURE_DEER_DOE;
 const std::string PATH_TEX_WORLD_CREATURE_DEER_DOE = "Textures/World/Creature/Deer/Doe.png";
+Texture TEX_WORLD_CREATURE_DEER_DOE_DED;
+const std::string PATH_TEX_WORLD_CREATURE_DEER_DOE_DED = "Textures/World/Creature/Deer/Doe-ded.png";
 
 Texture TEX_WORLD_TERRAIN_DESERT_00;
 Texture TEX_WORLD_TERRAIN_DESERT_01;
@@ -355,7 +359,9 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   loadTextureVerbose(PATH_TEX_GUI_CENTER_CAMERA,&TEX_GUI_CENTER_CAMERA);
   
   loadTextureVerbose(PATH_TEX_WORLD_CREATURE_DEER_DEER,&TEX_WORLD_CREATURE_DEER_DEER);
+  loadTextureVerbose(PATH_TEX_WORLD_CREATURE_DEER_DEER_DED,&TEX_WORLD_CREATURE_DEER_DEER_DED);
   loadTextureVerbose(PATH_TEX_WORLD_CREATURE_DEER_DOE,&TEX_WORLD_CREATURE_DEER_DOE);
+  loadTextureVerbose(PATH_TEX_WORLD_CREATURE_DEER_DOE_DED,&TEX_WORLD_CREATURE_DEER_DOE_DED);
   
   loadTextureVerbose(PATH_TEX_PORTRAIT_SNEK,&TEX_PORTRAIT_SNEK);
   loadTextureVerbose(PATH_TEX_PORTRAIT_LING,&TEX_PORTRAIT_LING);

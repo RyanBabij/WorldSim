@@ -136,9 +136,18 @@ class Item: public WorldObject
   {
     std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
   }
-  virtual void interact (Character* obj)
+  virtual void interact (Item* obj, int interactionType=0)
+  {
+    std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
+  }
+  virtual void interact (Character* obj, int interactionType=0)
   {
     std::cout<<"Char interact\n";
+    //std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
+  }
+  virtual void interact (Creature* obj, int interactionType=0)
+  {
+    std::cout<<"Creature interact\n";
     //std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
   }
 
@@ -235,13 +244,17 @@ class Item_Longbow: public Item
   {
     
   }
-  std::string getName() { return "Longbow"; }
+  std::string getName() override { return "Longbow"; }
   
   
-  Texture* currentTexture()
+  Texture* currentTexture() override
   {
     return &TEX_ITEM_LONGBOW;
   }
+  
+  virtual Vector <std::string>* getInteractNames(Creature* _target) override;
+  
+  virtual void interact(Creature* _target, int interactType=0) override;
 
 };
 
@@ -284,6 +297,8 @@ class Item_Fishrod: public Item
     }
     return -1;
   }
+  
+  virtual Vector <std::string>* getInteractNames(LocalTile* _w);
   
   Texture* currentTexture()
   {
@@ -334,11 +349,11 @@ class Item_Axe: public Item
   {
     std::cout<<"You chop the TILE "<<obj->getName()<<".\n";
   }
-  virtual void interact (Item* obj)
+  virtual void interact (Item* obj, int)
   {
     std::cout<<"You chop the ITM "<<obj->getName()<<".\n";
   }
-  virtual void interact (Character* obj)
+  virtual void interact (Character* obj, int interactionType=0)
   {
     //std::cout<<"You chop the CHARACTER "<<obj->getName()<<".\n";
   }
@@ -438,15 +453,20 @@ class Item_Fish: public Item
 	virtual ~Item_Fish() {}
   
   
-	virtual std::string getName()
+	virtual std::string getName() override
   {
+    if (isCooked)
+    {
+      return "Cooked fish";
+    }
     return "Fish";
   }
   
-  virtual void interact (WorldObject*, int interactType=0); /* cook */
-  virtual void interact (Character*); /* eat */
+  virtual void interact (Item*, int interactType=0) override; /* cook */
+  virtual void interact (Character*, int interactType=0) override; /* eat */
+  virtual void interact (WorldObject*, int interactType=0) override; /* eat */
 
-  Texture* currentTexture()
+  Texture* currentTexture() override
   {
     if (isCooked)
     {
@@ -454,8 +474,11 @@ class Item_Fish: public Item
     }
     return &TEX_OBJECT_FISH;
   }
+  
+  virtual Vector <std::string>* getInteractNames(Item* _w) override;
+  virtual Vector <std::string>* getInteractNames(Character* _w) override;
 
-  virtual void addToRecipeManager();
+  virtual void addToRecipeManager() override;
 };
 
 class Item_Campfire: public Item

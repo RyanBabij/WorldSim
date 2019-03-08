@@ -45,7 +45,7 @@ class Creature: public WorldObject, public TableInterface
 		*/
 	void incrementTicks(int = 1);
 	
-	Texture* currentTexture ();
+	Texture* currentTexture () override;
 	
 	
 	void die();
@@ -59,8 +59,8 @@ class Creature: public WorldObject, public TableInterface
   
 	/* TABLE INTERFACE */
   
-	std::string getColumn(std::string _column);
-	std::string getColumnType(std::string _column);
+	std::string getColumn(std::string _column) override;
+	std::string getColumnType(std::string _column) override;
   
   
   /* COMBAT FUNCTIONS */

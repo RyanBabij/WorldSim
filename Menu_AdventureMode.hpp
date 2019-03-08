@@ -233,6 +233,14 @@ class InteractManager: public GUI_Interface
           {
             sourceItem->interact(vItem(selectedIndex),interactionType);
           }
+          else if ( selectedVector == 2 ) /* Character */
+          {
+            sourceItem->interact(vCharacter(selectedIndex),interactionType);
+          }
+          else if ( selectedVector == 3 ) /* Creature */
+          {
+            sourceItem->interact(vCreature(selectedIndex),interactionType);
+          }
           else if ( selectedVector == 4 ) /* Terrain */
           {
             std::cout<<"Terrain interaction\n";

@@ -87,6 +87,8 @@
     }
   }
 
+  
+    //FISHING ROD
   void Item_Fishrod::interact (LocalTile* _tile, int interactionType /* =0 */)
   {
     // For testing you can catch a fish on any tile.
@@ -106,7 +108,14 @@
     }
 
   }
-
+  Vector <std::string>* Item_Fishrod::getInteractNames(LocalTile* _target)
+  {
+    if (_target==0) { return 0; }
+    
+    auto vInteract = new Vector <std::string>;
+    vInteract->push("Fish on the "+_target->getName());
+    return vInteract;
+  }
 
   
   
@@ -185,7 +194,28 @@
     return vInteract;
   }
   
-  void Item_Fish::interact (WorldObject* _item, int interactType /* =0 */)
+    // FISH
+  Vector <std::string>* Item_Fish::getInteractNames(Item* _w)
+  {
+    if (_w==0) { return 0; }
+    
+    auto vInteract = new Vector <std::string>;
+    if (_w->canCook)
+    {
+      vInteract->push("Cook fish");
+    }    
+    return vInteract;
+  }
+  Vector <std::string>* Item_Fish::getInteractNames(Character* _w)
+  {
+    if (_w==0) { return 0; }
+    
+    auto vInteract = new Vector <std::string>;
+      vInteract->push("Eat fish");
+    return vInteract;
+  }
+    
+  void Item_Fish::interact (Item* _item, int interactType /* =0 */)
   {
       // Check if we can cook with this object
     if ( _item->canCook )
@@ -195,8 +225,14 @@
       isCooked=true;
     }
   }
+  
+  void Item_Fish::interact (WorldObject* _target, int interactType /* =0 */)
+  {
+      // Check if we can cook with this object
+    Console ("Generic fish");
+  }
 
-  void Item_Fish::interact (Character* _character)
+  void Item_Fish::interact (Character* _character, int interactType /* =0 */)
   {
     Console ("You eat the fish");
     owner->consume(this);
@@ -352,4 +388,22 @@ void Item_Plank::addToRecipeManager()
       obj->hasFloor = 0;
     }
   }
+  
+Vector <std::string>* Item_Longbow::getInteractNames(Creature* _target)
+{
+  if (_target==0) { return 0; }
+  
+  auto vInteract = new Vector <std::string>;
+  vInteract->push("Shoot "+_target->getName());
+  return vInteract;
+}
+void Item_Longbow::interact(Creature* _target, int interactType)
+{
+  if (_target==0) { return; }
+  
+  Console("You shoot the "+_target->getName());
+  _target->die();
+}
+
+  
 #endif
