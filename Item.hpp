@@ -642,4 +642,23 @@ class Item_PlantFibre: public Item
   }
 };
 
+  // Merker for debugging
+class Item_Marker_Red: public Item
+{
+  public:
+  
+  Item_Marker_Red()
+  {
+    
+  }
+  std::string getName() override { return "Debug Marker"; }
+
+  // Dummy function
+  Texture* currentTexture() override
+  {
+    return &TEX_MARKER_RED;
+  }
+
+};
+
 #endif

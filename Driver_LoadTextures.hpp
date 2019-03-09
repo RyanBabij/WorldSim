@@ -227,6 +227,9 @@ const std::string PATH_TEX_LOCAL_FLOOR = "Textures/Local/Building/Floor.png";
 Texture TEX_LOCAL_SIGN;
 const std::string PATH_TEX_LOCAL_SIGN = "Textures/Local/Sign.png";
 
+  //MARKERS
+Texture TEX_MARKER_RED;
+const std::string PATH_TEX_MARKER_RED = "Textures/Marker/RedDot.png";
   // PORTRAITS
   
 Texture TEX_PORTRAIT_SNEK;
@@ -415,6 +418,8 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   // CRAFTING
   loadTextureVerbose(PATH_TEX_CRAFTING_FLAX,&TEX_CRAFTING_FLAX);
   
+  //MARKERS
+  loadTextureVerbose(PATH_TEX_MARKER_RED,&TEX_MARKER_RED);
   
   //loadTextureMipmapRotate("Textures/Object/Wall/BrickWall-S.png", &TEX_WALL_GREYBRICK_SOUTH, &TEX_WALL_GREYBRICK_WEST, &TEX_WALL_GREYBRICK_NORTH, &TEX_WALL_GREYBRICK_EAST);
   //loadTextureMipmapRotate("Textures/Wall/Brick/window.png", &TEX_WINDOW_SOUTH, &TEX_WINDOW_WEST, &TEX_WINDOW_NORTH, &TEX_WINDOW_EAST);

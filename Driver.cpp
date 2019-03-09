@@ -167,6 +167,8 @@ Timer debugTimer;
 #include "World.cpp"
 World world;
 
+#include "Pathing.hpp"
+
 #include "World_Local.cpp"
 World_Local * worldLocal;
 

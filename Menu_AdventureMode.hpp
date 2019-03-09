@@ -1028,6 +1028,16 @@ class Menu_AdventureMode: public GUI_Interface
       std::cout<<"Player tribe: "<<playerCharacter->tribe->getName()<<".\n";
       world.incrementTicksBacklog(1);
       _keyboard->keyUp(Keyboard::PERIOD);
+      
+      Pathing_Local * pl = new Pathing_Local;
+      pl->init(world(playerCharacter->worldX,playerCharacter->worldY));
+      pl->pathLocal(playerCharacter->x,playerCharacter->y,0,0);
+      
+      if ( pl->vPath.size() > 0)
+      {
+        std::cout<<"Next action: "<<pl->vPath(0)<<".\n";
+      }
+      delete pl;
     }
     
     // Hotbar selection keys
