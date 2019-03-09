@@ -21,6 +21,7 @@ A tile is 5km by 5km, ie, 5,000 * 5000 tiles. */
 
 class Item;
 class Creature;
+class Creature_Footprint;
 class Character;
 
 class LocalTile: public HasTexture
@@ -69,6 +70,8 @@ class LocalTile: public HasTexture
       Vector <Character*> vCharacter;
       // Vector of Creatures on this tile.
       Vector <Creature*> vCreature;
+      
+  Creature_Footprint* footprint;
   
   // Generic add/remove automatically sorts into appropriate lists.
   

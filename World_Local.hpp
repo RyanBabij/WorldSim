@@ -41,6 +41,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 {
 	private:
 	
+  
 	public:
   
 	int globalX, globalY; /* The local world's position in the world. */
@@ -96,6 +97,10 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   virtual ~World_Local();
 	
 	void init(int /*x*/, int /*y*/);
+  
+    // Returns true if the coordinate is inside this map
+  bool isSafe(int /* x */, int /* y */);
+  
 	
 	bool generate();
   

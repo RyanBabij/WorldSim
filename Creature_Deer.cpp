@@ -37,15 +37,15 @@ Texture* Creature_Deer::currentTexture()
   {
     if (isAlive)
     {
-      return &TEX_WORLD_CREATURE_DEER_DEER;
+      return &TEX_CREATURE_DEER;
     }
-    return &TEX_WORLD_CREATURE_DEER_DEER_DED;
+    return &TEX_CREATURE_DEER_DED;
   }
   if (isAlive)
   {
-    return &TEX_WORLD_CREATURE_DEER_DOE;
+    return &TEX_CREATURE_DOE;
   }
-  return &TEX_WORLD_CREATURE_DEER_DOE_DED;
+  return &TEX_CREATURE_DOE_DED;
 }
 std::string Creature_Deer::getName()
 {

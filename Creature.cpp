@@ -31,6 +31,7 @@ Creature::Creature()
   worldX = -1;
   worldY = -1;
 	
+  map=0;
 }
 
   //_sex: 0 - Roll, 1 - Male, 2 - Female.
@@ -42,6 +43,7 @@ void Creature::init(const int _sex /* =0 */)
   else { isMale = Random::flip(); }
   
 	age=0;
+  map=0;
 
 }
 
@@ -76,7 +78,35 @@ void Creature::die()
 
 
 
+void Creature::wander()
+{
+  
+  int newX = x;
+  int newY = y;
+  
+  int direction = Random::randomInt(3);
+  
+  if ( direction==0 ) { ++newX; }
+  else if ( direction==1 ) { --newX; }
+  else if ( direction==2 ) { ++newY; }
+  else { --newY; }
+  
+  if ( map->isSafe(newX,newY) && map->aLocalTile(newX,newY).hasMovementBlocker() == false )
+  {
+    map->remove(this);
+    if (map->put(this,newX,newY) == false)
+    {
+      map->put(this,x,y);
+    }
+    
+    if (Random::oneIn(10))
+    {
+      delete map->aLocalTile(x,y).footprint;
+      map->aLocalTile(x,y).footprint = new Creature_Footprint;
+    }
+  }
 
+}
 
 
 
@@ -97,7 +127,7 @@ void Creature::die()
 
 Texture* Creature::currentTexture ()
 {	
-	return &TEX_WORLD_CREATURE_DEER_DEER;
+	return &TEX_CREATURE_DEER;
 }
 
 
@@ -110,6 +140,11 @@ std::string Creature::getColumn(std::string _column)
 std::string Creature::getColumnType(std::string _column)
 {
 	return "string";
+}
+
+Texture* Creature_Footprint::currentTexture ()
+{
+  return &TEX_CREATURE_DEER_FOOTPRINT;
 }
 
 #endif

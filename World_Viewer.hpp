@@ -31,6 +31,8 @@
   /* Raindrops that are rendered over screen to indicate rain.
   Should start at top of screen and travel down. Should not render on sheltered tiles */
   
+#include "Creature.hpp"
+  
 class RainDrop
 {
   public:
@@ -1099,6 +1101,12 @@ void switchTarget(World_Local* _worldLocal)
 
                         
                         Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                        
+                        // Draw footprint
+                        if (localTile->footprint != 0)
+                        {
+                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->footprint->currentTexture(), false);
+                        }
                         glColor3ub(255,255,255);
                         
                         // Draw wall if necessary.

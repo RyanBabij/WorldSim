@@ -45,6 +45,12 @@ void World_Local::init(int _x, int _y)
   aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 }
 
+    // Returns true if the coordinate is inside this map
+bool World_Local::isSafe(int _x, int _y)
+{
+  return aLocalTile.isSafe(_x,_y);
+}
+
 bool World_Local::generate()
 {
   
@@ -119,7 +125,7 @@ bool World_Local::generate()
         {
           aLocalTile(_x,_y).baseTerrain = GRASSLAND;
           baseTreeChance/=8;
-          baseTreeChance/=8;
+          basePlantChance/=6;
         }
         
         
@@ -457,6 +463,7 @@ bool World_Local::put (Creature* _creature, int _x, int _y)
   _creature->fullY = _creature->worldY * LOCAL_MAP_SIZE + _creature->y;
   aLocalTile(_x,_y).add(_creature);
   vCreature.push(_creature);
+  _creature->map=this;
   
   return true;
 }
@@ -1535,7 +1542,10 @@ void World_Local::incrementTicks(int nTicks)
     }
   }
   for (int i=0;i<vToMove.size();++i)
-  { wander(vToMove(i)); }
+  {
+    //wander(vToMove(i));
+    vToMove(i)->wander();
+  }
 
 }
 

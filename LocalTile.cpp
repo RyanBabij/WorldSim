@@ -17,6 +17,7 @@ LocalTile::LocalTile()
   hasFloor = false;
   bWall=0;
   nFish=-1;
+  footprint=0;
 }
 
 LocalTile::~LocalTile()

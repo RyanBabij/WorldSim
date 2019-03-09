@@ -34,6 +34,8 @@ class Creature: public WorldObject, public TableInterface
 	int health;
 	int hunger;
 	
+  // All loaded creatures can get a link to their world.
+  World_Local* map;
 
 		// INITIALIZATION
 	Creature();
@@ -45,6 +47,8 @@ class Creature: public WorldObject, public TableInterface
 		*/
 	void incrementTicks(int = 1);
 	
+  virtual void wander();
+  
 	Texture* currentTexture () override;
 	
 	
@@ -63,6 +67,8 @@ class Creature: public WorldObject, public TableInterface
 	std::string getColumnType(std::string _column) override;
   
   
+
+  
   /* COMBAT FUNCTIONS */
   
     //Attack a Creature once.
@@ -70,6 +76,22 @@ class Creature: public WorldObject, public TableInterface
   
 
 	
+};
+
+// Footprints indicate the type of creature that walked here, the direction they were walking, and a rough
+// estimate of how long ago they were here. Footprints disappear over time. Footprints will generally last
+// a few hours.
+// Footprints probably won't stack.
+
+class Creature_Footprint: public WorldObject
+{
+  public:
+  
+  Creature* owner;
+  int direction;
+  int age;
+  
+	Texture* currentTexture () override;
 };
 
 #endif
