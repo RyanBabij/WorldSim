@@ -41,12 +41,9 @@ class LocalTile: public HasTexture
   
     // Walls block movement across them
     // Bitfield is used to determine the wall orientation.
-    // 000
-    // 0 0 Where a 1 indicates movement is blocked.
-    // 000
-    // The bitfield is used for both pathfinding and rendering.
-    // The bitfield blocks movement FROM and TO this tile.
-    // Basically this makes it possible to make one-way areas. Might be useful for traps or ledges.
+    // The first 4 bits control travel OUT from the tile. NESW.
+    // The last 4 bits control travel INTO the tile. NESW.
+    // This allows one-way travel, which would be useful for traps, pits, etc.
   unsigned char bWall;
   
   int height;
@@ -101,6 +98,12 @@ class LocalTile: public HasTexture
   bool hasMovementBlocker();
   
   std::string getName();
+  
+  
+  bool canTravelNorth();
+  bool canTravelEast();
+  bool canTravelSouth();
+  bool canTravelWest();
 
 	
 };

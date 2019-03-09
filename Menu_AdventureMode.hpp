@@ -45,7 +45,6 @@ class Menu_Crafting: public GUI_Interface
   {
     selectedRecipe=0;
     
-    
     //check inventory grid.
     for (int _y=0;_y<10;++_y)
     {

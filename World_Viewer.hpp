@@ -1110,42 +1110,43 @@ void switchTarget(World_Local* _worldLocal)
                         glColor3ub(255,255,255);
                         
                         // Draw wall if necessary.
-                        
-                        if ( localTile->bWall == 0b01000000) // NORTH
+                        if (localTile->bWall != 0 )
                         {
-                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 180);
+                          if ( localTile->bWall == 0b10001000) // NORTH
+                          {
+                            Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 180);
+                          }
+                          else if ( localTile->bWall == 0b00010001) // WEST
+                          {
+                            Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 90);
+                            //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, false);
+                          }
+                          else if ( localTile->bWall == 0b01000100) // EAST
+                          {
+                            Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 270);
+                          }
+                          else if ( localTile->bWall == 0b00100010) // SOUTH
+                          {
+                            Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, false);
+                          }
+                          else if ( localTile->bWall == 0b01100110) // SE
+                          {
+                            Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, false);
+                          }
+                          else if ( localTile->bWall == 0b00110011) // SW
+                          {
+                            Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 90);
+                          }
+                          else if ( localTile->bWall == 0b10011001) // NW
+                          {
+                            Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 180);
+                          }
+                          else if ( localTile->bWall == 0b11001100) // NE
+                          {
+                            Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 270);
+                          }
                         }
-                        else if ( localTile->bWall == 0b00010000) // WEST
-                        {
-                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 90);
-                          //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, false);
-                        }
-                        else if ( localTile->bWall == 0b00001000) // EAST
-                        {
-                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 270);
-                        }
-                        else if ( localTile->bWall == 0b00000010) // SOUTH
-                        {
-                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, false);
-                        }
-                        else if ( localTile->bWall == 0b00001011) // SE
-                        {
-                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, false);
-                        }
-                        else if ( localTile->bWall == 0b00010110) // SW
-                        {
-                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 90);
-                        }
-                        else if ( localTile->bWall == 0b11010000) // NW
-                        {
-                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 180);
-                        }
-                        else if ( localTile->bWall == 0b01101000) // NE
-                        {
-                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 270);
-                        }
-                        
-                        
+                          
                         for(int i=0;i<localMap->aLocalTile(localXTile,localYTile).vObject.size();++i)
                         {
                           Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);

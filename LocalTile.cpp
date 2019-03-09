@@ -221,5 +221,38 @@ Vector <HasTexture*> * LocalTile::currentTextures()
   return 0;
 }
 
+bool LocalTile::canTravelNorth()
+{
+  if ((bWall & 0b10000000) == 0)
+  {
+    return true;
+  }
+  return false;
+}
+bool LocalTile::canTravelEast()
+{
+  if ((bWall & 0b01000000) == 0)
+  {
+    return true;
+  }
+  return false;
+}
+bool LocalTile::canTravelSouth()
+{
+  if ((bWall & 0b00100000) == 0)
+  {
+    return true;
+  }
+  return false;
+}
+bool LocalTile::canTravelWest()
+{
+  if ((bWall & 0b00010000) == 0)
+  {
+    return true;
+  }
+  return false;
+}
+
 
 #endif

@@ -926,40 +926,44 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
   //char combinedCollision = source->bWall | destination->bWall;
   
   // Check walls
-  // Left
-  if ( newX < _object->x)
+  if (source->bWall!=0 || destination->bWall!=0)
   {
-    if ( (source->bWall & 0b00010000) == 0b00010000
-    ||   (destination->bWall & 0b00001000) == 0b00001000 )
+    //return false;
+    // West
+    if ( newX < _object->x)
     {
-      return false;
+      if ( (source->bWall & 0b00010000) == 0b00010000
+      ||   (destination->bWall & 0b00000100) == 0b00000100 )
+      {
+        return false;
+      }
     }
-  }
-  //right
-  else if (newX > _object->x)
-  {
-    if ( (destination->bWall & 0b00010000) == 0b00010000
-    ||   (source->bWall & 0b00001000) == 0b00001000 )
+    //East
+    else if (newX > _object->x)
     {
-      return false;
+      if ( (source->bWall & 0b01000000) == 0b01000000
+      ||   (destination->bWall & 0b00000001) == 0b00000001 )
+      {
+        return false;
+      }
     }
-  }
-  //north
-  else if (newY > _object->y)
-  {
-    if ( (destination->bWall & 0b00000010) == 0b00000010
-    ||   (source->bWall & 0b01000000) == 0b01000000 )
+    //North
+    else if (newY > _object->y)
     {
-      return false;
+      if ( (source->bWall & 0b10000000) == 0b10000000
+      ||   (destination->bWall & 0b00000010) == 0b00000010 )
+      {
+        return false;
+      }
     }
-  }
-  //south
-  else if (newY < _object->y)
-  {
-    if ( (source->bWall & 0b00000010) == 0b00000010
-    ||   (destination->bWall & 0b01000000) == 0b01000000 )
+    //South
+    else if (newY < _object->y)
     {
-      return false;
+      if ( (source->bWall & 0b00100000) == 0b00100000
+      ||   (destination->bWall & 0b00001000) == 0b00001000 )
+      {
+        return false;
+      }
     }
   }
   

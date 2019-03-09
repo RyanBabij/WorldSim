@@ -355,35 +355,35 @@ void Item_Plank::addToRecipeManager()
     
     if ( interactionType==0) /* North */
     {
-      obj->bWall = 0b01000000;
+      obj->bWall = 0b10001000;
     }
     else if (interactionType==1) /* East */
     {
-      obj->bWall = 0b00001000;
+      obj->bWall = 0b01000100;
     }
     else if (interactionType==2) /* South */
     {
-      obj->bWall = 0b00000010;
+      obj->bWall = 0b00100010;
     }
     else if (interactionType==3) /* West */
     {
-      obj->bWall = 0b00010000;
+      obj->bWall = 0b00010001;
     }
     else if (interactionType==4) /* NE */
     {
-      obj->bWall = 0b01101000;
+      obj->bWall = 0b11001100;
     }
     else if (interactionType==5) /* SE */
     {
-      obj->bWall = 0b00001011;
+      obj->bWall = 0b01100110;
     }
     else if (interactionType==6) /* SW */
     {
-      obj->bWall = 0b00010110;
+      obj->bWall = 0b00110011;
     }
     else if (interactionType==7) /* NW */
     {
-      obj->bWall = 0b11010000;
+      obj->bWall = 0b10011001;
     }
     else /* Demolish */
     {
