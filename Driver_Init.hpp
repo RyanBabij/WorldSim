@@ -35,6 +35,10 @@ void init()
 
 	/* Load textures (Tex pointers from Driver_TextureList.hpp). */
 	loadTextures();
+  
+  //LOAD RECIPES
+  recipeManager.addRecipe(&recipeGrilledFish);
+  recipeManager.addRecipe(&recipeWall);
 	
 	/* Load font */
 	Png fontPng;

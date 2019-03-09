@@ -12,6 +12,7 @@
 
 #include "WorldObject.hpp"
   #include "WorldObject_Tree.hpp"
+  #include "WorldObject_Plant.hpp"
   #include "WorldObject_Rock.hpp"
   #include "WorldObject_Sign.hpp"
 
@@ -111,11 +112,13 @@ bool World_Local::generate()
       {
       
         int baseTreeChance = 30;
+        int basePlantChance = 20;
         
         // Temporary hack to make forests look less bad.
         if ( baseBiome == FOREST || baseBiome == JUNGLE )
         {
           aLocalTile(_x,_y).baseTerrain = GRASSLAND;
+          baseTreeChance/=8;
           baseTreeChance/=8;
         }
         
@@ -133,6 +136,7 @@ bool World_Local::generate()
         
         if (random.oneIn(200)) /* Put down some testing objects */
         {
+          put(new Item_Floor, _x, _y);
           put(new Item_Sword, _x, _y);
           put(new Item_Longbow, _x, _y);
           put(new Item_Fishrod, _x, _y);
@@ -147,8 +151,8 @@ bool World_Local::generate()
           put(new Item_Wall, _x, _y);
           put(new Item_Wall, _x, _y);
           put(new Item_Wall, _x, _y);
-          put(new Item_Wall, _x, _y);
-          put(new Item_Floor, _x, _y);
+          put(new Item_PlantFibre, _x, _y);
+         
           
           
           
@@ -156,6 +160,10 @@ bool World_Local::generate()
         else if (random.oneIn(baseTreeChance))
         {
           aLocalTile(_x,_y).add(new WorldObject_Tree(1));
+        }
+        else if (random.oneIn(basePlantChance))
+        {
+          aLocalTile(_x,_y).add(new WorldObject_Plant());
         }
         else if (random.oneIn(1000))
         {

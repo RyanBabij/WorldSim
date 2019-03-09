@@ -43,8 +43,10 @@ class WorldObject: public HasTexture
   bool blocksMovement;
   
     // INTERACTIONS
+    // Should probably be moved down the heirarchy.
   bool canCook; /* This object can be used for cooking. */
   int chopAmount; /* -1 if chopping is not possible. */
+  bool canHarvest; /* Probably should be put into a Harvestable interface */
 	
 	WorldObject();
 	virtual ~WorldObject() {}

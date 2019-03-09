@@ -95,6 +95,8 @@ class Menu_Crafting: public GUI_Interface
       font8x8.drawText(vRecipe(i)->getName(),panelX1+250,(panelY2-50)-(i*10),panelX1+500,(panelY2-50)-((i+1)*10),false,true);
       std::cout<<"Recipt: "<<vRecipe(i)->getName()<<".\n";
     }
+    
+    std::cout<<"Prereq test: "<<recipeManager.getPrerequisites()<<".\n";
       //linesDrawn = font8x8.drawText(ADVENTURE_MODE_MANUAL,panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
   }
   
@@ -196,56 +198,41 @@ class InteractManager: public GUI_Interface
     
       else if (_mouse->isLeftClick)
       {
-        if (sourceItem == 0)
+        if (sourceItem==0)
         {
-          std::cout<<"FALCON PAUNCH\n";
-          
-          // if ( localTileSelected==0 )
-          // {
-            
-          // }
-          
-          // if (useItem == 0 )
-          // {
-            // std::cout<<"You punch the "<<localTileSelected->getName()<<".\n";
-          // }
-          // else
-          // {
-            // std::cout<<"You use the "<<useItem->getName()<<" on the "<<localTileSelected->getName()<<".\n";
-            // useItem->interact(localTileSelected);
-          // }
+          sourceItem = &itemHand;
+          itemHand.owner = playerCharacter;
         }
-        else
+        
+
+        std::cout<<"Using interaction: "<<vInteraction(selectedInteraction)->description<<".\n";
+        
+        
+        Interaction* _interaction = vInteraction(selectedInteraction);
+        int selectedVector = _interaction->vType;
+        int selectedIndex = _interaction->vIndex;
+        int interactionType = _interaction->interactID;
+        
+        if ( selectedVector == 0 ) /* generic */
         {
-          std::cout<<"Using interaction: "<<vInteraction(selectedInteraction)->description<<".\n";
-          
-          
-          Interaction* _interaction = vInteraction(selectedInteraction);
-          int selectedVector = _interaction->vType;
-          int selectedIndex = _interaction->vIndex;
-          int interactionType = _interaction->interactID;
-          
-          if ( selectedVector == 0 ) /* generic */
-          {
-            sourceItem->interact(vGeneric(selectedIndex),interactionType);
-          }
-          else if ( selectedVector == 1 ) /* Item */
-          {
-            sourceItem->interact(vItem(selectedIndex),interactionType);
-          }
-          else if ( selectedVector == 2 ) /* Character */
-          {
-            sourceItem->interact(vCharacter(selectedIndex),interactionType);
-          }
-          else if ( selectedVector == 3 ) /* Creature */
-          {
-            sourceItem->interact(vCreature(selectedIndex),interactionType);
-          }
-          else if ( selectedVector == 4 ) /* Terrain */
-          {
-            std::cout<<"Terrain interaction\n";
-            sourceItem->interact(localSelected,interactionType);
-          }
+          sourceItem->interact(vGeneric(selectedIndex),interactionType);
+        }
+        else if ( selectedVector == 1 ) /* Item */
+        {
+          sourceItem->interact(vItem(selectedIndex),interactionType);
+        }
+        else if ( selectedVector == 2 ) /* Character */
+        {
+          sourceItem->interact(vCharacter(selectedIndex),interactionType);
+        }
+        else if ( selectedVector == 3 ) /* Creature */
+        {
+          sourceItem->interact(vCreature(selectedIndex),interactionType);
+        }
+        else if ( selectedVector == 4 ) /* Terrain */
+        {
+          std::cout<<"Terrain interaction\n";
+          sourceItem->interact(localSelected,interactionType);
         }
         
         _mouse->isLeftClick=false;
@@ -263,7 +250,7 @@ class InteractManager: public GUI_Interface
     vItem.clear();
     vCharacter.clear();
     vCreature.clear();
-    vInteraction.clear();
+    vInteraction.deleteAll();
     
     x=_x;
     y=_y;
@@ -278,23 +265,31 @@ class InteractManager: public GUI_Interface
       
       for (int i=0; i<localSelected->vObjectGeneric.size();++i)
       {
-        vGeneric.push(localSelected->vObjectGeneric(i));
-        vInteraction.push( new Interaction ("Punch",0,i,0) );
+        auto vInteract = itemHand.getInteractNames(localSelected->vObjectGeneric(i));
+
+        if ( vInteract !=0 )
+        {
+          for (int i2=0;i2<vInteract->size();++i2)
+          {
+            vGeneric.push(localSelected->vObjectGeneric(i2));
+            vInteraction.push( new Interaction ((*vInteract)(i2),0,i,i2) );
+          }
+        }
       }
       for (int i=0; i<localSelected->vItem.size();++i)
       {
         vGeneric.push(localSelected->vItem(i));
-        vInteraction.push( new Interaction ("Punch",0,i,0) );
+        vInteraction.push( new Interaction ("Punch "+localSelected->vItem(i)->getName(),0,i,0) );
       }
       for (int i=0; i<localSelected->vCharacter.size();++i)
       {
         vGeneric.push(localSelected->vCharacter(i));
-        vInteraction.push( new Interaction ("Punch",0,i,0) );
+        vInteraction.push( new Interaction ("Punch "+localSelected->vCharacter(i)->getName(),0,i,0) );
       }
       for (int i=0; i<localSelected->vCreature.size();++i)
       {
         vGeneric.push(localSelected->vCreature(i));
-        vInteraction.push( new Interaction ("Punch",0,i,0) );
+        vInteraction.push( new Interaction ("Punch "+localSelected->vCreature(i)->getName(),0,i,0) );
       }
       
     }

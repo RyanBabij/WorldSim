@@ -20,6 +20,7 @@ WorldObject::WorldObject()
   blocksView=false;
   blocksMovement=false;
   canCook = false;
+  canHarvest = false;
   
   worldX=-1; worldY=-1;
   

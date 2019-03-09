@@ -94,11 +94,15 @@ const std::string PATH_TEX_WORLD_TERRAIN_OCEAN_00 = "Textures/World/Terrain/Ocea
 Texture TEX_WORLD_TERRAIN_FOREST_TREES;
 const std::string PATH_TEX_WORLD_TERRAIN_FOREST_TREES = "Textures/World/Terrain/Forest/00.png";
 
+  // FLORA
 Texture TEX_WORLD_TERRAIN_FOREST_TREE;
 const std::string PATH_TEX_WORLD_TERRAIN_FOREST_TREE = "Textures/World/Terrain/Forest/tree.png";
 
 Texture TEX_WORLD_TERRAIN_FOREST_SAPLING;
 const std::string PATH_TEX_WORLD_TERRAIN_FOREST_SAPLING = "Textures/World/Terrain/Forest/Sapling.png";
+
+Texture TEX_FLORA_PLANT;
+const std::string PATH_TEX_FLORA_PLANT = "Textures/Flora/Plant-small.png";
 
 Texture TEX_WORLD_TERRAIN_MOUNTAIN_00;
 const std::string PATH_TEX_WORLD_TERRAIN_MOUNTAIN_00 = "Textures/World/Terrain/Mountain/01.png";
@@ -207,6 +211,9 @@ const std::string PATH_TEX_ITEM_FOOD_COOKED_FISH = "Textures/Item/Food/CookedFis
 Texture TEX_FLORA_ADDERTONGUE;
 const std::string PATH_TEX_FLORA_ADDERTONGUE = "Textures/Flora/AdderTongue-32.png";
 
+  // CRAFTING
+Texture TEX_CRAFTING_FLAX;
+const std::string PATH_TEX_CRAFTING_FLAX = "Textures/Crafting/FlaxBundle.png";
 
   // LOCAL MAP
   
@@ -388,6 +395,7 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   
   //FLORA
   loadTextureVerbose(PATH_TEX_FLORA_ADDERTONGUE,&TEX_FLORA_ADDERTONGUE);
+  loadTextureVerbose(PATH_TEX_FLORA_PLANT,&TEX_FLORA_PLANT);
   
   //OBJECTS
   loadTextureVerbose(PATH_TEX_OBJECT_STUMP,&TEX_OBJECT_STUMP);
@@ -398,6 +406,10 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   
     // FLOOR
   loadTextureVerbose(PATH_TEX_FLOOR_WOOD,&TEX_FLOOR_WOOD);
+  
+  // CRAFTING
+  loadTextureVerbose(PATH_TEX_CRAFTING_FLAX,&TEX_CRAFTING_FLAX);
+  
   
   //loadTextureMipmapRotate("Textures/Object/Wall/BrickWall-S.png", &TEX_WALL_GREYBRICK_SOUTH, &TEX_WALL_GREYBRICK_WEST, &TEX_WALL_GREYBRICK_NORTH, &TEX_WALL_GREYBRICK_EAST);
   //loadTextureMipmapRotate("Textures/Wall/Brick/window.png", &TEX_WINDOW_SOUTH, &TEX_WINDOW_WEST, &TEX_WINDOW_NORTH, &TEX_WINDOW_EAST);

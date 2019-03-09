@@ -13,6 +13,8 @@ Implementation of Recipe.hpp
 
 Recipe::Recipe()
 {
+  vInput.push(new Item_Plank);
+  vInput.push(new Item_Sword);
 }
 Recipe::~Recipe()
 {

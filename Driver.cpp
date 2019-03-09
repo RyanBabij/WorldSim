@@ -192,6 +192,7 @@ World_Local * worldLocal;
   
 #include "WorldObject.cpp"
   #include "WorldObject_Tree.cpp"
+  #include "WorldObject_Plant.cpp"
   #include "WorldObject_Rock.cpp"
   #include "WorldObject_Sign.cpp"
   

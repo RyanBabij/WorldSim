@@ -25,14 +25,14 @@ class WorldObject_Plant: public WorldObject
 	virtual ~WorldObject_Plant() {}
   
   
-	virtual std::string getName();
+	virtual std::string getName() override;
 	// virtual std::string getExtendedInfo() { return "N/A"; }
 	
 	
 	// int distanceTo(WorldObject*); /* Chebyshev (this one is distances where diagonal movement is allowed.) */
 		// int distanceFrom(WorldObject*); /* Alias. */
 
-	virtual Texture* currentTexture();
+	virtual Texture* currentTexture() override;
 };
 
 #endif

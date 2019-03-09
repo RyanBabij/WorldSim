@@ -13,6 +13,9 @@
   In the future stacking should be implemented for identical objects.
   
   Only items can be stored in an inventory.
+  
+  Item interaction is currently handled using double dispatch. It's possible to override this by using getName() as
+  a typeID.
 
 */
 
@@ -212,6 +215,38 @@ class Item: public WorldObject
 
 	virtual Texture* currentTexture();
 };
+
+// So it has come to this
+// Obviously you can't call a function for a null pointer, however hand is the default (null) action
+// therefore an object must be created to deal with these interactions.
+// An alternative is to simply have Character handle this. However I like this approach because it keeps
+// Interactions together.
+class Item_Hand: public Item
+{
+  public:
+  
+  Item_Hand()
+  {
+    
+  }
+  std::string getName() override { return "Hand"; }
+  
+  virtual Vector <std::string>* getInteractNames(WorldObject*) override;
+    // virtual Vector <std::string>* getInteractNames(Item* _w) override;
+    // virtual Vector <std::string>* getInteractNames(Character* _w) override;
+    // virtual Vector <std::string>* getInteractNames(Creature* _w) override;
+  // virtual Vector <std::string>* getInteractNames(LocalTile* _w) override;
+  
+  virtual void interact(WorldObject*, int interactType=0) override;
+
+  // Dummy function
+  Texture* currentTexture() override
+  {
+    return &TEX_PORTRAIT_SNEK;
+  }
+
+};
+Item_Hand itemHand;
 
 class Item_Sword: public Item
 {
@@ -545,7 +580,7 @@ class Item_Plank: public Item
   {
     return &TEX_OBJECT_PLANK;
   }
-  
+  std::string getName() { return "Plank"; }
   
   virtual void addToRecipeManager();
 };
@@ -587,6 +622,23 @@ class Item_Floor: public Item
   Texture* currentTexture()
   {
     return &TEX_FLOOR_WOOD;
+  }
+};
+
+class Item_PlantFibre: public Item
+{
+  public:
+  
+  Item_PlantFibre()
+  {
+  }
+  virtual ~Item_PlantFibre()
+  {
+  }
+  
+  Texture* currentTexture() override
+  {
+    return &TEX_CRAFTING_FLAX;
   }
 };
 

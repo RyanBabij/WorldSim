@@ -33,6 +33,8 @@ all be of type Wall. The AI might mainly concern itself with building a wall, no
 
 A Wall Manager could decide which wall the AI should build in the circumstances.
 
+It's possible to override this system by using getName(), which basically functions as a typeID system.
+
 */
 
 class Item_Plank;
@@ -116,6 +118,7 @@ Recipe_Wall recipeWall;
 class Recipe_GrilledFish: public Recipe
 {
   public:
+  
   Vector <Item_Fish*> vFish;
 
   virtual int canUse (Item_Fish * _object) override /* return the amount of object needed. -1 means this object can't be used */
@@ -159,13 +162,18 @@ class RecipeManager
   
   //put one of every recipe here
   
-  Vector <std::string> vRecipe;
+  Vector <Recipe*> vRecipe;
   
   int canUse (Item_Plank* _object)
   {
     return -1;
   }
 
+  void addRecipe(Recipe* _recipe)
+  {
+    vRecipe.push(_recipe);
+  }
+  
   void addToRecipes (Item*)
   {
     std::cout<<"Adding item\n";
@@ -200,6 +208,16 @@ class RecipeManager
     return &vValidList;
   }
   
+  
+  std::string getPrerequisites()
+  {
+    std::string sPrerequisites = "";
+    for (int i=0;i<recipeGrilledFish.vInput.size();++i)
+    {
+      sPrerequisites+=recipeGrilledFish.vInput(i)->getName();
+    }
+    return sPrerequisites;
+  }
   // int canMakeRecipe(Recipe_Wall* _recipe, Vector <Item*> vInventory)
   // {
     // int nPlank=0;

@@ -32,9 +32,9 @@ Texture* WorldObject_Plant::currentTexture()
 {
   if ( growth==0 )
   {
-    return &TEX_WORLD_TERRAIN_FOREST_SAPLING;
+    return &TEX_FLORA_PLANT;
   }
-	return &TEX_WORLD_TERRAIN_FOREST_TREE;
+	return &TEX_FLORA_PLANT;
 }
 
 #endif
