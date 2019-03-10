@@ -47,6 +47,9 @@ class Pathing_Local
 
 	ArrayS2 <Node*> aNode;
 	Vector <Node*> vNode;
+  /* The last node which was closest to/furthest from the target. Useful for providing incomplete solution. */
+  // For now we find it from the vector. In future we might track it.
+  ///Node* bestNode;
 
 	
 	int sourceOriginalX;
@@ -80,12 +83,14 @@ class Pathing_Local
     tX=0;
     tY=0;
     
+//    bestNode=0;
+    
     finished=false;
     flipBest = false;
 	}
 	
 	void init(World_Local* _map)
-	{    
+	{
 		map=_map;
     if (_map==0) { return; }
     
@@ -108,12 +113,21 @@ class Pathing_Local
 	}
   
   // Do a simple local A* path. _pathSize 0 = unlimited
-  bool pathLocal(int _startX, int _startY, int _endX, int _endY, int _pathSize=50)
+  // pathAway true sets best nodes as those furthest away from target.
+  bool pathLocal(int _startX, int _startY, int _endX, int _endY, int _pathSize=50, bool pathAway=false)
   {
 
     if ( map == 0) { return false; }
     if (map->isSafe (_startX,_startY) == false || map->isSafe (_endX, _endY) == false)
     { return false; }
+  
+    if ( pathAway )
+    { std::cout<<"Pathing away from: "<<_endX<<", "<<_endY<<".\n";
+    }
+    else
+    { std::cout<<"Pathing to: "<<_endX<<", "<<_endY<<".\n";
+    }
+  
   
 		
 		sourceOriginalX=+_startX;
@@ -133,13 +147,13 @@ class Pathing_Local
     vNode.push(aNode(_startX,_startY));
     aNode(_startX,_startY)->findDistance(_startX,_startY,sX,sY,tX,tY);
     
-    while (expandBest() && finished==false)
+    while (expandBest(pathAway) && finished==false)
     {
     }
     
     if ( finished )
     {
-      getPath();
+      getPath(pathAway);
     }
     
     for (int i=0;i<vNode.size();++i)
@@ -209,48 +223,112 @@ class Pathing_Local
     expandLocal(pNode->x,pNode->y);
   }
   
-  bool expandBest()
+  bool expandBest(bool pathAway)
   {
     if (vNode.size() == 0) { return false; }
     int bestDistance = vNode(0)->distanceFromTarget;
-    Node* bestNode = 0;
-    for (int i=0;i<vNode.size();++i)
+    Node* _bestNode = 0;
+    
+    if (pathAway==false) /* Expand node closest to target */
     {
-      if (vNode(i)->exhausted==false && (bestNode == 0 || vNode(i)->distanceFromTarget < bestDistance
-      || (vNode(i)->distanceFromTarget == bestDistance && flipBest)))
+      for (int i=0;i<vNode.size();++i)
       {
-        flipBest = !flipBest;
-        bestDistance = vNode(i)->distanceFromTarget;
-        bestNode = vNode(i);
+        if (vNode(i)->exhausted==false && (_bestNode == 0 || vNode(i)->distanceFromTarget < bestDistance
+        || (vNode(i)->distanceFromTarget == bestDistance && flipBest)))
+        {
+          flipBest = !flipBest;
+          bestDistance = vNode(i)->distanceFromTarget;
+          _bestNode = vNode(i);
+        }
+      }
+      if (bestDistance==0)
+      {
+        finished=true;
+        return true;
+      }
+      if ( _bestNode!=0)
+      {
+        expandLocal(_bestNode);
+        return true;
+      }
+      
+    }
+    else /* Expand node furthest from target */
+    {
+      for (int i=0;i<vNode.size();++i)
+      {
+        if (vNode(i)->exhausted==false && (_bestNode == 0 || vNode(i)->distanceFromTarget > bestDistance
+        || (vNode(i)->distanceFromTarget == bestDistance && flipBest)))
+        {
+          flipBest = !flipBest;
+          bestDistance = vNode(i)->distanceFromTarget;
+          _bestNode = vNode(i);
+        }
+        
+      }
+      if (vNode.size() > pathSize)
+      {
+        finished=true;
+        return true;
+      }
+      if ( _bestNode!=0)
+      {
+        expandLocal(_bestNode);
+        return true;
       }
     }
     
-    if (bestDistance==0)
-    {
-      finished=true;
-      return true;
-    }
+
     
-    if ( bestNode!=0)
-    {
-      expandLocal(bestNode);
-      return true;
-    }
+
     return false;
   }
   
-  void getPath()
+  void getPath(bool pathAway)
+  //void getPath(Node* currentNode = 0)
   {
+    //if (currentNode == 0 ) {return;}
     if (vNode.size()==0) { return; }
     
-    Node* currentNode = aNode(tX,tY);
+    Node* currentNode = vNode(0);
+    int bestDistance = currentNode->distanceFromTarget;
+    
+    
+    
+    if (pathAway) // Find node furthest from target.
+    {
+      for (int i=1;i<vNode.size();++i)
+      {
+        if (vNode(i)->distanceFromTarget > bestDistance)
+        {
+          currentNode = vNode(i);
+          bestDistance = vNode(i)->distanceFromTarget;
+        }
+      }
+    }
+    else // Find node closest to target
+    {
+      for (int i=1;i<vNode.size();++i)
+      {
+        if (vNode(i)->distanceFromTarget < bestDistance)
+        {
+          currentNode = vNode(i);
+          bestDistance = vNode(i)->distanceFromTarget;
+        }
+      }
+    }
+    
+    //if (currentNode==0) { currentNode = aNode(tX,tY); }
+    if (currentNode==0) { return; }
+    
     int currentX = tX;
     int currentY = tY;
+    
 
     while (currentNode->x != sX || currentNode->y != sY)
     {
       
-      int bestDistance = -1;
+      bestDistance = -1;
       char bestDir = 0;
     
     

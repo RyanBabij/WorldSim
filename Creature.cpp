@@ -116,6 +116,103 @@ void Creature::wander()
   // KNOWLEDGE
   
 
+    //Update knowledge with current instance.
+  void Creature::updateKnowledge()
+  {
+    if ( knowledge == 0 || map==0 ) { return; }
+    
+    //idleCounter=0;
+
+
+    knowledge->addTile(map,x,y);
+  
+    
+    //Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(fullX,fullY,MAX_VIEW_RANGE/2);
+    
+    // if ( vVisibleTiles!=0 )
+    // {
+      // for (int i=0; i<vVisibleTiles->size(); ++i)
+      // {
+        // //std::cout<<"ADDING\n";
+        // knowledge->addTile((*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
+        // delete (*vVisibleTiles)(i);
+      // }
+    // }
+    
+
+  }
+  
+    //Update knowledge with current instance.
+  void Creature::updateKnowledgeIdle()
+  {
+    // Implement a basic delay to prevent idle flickering in.
+    // ++idleCounter;
+    // if (idleCounter > 10) { idleCounter=10; }
+    
+    // if ( vMovesToProcess.size() == 0 && vMovesToProcessSneak.size() == 0 ) { return; }
+    // if ( knowledge == 0 ) { return; }
+    // if ( tribe == 0 ) { return; }
+    
+    
+
+    // //Update the LOS backlog during idle time.
+    
+      // //For now this simply wipes LOS from last turn.
+    // knowledge->updateLOS();
+    
+    // if (vMovesToProcess.size() > 0)
+    // {
+      // vMovesToProcess.shuffle();
+      
+      // auto moveToProcess = vMovesToProcess(0);
+
+      // knowledge->addTile(moveToProcess->x,moveToProcess->y);
+      
+
+      // Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(moveToProcess->x,moveToProcess->y,MAX_VIEW_RANGE);
+      
+      // if ( vVisibleTiles!=0 )
+      // {
+        // for (int i=0; i<vVisibleTiles->size(); ++i)
+        // {
+          // //std::cout<<"ADDING\n";
+          // knowledge->addTile((*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
+          // delete (*vVisibleTiles)(i);
+        // }
+      // }
+      
+      // delete moveToProcess;
+      // vMovesToProcess.removeSlot(0);
+    // }
+    // else if ( vMovesToProcessSneak.size() > 0)
+    // {
+      // vMovesToProcessSneak.shuffle();
+      
+      // auto moveToProcess = vMovesToProcessSneak(0);
+
+      // knowledge->addTile(moveToProcess->x,moveToProcess->y);
+      
+
+      // Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(moveToProcess->x,moveToProcess->y,MAX_VIEW_RANGE,true);
+      
+      // if ( vVisibleTiles!=0 )
+      // {
+        // for (int i=0; i<vVisibleTiles->size(); ++i)
+        // {
+          // //std::cout<<"ADDING\n";
+          // knowledge->addTile((*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
+          // delete (*vVisibleTiles)(i);
+        // }
+      // }
+      
+      // delete moveToProcess;
+      // vMovesToProcessSneak.removeSlot(0);
+    // }
+
+    
+  }
+  
+
   
   bool Creature::hasSeen( World_Local* _map, int _x, int _y )
   {

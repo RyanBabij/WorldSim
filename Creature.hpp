@@ -15,6 +15,7 @@
 #include <Container/Table/TableInterface.hpp>
 
 #include "WorldObject.hpp"
+#include "Creature_Knowledge.hpp"
 
 class World_Local;
 
@@ -36,6 +37,10 @@ class Creature: public WorldObject, public TableInterface
 	
   // All loaded creatures can get a link to their world.
   World_Local* map;
+  
+    //Creature's knowledge of the world (optional).
+  Creature_Knowledge* knowledge;
+	
 
 		// INITIALIZATION
 	Creature();
@@ -74,6 +79,10 @@ class Creature: public WorldObject, public TableInterface
     //Attack a Creature once.
   //void attack (Creature*);
   
+    //Update knowledge with current instance.
+  void updateKnowledge();
+  // Extra processing available
+  void updateKnowledgeIdle();
 
 	
 };

@@ -176,6 +176,7 @@ World_Local * worldLocal;
 #include "LocalTile.cpp"
 	
 #include "Creature.cpp"
+  #include "Creature_Knowledge.cpp"
   #include "Creature_Deer.cpp"
   
 #include "Character.cpp"

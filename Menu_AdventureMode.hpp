@@ -1031,7 +1031,7 @@ class Menu_AdventureMode: public GUI_Interface
       
       Pathing_Local * pl = new Pathing_Local;
       pl->init(world(playerCharacter->worldX,playerCharacter->worldY));
-      pl->pathLocal(playerCharacter->x,playerCharacter->y,0,0);
+      pl->pathLocal(playerCharacter->x,playerCharacter->y,0,0,50,true);
       
       if ( pl->vPath.size() > 0)
       {
