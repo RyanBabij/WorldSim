@@ -27,4 +27,13 @@ void Recipe::addRequirement(Item* _object, int count, bool isConsumed)
 {
 }
 
+
+// LEATHER CLOTHES
+void Recipe_LeatherClothes::make(Character* _character)
+{
+  auto _output = new Item_LeatherClothes;
+  _character->giveItem(_output);
+}
+
+
 #endif

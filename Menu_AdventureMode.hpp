@@ -52,21 +52,11 @@ class Menu_Crafting: public GUI_Interface
       {
         if (inventoryGrid[_x][_y]!=0)
         {
-          //std::cout<<"We have item.\n";
           vItem.push(inventoryGrid[_x][_y]);
-          
-          //recipeManager.addToRecipes(inventoryGrid[_x][_y]);
           inventoryGrid[_x][_y]->addToRecipeManager();
-          
-          // if ( inventoryGrid[_x][_y]->canUseInRecipe(&recipeWall) )
-          // {
-            // std::cout<<"Can build wall\n";
-          // }
         }
       }
     }
-    //std::cout<<"Can make "<<recipeManager.getTotals()<<" walls.\n";
-    
     vRecipe.clear();
       
     auto vValidRecipe = recipeManager.getValidRecipes();
@@ -87,16 +77,10 @@ class Menu_Crafting: public GUI_Interface
     {
       Renderer::placeColour4a(180,180,180,255,panelX1+250,(panelY2-50)-(selectedRecipe*10),panelX1+600,(panelY2-50)-((selectedRecipe+1)*10));
     }
-
-    std::cout<<"vRecipe size: "<<vRecipe.size()<<".\n";
     for (int i=0;i<vRecipe.size();++i)
     {
       font8x8.drawText(vRecipe(i)->getName(),panelX1+250,(panelY2-50)-(i*10),panelX1+500,(panelY2-50)-((i+1)*10),false,true);
-      std::cout<<"Recipt: "<<vRecipe(i)->getName()<<".\n";
     }
-    
-    std::cout<<"Prereq test: "<<recipeManager.getPrerequisites()<<".\n";
-      //linesDrawn = font8x8.drawText(ADVENTURE_MODE_MANUAL,panelX1+250,panelY1+45,panelX2-25,panelY2-25,false,false);
   }
   
 	bool /* GUI_Interface */ mouseEvent (Mouse* _mouse)
@@ -116,6 +100,15 @@ class Menu_Crafting: public GUI_Interface
       _mouse->isWheelDown=false;
       _mouse->isWheelUp=false;
     }
+    // MAKE RECIPE
+    if (_mouse->isLeftClick)
+    {
+      recipeManager.makeRecipe(playerCharacter, selectedRecipe);
+      
+      _mouse->isLeftClick=false;
+      return true;
+    }
+    
     return false;
   }
   

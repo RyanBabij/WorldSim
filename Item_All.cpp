@@ -490,5 +490,12 @@ void Item_Longbow::interact(Creature* _target, int interactType)
   _target->die();
 }
 
+// DEER PELT
+
+void Item_DeerPelt::addToRecipeManager()
+{
+  recipeManager.addToRecipes(this);
+}
+
   
 #endif

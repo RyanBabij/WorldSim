@@ -38,6 +38,7 @@ It's possible to override this system by using getName(), which basically functi
 */
 
 class Item_Plank;
+class Item_DeerPelt;
 
 class Recipe
 {
@@ -63,6 +64,7 @@ class Recipe
   virtual int canUse (Item *) { return -1; }
   virtual int canUse (Item_Plank *) { return -1; }
   virtual int canUse (Item_Fish *) { return -1; }
+  virtual int canUse (Item_DeerPelt *) { return -1; }
   
   
   /* These should probably be in recipe manager. */
@@ -71,6 +73,9 @@ class Recipe
   virtual void countUp(Item*) {}
   virtual void countUp(Item_Plank*) {}
   virtual void countUp(Item_Fish*) {}
+  virtual void countUp(Item_DeerPelt*) {}
+  
+  virtual void make(Character*) { std::cout<<"RECIPE MAKED\n"; }
   
   virtual int getTotal()
   {
@@ -149,6 +154,45 @@ class Recipe_GrilledFish: public Recipe
 };
 Recipe_GrilledFish recipeGrilledFish;
 
+// LEATHER CLOTHES
+// 5 of any pelt
+class Recipe_LeatherClothes: public Recipe
+{
+  public:
+  
+  Vector <Item_DeerPelt*> vPelt;
+
+  virtual int canUse (Item_DeerPelt * _object) override /* return the amount of object needed. -1 means this object can't be used */
+  {
+    std::cout<<"Pelts\n";
+    return 1;
+  }
+  
+  virtual std::string getName() override
+  {
+    return "Leather clothes";
+  }
+  
+  virtual void countUp(WorldObject* _object) override {}
+  virtual void countUp(Item* _item) override {}
+  virtual void countUp(Item_DeerPelt* _input) override
+  {
+    std::cout<<"Add pelt\n";
+    vPelt.push(_input);
+  }
+  
+  virtual int getTotal() override
+  {
+    std::cout<<"PELTS: "<<vPelt.size()<<"\n";
+    // 5 pelts to make clothes.
+    return vPelt.size();
+  }
+  
+  virtual void make(Character* _character) override;
+
+};
+Recipe_LeatherClothes recipeLeatherClothes;
+
 // Inventory manager can give 2 types of information. What recipes can be made with current items. And also what reciped
 // an item can be used in.
 class RecipeManager
@@ -178,20 +222,25 @@ class RecipeManager
   {
     std::cout<<"Adding item\n";
   }
-  void addToRecipes(Item_Plank* _plank)
+  void addToRecipes(Item_Plank* _item)
   {
     std::cout<<"Adding plank\n";
-    recipeWall.countUp(_plank);
+    recipeWall.countUp(_item);
   }
-  void addToRecipes(Item_Fish* _fish)
+  void addToRecipes(Item_Fish* _item)
   {
-    recipeGrilledFish.countUp(_fish);
+    recipeGrilledFish.countUp(_item);
+  }
+  void addToRecipes(Item_DeerPelt* _item)
+  {
+    recipeLeatherClothes.countUp(_item);
   }
   
   int getTotals()
   {
     return recipeWall.getTotal();
     return recipeGrilledFish.getTotal();
+    return recipeLeatherClothes.getTotal();
   }
   
   Vector <Recipe*> * getValidRecipes()
@@ -205,9 +254,21 @@ class RecipeManager
     {
       vValidList.push(&recipeGrilledFish);
     }
+    if ( recipeLeatherClothes.getTotal() > 0 )
+    {
+      vValidList.push(&recipeLeatherClothes);
+    }
     return &vValidList;
   }
   
+  void makeRecipe(Character* _character, int _index)
+  {
+    if (vValidList.isSafe(_index))
+    {
+      std::cout<<"Making: "<<vValidList(_index)->getName()<<".\n";
+      vValidList(_index)->make(_character);
+    }
+  }
   
   std::string getPrerequisites()
   {
@@ -218,6 +279,7 @@ class RecipeManager
     }
     return sPrerequisites;
   }
+  
   // int canMakeRecipe(Recipe_Wall* _recipe, Vector <Item*> vInventory)
   // {
     // int nPlank=0;

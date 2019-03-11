@@ -84,57 +84,49 @@ void Creature::die()
 
 void Creature::wander()
 {
+  if ( map==0 ) { return; }
+  
   int newX = x;
   int newY = y;
   char moveDirection = '?';
   
-  if (map->contains(playerCharacter) && playerCharacter->distanceTo(this) < 10)
+  Character* closestThreat = 0;
+  int threatDistance = 0;
+  
+  // Get closest Character
+  for (int i=0;i<map->vCharacter.size();++i)
   {
-    //std::cout<<"Pathing away from player\n";
+    if (closestThreat==0 || distanceTo(map->vCharacter(i)) < threatDistance)
+    {
+      closestThreat = map->vCharacter(i);
+      threatDistance = distanceTo(map->vCharacter(i));
+    }
+  }
+
+
+  if (closestThreat != 0 && threatDistance < 10 )
+  {
     Pathing_Local p;
     p.init(map);
-    
-    //std::cout<<"Pathing away. Start: "<<x<<", "<<y<<".\n";
-    //std::cout<<"Target: "<<playerCharacter->x<<", "<<playerCharacter->y<<".\n";
-    p.pathLocal(x, y, playerCharacter->x, playerCharacter->y, 10, true);
+    p.pathLocal(x, y, closestThreat->x, closestThreat->y, 10, true);
     
     if (p.vPath.size() > 0)
     {
-      //std::cout<<"Recommended direction: "<<p.vPath(0)<<".\n";
       moveDirection=p.vPath(0);
-      //std::cout<<"Movedirection : "<<moveDirection<<"\n";
     }
-    else
-    { //std::cout<<"Vpath is empty\n";
-    }
+
   }
-  else
-  {
-  }
-  
-  
+
   int direction = Random::randomInt(3);
   
   if ( moveDirection == 'E' )
-  {
-    //std::cout<<"E\n";
-    direction = 0;
-  }
+  { direction = 0; }
   else if (moveDirection == 'N')
-  {
-    //std::cout<<"N\n";
-    direction = 2;
-  }
+  { direction = 2; }
   else if (moveDirection == 'S')
-  {
-    //std::cout<<"S\n";
-    direction = 3;
-  }
+  { direction = 3; }
   else if (moveDirection == 'W')
-  {
-    //std::cout<<"W\n";
-    direction = 1;
-  }
+  { direction = 1; }
   
   if ( direction==0 ) { ++newX; }
   else if ( direction==1 ) { --newX; }
@@ -155,23 +147,14 @@ void Creature::wander()
       map->aLocalTile(x,y).footprint = new Creature_Footprint;
     }
   }
-  else
-  {
-    //std::cout<<"Move not possible\n";
-  }
-  
   updateKnowledge();
 
 }
 
-
-
   // LOCATION
 
-  
   // KNOWLEDGE
   
-
     //Update knowledge with current instance.
   void Creature::updateKnowledge()
   {
@@ -179,10 +162,7 @@ void Creature::wander()
     
     //idleCounter=0;
     
-    //std::cout<<"Creature updating knowledge\n";
-
     knowledge->addTile(map,x,y);
-  
     
     Vector <HasXY *> * vVisibleTiles = map->rayTraceLOS(x,y,MAX_VIEW_RANGE/2);
     
@@ -193,18 +173,7 @@ void Creature::wander()
         knowledge->addTile(map, (*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
         delete (*vVisibleTiles)(i);
       }
-
-      // if (map->contains(playerCharacter))
-      // {
-        // std::cout<<"Player is on this map\n";
-      // }
-      // else
-      // { std::cout<<"Player is not on this map\n";
-      // }
-      
     }
-    
-
   }
   
     //Update knowledge with current instance.

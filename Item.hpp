@@ -684,9 +684,11 @@ class Item_DeerPelt: public Item
   }
   std::string getName() override { return "Deer Pelt"; }
   
+  virtual void addToRecipeManager() override;
+  
   Texture* currentTexture() override
   {
-    return &TEX_CREATURE_DEER;
+    return &TEX_CRAFTING_LEATHER;
   }
 };
   // DEER MEAT
@@ -702,9 +704,33 @@ class Item_DeerMeat: public Item
   }
   std::string getName() override { return "Deer Meat"; }
   
+  
+  
   Texture* currentTexture() override
   {
     return &TEX_ITEM_FOOD_STEAK_RAW;
+  }
+};
+
+
+  // LEATHER CLOTHES
+class Item_LeatherClothes: public Item
+{
+  public:
+  
+  Item_LeatherClothes()
+  {
+  }
+  virtual ~Item_LeatherClothes()
+  {
+  }
+  std::string getName() override { return "Leather clothes"; }
+  
+  
+  
+  Texture* currentTexture() override
+  {
+    return &TEX_CRAFTING_LEATHER_CLOTHES;
   }
 };
 

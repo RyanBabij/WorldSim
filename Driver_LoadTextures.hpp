@@ -227,6 +227,12 @@ const std::string PATH_TEX_FLORA_ADDERTONGUE = "Textures/Flora/AdderTongue-32.pn
 Texture TEX_CRAFTING_FLAX;
 const std::string PATH_TEX_CRAFTING_FLAX = "Textures/Crafting/FlaxBundle.png";
 
+Texture TEX_CRAFTING_LEATHER;
+const std::string PATH_TEX_CRAFTING_LEATHER = "Textures/Crafting/Leather.png";
+
+Texture TEX_CRAFTING_LEATHER_CLOTHES;
+const std::string PATH_TEX_CRAFTING_LEATHER_CLOTHES = "Textures/Crafting/LeatherClothes.png";
+
   // LOCAL MAP
   
 Texture TEX_LOCAL_FLOOR;
@@ -433,6 +439,8 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   
   // CRAFTING
   loadTextureVerbose(PATH_TEX_CRAFTING_FLAX,&TEX_CRAFTING_FLAX);
+  loadTextureVerbose(PATH_TEX_CRAFTING_LEATHER,&TEX_CRAFTING_LEATHER);
+  loadTextureVerbose(PATH_TEX_CRAFTING_LEATHER_CLOTHES,&TEX_CRAFTING_LEATHER_CLOTHES);
   
   //MARKERS
   loadTextureVerbose(PATH_TEX_MARKER_RED,&TEX_MARKER_RED);
