@@ -10,7 +10,7 @@
 
 #include <math.h>
 
-
+//#define PATHING_MARKERS
 
 class Pathing_Local
 {
@@ -22,6 +22,9 @@ class Pathing_Local
 		int distanceFromSource;
 		bool exhausted;
     bool created;
+    
+    Node* parent;
+    char pathName;
 		
 		Node()
 		{
@@ -29,6 +32,9 @@ class Pathing_Local
 			x=0; y=0;
 			distanceFromTarget=0; distanceFromSource=0;
       created=false;
+      
+      parent=0;
+      pathName=0;
 		}
 		void findDistance(int _currentX, int _currentY, int _sX, int _sY, int _tX, int _tY)
 		{
@@ -51,6 +57,8 @@ class Pathing_Local
   // For now we find it from the vector. In future we might track it.
   ///Node* bestNode;
 
+  
+  Node* finalNode;
 	
 	int sourceOriginalX;
 	int sourceOriginalY;
@@ -84,6 +92,7 @@ class Pathing_Local
     tY=0;
     
 //    bestNode=0;
+    finalNode=0;
     
     finished=false;
     flipBest = false;
@@ -107,7 +116,7 @@ class Pathing_Local
         aNode(x,y) = new Node;
         aNode(x,y)->setCoords(x,y);
         aNode(x,y)->exhausted=false;
-        aNode(x,y)->created=true;
+        aNode(x,y)->created=false;
       }
     }
 	}
@@ -122,10 +131,10 @@ class Pathing_Local
     { return false; }
   
     if ( pathAway )
-    { std::cout<<"Pathing away from: "<<_endX<<", "<<_endY<<".\n";
+    { //std::cout<<"Pathing away from: "<<_endX<<", "<<_endY<<".\n";
     }
     else
-    { std::cout<<"Pathing to: "<<_endX<<", "<<_endY<<".\n";
+    { //std::cout<<"Pathing to: "<<_endX<<", "<<_endY<<".\n";
     }
   
   
@@ -147,21 +156,40 @@ class Pathing_Local
     vNode.push(aNode(_startX,_startY));
     aNode(_startX,_startY)->findDistance(_startX,_startY,sX,sY,tX,tY);
     
-    while (expandBest(pathAway) && finished==false)
+    
+    //pathAway=false;
+    
+    while (expandBest(pathAway) && finished==false && pathSize-- > 0)
     {
+      //std::cout<<".";
     }
     
-    if ( finished )
-    {
-      getPath(pathAway);
-    }
-    
+    #ifdef PATHING_MARKERS
     for (int i=0;i<vNode.size();++i)
     {
-      map->put(new Item_Marker_Red,vNode(i)->x,vNode(i)->y);
+      map->put(new Item_Marker_Red  ,vNode(i)->x,vNode(i)->y);
     }
+    #endif
+    
+    //if ( )
+    //{
+      //std::cout<<"Getting path\n";
+      getPath(pathAway);
+      //std::cout<<"Done\n";
+    //}
+    
+
+    
     
     std::reverse(vPath.begin(), vPath.end());
+    
+    if (vPath.size() > 0 )
+    {
+      //std::cout<<"Final path:\n";
+      //for (int i=0;i<vPath.size();++i) { std::cout<<vPath(i); } std::cout<<".\n";
+      return true;
+    }
+    //std::cout<<"No path found\n";
 
     return false;
   }
@@ -183,38 +211,70 @@ class Pathing_Local
     // NORTH
 		if(pNodeY<aNode.nY-1 && aNode(pNodeX,pNodeY+1)->exhausted==false
 			&& map->aLocalTile(pNodeX, pNodeY+1).canTravelSouth()
-			&& map->aLocalTile(pNodeX, pNodeY).canTravelNorth())
+			&& map->aLocalTile(pNodeX, pNodeY).canTravelNorth()
+      && map->aLocalTile(pNodeX, pNodeY+1).hasMovementBlocker()==false )
 		{
-			aNode(pNodeX, pNodeY+1)->findDistance(_x,_y,sX,sY,tX,tY);
+			aNode(pNodeX, pNodeY+1)->findDistance(_x,_y+1,sX,sY,tX,tY);
 			vNode.push(aNode(pNodeX, pNodeY+1));
       aNode(pNodeX, pNodeY+1)->created=true;
+      
+      if ( aNode(pNodeX, pNodeY+1)->parent == 0 )
+      {
+        aNode(pNodeX, pNodeY+1)->parent = aNode(_x,_y);
+        aNode(pNodeX, pNodeY+1)->pathName = 'N';
+      }
 		}
     // SOUTH
 		if(pNodeY>0 && aNode(pNodeX,pNodeY-1)->exhausted==false
 			&& map->aLocalTile(pNodeX, pNodeY-1).canTravelNorth()
-			&& map->aLocalTile(pNodeX, pNodeY).canTravelSouth())
+			&& map->aLocalTile(pNodeX, pNodeY).canTravelSouth()
+      && map->aLocalTile(pNodeX, pNodeY-1).hasMovementBlocker()==false )
 		{
-			aNode(pNodeX, pNodeY-1)->findDistance(_x,_y,sX,sY,tX,tY);
+			aNode(pNodeX, pNodeY-1)->findDistance(_x,_y-1,sX,sY,tX,tY);
 			vNode.push(aNode(pNodeX, pNodeY-1));
       aNode(pNodeX, pNodeY-1)->created=true;
+
+      if ( aNode(pNodeX, pNodeY-1)->parent == 0 )
+      {
+        aNode(pNodeX, pNodeY-1)->parent = aNode(_x,_y);
+        aNode(pNodeX, pNodeY-1)->pathName = 'S';
+      }
+      
+      
 		}
     // EAST
 		if(pNodeX<aNode.nX-1 && aNode(pNodeX+1,pNodeY)->exhausted==false
 			&& map->aLocalTile(pNodeX+1, pNodeY).canTravelWest()
-			&& map->aLocalTile(pNodeX, pNodeY).canTravelEast())
+			&& map->aLocalTile(pNodeX, pNodeY).canTravelEast()
+      && map->aLocalTile(pNodeX+1, pNodeY).hasMovementBlocker()==false )
 		{
-			aNode(pNodeX+1, pNodeY)->findDistance(_x,_y,sX,sY,tX,tY);
+			aNode(pNodeX+1, pNodeY)->findDistance(_x+1,_y,sX,sY,tX,tY);
 			vNode.push(aNode(pNodeX+1, pNodeY));
       aNode(pNodeX+1, pNodeY)->created=true;
+
+      if ( aNode(pNodeX+1, pNodeY)->parent == 0 )
+      {
+        aNode(pNodeX+1, pNodeY)->parent = aNode(_x,_y);
+        aNode(pNodeX+1, pNodeY)->pathName = 'E';
+      }
 		}
     // WEST
 		if(pNodeX>0 && aNode(pNodeX-1,pNodeY)->exhausted==false
 			&& map->aLocalTile(pNodeX-1, pNodeY).canTravelEast()
-			&& map->aLocalTile(pNodeX, pNodeY).canTravelWest())
+			&& map->aLocalTile(pNodeX, pNodeY).canTravelWest()
+      && map->aLocalTile(pNodeX-1, pNodeY).hasMovementBlocker()==false )
 		{
-			aNode(pNodeX-1, pNodeY)->findDistance(_x,_y,sX,sY,tX,tY);
+			aNode(pNodeX-1, pNodeY)->findDistance(_x-1,_y,sX,sY,tX,tY);
 			vNode.push(aNode(pNodeX-1, pNodeY));
       aNode(pNodeX-1, pNodeY)->created=true;
+      aNode(pNodeX-1, pNodeY)->parent = aNode(_x,_y);
+      aNode(pNodeX-1, pNodeY)->pathName = 'W';
+      
+      if ( aNode(pNodeX-1, pNodeY)->parent == 0 )
+      {
+        aNode(pNodeX-1, pNodeY)->parent = aNode(_x,_y);
+        aNode(pNodeX-1, pNodeY)->pathName = 'W';
+      }
 		}
 	}
   void expandLocal (Node* pNode)
@@ -225,12 +285,15 @@ class Pathing_Local
   
   bool expandBest(bool pathAway)
   {
+    //std::cout<<"Expandbest\n";
     if (vNode.size() == 0) { return false; }
+    
     int bestDistance = vNode(0)->distanceFromTarget;
     Node* _bestNode = 0;
     
     if (pathAway==false) /* Expand node closest to target */
     {
+      //std::cout<<"pathto\n";
       for (int i=0;i<vNode.size();++i)
       {
         if (vNode(i)->exhausted==false && (_bestNode == 0 || vNode(i)->distanceFromTarget < bestDistance
@@ -244,6 +307,8 @@ class Pathing_Local
       if (bestDistance==0)
       {
         finished=true;
+        finalNode = _bestNode;
+        //std::cout<<"finalnode: "<<finalNode->x<<", "<<finalNode->y<<".\n";
         return true;
       }
       if ( _bestNode!=0)
@@ -255,6 +320,7 @@ class Pathing_Local
     }
     else /* Expand node furthest from target */
     {
+      //std::cout<<"pathaway\n";
       for (int i=0;i<vNode.size();++i)
       {
         if (vNode(i)->exhausted==false && (_bestNode == 0 || vNode(i)->distanceFromTarget > bestDistance
@@ -287,90 +353,119 @@ class Pathing_Local
   void getPath(bool pathAway)
   //void getPath(Node* currentNode = 0)
   {
+    //std::cout<<"Getpath\n";
     //if (currentNode == 0 ) {return;}
-    if (vNode.size()==0) { return; }
-    
-    Node* currentNode = vNode(0);
-    int bestDistance = currentNode->distanceFromTarget;
+    if (vNode.size()==0 || vNode.size() == 1) { return; }
     
     
-    
-    if (pathAway) // Find node furthest from target.
+    //Node* currentNode = vNode(0);
+    if (finalNode==0)
     {
-      for (int i=1;i<vNode.size();++i)
-      {
-        if (vNode(i)->distanceFromTarget > bestDistance)
-        {
-          currentNode = vNode(i);
-          bestDistance = vNode(i)->distanceFromTarget;
-        }
-      }
-    }
-    else // Find node closest to target
-    {
-      for (int i=1;i<vNode.size();++i)
-      {
-        if (vNode(i)->distanceFromTarget < bestDistance)
-        {
-          currentNode = vNode(i);
-          bestDistance = vNode(i)->distanceFromTarget;
-        }
-      }
+      finalNode = vNode(vNode.size()-1);
     }
     
-    //if (currentNode==0) { currentNode = aNode(tX,tY); }
-    if (currentNode==0) { return; }
+    Node* currentNode = finalNode;
     
-    int currentX = tX;
-    int currentY = tY;
+    //std::cout<<"Backtracking from: "<<currentNode->x<<", "<<currentNode->y<<".\n";
+    
+    while(currentNode->parent!=0)
+    {
+      //std::cout<<"Pushing parent\n";
+      
+      vPath.push(currentNode->pathName);
+      #ifdef PATHING_MARKERS
+      map->put(new Item_Marker_Green_Small, currentNode->x, currentNode->y);
+      #endif
+      
+
+      
+      
+      currentNode = currentNode->parent;
+    }
+    
+    
+    // //int bestDistance = currentNode->distanceFromTarget;
+    
+    // std::cout<<"Vnode size: "<<vNode.size()<<".\n";
+    
+    // if (pathAway) // Find node furthest from target.
+    // {
+      // std::cout<<"Pathing away\n";
+      // for (int i=1;i<vNode.size();++i)
+      // {
+        // if (vNode(i)->distanceFromTarget > bestDistance)
+        // {
+          // currentNode = vNode(i);
+          // bestDistance = vNode(i)->distanceFromTarget;
+        // }
+      // }
+    // }
+    // else // Find node closest to target
+    // {
+      // for (int i=1;i<vNode.size();++i)
+      // {
+        // if (vNode(i)->distanceFromTarget < bestDistance)
+        // {
+          // currentNode = vNode(i);
+          // bestDistance = vNode(i)->distanceFromTarget;
+        // }
+      // }
+    // }
+    
+    // //if (currentNode==0) { currentNode = aNode(tX,tY); }
+    // if (currentNode==0) { return; }
+    
+    // int currentX = tX;
+    // int currentY = tY;
     
 
-    while (currentNode->x != sX || currentNode->y != sY)
-    {
+    // while (currentNode->x != sX || currentNode->y != sY)
+    // {
+      // std::cout<<",";
       
-      bestDistance = -1;
-      char bestDir = 0;
+      // bestDistance = -1;
+      // char bestDir = 0;
     
     
-      if (aNode.isSafe(currentX-1,currentY) && aNode(currentX-1,currentY)->created
-        && (aNode(currentX-1,currentY)->distanceFromSource<bestDistance || bestDistance==-1)) // WEST
-      {
-        currentNode = aNode(currentX-1,currentY);
-        bestDistance = aNode(currentX-1,currentY)->distanceFromSource;
-        bestDir = 'E';
-      }
-      if (aNode.isSafe(currentX+1,currentY) && aNode(currentX+1,currentY)->created
-        && (aNode(currentX+1,currentY)->distanceFromSource<bestDistance || bestDistance==-1)) // WEST
-      {
-        currentNode = aNode(currentX+1,currentY);
-        bestDistance = aNode(currentX+1,currentY)->distanceFromSource;
-        bestDir = 'W';
-      }
-      if (aNode.isSafe(currentX,currentY-1) && aNode(currentX,currentY-1)->created
-        && (aNode(currentX,currentY-1)->distanceFromSource<bestDistance || bestDistance==-1)) // SOUTH
-      {
-        currentNode = aNode(currentX,currentY-1);
-        bestDistance = aNode(currentX,currentY-1)->distanceFromSource;
-        bestDir = 'N';
-      }
-      if (aNode.isSafe(currentX,currentY+1) && aNode(currentX,currentY+1)->created
-        && (aNode(currentX,currentY+1)->distanceFromSource<bestDistance || bestDistance==-1)) // SOUTH
-      {
-        currentNode = aNode(currentX,currentY+1);
-        bestDistance = aNode(currentX,currentY+1)->distanceFromSource;
-        bestDir = 'S';
-      }
+      // if (aNode.isSafe(currentX-1,currentY) && aNode(currentX-1,currentY)->created
+        // && (aNode(currentX-1,currentY)->distanceFromSource<bestDistance || bestDistance==-1)) // WEST
+      // {
+        // currentNode = aNode(currentX-1,currentY);
+        // bestDistance = aNode(currentX-1,currentY)->distanceFromSource;
+        // bestDir = 'E';
+      // }
+      // if (aNode.isSafe(currentX+1,currentY) && aNode(currentX+1,currentY)->created
+        // && (aNode(currentX+1,currentY)->distanceFromSource<bestDistance || bestDistance==-1)) // WEST
+      // {
+        // currentNode = aNode(currentX+1,currentY);
+        // bestDistance = aNode(currentX+1,currentY)->distanceFromSource;
+        // bestDir = 'W';
+      // }
+      // if (aNode.isSafe(currentX,currentY-1) && aNode(currentX,currentY-1)->created
+        // && (aNode(currentX,currentY-1)->distanceFromSource<bestDistance || bestDistance==-1)) // SOUTH
+      // {
+        // currentNode = aNode(currentX,currentY-1);
+        // bestDistance = aNode(currentX,currentY-1)->distanceFromSource;
+        // bestDir = 'N';
+      // }
+      // if (aNode.isSafe(currentX,currentY+1) && aNode(currentX,currentY+1)->created
+        // && (aNode(currentX,currentY+1)->distanceFromSource<bestDistance || bestDistance==-1)) // SOUTH
+      // {
+        // currentNode = aNode(currentX,currentY+1);
+        // bestDistance = aNode(currentX,currentY+1)->distanceFromSource;
+        // bestDir = 'S';
+      // }
 
-      vPath.push(bestDir);
+      // vPath.push(bestDir);
       
-      currentX = currentNode->x;
-      currentY = currentNode->y;
+      // currentX = currentNode->x;
+      // currentY = currentNode->y;
       
-      if (bestDistance == 0)
-      {
-        return;
-      }
-    }
+      // if (bestDistance == 0)
+      // {
+        // return;
+      // }
+    // } std::cout<<"\n";
   }
 };
 

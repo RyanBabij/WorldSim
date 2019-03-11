@@ -660,5 +660,23 @@ class Item_Marker_Red: public Item
   }
 
 };
+  // Merker for debugging
+class Item_Marker_Green_Small: public Item
+{
+  public:
+  
+  Item_Marker_Green_Small()
+  {
+    
+  }
+  std::string getName() override { return "Debug Marker"; }
+
+  // Dummy function
+  Texture* currentTexture() override
+  {
+    return &TEX_MARKER_GREEN_SMALL;
+  }
+
+};
 
 #endif

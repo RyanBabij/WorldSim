@@ -27,6 +27,8 @@ void Creature_Deer::init(const int _sex  /*=0*/ )
   else { isMale = Random::flip(); }
   
 	age=0;
+  map=0;
+  knowledge = new Creature_Knowledge;
 
 }
 

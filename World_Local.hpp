@@ -91,11 +91,9 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   Vector <WorldObject*> vObjectGeneric;
 
   
-  
+    // Initialisation
 	World_Local();
-  
   virtual ~World_Local();
-	
 	void init(int /*x*/, int /*y*/);
   
     // Returns true if the coordinate is inside this map
@@ -129,6 +127,9 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
     bool erase (Item*);
     bool erase (Character*);
     bool erase (Creature*);
+  // Return true if the map has this object in it
+  bool contains(WorldObject*);
+    bool contains(Character*);
   
   
   bool moveObject (WorldObject* , int /* newX */, int /* newY */ );

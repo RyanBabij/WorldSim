@@ -127,8 +127,6 @@ bool World_Local::generate()
           baseTreeChance/=8;
           basePlantChance/=6;
         }
-        
-        
 
         aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
         aLocalTile(_x,_y).clearObjects();
@@ -176,6 +174,7 @@ bool World_Local::generate()
           aLocalTile(_x,_y).add(new WorldObject_Tree);
         }
         else if (random.oneIn(1000) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
+        //else if (random.oneIn(200))
         {
           auto deer = new Creature_Deer;
           deer->init();
@@ -234,7 +233,8 @@ bool World_Local::generate()
       //currentTribe->vCharacter(i2)->y=randY;
       
       put(currentTribe->vCharacter(i2),randX,randY);
-      vCharacter.push(currentTribe->vCharacter(i2));
+      //vCharacter.push(currentTribe->vCharacter(i2));
+      //std::cout<<"vChar size: "<<vCharacter.size()<<".\n";
       
       //aLocalTile(randX,randY).addObject(currentTribe->vCharacter(i2));
       //aLocalTile(Random::randInt(nX-1),Random::randInt(nY-1)).addObject(c);
@@ -715,7 +715,6 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
   //Yeah this is a mess.
 bool World_Local::moveObject (Character* _object, int newX, int newY )
 {
-  
   // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
   
   if ( aLocalTile.isSafe(newX,newY) == false )
@@ -967,38 +966,25 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
     }
   }
   
-  
-  //if ( aLocalTile(newX,newY).bW
-  
   aLocalTile(_object->x,_object->y).remove(_object);
-  
 
-
-
-
-  
   _object->x=newX;
   _object->y=newY;
   _object->worldX = globalX;
   _object->worldY = globalY;
-  
+
   aLocalTile(newX,newY).add(_object);
   
   _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
   _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-  //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
-  
-  //std::cout<<"World conversion:";
-  
+
   world(_object->fullX,_object->fullY);
-  
   
   int gX = 0;
   int gY = 0;
   int lX = 0;
   int lY = 0;
   world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-  //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
   return true;
 }
 
@@ -1195,7 +1181,23 @@ bool World_Local::erase (Creature* _creature )
   return false;
 }
 
+bool World_Local::contains(WorldObject* _target)
+{
+  if (vObjectGeneric.contains(_target))
+  {
+    return true;
+  } return false;
+}
+bool World_Local::contains(Character* _target)
+{
+  if (vCharacter.contains(_target))
+  {
+    return true;
+  } return false;
+}
+
     //Return a vector of coordinates visible from the given location.
+    // This raytrace stays within map boundaries.
 Vector <HasXY*> * World_Local::rayTraceLOS (int _x, int _y, const int RANGE)
 {
   if (RANGE <= 0) { return 0; }

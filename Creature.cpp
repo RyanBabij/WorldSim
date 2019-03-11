@@ -45,6 +45,7 @@ void Creature::init(const int _sex /* =0 */)
 	age=0;
   map=0;
 
+  knowledge = new Creature_Knowledge;
 }
 
 
@@ -80,11 +81,57 @@ void Creature::die()
 
 void Creature::wander()
 {
-  
   int newX = x;
   int newY = y;
+  char moveDirection = '?';
+  
+  if (map->contains(playerCharacter) && playerCharacter->distanceTo(this) < 10)
+  {
+    //std::cout<<"Pathing away from player\n";
+    Pathing_Local p;
+    p.init(map);
+    
+    //std::cout<<"Pathing away. Start: "<<x<<", "<<y<<".\n";
+    //std::cout<<"Target: "<<playerCharacter->x<<", "<<playerCharacter->y<<".\n";
+    p.pathLocal(x, y, playerCharacter->x, playerCharacter->y, 10, true);
+    
+    if (p.vPath.size() > 0)
+    {
+      //std::cout<<"Recommended direction: "<<p.vPath(0)<<".\n";
+      moveDirection=p.vPath(0);
+      //std::cout<<"Movedirection : "<<moveDirection<<"\n";
+    }
+    else
+    { //std::cout<<"Vpath is empty\n";
+    }
+  }
+  else
+  {
+  }
+  
   
   int direction = Random::randomInt(3);
+  
+  if ( moveDirection == 'E' )
+  {
+    //std::cout<<"E\n";
+    direction = 0;
+  }
+  else if (moveDirection == 'N')
+  {
+    //std::cout<<"N\n";
+    direction = 2;
+  }
+  else if (moveDirection == 'S')
+  {
+    //std::cout<<"S\n";
+    direction = 3;
+  }
+  else if (moveDirection == 'W')
+  {
+    //std::cout<<"W\n";
+    direction = 1;
+  }
   
   if ( direction==0 ) { ++newX; }
   else if ( direction==1 ) { --newX; }
@@ -105,6 +152,12 @@ void Creature::wander()
       map->aLocalTile(x,y).footprint = new Creature_Footprint;
     }
   }
+  else
+  {
+    //std::cout<<"Move not possible\n";
+  }
+  
+  updateKnowledge();
 
 }
 
@@ -122,22 +175,31 @@ void Creature::wander()
     if ( knowledge == 0 || map==0 ) { return; }
     
     //idleCounter=0;
-
+    
+    //std::cout<<"Creature updating knowledge\n";
 
     knowledge->addTile(map,x,y);
   
     
-    //Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(fullX,fullY,MAX_VIEW_RANGE/2);
+    Vector <HasXY *> * vVisibleTiles = map->rayTraceLOS(x,y,MAX_VIEW_RANGE/2);
     
-    // if ( vVisibleTiles!=0 )
-    // {
-      // for (int i=0; i<vVisibleTiles->size(); ++i)
+    if ( vVisibleTiles!=0 )
+    {
+      for (int i=0; i<vVisibleTiles->size(); ++i)
+      {
+        knowledge->addTile(map, (*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
+        delete (*vVisibleTiles)(i);
+      }
+
+      // if (map->contains(playerCharacter))
       // {
-        // //std::cout<<"ADDING\n";
-        // knowledge->addTile((*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
-        // delete (*vVisibleTiles)(i);
+        // std::cout<<"Player is on this map\n";
       // }
-    // }
+      // else
+      // { std::cout<<"Player is not on this map\n";
+      // }
+      
+    }
     
 
   }
