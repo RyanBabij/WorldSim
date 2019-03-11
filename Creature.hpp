@@ -41,6 +41,10 @@ class Creature: public WorldObject, public TableInterface
     //Creature's knowledge of the world (optional).
   Creature_Knowledge* knowledge;
 	
+    // INTERACTION
+    int nPelt; /* How many pelts you can harvest from the creature. */
+    int nMeat; /* How many meats you can harvest from the creature. */
+  
 
 		// INITIALIZATION
 	Creature();

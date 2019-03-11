@@ -323,6 +323,66 @@ void Item_Hand::interact(WorldObject* _target, int interactType /* =0 */)
     return vInteract;
   }
   
+  // KNIFE
+  
+    Vector <std::string>* Item_Knife::getInteractNames(Creature* _target)
+    {
+      if (_target==0) { return 0; }
+      
+      auto vInteract = new Vector <std::string>;
+      vInteract->push("Stab "+_target->getName());
+      
+      if ( _target->isAlive == false )
+      {
+        vInteract->push("Skin "+_target->getName());
+        vInteract->push("Butcher "+_target->getName());
+      }
+      
+      return vInteract;
+    }
+    
+    void Item_Knife::interact (Creature* _target, int interactionType /* =0 */)
+    {
+      if ( interactionType==0 && _target->isAlive==false )
+      {
+        Console("It's already dead mate");
+      }
+      if ( interactionType==0 && _target->isAlive )
+      {
+        Console("The deer frolics no more");
+        _target->isAlive=false;
+      }
+      if ( interactionType==1 )
+      {
+        if (_target->nPelt > 0)
+        {
+          _target->nPelt--;
+          auto _pelt = new Item_DeerPelt;
+          owner->giveItem(_pelt);
+        }
+        else
+        {
+          Console("No more pelts");
+        }
+      }
+      if ( interactionType==2 )
+      {
+        if (_target->nMeat > 0)
+        {
+          _target->nMeat--;
+          owner->giveItem(new Item_DeerMeat);
+        }
+        else
+        {
+          Console("No more meats");
+        }
+      }
+      
+
+
+
+    }
+    
   //Plank
   
 void Item_Plank::addToRecipeManager()

@@ -182,6 +182,9 @@ const std::string PATH_TEX_OBJECT_PLANK = "Textures/Object/Plank.png";
   
 Texture TEX_ITEM_SWORD;
 const std::string PATH_TEX_ITEM_SWORD = "Textures/Item/Sword.png";
+
+Texture TEX_ITEM_KNIFE;
+const std::string PATH_TEX_ITEM_KNIFE = "Textures/Item/Knife.png";
   
 Texture TEX_ITEM_LONGBOW;
 const std::string PATH_TEX_ITEM_LONGBOW = "Textures/Item/Longbow.png";
@@ -209,6 +212,11 @@ const std::string PATH_TEX_OBJECT_CAMPFIRE [5] = { "Textures/Object/Campfire-64-
 Texture TEX_ITEM_FOOD_COOKED_FISH;
 const std::string PATH_TEX_ITEM_FOOD_COOKED_FISH = "Textures/Item/Food/CookedFish.png";
 
+Texture TEX_ITEM_FOOD_STEAK_COOKED;
+const std::string PATH_TEX_ITEM_FOOD_STEAK_COOKED = "Textures/Item/Food/Steak-Cooked.png";
+
+Texture TEX_ITEM_FOOD_STEAK_RAW;
+const std::string PATH_TEX_ITEM_FOOD_STEAK_RAW = "Textures/Item/Food/Steak-Raw.png";
 
   // FLORA
   
@@ -388,6 +396,7 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   
   // ITEMS
   loadTextureVerbose(PATH_TEX_ITEM_SWORD,&TEX_ITEM_SWORD);
+  loadTextureVerbose(PATH_TEX_ITEM_KNIFE,&TEX_ITEM_KNIFE);
   loadTextureVerbose(PATH_TEX_ITEM_LONGBOW,&TEX_ITEM_LONGBOW);
   loadTextureVerbose(PATH_TEX_ITEM_FISHROD,&TEX_ITEM_FISHROD);
   loadTextureVerbose(PATH_TEX_ITEM_SHOVEL,&TEX_ITEM_SHOVEL);
@@ -403,6 +412,8 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   
   // FOOD
   loadTextureVerbose(PATH_TEX_ITEM_FOOD_COOKED_FISH,&TEX_ITEM_FOOD_COOKED_FISH);
+  loadTextureVerbose(PATH_TEX_ITEM_FOOD_STEAK_COOKED,&TEX_ITEM_FOOD_STEAK_COOKED);
+  loadTextureVerbose(PATH_TEX_ITEM_FOOD_STEAK_RAW,&TEX_ITEM_FOOD_STEAK_RAW);
   
   //Campfire-64-1.png
   

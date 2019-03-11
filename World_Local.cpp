@@ -156,6 +156,7 @@ bool World_Local::generate()
           put(new Item_Wall, _x, _y);
           put(new Item_Wall, _x, _y);
           put(new Item_PlantFibre, _x, _y);
+          put(new Item_Knife, _x, _y);
          
           
           

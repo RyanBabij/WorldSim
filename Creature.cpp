@@ -32,6 +32,9 @@ Creature::Creature()
   worldY = -1;
 	
   map=0;
+  
+  nPelt=0;
+  nMeat=0;
 }
 
   //_sex: 0 - Roll, 1 - Male, 2 - Female.

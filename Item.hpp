@@ -34,6 +34,8 @@ class Ammo
 class Character;
 class Recipe;
 
+class Creature;
+//class Creature_Deer;
 
 class Item: public WorldObject
 {
@@ -153,6 +155,7 @@ class Item: public WorldObject
     std::cout<<"Creature interact\n";
     //std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
   }
+  //virtual void interact (Creature_Deer*, int interactionType=0) {}
 
     // HOW LONG THIS TASK WILL TAKE. -1 MEANS YOU CAN'T DO IT. 0 MEANS NO TIME COST.
   virtual int interactTime(WorldObject* _w)
@@ -267,6 +270,32 @@ class Item_Sword: public Item
   Texture* currentTexture()
   {
     return &TEX_ITEM_SWORD;
+  }
+
+};
+
+class Item_Knife: public Item
+{
+  public:
+  
+  Item_Knife()
+  {
+    
+  }
+  std::string getName() { return "Knife"; }
+  
+  // virtual Vector <std::string>* getInteractNames(WorldObject* _w);
+    // virtual Vector <std::string>* getInteractNames(Item* _w);
+    // virtual Vector <std::string>* getInteractNames(Character* _w);
+    virtual Vector <std::string>* getInteractNames(Creature* _w);
+  // virtual Vector <std::string>* getInteractNames(LocalTile* _w);
+  
+  virtual void interact (Creature* obj, int interactionType=0);
+
+
+  Texture* currentTexture()
+  {
+    return &TEX_ITEM_KNIFE;
   }
 
 };
@@ -642,7 +671,44 @@ class Item_PlantFibre: public Item
   }
 };
 
-  // Merker for debugging
+  // DEER PELT
+class Item_DeerPelt: public Item
+{
+  public:
+  
+  Item_DeerPelt()
+  {
+  }
+  virtual ~Item_DeerPelt()
+  {
+  }
+  std::string getName() override { return "Deer Pelt"; }
+  
+  Texture* currentTexture() override
+  {
+    return &TEX_CREATURE_DEER;
+  }
+};
+  // DEER MEAT
+class Item_DeerMeat: public Item
+{
+  public:
+  
+  Item_DeerMeat()
+  {
+  }
+  virtual ~Item_DeerMeat()
+  {
+  }
+  std::string getName() override { return "Deer Meat"; }
+  
+  Texture* currentTexture() override
+  {
+    return &TEX_ITEM_FOOD_STEAK_RAW;
+  }
+};
+
+  // Marker for debugging
 class Item_Marker_Red: public Item
 {
   public:
@@ -660,7 +726,7 @@ class Item_Marker_Red: public Item
   }
 
 };
-  // Merker for debugging
+  // Marker for debugging
 class Item_Marker_Green_Small: public Item
 {
   public:

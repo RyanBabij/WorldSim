@@ -13,6 +13,8 @@
 
 Creature_Deer::Creature_Deer()
 {
+  nPelt=1;
+  nMeat=2;
 }
 Creature_Deer::~Creature_Deer()
 {
