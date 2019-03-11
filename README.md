@@ -35,7 +35,7 @@ Here's the world generator GUI right now:
 
 ![Screenshot of WorldGen](https://raw.githubusercontent.com/RyanBabij/WorldSim/master/doc/2018-06-26-Example01.png)
 
-It that doesn't look amazing to you then go play CoD or something.
+It doesn't look too pretty because it's basically just biome data. However each tile is it's own map which can be explored. The graphics are quite bad but if you've played DF or other roguelikes I think you'll have no problem here.
 
 ### Dependencies
 
