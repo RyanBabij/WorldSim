@@ -23,9 +23,11 @@ You can select a Character and then walk around the world with them. Currently t
 
 It's mostly just an experiment in procedurally generated worlds. I don't have plans to commercialise this project, but I would like to make a release at some point. I'm trying to get to a minimum viable product, but I have no idea when I'll get there. When I do, I'll release it as 0.1.
 
-I'm trying to make something on the scale of DF, but honestly it's quite different in the implementation. For a start my game is tile-based. Secondly the focus is on the Adventure Mode. Thirdly there's a huge emphasis on creating a "living world". Where possible, I am trying to simulate things happening off-screen. This is a much more complex goal than one might assume. Sure, you can run A* pathfinding for a thousand entities, but when you're trying to do it for millions, you start running into interesting problems. One of the few games I know that did it well is Falcon 4.0, and the programmer Kevin Klemmick said it was a hell of a job.
+I'm trying to make something on the scale of DF, but honestly it's quite different in the implementation. For a start my game implements a reasonably modern interface. None of this fixed-window, keyboard-only, ASCII business. Secondly the focus is on the Adventure Mode. Strategy elements are planned but will be optional. Thirdly the game tries to avoid unnecessary complexity. The game is hard enough to write without worrying about left and right socks.
 
-Anyway that's what I want to do. If the project goes well I would like it to be a kind of base which other developers could use to make their own worlds. The code is all there for people to mess around with. I mean, theoretically you could even swap out my 2D renderer for a 3D one, but I don't have the time or skill to do such a thing myself.
+Finally there's an emphasis on creating a "living world". Where possible, I am trying to simulate things happening off-screen. This is a much more complex goal than one might assume. Sure, you can run A* pathfinding for a thousand entities, but when you're trying to do it for millions, you start running into interesting problems. One of the few games I know that did it well is Falcon 4.0, and the programmer Kevin Klemmick said it was a hell of a job. Many developers talk about implementing such a thing but it never actually happens. I want to make it happen, even if only for a 2D tile-based game.
+
+If the project goes well I would like it to be a kind of base which other developers could use to make their own worlds. The code is all there for people to mess around with. I mean, theoretically you could even swap out my 2D renderer for a 3D one, but I don't have the time or skill to do such a thing myself.
 
 ### Sample Output
 
