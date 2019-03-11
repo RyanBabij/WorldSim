@@ -27,7 +27,7 @@ I'm trying to make something on the scale of DF, but honestly it's quite differe
 
 Finally there's an emphasis on creating a "living world". Where possible, I am trying to simulate things happening off-screen. This is a much more complex goal than one might assume. Sure, you can run A* pathfinding for a thousand entities, but when you're trying to do it for millions, you start running into interesting problems. One of the few games I know that did it well is Falcon 4.0, and the programmer Kevin Klemmick said it was a hell of a job. Many developers talk about implementing such a thing but it never actually happens. I want to make it happen, even if only for a 2D tile-based game.
 
-If the project goes well I would like it to be a kind of base which other developers could use to make their own worlds. The code is all there for people to mess around with. I mean, theoretically you could even swap out my 2D renderer for a 3D one, but I don't have the time or skill to do such a thing myself.
+If the project goes well I would like it to be a kind of base which other developers could use to make their own worlds. The code is all there for people to mess around with. I mean, theoretically you could even swap out my 2D renderer for a 3D one, but I don't have the time or skill to do such a thing myself. The algorithms are high-performance out of necessity, however I try to make the overall design fairly simple.
 
 ### Sample Output
 
@@ -35,7 +35,7 @@ Here's the world generator GUI right now:
 
 ![Screenshot of WorldGen](https://raw.githubusercontent.com/RyanBabij/WorldSim/master/doc/2018-06-26-Example01.png)
 
-It doesn't look too pretty because it's basically just biome data. However each tile is it's own map which can be explored. The graphics are quite bad but if you've played DF or other roguelikes I think you'll have no problem here.
+It doesn't look too pretty because it's basically just biome data. However each tile is its own map which can be explored. The graphics are quite bad but if you've played DF or other roguelikes I think you'll have no problem here.
 
 ### Dependencies
 
