@@ -77,6 +77,10 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   
   Vector <Item*> vInventory;
   
+  //INTERACTION
+    int nPelt;
+    int nMeat;
+  
   
   bool isSneaking;
   

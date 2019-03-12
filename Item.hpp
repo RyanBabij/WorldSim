@@ -286,11 +286,12 @@ class Item_Knife: public Item
   
   // virtual Vector <std::string>* getInteractNames(WorldObject* _w);
     // virtual Vector <std::string>* getInteractNames(Item* _w);
-    // virtual Vector <std::string>* getInteractNames(Character* _w);
+    virtual Vector <std::string>* getInteractNames(Character* _w);
     virtual Vector <std::string>* getInteractNames(Creature* _w);
   // virtual Vector <std::string>* getInteractNames(LocalTile* _w);
   
   virtual void interact (Creature* obj, int interactionType=0);
+  virtual void interact (Character* obj, int interactionType=0);
 
 
   Texture* currentTexture()
@@ -703,6 +704,47 @@ class Item_DeerMeat: public Item
   {
   }
   std::string getName() override { return "Deer Meat"; }
+  
+  
+  
+  Texture* currentTexture() override
+  {
+    return &TEX_ITEM_FOOD_STEAK_RAW;
+  }
+};
+
+  // HUMAN SKIN
+class Item_HumanSkin: public Item
+{
+  public:
+  
+  Item_HumanSkin()
+  {
+  }
+  virtual ~Item_HumanSkin()
+  {
+  }
+  std::string getName() override { return "Human skin"; }
+  
+  //virtual void addToRecipeManager() override;
+  
+  Texture* currentTexture() override
+  {
+    return &TEX_CRAFTING_LEATHER;
+  }
+};
+  // HUMAN MEAT
+class Item_HumanMeat: public Item
+{
+  public:
+  
+  Item_HumanMeat()
+  {
+  }
+  virtual ~Item_HumanMeat()
+  {
+  }
+  std::string getName() override { return "Human Meat"; }
   
   
   

@@ -78,6 +78,8 @@ Character::Character()
   skillFishing=0;
   skillMarksmanship=0;
 	
+  nPelt = 1;
+  nMeat = 1;
 	//enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, OLD_AGE=2 };
 	
 }
