@@ -776,6 +776,27 @@ class Item_LeatherClothes: public Item
   }
 };
 
+  // WATERSKIN
+class Item_Waterskin: public Item
+{
+  public:
+  
+  Item_Waterskin()
+  {
+  }
+  virtual ~Item_Waterskin()
+  {
+  }
+  std::string getName() override { return "Waterskin"; }
+  
+  
+  
+  Texture* currentTexture() override
+  {
+    return &TEX_ITEM_WATERSKIN;
+  }
+};
+
   // Marker for debugging
 class Item_Marker_Red: public Item
 {

@@ -81,6 +81,8 @@ Character::Character()
   nPelt = 1;
   nMeat = 1;
 	//enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, OLD_AGE=2 };
+  
+  map = 0;
 	
 }
 
@@ -233,6 +235,75 @@ void Character::incrementTicks(int nTicks)
 			// }
 		// }
 	}
+}
+
+void Character::wander()
+{
+  if ( map==0 ) { return; }
+  
+  int newX = x;
+  int newY = y;
+  char moveDirection = '?';
+  
+  // Character* closestThreat = 0;
+  // int threatDistance = 0;
+  
+  // // Get closest Character
+  // for (int i=0;i<map->vCharacter.size();++i)
+  // {
+    // if (closestThreat==0 || distanceTo(map->vCharacter(i)) < threatDistance)
+    // {
+      // closestThreat = map->vCharacter(i);
+      // threatDistance = distanceTo(map->vCharacter(i));
+    // }
+  // }
+
+
+  // if (closestThreat != 0 && threatDistance < 10 )
+  // {
+    // Pathing_Local p;
+    // p.init(map);
+    // p.pathLocal(x, y, closestThreat->x, closestThreat->y, 10, true);
+    
+    // if (p.vPath.size() > 0)
+    // {
+      // moveDirection=p.vPath(0);
+    // }
+
+  // }
+
+  int direction = Random::randomInt(3);
+  
+  if ( moveDirection == 'E' )
+  { direction = 0; }
+  else if (moveDirection == 'N')
+  { direction = 2; }
+  else if (moveDirection == 'S')
+  { direction = 3; }
+  else if (moveDirection == 'W')
+  { direction = 1; }
+  
+  if ( direction==0 ) { ++newX; }
+  else if ( direction==1 ) { --newX; }
+  else if ( direction==2 ) { ++newY; }
+  else { --newY; }
+  
+  if ( map->isSafe(newX,newY) && map->aLocalTile(newX,newY).hasMovementBlocker() == false )
+  {
+    map->remove(this);
+    if (map->put(this,newX,newY) == false)
+    {
+      map->put(this,x,y);
+    }
+    
+    if (Random::oneIn(10))
+    {
+      //delete map->aLocalTile(x,y).footprint;
+      //map->aLocalTile(x,y).footprint = new Creature_Footprint;
+    }
+  }
+  //updateKnowledge();
+
 }
 
 void Character::die(enumCauseOfDeath _causeOfDeath /* =UNKNOWN */)

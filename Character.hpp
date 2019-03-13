@@ -107,6 +107,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   
   enumCauseOfDeath causeOfDeath;
   
+  // All loaded Characters can get a link to their world.
+  World_Local* map;
   
     //Character's knowledge of the world (optional).
   Character_Knowledge* knowledge;
@@ -121,6 +123,9 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 		
 		*/
 	void incrementTicks(int = 1);
+  
+  // MOVE FUNCTIONS
+  virtual void wander();
 	
 	Texture* currentTexture ();
   

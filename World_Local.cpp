@@ -232,8 +232,9 @@ bool World_Local::generate()
 
       //currentTribe->vCharacter(i2)->x=randX;
       //currentTribe->vCharacter(i2)->y=randY;
-      
+      currentTribe->vCharacter(i2)->map=this;
       put(currentTribe->vCharacter(i2),randX,randY);
+      
       //vCharacter.push(currentTribe->vCharacter(i2));
       //std::cout<<"vChar size: "<<vCharacter.size()<<".\n";
       
@@ -1554,6 +1555,19 @@ void World_Local::incrementTicks(int nTicks)
     vToMove(i)->wander();
   }
 
+  
+  Vector <Character*> vToMove2;
+  for (int i=0;i<vCharacter.size();++i)
+  {
+    if (vCharacter(i)->isAlive && vCharacter(i) != playerCharacter)
+    {
+      vToMove2.push(vCharacter(i));
+    }
+  }
+  for (int i=0;i<vToMove2.size();++i)
+  {
+    vToMove2(i)->wander();
+  }
 }
 
 

@@ -193,6 +193,45 @@ class Recipe_LeatherClothes: public Recipe
 };
 Recipe_LeatherClothes recipeLeatherClothes;
 
+// Waterskin
+// 1 of any pelt
+class Recipe_Waterskin: public Recipe
+{
+  public:
+  
+  Vector <Item_DeerPelt*> vPelt;
+
+  virtual int canUse (Item_DeerPelt * _object) override /* return the amount of object needed. -1 means this object can't be used */
+  {
+    std::cout<<"Pelts\n";
+    return 1;
+  }
+  
+  virtual std::string getName() override
+  {
+    return "Waterskin";
+  }
+  
+  virtual void countUp(WorldObject* _object) override {}
+  virtual void countUp(Item* _item) override {}
+  virtual void countUp(Item_DeerPelt* _input) override
+  {
+    std::cout<<"Add pelt\n";
+    vPelt.push(_input);
+  }
+  
+  virtual int getTotal() override
+  {
+    std::cout<<"PELTS: "<<vPelt.size()<<"\n";
+    // 5 pelts to make clothes.
+    return vPelt.size();
+  }
+  
+  virtual void make(Character* _character) override;
+
+};
+Recipe_Waterskin recipeWaterskin;
+
 // Inventory manager can give 2 types of information. What recipes can be made with current items. And also what reciped
 // an item can be used in.
 class RecipeManager
@@ -234,6 +273,7 @@ class RecipeManager
   void addToRecipes(Item_DeerPelt* _item)
   {
     recipeLeatherClothes.countUp(_item);
+    recipeWaterskin.countUp(_item);
   }
   
   int getTotals()
@@ -241,6 +281,7 @@ class RecipeManager
     return recipeWall.getTotal();
     return recipeGrilledFish.getTotal();
     return recipeLeatherClothes.getTotal();
+    return recipeWaterskin.getTotal();
   }
   
   Vector <Recipe*> * getValidRecipes()
@@ -257,6 +298,10 @@ class RecipeManager
     if ( recipeLeatherClothes.getTotal() > 0 )
     {
       vValidList.push(&recipeLeatherClothes);
+    }
+    if ( recipeWaterskin.getTotal() > 0 )
+    {
+      vValidList.push(&recipeWaterskin);
     }
     return &vValidList;
   }

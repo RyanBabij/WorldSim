@@ -204,6 +204,9 @@ const std::string PATH_TEX_OBJECT_LOG = "Textures/Object/Log.png";
 Texture TEX_OBJECT_FISH;
 const std::string PATH_TEX_OBJECT_FISH = "Textures/Object/Fish-32.png";
 
+Texture TEX_ITEM_WATERSKIN;
+const std::string PATH_TEX_ITEM_WATERSKIN = "Textures/Item/Waterskin.png";
+
 Texture TEX_OBJECT_CAMPFIRE [5];
 const std::string PATH_TEX_OBJECT_CAMPFIRE [5] = { "Textures/Object/Campfire-64-1.png", "Textures/Object/Campfire-64-2.png", "Textures/Object/Campfire-64-3.png", "Textures/Object/Campfire-64-4.png", "Textures/Object/Campfire-64-5.png" };
 
@@ -409,6 +412,7 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   loadTextureVerbose(PATH_TEX_ITEM_AXE,&TEX_ITEM_AXE);
   loadTextureVerbose(PATH_TEX_OBJECT_LOG,&TEX_OBJECT_LOG);
   loadTextureVerbose(PATH_TEX_OBJECT_FISH,&TEX_OBJECT_FISH);
+  loadTextureVerbose(PATH_TEX_ITEM_WATERSKIN,&TEX_ITEM_WATERSKIN);
   
   for (int i=0;i<5;++i)
   {

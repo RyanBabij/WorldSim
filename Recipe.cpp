@@ -35,5 +35,11 @@ void Recipe_LeatherClothes::make(Character* _character)
   _character->giveItem(_output);
 }
 
+// LEATHER CLOTHES
+void Recipe_Waterskin::make(Character* _character)
+{
+  auto _output = new Item_Waterskin;
+  _character->giveItem(_output);
+}
 
 #endif
