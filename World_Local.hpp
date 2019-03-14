@@ -96,6 +96,9 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   virtual ~World_Local();
 	void init(int /*x*/, int /*y*/);
   
+  // Access
+  inline LocalTile* operator() (int _x, int _y);
+  
     // Returns true if the coordinate is inside this map
   bool isSafe(int /* x */, int /* y */);
   

@@ -16,7 +16,7 @@ class Creature_Knowledge
   //Vector <World_Local*> vMapsVisited;
   //Vector < ArrayS2 <char>* > vaTileVisited;
   
-  Vector <LocalTile*>* vVisibleTiles;
+  Vector <LocalTile*> vVisibleTiles;
 
 		/* INITIALIZATION */
 	Creature_Knowledge();
@@ -32,6 +32,8 @@ class Creature_Knowledge
   
   // Sets all 2 to 1 for LOS update.
   void updateLOS();
+  // Forget all knowledge
+  void clear();
 	
     //returns true if the Character can currently see this tile.
   //bool canSee( World_Local* /* _map */, int /* _x */, int /* _y */ );

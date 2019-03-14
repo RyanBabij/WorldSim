@@ -45,6 +45,15 @@ void World_Local::init(int _x, int _y)
   aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 }
 
+inline LocalTile* World_Local::operator() (int _x, int _y)
+{
+  if (isSafe(_x,_y))
+  {
+    return &aLocalTile(_x,_y);
+  }
+  return 0;
+}
+
     // Returns true if the coordinate is inside this map
 bool World_Local::isSafe(int _x, int _y)
 {

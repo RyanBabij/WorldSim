@@ -586,6 +586,10 @@ class Menu_AdventureMode: public GUI_Interface
     Renderer::placeColour4a(150,150,150,250,panelX1,panelY1+220,panelX1+220,panelY1+320);
     font8x8.drawText("Action Menu",panelX1,panelY1+220,panelX1+220,panelY1+320,true,true);
     
+    font8x8.drawText(DataTools::toString(worldViewer.hoveredXTile) + ", " + DataTools::toString(worldViewer.hoveredYTile),panelX1,panelY1+210,panelX1+220,panelY1+220,false,true);
+    font8x8.drawText(DataTools::toString(worldViewer.hoveredXTileLocal) + ", " + DataTools::toString(worldViewer.hoveredYTileLocal),panelX1,panelY1+200,panelX1+220,panelY1+210,false,true);
+    font8x8.drawText(DataTools::toString(worldViewer.hoveredAbsoluteX) + ", " + DataTools::toString(worldViewer.hoveredAbsoluteY),panelX1,panelY1+190,panelX1+220,panelY1+200,false,true);
+    
     if (playerCharacter->hunger > MAX_HUNGER - 100)
     {
       font8x8.drawText("HUNGRY",panelX1+230,panelY1+220,panelX1+400,panelY1+230,false,true,255,0,0);

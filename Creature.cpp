@@ -93,9 +93,21 @@ void Creature::wander()
   Character* closestThreat = 0;
   int threatDistance = 0;
   
+  if (knowledge!=0 && knowledge->hasSeen(map, playerCharacter->x, playerCharacter->y) )
+  {
+    //std::cout<<"Creature: "<<x<<", "<<y<<" can see player\n";
+  }
+  
   // Get closest Character
   for (int i=0;i<map->vCharacter.size();++i)
   {
+    Character* c = map->vCharacter(i);
+
+    if (knowledge!=0 && knowledge->hasSeen(map, c->x,c->y) )
+    {
+      //std::cout<<"Creature can see someone\n";
+    }
+
     if (closestThreat==0 || distanceTo(map->vCharacter(i)) < threatDistance)
     {
       closestThreat = map->vCharacter(i);
@@ -160,11 +172,11 @@ void Creature::wander()
   {
     if ( knowledge == 0 || map==0 ) { return; }
     
-    //idleCounter=0;
+    knowledge->clear();
     
     knowledge->addTile(map,x,y);
     
-    Vector <HasXY *> * vVisibleTiles = map->rayTraceLOS(x,y,MAX_VIEW_RANGE/2);
+    Vector <HasXY *> * vVisibleTiles = map->rayTraceLOS(x,y,MAX_VIEW_RANGE);
     
     if ( vVisibleTiles!=0 )
     {
