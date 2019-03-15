@@ -101,6 +101,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   
     // Returns true if the coordinate is inside this map
   bool isSafe(int /* x */, int /* y */);
+    bool isSafe(HasXY*);
   
 	
 	bool generate();
@@ -150,6 +151,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 //SEARCH FUNCTIONS
 
   Vector <Character*> * getAdjacentCharacters(int /* _x */, int /* _y */);
+  
+  HasXY* getRandomTile();
   
 // LINE OF SIGHT
     

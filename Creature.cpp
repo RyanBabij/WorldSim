@@ -49,6 +49,7 @@ void Creature::init(const int _sex /* =0 */)
   map=0;
 
   knowledge = new Creature_Knowledge;
+  knowledge->init();
 }
 
 
@@ -86,6 +87,8 @@ void Creature::wander()
 {
   if ( map==0 ) { return; }
   
+
+  
   int newX = x;
   int newY = y;
   char moveDirection = '?';
@@ -98,35 +101,84 @@ void Creature::wander()
     //std::cout<<"Creature: "<<x<<", "<<y<<" can see player\n";
   }
   
-  // Get closest Character
+  // Look for nearby Characters to run away from.
   for (int i=0;i<map->vCharacter.size();++i)
   {
     Character* c = map->vCharacter(i);
 
     if (knowledge!=0 && knowledge->hasSeen(map, c->x,c->y) )
     {
-      //std::cout<<"Creature can see someone\n";
+      if (closestThreat==0 || distanceTo(map->vCharacter(i)) < threatDistance)
+      {
+        closestThreat = map->vCharacter(i);
+        threatDistance = distanceTo(map->vCharacter(i));
+      }
     }
 
-    if (closestThreat==0 || distanceTo(map->vCharacter(i)) < threatDistance)
-    {
-      closestThreat = map->vCharacter(i);
-      threatDistance = distanceTo(map->vCharacter(i));
-    }
+
   }
 
-
-  if (closestThreat != 0 && threatDistance < 10 )
+  // Run away from threat if necessary
+  if (closestThreat != 0 && threatDistance < 2 )
   {
     Pathing_Local p;
     p.init(map);
     p.pathLocal(x, y, closestThreat->x, closestThreat->y, 10, true);
-    
+      
     if (p.vPath.size() > 0)
     {
       moveDirection=p.vPath(0);
     }
 
+  }
+  // Look for food or explore.
+  else
+  {
+
+    if (knowledge)
+    {
+        // PICK A DESTINATION IF NECESSARY
+      if (map->isSafe(&(knowledge->currentGoal))==false ||
+      (knowledge->currentGoal.x == x && knowledge->currentGoal.y ==y))
+      {
+        HasXY* randomDestination = map->getRandomTile();
+        
+        knowledge->currentGoal.set(randomDestination);
+        
+        Pathing_Local p;
+        p.init(map);
+        p.pathLocal(x, y, randomDestination->x, randomDestination->y, 10, false);
+            
+        if (p.vPath.size() > 0)
+        {
+          moveDirection=p.vPath(0);
+        }
+        else // Go somewhere else.
+        { knowledge->currentGoal.set(-1,-1);
+        }
+            
+        delete randomDestination;
+      }
+      else
+      {
+        Pathing_Local p;
+        p.init(map);
+        bool pathingSuccess = p.pathLocal(x, y, knowledge->currentGoal.x, knowledge->currentGoal.y, 10, false);
+        
+        if (pathingSuccess == false && p.vPath.size() < 9 )
+        { knowledge->currentGoal.set(-1,-1);
+        }
+        
+        
+        if (p.vPath.size() > 0)
+        {
+          moveDirection=p.vPath(0);
+        }
+        else { knowledge->currentGoal.set(-1,-1); }
+      }
+      std::cout<<"2 Deer is pathing to: "<<knowledge->currentGoal.x<<", "<<knowledge->currentGoal.y<<".\n";
+    }
+    
   }
 
   int direction = Random::randomInt(3);
@@ -173,6 +225,8 @@ void Creature::wander()
     if ( knowledge == 0 || map==0 ) { return; }
     
     knowledge->clear();
+    
+    knowledge->vVisitedTiles.pushUnique(new HasXY(x,y));
     
     knowledge->addTile(map,x,y);
     

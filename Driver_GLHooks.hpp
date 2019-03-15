@@ -391,14 +391,15 @@ void GL_idle()
 		if(frameRateTimer.totalUSeconds+frameLateness>=SLOW_FRAMERATE)
 		{
 				/* Adjust for late frames by a maximum of half of the time between frames. */
-			frameLateness = frameRateTimer.totalUSeconds-SLOW_FRAMERATE;
+			//frameLateness = frameRateTimer.totalUSeconds-SLOW_FRAMERATE;
 			if ( frameLateness > SLOW_FRAMERATE/2 )
 			{
-				frameLateness = SLOW_FRAMERATE/2;
+				//frameLateness = SLOW_FRAMERATE/2;
 			}
-			glutPostRedisplay();
-			frameRateTimer.init();
-			frameRateTimer.start();
+			//glutPostRedisplay();
+      GL_display();
+			//frameRateTimer.init();
+			//frameRateTimer.start();
 		}
 	}
 	else if(LIMIT_FRAMERATE==true)
@@ -407,14 +408,15 @@ void GL_idle()
 		if(frameRateTimer.totalUSeconds+frameLateness>=UFRAMERATE)
 		{
 				/* Adjust for late frames by a maximum of half of the time between frames. */
-			frameLateness = frameRateTimer.totalUSeconds-UFRAMERATE;
+			//frameLateness = frameRateTimer.totalUSeconds-UFRAMERATE;
 			if ( frameLateness > UFRAMERATE/2 )
 			{
-				frameLateness = UFRAMERATE/2;
+				//frameLateness = UFRAMERATE/2;
 			}
-			glutPostRedisplay();
-			frameRateTimer.init();
-			frameRateTimer.start();
+			//glutPostRedisplay();
+      GL_display();
+			//frameRateTimer.init();
+			//frameRateTimer.start();
 		}
 	}
 	else
@@ -484,35 +486,90 @@ void GL_display()
   if ( DONT_RENDER )
   { return; }
 
+  float frameTime = 0;
+  
+  if (OUTPUT_FRAMERATE)
+  {
+    frameRateTimer.update();
+    frameTime = frameRateTimer.fullSeconds;
+  }
+  
+  if (SLOW_FRAMERATE_ACTIVE)
+	{
+		frameRateTimer.update();
+    
+		if(frameRateTimer.totalUSeconds+frameLateness>=SLOW_FRAMERATE)
+		{
+				/* Adjust for late frames by a maximum of 1/4 of the time between frames. */
+			frameLateness = frameRateTimer.totalUSeconds-SLOW_FRAMERATE;
+			if ( frameLateness > SLOW_FRAMERATE/4 )
+			{
+				frameLateness = SLOW_FRAMERATE/4;
+			}
+			frameRateTimer.init();
+			frameRateTimer.start();
+		}
+	}
+  else if(LIMIT_FRAMERATE)
+	{
+		frameRateTimer.update();
+		if(frameRateTimer.totalUSeconds+frameLateness>=UFRAMERATE)
+		{
+				/* Adjust for late frames by a maximum of 1/4 of the time between frames. */
+			frameLateness = frameRateTimer.totalUSeconds-UFRAMERATE;
+			if ( frameLateness > UFRAMERATE/4 )
+			{
+				frameLateness = UFRAMERATE/4;
+			}
+			frameRateTimer.init();
+			frameRateTimer.start();
+		}
+    else
+    {
+      return;
+    }
+	}
+
+
+  
+
+
   if( OUTPUT_FRAMERATE )
   {
   
     /* Timer must be done like this because OpenGL threads shit which can hang the app but won't show up if the timer is checked directly after OpenGL calls. Maybe the framerate smoother could learn from this. */
-    debugTimer.update();
+    //debugTimer.update();
     //std::cout<<"Seconds per frame rolling average: "<<debugTimer.fullSeconds<<".\n";
     
-    aFrameTime[iFrameTime] = debugTimer.fullSeconds;
+    aFrameTime[iFrameTime] = frameTime;
     ++iFrameTime;
     if(iFrameTime==OUTPUT_FRAMERATE_SAMPLE_SIZE)
     {
-      double totalFrameTime = 0;
+      float totalFrameTime = 0;
       for (int i=0;i<OUTPUT_FRAMERATE_SAMPLE_SIZE;++i)
       {
         totalFrameTime+=aFrameTime[i];
       }
       totalFrameTime/=OUTPUT_FRAMERATE_SAMPLE_SIZE;
       std::cout<<"SPF: "<<totalFrameTime<<". ";
-      double frameRate = 1/totalFrameTime;
+      float frameRate = 1/totalFrameTime;
       std::cout<<"FPS: "<<frameRate<<".\n";
     
       iFrameTime=0;
     }
-    debugTimer.start();
+    //debugTimer.start();
     
   }
+  
+
+    
+  if(DOUBLE_BUFFERING==true)
+  { glutSwapBuffers(); }
+  else
+  { glFlush(); }
 
   glClear(GL_COLOR_BUFFER_BIT);
-  
+
     // NEW SYSTEM FOR MENU MANAGEMENT.
     // No more complicated hierarchies or menu managers. Just one global variable.
     // Submenus are still contained within their parent menu.
@@ -545,12 +602,9 @@ void GL_display()
     /* Render everything that wants to render. */
   displayInterfaceManager.renderAll();
     
-    
-  if(DOUBLE_BUFFERING==true)
-  { glutSwapBuffers(); }
-  else
-  { glFlush(); }
+
 }
+
 
 static void GL_mouseWheel (const int wheel, const int direction, const int _x, const int _y)
 {

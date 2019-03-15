@@ -59,6 +59,10 @@ bool World_Local::isSafe(int _x, int _y)
 {
   return aLocalTile.isSafe(_x,_y);
 }
+bool World_Local::isSafe(HasXY* xy)
+{
+  return aLocalTile.isSafe(xy);
+}
 
 bool World_Local::generate()
 {
@@ -1537,6 +1541,12 @@ Vector <Character*> * World_Local::getAdjacentCharacters(int _x, int _y)
   }
   
   return vNearbyCharacters;
+}
+
+HasXY* World_Local::getRandomTile()
+{
+  auto xy = new HasXY ( Random::randomInt(nX-1), Random::randomInt(nY-1) );
+  return xy;
 }
   
   

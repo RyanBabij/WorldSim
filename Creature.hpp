@@ -24,7 +24,7 @@ class Creature: public WorldObject, public TableInterface
 	public:
 
 	bool isMale;
-	int age; /* In years. (or days?) */
+	int age; /* In ticks */
 	int daysCounter; /* 0-360 */
 	int secondsCounter; /* 0 - 86,400 */
 	

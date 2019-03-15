@@ -8,6 +8,8 @@
   Creatures will be able to have some limited understanding of the world when they are loaded in.
 */
 
+#include <Interface/HasXY.hpp>
+
 class Creature_Knowledge
 {
 	public:
@@ -16,7 +18,12 @@ class Creature_Knowledge
   //Vector <World_Local*> vMapsVisited;
   //Vector < ArrayS2 <char>* > vaTileVisited;
   
+  Vector <HasXY*> vVisitedTiles; /* List of coordinates the Creature has stood on. */
+  
   Vector <LocalTile*> vVisibleTiles;
+  
+  HasXY currentGoal; /* Creatures can wander by moving toward a particular waypoint */
+
 
 		/* INITIALIZATION */
 	Creature_Knowledge();

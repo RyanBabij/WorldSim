@@ -31,6 +31,7 @@ void Creature_Deer::init(const int _sex  /*=0*/ )
 	age=0;
   map=0;
   knowledge = new Creature_Knowledge;
+  knowledge->init();
 
 }
 

@@ -97,6 +97,16 @@ class Pathing_Local
     finished=false;
     flipBest = false;
 	}
+  ~Pathing_Local()
+  {
+    for(int y=0;y<aNode.nY;++y)
+    {
+      for(int x=0;x<aNode.nX;++x)
+      {
+        delete aNode(x,y);
+      }
+    } 
+  }
 	
 	void init(World_Local* _map)
 	{
@@ -185,11 +195,19 @@ class Pathing_Local
     
     if (vPath.size() > 0 )
     {
+      for (int i=0;i<vNode.size();++i)
+      {
+        if (vNode(i)->x==tX && vNode(i)->y==tY)
+        {
+          std::cout<<"Has target\n";
+          return true;
+        }
+      }
       //std::cout<<"Final path:\n";
       //for (int i=0;i<vPath.size();++i) { std::cout<<vPath(i); } std::cout<<".\n";
-      return true;
+      //return true;
     }
-    //std::cout<<"No path found\n";
+    std::cout<<"No path found\n";
 
     return false;
   }

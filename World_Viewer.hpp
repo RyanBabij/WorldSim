@@ -25,6 +25,10 @@
   It is quite messy and uses only basic OpenGL techniques. In future it could probably
   be optimised to render much faster, for example using texture atlases, mipmapping
   vertex buffering and on-demand rendering.
+  
+  New plan: The WorldViewer is currently calculating what to render and rendering in a single call. I think this might
+  be a bad approach. What should really be happening is the World Viewer should use idle time to build an array of
+  textures to draw, plus calculating the coordinates. Then the render should only focus on rendering the array.
 	
 */
 
@@ -74,7 +78,7 @@ class RainManager
   
   RainManager() { }
   
-  void init (int _x1, int _y1, int _x2, int _y2, World* _world, int _maxRain=10000, double _rainPercentOfX=0.01)
+  void init (int _x1, int _y1, int _x2, int _y2, World* _world, int _maxRain=10000, double _rainPercentOfX=0.005)
   {
     x1=_x1;
     y1=_y1;
@@ -133,6 +137,10 @@ class WorldViewer: public DisplayInterface, public MouseInterface
   //RAIN
   RainManager rainManager;
   double localTileMantissa;
+  
+  // Here is what we should really be drawing, rather than deciding during the render call.
+  // Ideally this should also be running in a thread, locking when render is called.
+  ArrayS2 <Vector <Texture* > > aScene;
   
 	public:
 	
@@ -730,6 +738,15 @@ void switchTarget(World_Local* _worldLocal)
 		Renderer::restoreViewPort();
 		
 	}
+  
+    // This function should run in the background and basically constantly build and update the array of textures to render.
+    // We need code to build the world view, and code to build the local map view.
+    // We can start with just the global view because it's less complicated.
+    // The scene should not update more than once per frame. Otherwise we're going to be constantly loading and unloading
+    // arrays for nothing.
+  void updateScene()
+  {
+  }
 	
 	void render()
 	{
