@@ -87,19 +87,12 @@ void Creature::wander()
 {
   if ( map==0 ) { return; }
   
-
-  
   int newX = x;
   int newY = y;
   char moveDirection = '?';
   
   Character* closestThreat = 0;
   int threatDistance = 0;
-  
-  if (knowledge!=0 && knowledge->hasSeen(map, playerCharacter->x, playerCharacter->y) )
-  {
-    //std::cout<<"Creature: "<<x<<", "<<y<<" can see player\n";
-  }
   
   // Look for nearby Characters to run away from.
   for (int i=0;i<map->vCharacter.size();++i)
@@ -114,12 +107,10 @@ void Creature::wander()
         threatDistance = distanceTo(map->vCharacter(i));
       }
     }
-
-
   }
 
   // Run away from threat if necessary
-  if (closestThreat != 0 && threatDistance < 2 )
+  if (closestThreat != 0 && threatDistance < 5 )
   {
     Pathing_Local p;
     p.init(map);
@@ -176,7 +167,6 @@ void Creature::wander()
         }
         else { knowledge->currentGoal.set(-1,-1); }
       }
-      std::cout<<"2 Deer is pathing to: "<<knowledge->currentGoal.x<<", "<<knowledge->currentGoal.y<<".\n";
     }
     
   }

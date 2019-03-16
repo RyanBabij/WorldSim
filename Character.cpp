@@ -135,6 +135,9 @@ void Character::init(const int _sex /* =0 */)
   isSneaking=false;
 	
 	dateOfBirth.set(world.calendar);
+  
+  //knowledge = new Character_Knowledge;
+  //knowledge->init();
 }
 
   //ITEM FUNCTIONS
@@ -245,32 +248,51 @@ void Character::wander()
   int newY = y;
   char moveDirection = '?';
   
-  // Character* closestThreat = 0;
-  // int threatDistance = 0;
   
-  // // Get closest Character
-  // for (int i=0;i<map->vCharacter.size();++i)
-  // {
-    // if (closestThreat==0 || distanceTo(map->vCharacter(i)) < threatDistance)
-    // {
-      // closestThreat = map->vCharacter(i);
-      // threatDistance = distanceTo(map->vCharacter(i));
-    // }
-  // }
-
-
-  // if (closestThreat != 0 && threatDistance < 10 )
-  // {
-    // Pathing_Local p;
-    // p.init(map);
-    // p.pathLocal(x, y, closestThreat->x, closestThreat->y, 10, true);
-    
-    // if (p.vPath.size() > 0)
-    // {
-      // moveDirection=p.vPath(0);
-    // }
-
-  // }
+  
+  if (knowledge)
+  {
+      // PICK A DESTINATION IF NECESSARY
+    if (map->isSafe(&(knowledge->currentGoal))==false ||
+    (knowledge->currentGoal.x == x && knowledge->currentGoal.y ==y))
+    {
+      HasXY* randomDestination = map->getRandomTile();
+      
+      knowledge->currentGoal.set(randomDestination);
+      
+      Pathing_Local p;
+      p.init(map);
+      p.pathLocal(x, y, randomDestination->x, randomDestination->y, 10, false);
+          
+      if (p.vPath.size() > 0)
+      {
+        moveDirection=p.vPath(0);
+      }
+      else // Go somewhere else.
+      { knowledge->currentGoal.set(-1,-1);
+      }
+          
+      delete randomDestination;
+    }
+    else
+    {
+      Pathing_Local p;
+      p.init(map);
+      bool pathingSuccess = p.pathLocal(x, y, knowledge->currentGoal.x, knowledge->currentGoal.y, 10, false);
+      
+      if (pathingSuccess == false && p.vPath.size() < 9 )
+      { knowledge->currentGoal.set(-1,-1);
+      }
+      
+      
+      if (p.vPath.size() > 0)
+      {
+        moveDirection=p.vPath(0);
+      }
+      else { knowledge->currentGoal.set(-1,-1); }
+    }
+  }
+  else { std::cout<<"noknow\n"; }
 
   int direction = Random::randomInt(3);
   
@@ -569,7 +591,9 @@ void Character::initialiseKnowledge()
 {
   if ( knowledge == 0 )
   {
+    std::cout<<"INIT\n";
     knowledge = new Character_Knowledge;
+    knowledge->init();
     
     if ( tribe != 0 )
     {

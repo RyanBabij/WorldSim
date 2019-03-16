@@ -17,6 +17,8 @@ class Character_Knowledge
   Vector <World_Local*> vMapsVisited;
   Vector < ArrayS2 <char>* > vaTileVisited;
   
+  HasXY currentGoal; /* Characters can wander by moving toward a particular waypoint */
+  
 
 		/* INITIALIZATION */
 	Character_Knowledge();

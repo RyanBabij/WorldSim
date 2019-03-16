@@ -17,6 +17,7 @@ Character_Knowledge::Character_Knowledge()
 
 void Character_Knowledge::init()
 {
+  currentGoal.set(-1,-1);
 }
 
   // Adds the tile to the Character's knowledge.

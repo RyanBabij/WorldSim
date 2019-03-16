@@ -247,7 +247,7 @@ bool World_Local::generate()
       //currentTribe->vCharacter(i2)->y=randY;
       currentTribe->vCharacter(i2)->map=this;
       put(currentTribe->vCharacter(i2),randX,randY);
-      
+      currentTribe->vCharacter(i2)->initialiseKnowledge();
       //vCharacter.push(currentTribe->vCharacter(i2));
       //std::cout<<"vChar size: "<<vCharacter.size()<<".\n";
       
