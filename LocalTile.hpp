@@ -19,10 +19,12 @@ A tile is 5km by 5km, ie, 5,000 * 5000 tiles. */
 //class Tribe;
 //#include "Tribe.hpp"
 
-class Item;
-class Creature;
-class Creature_Footprint;
-class Character;
+class WorldObject;
+  class Item;
+  class Creature;
+  class Creature_Footprint;
+  class Character;
+
 
 class LocalTile: public HasTexture
 {

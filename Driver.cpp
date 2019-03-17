@@ -172,7 +172,6 @@ World world;
 #include "World_Local.cpp"
 World_Local * worldLocal;
 
-#include "WorldTile.cpp"
 #include "LocalTile.cpp"
 	
 #include "Creature.cpp"

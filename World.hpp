@@ -32,12 +32,13 @@ class Tribe_Human;
 class Tribe_Dwarven;
 class Tribe_Elf;
 
-#include "WorldTile.hpp"
 #include "LocalTile.hpp"
 
 #include "GuildCalendar.hpp"
 
-class World_Local;
+//class World_Local;
+
+#include "World_Local.hpp"
 
 class WorldObjectGlobal;
 
@@ -139,7 +140,14 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	
 	
 		// All tile-specific info is to go here. Data access with array syntax eg world(x,y).biomeID;
-	ArrayS2 <WorldTile> aWorldTile;
+	//ArrayS2 <WorldTile> aWorldTile;
+    // A vector of all local maps in memory. These worlds can be rendered and simulated.
+    // This array also replaces WorldTile
+  ArrayS2 <World_Local> aWorldTile;
+  Vector <World_Local*> vWorldLocal;
+  
+  
+  // All of these should be ported into aWorldTile.
 	ArrayS2 <int> aSeed;
 	ArrayS2 <int> aLandmassID;
 	ArrayS2 <bool> aIsLand;
@@ -147,8 +155,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
   ArrayS2 <int> aRiverID; /* Contains the river ID */
   
   
-    // A vector of all local maps in memory. These worlds can be rendered and simulated.
-  Vector <World_Local*> vWorldLocal;
+
   
 
 	
@@ -271,7 +278,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
   
    /* Return a pointer to the WorldTile at the coordinates.
     Return null pointer if fail */
-  WorldTile * getTile (const int /* x */, const int /* y */ );
+  World_Local * getTile (const int /* x */, const int /* y */ );
 		/* Return the fertility value of the tile. */
 	int getTileFertility(const int /* x */, const int /* y */);
 		int getTileFertility(const HasXY* /* xy */);

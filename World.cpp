@@ -1021,7 +1021,7 @@ void World::buildArrays()
 			aSeed(_x,_y) = random.randInt(PORTABLE_INT_MAX-1);
 
         //Initialise the WorldTile with biome enum.
-      aWorldTile(_x,_y).init(aTerrain(_x,_y), aSeed(_x,_y),aRiverID(_x,_y));
+      aWorldTile(_x,_y).init(_x,_y,aTerrain(_x,_y), aSeed(_x,_y),aRiverID(_x,_y));
         //Initialise the subterranean tiles
 			
 			int _red;
@@ -1588,15 +1588,6 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   tvAllTiles2.join();
 	
 
-  
-  
-
-
-  
-
-
-	
-	
 	//Vector < Vector <HasXY* >* > vAllTiles;
   
   
@@ -1632,6 +1623,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 //This makes the local map visible.
 void World::generateLocal(const int _localX, const int _localY)
 {
+  std::cout<<"GENERATE LOCAL 2\n";
   if ( isSafe(_localX,_localY) == false )
   { return; }
 
@@ -1645,11 +1637,11 @@ void World::generateLocal(const int _localX, const int _localY)
     }
   }
 
-  auto worldLocal = new World_Local;
-  worldLocal->init(_localX,_localY);
-  worldLocal->generate();
+  //auto worldLocal = new World_Local;
+  //worldLocal->init(_localX,_localY);
+  aWorldTile(_localX,_localY).generate();
   
-  vWorldLocal.push(worldLocal);
+  vWorldLocal.push(&aWorldTile(_localX,_localY));
   
   //There needs to be a minimum of 3 maps active at any time. (1 map the player is currently in,
     // and potentially three neighboring maps. Additional maps will likely need to be loaded in
@@ -2250,7 +2242,7 @@ Tribe* World::combatCheck (Tribe* _tribe)
   return 0;
 }
 	
-WorldTile * World::getTile (const int x, const int y )
+World_Local * World::getTile (const int x, const int y )
 {
   if (isSafe(x,y) )
   { return &aWorldTile(x,y); }

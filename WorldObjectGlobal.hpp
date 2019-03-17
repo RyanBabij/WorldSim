@@ -6,7 +6,7 @@
 	#include "WorldObjectGlobal.hpp"
 
 	Description:
-	Interface for objects which have a presence on the world map.
+	Interface for objects which have a presence on the world map. Stuff like Armies, Tribes, Cities, etc.
 
 */
 

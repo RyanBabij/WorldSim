@@ -34,8 +34,10 @@
 
   /* Raindrops that are rendered over screen to indicate rain.
   Should start at top of screen and travel down. Should not render on sheltered tiles */
-  
+
+#include "WorldObjectGlobal.hpp"
 #include "Creature.hpp"
+#include "Tribe.hpp"
   
 class RainDrop
 {
@@ -750,7 +752,6 @@ void switchTarget(World_Local* _worldLocal)
 	
 	void render()
 	{
-		
 		if (active == false)
 		{ return; }
 		if(world==0)
@@ -1356,7 +1357,7 @@ void switchTarget(World_Local* _worldLocal)
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_MOUNTAIN_00, false);
               glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 						}
-            if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aRiverID(tileX,tileY) == 1)
+            if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aRiverID(tileX,tileY) != -1)
 						{
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_01, false);
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_RIVER_EAST, false);

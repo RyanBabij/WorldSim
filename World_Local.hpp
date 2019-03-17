@@ -28,6 +28,12 @@
   
   World_Local should have a custom texture allowing a kind of thumbnail view of the tile.
   
+  
+  
+  
+  World_Local has 2 types of data. The first is essential data needed for the world view. This is always initialised.
+  The second type of data is only generated when necessary. It's basically in-depth data about the tile used for local view.
+  
 
 */
 
@@ -37,6 +43,10 @@ class Creature;
 
 class Item;
 
+
+//Wew this uses a lot of RAM
+RandomNonStatic random;
+
 class World_Local: public LogicTickInterface, public IdleTickInterface
 {
 	private:
@@ -44,13 +54,61 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   
 	public:
   
-	int globalX, globalY; /* The local world's position in the world. */
+    //WORLD DATA
+  short int globalX, globalY; /* The local world's position in the world. */
+  
+    // How many metals may be mined from this tile.
+  short int baseMetal;
+	
+	// texture pointer
+	
+	enumBiome biome; /* Determines what it looks like and is called */
+	short int baseMoveCost; /* how many ap to move onto the tile. */
+	bool canHaveSettlement;
+	short int baseFertility;
+	bool canMove; /* True if units can walk over it. */
+	char baseLogisticsCost; /* Will consume logistics from armies and navies. Used to prevent armies from travelling through desert, and early navies from travelling through ocean. */
+	char defensiveBonus;
+	
+		// The id of the landmass.
+	short int landID;
+		// The id of the biome.
+  short int biomeID;
+  
+  short int hasRiver; /* In future will be expanded to have more detailed info about river direction etc */
+  
+  // Keeps track of influence values for each tribe.
+  std::map<Tribe*,int> mInfluence;
+  
+    //Return a string with the name of the terrain.
+  std::string getTerrainName();
+  
+    //Add influence from the particular tribe for this tile. 
+  void addInfluence (Tribe* tribe, int amount);
+    //Remove influence from the particular tribe for this tile. 
+  void removeInfluence (Tribe* tribe, int amount);
+    //Lower all influence by a certain amount.
+  void degradeInfluence (int amount);
+    //Erase the influence entry of this tribe.
+  void destroyInfluence (Tribe* tribe);
+  
+    // Return the tribe with the greatest influence on the tile.
+  Tribe* getDominantInfluence ();
+    // Return the value of the greatest influence on the tile.
+  int getDominantInfluenceValue ();
+	
+		// This returns the base texture.
+	virtual Texture* currentTexture();
+	
 
+  
+  // LOCAL MAP DATA
+  
   // Local RNG
-  RandomNonStatic random;
+  //RandomNonStatic random;
 	
 		/* The size of the world, measured in tiles. */
-	int nX, nY;
+	short int nX, nY;
 	
     // The generation seed for this local map.
   int seed;
@@ -90,13 +148,13 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   // Vector of all non-categorised objects on this map.
   Vector <WorldObject*> vObjectGeneric;
   
-  bool hasRiver; /* For now just a basic bool. In future it will need to define the river sides. */
+  //bool hasRiver; /* For now just a basic bool. In future it will need to define the river sides. */
 
   
     // Initialisation
 	World_Local();
   virtual ~World_Local();
-	void init(int /*x*/, int /*y*/);
+	void init(const int _globalX, const int _globalY, const enumBiome _biomeID, const int _seed /*=0*/, const int _hasRiver /*=-1*/);
   
   // Access
   inline LocalTile* operator() (int _x, int _y);

@@ -1,13 +1,3 @@
-*.exe
-*.bat
-*.txt
-*.png
-*.dat
-*.jpg
-*.xcf
-*.yml
-*.txt
-*.rc
-*.res
-*.ico
-*.bmp
+!*.hpp !*.cpp
+#ignore all subdirectories
+**

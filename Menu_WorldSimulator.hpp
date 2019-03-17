@@ -257,7 +257,7 @@ class Menu_WorldSimulator: public GUI_Interface
     
     if (world.queryWorldX != -1 && world.queryWorldY != -1)
     {
-      WorldTile * tile = world.getTile(world.queryWorldX,world.queryWorldY);
+      World_Local * tile = world.getTile(world.queryWorldX,world.queryWorldY);
       
       if ( tile != 0 )
       {
