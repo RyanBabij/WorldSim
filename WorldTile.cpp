@@ -103,10 +103,11 @@ int WorldTile::getDominantInfluenceValue ()
 }
 
 
-void WorldTile::init(enumBiome _biomeID, int _seed = 0)
+void WorldTile::init(enumBiome _biomeID, int _seed = 0, bool _hasRiver=false)
 {
   biome = _biomeID;
   seed = _seed;
+  hasRiver = _hasRiver;
     
   switch(_biomeID) {
     case NOTHING:

@@ -30,6 +30,7 @@ World_Local::World_Local()
 	nY=LOCAL_MAP_SIZE;
 	active=false;
 	generated=false;
+  hasRiver=false;
 }
 
 World_Local::~World_Local()
@@ -129,6 +130,13 @@ bool World_Local::generate()
       
       if ( baseBiome != OCEAN )
       {
+        
+        //Put down some water for drinking
+        if (Random::oneIn(200))
+        {
+          aLocalTile(_x,_y).baseTerrain = OCEAN;
+          continue;
+        }
       
         int baseTreeChance = 30;
         int basePlantChance = 20;

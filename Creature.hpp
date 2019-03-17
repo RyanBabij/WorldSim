@@ -33,7 +33,11 @@ class Creature: public WorldObject, public TableInterface
 	bool isAlive;
 	
 	int health;
+  
+    // Creatures also need to eat and drink.
+    // However herbivores can eat grass.
 	int hunger;
+  int thirst;
 	
   // All loaded creatures can get a link to their world.
   World_Local* map;

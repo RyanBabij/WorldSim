@@ -89,6 +89,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   Vector <Item*> vItem;
   // Vector of all non-categorised objects on this map.
   Vector <WorldObject*> vObjectGeneric;
+  
+  bool hasRiver; /* For now just a basic bool. In future it will need to define the river sides. */
 
   
     // Initialisation

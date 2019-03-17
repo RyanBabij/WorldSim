@@ -1222,14 +1222,17 @@ void switchTarget(World_Local* _worldLocal)
 							// //Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, world->aWorldTile(tileX,tileY).currentTexture(), false);
 						// }
             
+
             
-				
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY))
+            
+              // DRAW BASE TERRAIN (BIOME)
+            
+						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == DESERT)
 						{
-							// //Renderer::pair
-							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
-							
-							
+							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_00, false);
+						}
+						else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY))
+						{
 							if (world->aSeed(tileX,tileY) % 4 == 0)
 							{
                 glColor4f(2.0f, 2.0f, 2.0f, 1.0f);
@@ -1248,64 +1251,66 @@ void switchTarget(World_Local* _worldLocal)
 							{
 								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_03, false);
 							}
+              
+                // THIS CODE DRAWS COASTLINES. IT IS IMCOMPLETE AND UGLY.
 							
-							if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false )
-							{
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_00, false);
-							}
-							if ( world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false )
-							{
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_02, false);
-							}
-							if ( world->isSafe(tileX,tileY+1) && world->isLand(tileX,tileY+1) ==false )
-							{
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_03, false);
-							}
-							if ( world->isSafe(tileX,tileY-1) && world->isLand(tileX,tileY-1) ==false )
-							{
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_01, false);
-							}
+							// if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false )
+							// {
+								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_00, false);
+							// }
+							// if ( world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false )
+							// {
+								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_02, false);
+							// }
+							// if ( world->isSafe(tileX,tileY+1) && world->isLand(tileX,tileY+1) ==false )
+							// {
+								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_03, false);
+							// }
+							// if ( world->isSafe(tileX,tileY-1) && world->isLand(tileX,tileY-1) ==false )
+							// {
+								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_01, false);
+							// }
 							
-							if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false
-							&& world->isSafe(tileX,tileY+1) && world->isLand(tileX,tileY+1) ==false)
-							{
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_CORNER_00, false);
-							}
-							if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false
-							&& world->isSafe(tileX,tileY-1) && world->isLand(tileX,tileY-1) ==false)
-							{
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_CORNER_01, false);
-							}
-							if ( world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false
-							&& world->isSafe(tileX,tileY+1) && world->isLand(tileX,tileY+1) ==false)
-							{
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_CORNER_03, false);
-							}
-							if ( world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false
-							&& world->isSafe(tileX,tileY-1) && world->isLand(tileX,tileY-1) ==false)
-							{
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_CORNER_02, false);
-							}
+							// if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false
+							// && world->isSafe(tileX,tileY+1) && world->isLand(tileX,tileY+1) ==false)
+							// {
+								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_CORNER_00, false);
+							// }
+							// if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false
+							// && world->isSafe(tileX,tileY-1) && world->isLand(tileX,tileY-1) ==false)
+							// {
+								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_CORNER_01, false);
+							// }
+							// if ( world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false
+							// && world->isSafe(tileX,tileY+1) && world->isLand(tileX,tileY+1) ==false)
+							// {
+								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_CORNER_03, false);
+							// }
+							// if ( world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false
+							// && world->isSafe(tileX,tileY-1) && world->isLand(tileX,tileY-1) ==false)
+							// {
+								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_CORNER_02, false);
+							// }
 							
-							if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false
-							&& world->isSafe(tileX,tileY+1) && world->isLand(tileX,tileY+1) ==false
-							&& world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false )
-							{
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_PENINSULA_00, false);
-							}
+							// if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false
+							// && world->isSafe(tileX,tileY+1) && world->isLand(tileX,tileY+1) ==false
+							// && world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false )
+							// {
+								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_PENINSULA_00, false);
+							// }
 							
-							if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false
-							&& world->isSafe(tileX,tileY-1) && world->isLand(tileX,tileY-1) ==false
-							&& world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false )
-							{
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_PENINSULA_02, false);
-							}
+							// if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false
+							// && world->isSafe(tileX,tileY-1) && world->isLand(tileX,tileY-1) ==false
+							// && world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false )
+							// {
+								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_PENINSULA_02, false);
+							// }
 
 
 							
 							if ( world->aSeed(tileX,tileY) % 20 == 0 )
 							{
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_ALCHEMY, false);
+								//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_ALCHEMY, false);
 							}
 							// glVertex2s(currentX,currentY);
 							// glVertex2s(currentX,currentY+tileSize);
@@ -1336,11 +1341,14 @@ void switchTarget(World_Local* _worldLocal)
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
 						}
 						
+
+              // DRAW IMPROVEMENTS (FOREST, RIVER)
+              // Improvements can layer over base terrain, and each other. For example a tile may have a river and forest.
+            
 						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == FOREST)
 						{
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_FOREST_TREES, false);
 						}
-						
 						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == MOUNTAIN)
 						{
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
@@ -1348,14 +1356,11 @@ void switchTarget(World_Local* _worldLocal)
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_MOUNTAIN_00, false);
               glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 						}
-
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == DESERT)
+            if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aRiverID(tileX,tileY) == 1)
 						{
-							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_00, false);
-						}
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == DESERT)
-						{
-							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_01, false);
+							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_01, false);
+							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_RIVER_EAST, false);
+							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_RIVER_FULL, false);
 						}
 						
 						

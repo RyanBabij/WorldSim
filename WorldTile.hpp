@@ -12,6 +12,9 @@ A tile is 5km by 5km, ie, 5,000 * 5000 tiles. */
 
 // In the future we might have polymorphic classes to distinguish simulated tiles from abstract tiles. However for now it's not a major concern as the world map should need less than 100MB of RAM.
 
+// WORLDTILE AND WORLD_LOCAL SHOULD BE MERGED BECAUSE THEY'RE HANDLING THE SAME THING
+
+
 #include <Interface/HasTexture.hpp>
 
 #include <WorldGenerator/Biome.hpp>
@@ -46,6 +49,8 @@ class WorldTile: public HasTexture
 		// The id of the biome.
   int biomeID;
   
+  bool hasRiver; /* In future will be expanded to have more detailed info about river direction etc */
+  
   // Keeps track of influence values for each tribe.
   std::map<Tribe*,int> mInfluence;
   
@@ -66,7 +71,7 @@ class WorldTile: public HasTexture
     // Return the value of the greatest influence on the tile.
   int getDominantInfluenceValue ();
   
-  void init(enumBiome _biomeID, int /* seed */);
+  void init(enumBiome _biomeID, int /* seed */, bool /* hasRiver */);
 	
 		// This returns the base texture.
 	virtual Texture* currentTexture();

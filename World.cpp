@@ -1021,7 +1021,7 @@ void World::buildArrays()
 			aSeed(_x,_y) = random.randInt(PORTABLE_INT_MAX-1);
 
         //Initialise the WorldTile with biome enum.
-      aWorldTile(_x,_y).init(aTerrain(_x,_y), aSeed(_x,_y));
+      aWorldTile(_x,_y).init(aTerrain(_x,_y), aSeed(_x,_y),aRiverID(_x,_y));
         //Initialise the subterranean tiles
 			
 			int _red;
@@ -1299,6 +1299,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	
 		// We could remove this later by using a pointer.
 	aTerrain = wg.aTerrainType;
+  aRiverID = wg.aRiverMap;
 	
 	buildArrays(); 
 

@@ -144,6 +144,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	ArrayS2 <int> aLandmassID;
 	ArrayS2 <bool> aIsLand;
 	ArrayS2 <int> aBiomeID;
+  ArrayS2 <int> aRiverID; /* Contains the river ID */
   
   
     // A vector of all local maps in memory. These worlds can be rendered and simulated.
