@@ -47,12 +47,47 @@ class Item;
 //Wew this uses a lot of RAM
 RandomNonStatic random;
 
+
+
+
 class World_Local: public LogicTickInterface, public IdleTickInterface
 {
 	private:
+  
+  // Data stores all data which is only present in generated maps.
+  // This is done to keep memory footprint low, because million of maps are generated on large worlds.
+  // This basically combines all pointers to these arrays into a single pointer.
+  struct Data
+  {
+      // /* LOCAL MAP ARRAYS */
+    ArrayS2 <LocalTile> aLocalTile; // Array of all tiles on map.
+    ArrayS2 <LocalTile> aSubterranean;  // Array of underground layer. Used for caves, tunnels, mines.
+    
+    // Vector of all tile coordinates.
+    // This is used to do things like loop through every coordinate once in random order
+    // (using shuffle).
+    // This should be a static function.
+    //Vector <HasXY*> vAllTiles;
+
+    // // Lists of all objects of type on this map.
+    // // Useful for counting or looping through each object of type.
+    // // Vector of all Creatures on this map
+    // Vector <Creature*> vCreature;
+    // //Vector of all Characters on this map
+    // Vector <Character*> vCharacter;
+    // //Vector of all Items on this map
+    // Vector <Item*> vItem;
+    // // // Vector of all non-categorised objects on this map.
+    // Vector <WorldObject*> vObjectGeneric;
+      
+  };
 	
+  // Keeps track of influence values for each tribe.
+  std::map<Tribe*,int> mInfluence;
   
 	public:
+  
+  Data * data;
   
     //WORLD DATA
   short int globalX, globalY; /* The local world's position in the world. */
@@ -63,12 +98,12 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	// texture pointer
 	
 	enumBiome biome; /* Determines what it looks like and is called */
-	short int baseMoveCost; /* how many ap to move onto the tile. */
-	bool canHaveSettlement;
+	//short int baseMoveCost; /* how many ap to move onto the tile. */
+	//bool canHaveSettlement;
 	short int baseFertility;
 	bool canMove; /* True if units can walk over it. */
-	char baseLogisticsCost; /* Will consume logistics from armies and navies. Used to prevent armies from travelling through desert, and early navies from travelling through ocean. */
-	char defensiveBonus;
+	//char baseLogisticsCost; /* Will consume logistics from armies and navies. Used to prevent armies from travelling through desert, and early navies from travelling through ocean. */
+	//char defensiveBonus;
 	
 		// The id of the landmass.
 	short int landID;
@@ -76,9 +111,9 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   short int biomeID;
   
   short int hasRiver; /* In future will be expanded to have more detailed info about river direction etc */
+  char riverConnections; // NW N NE E SE S SW W. There should be at least 2.
   
-  // Keeps track of influence values for each tribe.
-  std::map<Tribe*,int> mInfluence;
+
   
     //Return a string with the name of the terrain.
   std::string getTerrainName();
@@ -112,30 +147,30 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	
     // The generation seed for this local map.
   int seed;
-  
 	bool active; /* Whether or not the world should be simulated. */
 	bool generated; /* False until a world has been generated. Prevents trying to simulate a non-existent world. */
 	
 	long long unsigned int ticksBacklog; /* World will simulate these ticks whenever it can, while still relinquishing for input etc. */
-	//Timer relinquishTimer;
-	
-	//RandomNonStatic random;
 
     //The base designated biome for this tile. Will influence generation.
   enumBiome baseBiome;
 	
     // This should be moved into LocalTile.
-	ArrayS2 <bool> aIsLand;
+	//ArrayS2 <bool> aIsLand;
   
   
     /* LOCAL MAP ARRAYS */
-  ArrayS2 <LocalTile> aLocalTile; // Array of all tiles on map.
-  ArrayS2 <LocalTile> aSubterranean;  // Array of underground layer. Used for caves, tunnels, mines.
+  //ArrayS2 <LocalTile> aLocalTile; // Array of all tiles on map.
+  //ArrayS2 <LocalTile> aSubterranean;  // Array of underground layer. Used for caves, tunnels, mines.
   
   // Vector of all tile coordinates.
   // This is used to do things like loop through every coordinate once in random order
   // (using shuffle).
-	Vector <HasXY*> vAllTiles;
+	//Vector <HasXY*> vAllTiles;
+  
+// A vector with a coordinate object for every tile on a local map.
+// Useful for randomly looping through all tiles in a map.
+  //static Vector <HasXY*> vAllTiles;
 
     // Lists of all objects of type on this map.
     // Useful for counting or looping through each object of type.

@@ -1014,7 +1014,7 @@ void switchTarget(World_Local* _worldLocal)
 						// RENDER THE LOCAL TILE
             // Should be it's own function
 					//if (tileSize > 4 && localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
-          if ( localMap != 0 && tileSize > 4)
+          if ( localMap != 0 && localMap->data != 0 && tileSize > 4)
 					{
 						float currentSubY = currentY;
 						float nextSubY = currentY + pixelsPerLocalTile;
@@ -1041,7 +1041,7 @@ void switchTarget(World_Local* _worldLocal)
 									{
                     if ( subterraneanMode )
                     {
-                      LocalTile* localTile = &localMap->aSubterranean(localXTile,localYTile);
+                      LocalTile* localTile = &localMap->data->aSubterranean(localXTile,localYTile);
                         // There is deliberate overlap of 1 pixel to prevent artifacts when zooming out.
                       Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
                     }
@@ -1060,7 +1060,7 @@ void switchTarget(World_Local* _worldLocal)
                         //glColor3ub(255,255,255);
                         
                         
-                        for(int i=0;i<localMap->aLocalTile(localXTile,localYTile).vObject.size();++i)
+                        for(int i=0;i<localMap->data->aLocalTile(localXTile,localYTile).vObject.size();++i)
                         {
                           //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
                         }
@@ -1070,7 +1070,7 @@ void switchTarget(World_Local* _worldLocal)
                       else if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == 1 )
                       {
                         //Draw tile very dark to symbolise fog of war
-                        LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
+                        LocalTile* localTile = &localMap->data->aLocalTile(localXTile,localYTile);
                         
                         unsigned char lightValue = 80;
                         glColor3ub(lightValue,lightValue,lightValue);
@@ -1078,7 +1078,7 @@ void switchTarget(World_Local* _worldLocal)
                         glColor3ub(255,255,255);
                         
                         
-                        for(int i=0;i<localMap->aLocalTile(localXTile,localYTile).vObject.size();++i)
+                        for(int i=0;i<localMap->data->aLocalTile(localXTile,localYTile).vObject.size();++i)
                         {
                           //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
                         }
@@ -1086,7 +1086,7 @@ void switchTarget(World_Local* _worldLocal)
                       }
                       else /* DRAW VISIBLE TILES */
                       {
-                        LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
+                        LocalTile* localTile = &localMap->data->aLocalTile(localXTile,localYTile);
                         
                         unsigned char lightValue = localTile->height*15;
                         
@@ -1165,9 +1165,9 @@ void switchTarget(World_Local* _worldLocal)
                           }
                         }
                           
-                        for(int i=0;i<localMap->aLocalTile(localXTile,localYTile).vObject.size();++i)
+                        for(int i=0;i<localMap->data->aLocalTile(localXTile,localYTile).vObject.size();++i)
                         {
-                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->data->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
                         }
                       }
                       
@@ -1232,6 +1232,24 @@ void switchTarget(World_Local* _worldLocal)
 						{
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_00, false);
 						}
+            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == ICE)
+            {
+              Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_ICE, false);
+            }
+            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == SNOW)
+            {
+              Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_SNOW, false);
+            }
+            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == STEPPES)
+            {
+              Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_STEPPE, false);
+            }
+            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == WETLAND)
+            {
+              Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_SWAMP, false);
+            }
+            
+            
 						else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY))
 						{
 							if (world->aSeed(tileX,tileY) % 4 == 0)
@@ -1252,7 +1270,7 @@ void switchTarget(World_Local* _worldLocal)
 							{
 								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_03, false);
 							}
-              
+
                 // THIS CODE DRAWS COASTLINES. IT IS IMCOMPLETE AND UGLY.
 							
 							// if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false )
@@ -1350,13 +1368,31 @@ void switchTarget(World_Local* _worldLocal)
 						{
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_FOREST_TREES, false);
 						}
+						else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == JUNGLE)
+						{
+							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_JUNGLE, false);
+						}
+            
+            
 						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == MOUNTAIN)
 						{
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
-              glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+              //glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_MOUNTAIN_00, false);
-              glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+              //glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 						}
+						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == HILLY)
+						{
+							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
+              //glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_HILL, false);
+              //glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+						}
+            
+            
+            
+            
+            
             if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aRiverID(tileX,tileY) != -1)
 						{
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_01, false);

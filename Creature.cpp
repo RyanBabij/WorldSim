@@ -187,7 +187,7 @@ void Creature::wander()
   else if ( direction==2 ) { ++newY; }
   else { --newY; }
   
-  if ( map->isSafe(newX,newY) && map->aLocalTile(newX,newY).hasMovementBlocker() == false )
+  if ( map->isSafe(newX,newY) && map->data->aLocalTile(newX,newY).hasMovementBlocker() == false )
   {
     map->remove(this);
     if (map->put(this,newX,newY) == false)
@@ -197,8 +197,8 @@ void Creature::wander()
     
     if (Random::oneIn(10))
     {
-      delete map->aLocalTile(x,y).footprint;
-      map->aLocalTile(x,y).footprint = new Creature_Footprint;
+      delete map->data->aLocalTile(x,y).footprint;
+      map->data->aLocalTile(x,y).footprint = new Creature_Footprint;
     }
   }
   updateKnowledge();

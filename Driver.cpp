@@ -42,6 +42,8 @@ inline void Console (std::string s)
 #include <sstream>
 
 //Stolen from https://codereview.stackexchange.com/questions/226/formatter-class
+// This allows you to pass multiple datatypes as an std::string.
+// Use like this: function( Stream() << "Error Recieved" << 42 << " " << some_code << " '" << some_msg << "'");
 class Stream
 {
   public:
@@ -52,19 +54,13 @@ class Stream
       ss_ << f;
       return *this;
     }
-    
     // This is a custom typecast to std::string. (C++11)
     operator std::string() const { return ss_.str(); }
-    
 };
-
 
 #include <File/SaveFileManager.hpp>
   // Class for managing world save files.
 SaveFileManager saveFileManager;
-
-// This allows you to pass multiple datatypes as an std::string.
-// Use like this: function( Stream() << "Error Recieved" << 42 << " " << some_code << " '" << some_msg << "'");
 
 #include <GL/GLee.h> // THIS CURRENTLY FIXES LINKER CRAP. Also allows RGBA_COMPRESSED, it would seem.
 #include <GL/freeglut.h> //
@@ -90,7 +86,7 @@ SaveFileManager saveFileManager;
 
 void printHelp()
 {
-  std::cout<<"\nWorldSim by Garosoft (garosoft.org) "<<VERSION<<".\n";
+  std::cout<<"\nWorldSim"<<VERSION<<".\n";
   std::cout<<"  Warning: This is not a stable release.\n";
 	std::cout<<"  WorldSim is a 2D tile-based sandbox RPG with procedurally generated fantasy world.\n";
 	std::cout<<"  License: Public domain. This program uses a modified version of LodePNG.\n";
@@ -129,7 +125,6 @@ class QuitChecker
     gameTime.update();
     if (gameTime.seconds > 10 )
     {
-      std::cout<<"Thankyou for playing. ^_^\n";
       std::cout<<"Time played: "<<gameTime.seconds/60<<" minutes.\n";
     }
 	}

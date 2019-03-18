@@ -460,40 +460,42 @@ class Item_Log: public Item
   }
 	virtual ~Item_Log() {}
   
-  virtual void interact (LocalTile* obj, int interactionType = 0);
+  virtual void interact (LocalTile* obj, int interactionType = 0) override;
   
-  virtual Vector <std::string>* getInteractNames(WorldObject* _w);
-    virtual Vector <std::string>* getInteractNames(Item* _w);
-    virtual Vector <std::string>* getInteractNames(Character* _w);
-    virtual Vector <std::string>* getInteractNames(Creature* _w);
-  virtual Vector <std::string>* getInteractNames(LocalTile* _w);
+  virtual Vector <std::string>* getInteractNames(WorldObject* _w) override;
+    virtual Vector <std::string>* getInteractNames(Item* _w) override;
+    virtual Vector <std::string>* getInteractNames(Character* _w) override;
+    virtual Vector <std::string>* getInteractNames(Creature* _w) override;
+  virtual Vector <std::string>* getInteractNames(LocalTile* _w) override;
 
 
   
   // We need to have 2 interactions:
   // Light a fire
   // Build a wall
-  std::string getInteractName(LocalTile* _w)
+  std::string getInteractName(LocalTile* _w) override
   {
     return "Light a fire on the "+_w->getName();
   }
   
-  virtual int interactTime(WorldObject* _w)
+  virtual int interactTime(WorldObject* _w) override
   {
     return -1;
   }
   
-  virtual int interactTime(LocalTile* _w)
+  virtual int interactTime(LocalTile* _w) override
   {
     return 30;
   }
   
-	virtual std::string getName()
+	virtual std::string getName() override
   {
     return "Log";
   }
+  
+  virtual void addToRecipeManager() override;
 
-  Texture* currentTexture()
+  Texture* currentTexture() override
   {
     return &TEX_OBJECT_LOG;
   }
@@ -794,6 +796,25 @@ class Item_Waterskin: public Item
   Texture* currentTexture() override
   {
     return &TEX_ITEM_WATERSKIN;
+  }
+};
+
+  // Shelter
+class Item_Shelter: public Item
+{
+  public:
+  
+  Item_Shelter()
+  {
+  }
+  virtual ~Item_Shelter()
+  {
+  }
+  std::string getName() override { return "Shelter"; }
+
+  Texture* currentTexture() override
+  {
+    return &TEX_OBJECT_TENT;
   }
 };
 

@@ -37,6 +37,7 @@ It's possible to override this system by using getName(), which basically functi
 
 */
 
+class Item_Log;
 class Item_Plank;
 class Item_DeerPelt;
 
@@ -63,6 +64,7 @@ class Recipe
     // Every item must be listed here in order to specialise the base class.
   virtual int canUse (Item *) { return -1; }
   virtual int canUse (Item_Plank *) { return -1; }
+  virtual int canUse (Item_Log*) { return -1; }
   virtual int canUse (Item_Fish *) { return -1; }
   virtual int canUse (Item_DeerPelt *) { return -1; }
   
@@ -72,6 +74,7 @@ class Recipe
   virtual void countUp(WorldObject*) {}
   virtual void countUp(Item*) {}
   virtual void countUp(Item_Plank*) {}
+  virtual void countUp(Item_Log*) {}
   virtual void countUp(Item_Fish*) {}
   virtual void countUp(Item_DeerPelt*) {}
   
@@ -232,6 +235,44 @@ class Recipe_Waterskin: public Recipe
 };
 Recipe_Waterskin recipeWaterskin;
 
+// Log Shelter
+// 1 of any pelt
+class Recipe_LogShelter: public Recipe
+{
+  public:
+  
+  Vector <Item_Log*> vInput;
+
+  virtual int canUse (Item_Log * _object) override /* return the amount of object needed. -1 means this object can't be used */
+  {
+    return 1;
+  }
+  
+  virtual std::string getName() override
+  {
+    return "Shelter";
+  }
+  
+  virtual void countUp(WorldObject* _object) override {}
+  virtual void countUp(Item* _item) override {}
+  virtual void countUp(Item_Log* _input) override
+  {
+    std::cout<<"Adding log shelt\n";
+    vInput.push(_input);
+  }
+  
+  virtual int getTotal() override
+  {
+    std::cout<<" log shelt\n";
+    // 5 pelts to make clothes.
+    return vInput.size();
+  }
+  
+  virtual void make(Character* _character) override;
+
+};
+Recipe_LogShelter recipeLogShelter;
+
 // Inventory manager can give 2 types of information. What recipes can be made with current items. And also what reciped
 // an item can be used in.
 class RecipeManager
@@ -268,12 +309,18 @@ class RecipeManager
   }
   void addToRecipes(Item_Fish* _item)
   {
+    std::cout<<"adding fish\n";
     recipeGrilledFish.countUp(_item);
   }
   void addToRecipes(Item_DeerPelt* _item)
   {
     recipeLeatherClothes.countUp(_item);
     recipeWaterskin.countUp(_item);
+  }
+  void addToRecipes(Item_Log* _item)
+  {
+    std::cout<<"adding log\n";
+    recipeLogShelter.countUp(_item);
   }
   
   int getTotals()
@@ -282,6 +329,7 @@ class RecipeManager
     return recipeGrilledFish.getTotal();
     return recipeLeatherClothes.getTotal();
     return recipeWaterskin.getTotal();
+    return recipeLogShelter.getTotal();
   }
   
   Vector <Recipe*> * getValidRecipes()
@@ -302,6 +350,10 @@ class RecipeManager
     if ( recipeWaterskin.getTotal() > 0 )
     {
       vValidList.push(&recipeWaterskin);
+    }
+    if ( recipeLogShelter.getTotal() > 0 )
+    {
+      vValidList.push(&recipeLogShelter);
     }
     return &vValidList;
   }

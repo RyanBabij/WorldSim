@@ -111,13 +111,13 @@ class Pathing_Local
 	void init(World_Local* _map)
 	{
 		map=_map;
-    if (_map==0) { return; }
+    if (_map==0 || _map->data==0 ) { return; }
     
-    if (map->aLocalTile.nX < 1 || map->aLocalTile.nY < 1)
+    if (map->data->aLocalTile.nX < 1 || map->data->aLocalTile.nY < 1)
     { return; }
     
 		//Node* n = new Node;
-		aNode.init(map->aLocalTile.nX,map->aLocalTile.nY,0);
+		aNode.init(map->data->aLocalTile.nX,map->data->aLocalTile.nY,0);
 
     for(int y=0;y<aNode.nY;++y)
     {
@@ -228,9 +228,9 @@ class Pathing_Local
 		
     // NORTH
 		if(pNodeY<aNode.nY-1 && aNode(pNodeX,pNodeY+1)->exhausted==false
-			&& map->aLocalTile(pNodeX, pNodeY+1).canTravelSouth()
-			&& map->aLocalTile(pNodeX, pNodeY).canTravelNorth()
-      && map->aLocalTile(pNodeX, pNodeY+1).hasMovementBlocker()==false )
+			&& map->data->aLocalTile(pNodeX, pNodeY+1).canTravelSouth()
+			&& map->data->aLocalTile(pNodeX, pNodeY).canTravelNorth()
+      && map->data->aLocalTile(pNodeX, pNodeY+1).hasMovementBlocker()==false )
 		{
 			aNode(pNodeX, pNodeY+1)->findDistance(_x,_y+1,sX,sY,tX,tY);
 			vNode.push(aNode(pNodeX, pNodeY+1));
@@ -244,9 +244,9 @@ class Pathing_Local
 		}
     // SOUTH
 		if(pNodeY>0 && aNode(pNodeX,pNodeY-1)->exhausted==false
-			&& map->aLocalTile(pNodeX, pNodeY-1).canTravelNorth()
-			&& map->aLocalTile(pNodeX, pNodeY).canTravelSouth()
-      && map->aLocalTile(pNodeX, pNodeY-1).hasMovementBlocker()==false )
+			&& map->data->aLocalTile(pNodeX, pNodeY-1).canTravelNorth()
+			&& map->data->aLocalTile(pNodeX, pNodeY).canTravelSouth()
+      && map->data->aLocalTile(pNodeX, pNodeY-1).hasMovementBlocker()==false )
 		{
 			aNode(pNodeX, pNodeY-1)->findDistance(_x,_y-1,sX,sY,tX,tY);
 			vNode.push(aNode(pNodeX, pNodeY-1));
@@ -262,9 +262,9 @@ class Pathing_Local
 		}
     // EAST
 		if(pNodeX<aNode.nX-1 && aNode(pNodeX+1,pNodeY)->exhausted==false
-			&& map->aLocalTile(pNodeX+1, pNodeY).canTravelWest()
-			&& map->aLocalTile(pNodeX, pNodeY).canTravelEast()
-      && map->aLocalTile(pNodeX+1, pNodeY).hasMovementBlocker()==false )
+			&& map->data->aLocalTile(pNodeX+1, pNodeY).canTravelWest()
+			&& map->data->aLocalTile(pNodeX, pNodeY).canTravelEast()
+      && map->data->aLocalTile(pNodeX+1, pNodeY).hasMovementBlocker()==false )
 		{
 			aNode(pNodeX+1, pNodeY)->findDistance(_x+1,_y,sX,sY,tX,tY);
 			vNode.push(aNode(pNodeX+1, pNodeY));
@@ -278,9 +278,9 @@ class Pathing_Local
 		}
     // WEST
 		if(pNodeX>0 && aNode(pNodeX-1,pNodeY)->exhausted==false
-			&& map->aLocalTile(pNodeX-1, pNodeY).canTravelEast()
-			&& map->aLocalTile(pNodeX, pNodeY).canTravelWest()
-      && map->aLocalTile(pNodeX-1, pNodeY).hasMovementBlocker()==false )
+			&& map->data->aLocalTile(pNodeX-1, pNodeY).canTravelEast()
+			&& map->data->aLocalTile(pNodeX, pNodeY).canTravelWest()
+      && map->data->aLocalTile(pNodeX-1, pNodeY).hasMovementBlocker()==false )
 		{
 			aNode(pNodeX-1, pNodeY)->findDistance(_x-1,_y,sX,sY,tX,tY);
 			vNode.push(aNode(pNodeX-1, pNodeY));

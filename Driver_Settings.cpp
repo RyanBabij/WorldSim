@@ -31,7 +31,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.131 Win32 dev";
+const std::string VERSION = "0.0.132 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -62,7 +62,7 @@ const int QUICKSTART_WORLD_SIZE = 129; /* Please set to (power of 2)+1. */
 long long int INITIAL_YEARS_SIMULATE = 0;
 
   // Default setting on the GUI
-const int DEFAULT_WORLD_SIZE_SLOT = 2; /* 0 = 129, 1 = 257, 513, 1025, 2049, 4097. You can set it lower for easier debugging. */
+const int DEFAULT_WORLD_SIZE_SLOT = 2; /* 0 = 33, 1 = 65, 129, 257, 513, 1025. You can set it lower for easier debugging. */
 
 const int DEFAULT_NUMBER_TRIBES_DWARVEN = 0;
 const int DEFAULT_NUMBER_TRIBES_HUMAN = 6;
@@ -88,7 +88,7 @@ const int CALENDAR_SECONDS_PER_MINUTE = 2;
 const int LOCAL_MAP_SIZE = 65;
 //const int LOCAL_MAP_SIZE = 129;
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
-const int MAX_VIEW_RANGE = 20;
+const int MAX_VIEW_RANGE = 24;
 
   // CHARACTER STUFF
 const int MAX_HUNGER = 300;
@@ -161,6 +161,6 @@ const char DECIMAL_DELIMITER = '.';
 
 std::string NYA;
 
-const std::string ADVENTURE_MODE_MANUAL = "Adventure mode manual. Click MAN again or press ESC to close it.\nWelcome to Adventure Mode. This manual will be used to explain some basic stuff you can do in the game.\n\n INV - Access inventory and equipment. (not currently implemented)\n SNK - Sneak. Your line of sight will increase and allow you to see around corners. However your movement speed will be halved. Sneaking will also reduce your visibility so that if you are next to fog (from the NPC's view), you can't be seen.\nSPT - Sprint (not implemented). You will travel twice as fast but will have low view distance.\n\nSPACE - Talk to adjacent NPC.";
+const std::string ADVENTURE_MODE_MANUAL = "Adventure mode manual. Click MAN again or press ESC to close it.\nWelcome to Adventure Mode. This manual will be used to explain some basic stuff you can do in the game.\n\nButtons:\nINV - Access inventory and equipment. (not currently implemented)\n SNK - Sneak. Your line of sight will increase and allow you to see around corners. However your movement speed will be halved. Sneaking will also reduce your visibility so that if you are next to fog (from the NPC's view), you can't be seen.\nSPT - Sprint (not implemented). You will travel twice as fast but will have low view distance.\n\nHotkeys:\nE - use equipped item. Click on a tile to use your item there. Use mousewheel to scroll through options. Left click to select an option. Right-click to exit menu.\nSPACE - Talk to adjacent NPC.";
 
 #endif

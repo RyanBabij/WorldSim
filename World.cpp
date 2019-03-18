@@ -120,9 +120,9 @@ inline LocalTile* World::operator() (unsigned long int _x, unsigned long int _y)
   // Check if local map is already loaded.
   for (int i=0;i<vWorldLocal.size();++i)
   {
-    if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY )
+    if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY && vWorldLocal(i)->data )
     {
-      return &vWorldLocal(i)->aLocalTile(lX,lY);
+      return &vWorldLocal(i)->data->aLocalTile(lX,lY);
     }
   }
   // The local map isn't in memory, therefore we need to load it up.
@@ -131,9 +131,9 @@ inline LocalTile* World::operator() (unsigned long int _x, unsigned long int _y)
 
   for (int i=0;i<vWorldLocal.size();++i)
   {
-    if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY )
+    if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY && vWorldLocal(i)->data )
     {
-      return &vWorldLocal(i)->aLocalTile(lX,lY);
+      return &vWorldLocal(i)->data->aLocalTile(lX,lY);
     }
   }
   
@@ -1144,8 +1144,11 @@ void World::buildArrays()
 			
 		}
 	}
+  
+  #if SAVE_DATA
 	Png png;
 	png.encodeS3(strSavePath+"/worldmap.png",&aTopoMap);
+  #endif
 }
 
 void World::generateWorld(const std::string _worldName, const int x=127, const int y=127, const int seed=0, const int fragmentation=2, const bool islandMode = true, const bool wrapX=true, const bool wrapY=false, const double landPercent = 0.66)
@@ -1167,13 +1170,14 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	}
 	name=_worldName;
 	
+  #ifdef SAVE_DATA
 	FileManager::createDirectory("savedata");
-	
 	if ( FileManager::directoryExists("savedata") == false )
 	{
 		std::cout<<"Error: Unable to create save directory.\n";
 		return;
 	}
+  #endif
 
 	nX = x;
 	nY = y;
@@ -1186,6 +1190,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   landmassSeed = seed;
 	
 	strSavePath = "savedata/"+name;
+  
+  #ifdef SAVE_DATA
   
 		// For now, we will just delete any worlds with the same name.
 	//std::string systemCommmand = "exec rm -r "+strSavePath;
@@ -1201,6 +1207,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 		std::cout<<"Error: Unable to create save directory.\n";
 		return;
 	}
+  #endif
 	
 	Timer worldGenTimer;
 	worldGenTimer.init();
@@ -1276,7 +1283,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	// Create master file.
   worldFilePath = strSavePath+"/main.dat";
   
-
+  #ifdef SAVE_DATA
   
 	FileManager::createFile(worldFilePath);
   FileManager::writeTag("LANDSEED",DataTools::toString(landmassSeed),worldFilePath);
@@ -1284,7 +1291,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   FileManager::writeTag("SIZEX",DataTools::toString(nX),worldFilePath);
   FileManager::writeTag("SIZEY",DataTools::toString(nY),worldFilePath);
   //FileManager::writeString(DataTools::toString(landmassSeed)+"\n"+name+"\n"+DataTools::toString(nX)+"\n"+DataTools::toString(nY)+"\n",worldFilePath);
-	
+	#endif
   
   #if defined THREAD_ALL || defined THREAD_WORLD_INIT 
 		t1.join();
@@ -1302,6 +1309,67 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   aRiverID = wg.aRiverMap;
 	
 	buildArrays(); 
+  
+  // BUILD RIVER CONNECTIVITY
+  for ( int _y=0;_y<nY;++_y)
+  {
+    for ( int _x=0;_x<nX;++_x)
+    {
+      if (aRiverID(_x,_y)!=-1)
+      {
+        char riverConnectivity = 0;
+        // Connect east
+        if ( aRiverID.isSafe(_x+1,_y) && aRiverID(_x+1,_y) != -1 )
+        {
+          riverConnectivity=riverConnectivity|0b00001000;
+        }
+        // Connect west
+        if ( aRiverID.isSafe(_x-1,_y) && aRiverID(_x-1,_y) != -1 )
+        {
+          riverConnectivity=riverConnectivity|0b00010000;
+        }
+        // Connect north
+        if ( aRiverID.isSafe(_x,_y+1) && aRiverID(_x,_y+1) != -1 )
+        {
+          riverConnectivity=riverConnectivity|0b01000000;
+        }
+        // Connect south
+        if ( aRiverID.isSafe(_x,_y-1) && aRiverID(_x,_y-1) != -1 )
+        {
+          riverConnectivity=riverConnectivity|0b00000010;
+        }
+        aWorldTile(_x,_y).riverConnections = riverConnectivity;
+        
+        // If tile is surrounded by rivers, it becomes a lake tile.
+        if ( riverConnectivity == 0b01011010 )
+        {
+          aWorldTile(_x,_y).biome=OCEAN;
+        }
+        // All tiles surrounded on at least 3 sides by rivers become lakes.
+        if ( riverConnectivity == 0b01010010 )
+        {
+          aWorldTile(_x,_y).biome=OCEAN;
+        }
+        else if ( riverConnectivity == 0b01001010 )
+        {
+          aWorldTile(_x,_y).biome=OCEAN;
+        }
+        else if ( riverConnectivity == 0b01010010 )
+        {
+          aWorldTile(_x,_y).biome=OCEAN;
+        }
+        else if ( riverConnectivity == 0b01011000 )
+        {
+          aWorldTile(_x,_y).biome=OCEAN;
+        }
+        else if ( riverConnectivity == 0b00011010 )
+        {
+          aWorldTile(_x,_y).biome=OCEAN;
+        }
+        
+      }
+    }
+  }
 
 	// BUILD LANDMASS ID ARRAY
   
@@ -1623,7 +1691,6 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 //This makes the local map visible.
 void World::generateLocal(const int _localX, const int _localY)
 {
-  std::cout<<"GENERATE LOCAL 2\n";
   if ( isSafe(_localX,_localY) == false )
   { return; }
 
@@ -1637,6 +1704,14 @@ void World::generateLocal(const int _localX, const int _localY)
     }
   }
 
+  
+  // don't generate ocean tiles
+  // if ( aWorldTile(_localX,_localY).biome == OCEAN )
+  // {
+    // return;
+  // }
+  
+  
   //auto worldLocal = new World_Local;
   //worldLocal->init(_localX,_localY);
   aWorldTile(_localX,_localY).generate();
@@ -2280,6 +2355,7 @@ bool World::prepareAdventureMode( Character * _character )
 
 bool World::loadWorld(std::string _name)
 {
+  #ifdef SAVE_DATA
   SaveFileManager sfm;
   
 	strSavePath = "savedata/"+_name;
@@ -2390,6 +2466,8 @@ bool World::loadWorld(std::string _name)
   
   generated = true;
 	return true;
+  #endif
+  return false;
 }
 
 // SaveFileInterface

@@ -18,6 +18,8 @@ LocalTile::LocalTile()
   bWall=0;
   nFish=-1;
   footprint=0;
+  
+  isLand=false;
 }
 
 LocalTile::~LocalTile()

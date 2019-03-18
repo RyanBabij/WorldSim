@@ -99,8 +99,25 @@ const std::string PATH_TEX_ALCHEMY = "Textures/World/Terrain/Alchemy/05.png";
 Texture TEX_WORLD_TERRAIN_OCEAN_00;
 const std::string PATH_TEX_WORLD_TERRAIN_OCEAN_00 = "Textures/World/Terrain/Ocean/01.png";
 
+Texture TEX_WORLD_TERRAIN_ICE;
+const std::string PATH_TEX_WORLD_TERRAIN_ICE = "Textures/World/Terrain/Ice/Ice.png";
+
+Texture TEX_WORLD_TERRAIN_SNOW;
+const std::string PATH_TEX_WORLD_TERRAIN_SNOW = "Textures/World/Terrain/Snow/Snow.png";
+
+Texture TEX_WORLD_TERRAIN_STEPPE;
+const std::string PATH_TEX_WORLD_TERRAIN_STEPPE = "Textures/World/Terrain/Steppe/Steppe.png";
+
+Texture TEX_WORLD_TERRAIN_SWAMP;
+const std::string PATH_TEX_WORLD_TERRAIN_SWAMP = "Textures/World/Terrain/Wetland/Swamp.png";
+
+
+
 Texture TEX_WORLD_TERRAIN_FOREST_TREES;
 const std::string PATH_TEX_WORLD_TERRAIN_FOREST_TREES = "Textures/World/Terrain/Forest/00.png";
+
+Texture TEX_WORLD_TERRAIN_JUNGLE;
+const std::string PATH_TEX_WORLD_TERRAIN_JUNGLE = "Textures/World/Terrain/Jungle/01.png";
 
   // FLORA
 Texture TEX_WORLD_TERRAIN_FOREST_TREE;
@@ -114,6 +131,9 @@ const std::string PATH_TEX_FLORA_PLANT = "Textures/Flora/Plant-small.png";
 
 Texture TEX_WORLD_TERRAIN_MOUNTAIN_00;
 const std::string PATH_TEX_WORLD_TERRAIN_MOUNTAIN_00 = "Textures/World/Terrain/Mountain/01.png";
+
+Texture TEX_WORLD_TERRAIN_HILL;
+const std::string PATH_TEX_WORLD_TERRAIN_HILL = "Textures/World/Terrain/Mountain/Hills.png";
 
 Texture TEX_WORLD_TERRAIN_UNDERGROUND_00;
 const std::string PATH_TEX_WORLD_TERRAIN_UNDERGROUND_00 = "Textures/World/Terrain/Underground/00.png";
@@ -217,6 +237,9 @@ const std::string PATH_TEX_ITEM_WATERSKIN = "Textures/Item/Waterskin.png";
 
 Texture TEX_OBJECT_CAMPFIRE [5];
 const std::string PATH_TEX_OBJECT_CAMPFIRE [5] = { "Textures/Object/Campfire-64-1.png", "Textures/Object/Campfire-64-2.png", "Textures/Object/Campfire-64-3.png", "Textures/Object/Campfire-64-4.png", "Textures/Object/Campfire-64-5.png" };
+
+Texture TEX_OBJECT_TENT;
+const std::string PATH_TEX_OBJECT_TENT = "Textures/Object/Tent.png";
 
   // FOOD
   
@@ -378,14 +401,22 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
 	loadTextureVerbose(PATH_TEX_ALCHEMY,&TEX_ALCHEMY);
 	
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_OCEAN_00,&TEX_WORLD_TERRAIN_OCEAN_00);
+	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_ICE,&TEX_WORLD_TERRAIN_ICE);
+	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_SNOW,&TEX_WORLD_TERRAIN_SNOW);
+	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_STEPPE,&TEX_WORLD_TERRAIN_STEPPE);
+	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_SWAMP,&TEX_WORLD_TERRAIN_SWAMP);
 	
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_FOREST_TREES,&TEX_WORLD_TERRAIN_FOREST_TREES);
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_FOREST_TREE,&TEX_WORLD_TERRAIN_FOREST_TREE);
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_FOREST_SAPLING,&TEX_WORLD_TERRAIN_FOREST_SAPLING);
+  
+	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_JUNGLE,&TEX_WORLD_TERRAIN_JUNGLE);
 	
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_MOUNTAIN_00,&TEX_WORLD_TERRAIN_MOUNTAIN_00);
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI,&TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI);
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI_GOLD,&TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI_GOLD);
+  
+	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_HILL,&TEX_WORLD_TERRAIN_HILL);
   
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_UNDERGROUND_00,&TEX_WORLD_TERRAIN_UNDERGROUND_00);
 	
@@ -424,6 +455,7 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   loadTextureVerbose(PATH_TEX_OBJECT_LOG,&TEX_OBJECT_LOG);
   loadTextureVerbose(PATH_TEX_OBJECT_FISH,&TEX_OBJECT_FISH);
   loadTextureVerbose(PATH_TEX_ITEM_WATERSKIN,&TEX_ITEM_WATERSKIN);
+  loadTextureVerbose(PATH_TEX_OBJECT_TENT,&TEX_OBJECT_TENT);
   
   for (int i=0;i<5;++i)
   {

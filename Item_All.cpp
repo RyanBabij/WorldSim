@@ -218,6 +218,10 @@ void Item_Hand::interact(WorldObject* _target, int interactType /* =0 */)
 
     return vInteract;
   }
+  void Item_Log::addToRecipeManager()
+  {
+    recipeManager.addToRecipes(this);
+  }
   
     // FISH
   Vector <std::string>* Item_Fish::getInteractNames(Item* _w)

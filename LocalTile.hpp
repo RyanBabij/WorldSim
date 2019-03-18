@@ -50,6 +50,8 @@ class LocalTile: public HasTexture
   
   int height;
   
+  bool isLand; /* True if not water */
+  
   bool isUphill [8]; /* Clockwise starting north */
   
   

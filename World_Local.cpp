@@ -32,16 +32,23 @@ World_Local::World_Local()
 	generated=false;
   hasRiver=-1;
   
-  
 	seed = 0;
 	biome = NOTHING;
-	baseMoveCost = 0;
-	canHaveSettlement = false;
+	//baseMoveCost = 0;
+	//canHaveSettlement = false;
 	baseFertility = 0;
 	canMove = 0;
-	baseLogisticsCost = 0;
-	defensiveBonus = 0;
+	//baseLogisticsCost = 0;
+	//defensiveBonus = 0;
   baseMetal=0;
+  
+  //vAllTiles.reserve(0);
+  vCreature.reserve(0);
+  vCharacter.reserve(0);
+  vItem.reserve(0);
+  vObjectGeneric.reserve(0);
+  
+  data=0;
 }
 
 World_Local::~World_Local()
@@ -63,146 +70,149 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
   //aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
     
   switch(_biomeID) {
+    
+   //baseMoveCost=0;
+    //canHaveSettlement=false;
     case NOTHING:
     {
-      baseMoveCost = 0;
-      canHaveSettlement = false;
+      //baseMoveCost = 0;
+      //canHaveSettlement = false;
       baseFertility = 0;
       canMove = 0;
-      baseLogisticsCost = 0;
-      defensiveBonus = 0;
+      //baseLogisticsCost = 0;
+      //defensiveBonus = 0;
       baseMetal = 0;
       break;
     }
     case OCEAN:
     {
-      baseMoveCost = 0;
-      canHaveSettlement = false;
+      //baseMoveCost = 0;
+      //canHaveSettlement = false;
       baseFertility = 2;
       canMove = 0;
-      baseLogisticsCost = 0;
-      defensiveBonus = 0;
+      //baseLogisticsCost = 0;
+      //defensiveBonus = 0;
       baseMetal = 0;
       break;
     }
     case GRASSLAND:
     {
-      baseMoveCost = 0;
-      canHaveSettlement = false;
+      //baseMoveCost = 0;
+      //canHaveSettlement = false;
       baseFertility = 4;
       canMove = 0;
-      baseLogisticsCost = 0;
-      defensiveBonus = 0;
+      //baseLogisticsCost = 0;
+      //defensiveBonus = 0;
       baseMetal = 0;
       break;
     }
     case FOREST:
     {
-      baseMoveCost = 0;
-      canHaveSettlement = false;
+      //baseMoveCost = 0;
+      //canHaveSettlement = false;
       baseFertility = 2;
       canMove = 0;
-      baseLogisticsCost = 0;
-      defensiveBonus = 0;
+      //baseLogisticsCost = 0;
+      //defensiveBonus = 0;
       baseMetal = 0;
       break;
     }
     case DESERT:
     {
-      baseMoveCost = 0;
-      canHaveSettlement = false;
+     //baseMoveCost = 0;
+      //canHaveSettlement = false;
       baseFertility = 1;
       canMove = 0;
-      baseLogisticsCost = 0;
-      defensiveBonus = 0;
+      //baseLogisticsCost = 0;
+      //defensiveBonus = 0;
       baseMetal = 0;
       break;
     }
     case MOUNTAIN:
     {
-      baseMoveCost = 0;
-      canHaveSettlement = false;
+      //baseMoveCost = 0;
+      //canHaveSettlement = false;
       baseFertility = 1;
       canMove = 0;
-      baseLogisticsCost = 0;
-      defensiveBonus = 0;
+      //baseLogisticsCost = 0;
+      //defensiveBonus = 0;
       baseMetal = 0;
       break;
     }
     case SNOW:
     {
-      baseMoveCost = 0;
-      canHaveSettlement = false;
+      //baseMoveCost = 0;
+      //canHaveSettlement = false;
       baseFertility = 1;
       canMove = 0;
-      baseLogisticsCost = 0;
-      defensiveBonus = 0;
+      //baseLogisticsCost = 0;
+      //defensiveBonus = 0;
       baseMetal = 0;
       break;
     }
     case HILLY:
     {
-      baseMoveCost = 0;
-      canHaveSettlement = false;
+      //baseMoveCost = 0;
+      //canHaveSettlement = false;
       baseFertility = 2;
       canMove = 0;
-      baseLogisticsCost = 0;
-      defensiveBonus = 0;
+      //baseLogisticsCost = 0;
+      //defensiveBonus = 0;
       baseMetal = 0;
       break;
     }
     case JUNGLE:
     {
-      baseMoveCost = 0;
-      canHaveSettlement = false;
+      //baseMoveCost = 0;
+      //canHaveSettlement = false;
       baseFertility = 2;
       canMove = 0;
-      baseLogisticsCost = 0;
-      defensiveBonus = 0;
+      //baseLogisticsCost = 0;
+      //defensiveBonus = 0;
       baseMetal = 0;
       break;
     }
     case WETLAND:
     {
-      baseMoveCost = 0;
-      canHaveSettlement = false;
+     // baseMoveCost = 0;
+     // canHaveSettlement = false;
       baseFertility = 2;
       canMove = 0;
-      baseLogisticsCost = 0;
-      defensiveBonus = 0;
+      //baseLogisticsCost = 0;
+      //defensiveBonus = 0;
       baseMetal = 0;
       break;
     }
     case STEPPES:
     {
-      baseMoveCost = 0;
-      canHaveSettlement = false;
+      //baseMoveCost = 0;
+      //canHaveSettlement = false;
       baseFertility = 2;
       canMove = 0;
-      baseLogisticsCost = 0;
-      defensiveBonus = 0;
+      //baseLogisticsCost = 0;
+      //defensiveBonus = 0;
       baseMetal = 0;
       break;
     }
     case RIVER:
     {
-      baseMoveCost = 0;
-      canHaveSettlement = false;
+      //baseMoveCost = 0;
+      //canHaveSettlement = false;
       baseFertility = 2;
       canMove = 0;
-      baseLogisticsCost = 0;
-      defensiveBonus = 0;
+      //baseLogisticsCost = 0;
+      //defensiveBonus = 0;
       baseMetal = 0;
       break;
     }
     default:
     {
-      baseMoveCost = 0;
-      canHaveSettlement = false;
+      ///baseMoveCost = 0;
+      //canHaveSettlement = false;
       baseFertility = 0;
       canMove = 0;
-      baseLogisticsCost = 0;
-      defensiveBonus = 0;
+      //baseLogisticsCost = 0;
+      //defensiveBonus = 0;
       baseMetal = 0;
       break;
     }
@@ -225,33 +235,39 @@ inline LocalTile* World_Local::operator() (int _x, int _y)
 {
   if (isSafe(_x,_y))
   {
-    return &aLocalTile(_x,_y);
+    return &data->aLocalTile(_x,_y);
   }
   return 0;
 }
 
     // Returns true if the coordinate is inside this map
-bool World_Local::isSafe(int _x, int _y)
+bool World_Local::isSafe(const int _x, const int _y)
 {
-  return aLocalTile.isSafe(_x,_y);
+  if (data==0) { return false; }
+  return data->aLocalTile.isSafe(_x,_y);
 }
 bool World_Local::isSafe(HasXY* xy)
 {
-  return aLocalTile.isSafe(xy);
+  if (data==0) { return false; }
+  return data->aLocalTile.isSafe(xy);
 }
 
 bool World_Local::generate()
 {
-  std::cout<<"GENERATE LOCAL\n";
-  
   if ( world.isSafe(globalX,globalY) == false )
   { return false; }
+  if (data==0) { data = new Data; }
+
+  std::cout<<"Generate localmap: "<<globalX<<", "<<globalY<<".\n";
   
-  baseBiome = world.aWorldTile(globalX,globalY).biome;
+  //baseBiome = world.aWorldTile(globalX,globalY).biome;
+  baseBiome = biome;
   seed = world.aSeed(globalX,globalY);
   
-  aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-  aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+  //if ( baseBiome == OCEAN) { return false; }
+
+  data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+  data->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
   
 		// GENERATE HEIGHTMAP
   DiamondSquareAlgorithmCustomRange dsa2;
@@ -259,6 +275,13 @@ bool World_Local::generate()
   
   ArrayS2 <int> aLocalHeight;
   aLocalHeight.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
+  
+  if (riverConnections!=0)
+  {
+    // We need to generate a river here.
+
+    
+  }
   
   // If we are generating a mountain, set a summit in the middle which is 3x3 tiles.
   if ( baseBiome == MOUNTAIN )
@@ -279,13 +302,13 @@ bool World_Local::generate()
     dsa2.maxValue=100;
     dsa2.generate(&aLocalHeight,0,0,0.9,10);
     
-  for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
-  {
-    for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+    for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
     {
-      aLocalHeight(_x,_y) =  aLocalHeight(_x,_y)/20;
+      for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+      {
+        aLocalHeight(_x,_y) = aLocalHeight(_x,_y)/20;
+      }
     }
-  }
     //aLocalHeight.setBorder(1);
   }
   else
@@ -298,45 +321,98 @@ bool World_Local::generate()
   // Take the seed for this world tile and expand it into a subseed for every local tile */
   random.seed(seed);
   
+  int midX = LOCAL_MAP_SIZE/2;
+  
 
   for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
   {
     for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
-      aLocalTile(_x,_y).baseTerrain = baseBiome;
+      
+      
+
+      if ( ((riverConnections & 0b01000010) == 0b01000010
+       || (riverConnections & 0b00001010) == 0b00001010
+       || (riverConnections & 0b11111111) == 0b00000010
+       || (riverConnections & 0b11111111) == 0b01000000
+      )
+      && _x > LOCAL_MAP_SIZE-3 )
+      {
+        data->aLocalTile(_x,_y).baseTerrain = OCEAN;  
+        continue;
+      }
+      
+      
+      if ( ((riverConnections & 0b00011000) == 0b00011000
+        || (riverConnections & 0b01010000) == 0b01010000
+       || (riverConnections & 0b11111111) == 0b00001000
+       || (riverConnections & 0b11111111) == 0b00010000
+        )
+            && _y > LOCAL_MAP_SIZE-3 )
+      {
+        data->aLocalTile(_x,_y).baseTerrain = OCEAN;
+        continue;
+      }
+      // if ( (riverConnections & 0b01010000) == 0b01010000
+            // && _y > LOCAL_MAP_SIZE-3 )
+      // {
+        // data->aLocalTile(_x,_y).baseTerrain = OCEAN;
+        // continue;
+      // }
+      if ( (riverConnections & 0b01001000) == 0b01001000
+            && _y > LOCAL_MAP_SIZE-3 && _x > LOCAL_MAP_SIZE-3 )
+      {
+        data->aLocalTile(_x,_y).baseTerrain = OCEAN;
+        continue;
+      }
+      // Left and down (runs along right and top)
+      if ( (riverConnections & 0b00010010) == 0b00010010
+            && (_y > LOCAL_MAP_SIZE-3 || _x > LOCAL_MAP_SIZE-3) )
+      {
+        data->aLocalTile(_x,_y).baseTerrain = OCEAN;
+        continue;
+      }
+      
+      
+      
+      data->aLocalTile(_x,_y).baseTerrain = baseBiome;
       
       if ( baseBiome != OCEAN )
       {
-        
-        //Put down some water for drinking
-        if (Random::oneIn(200))
-        {
-          aLocalTile(_x,_y).baseTerrain = OCEAN;
-          continue;
-        }
-      
         int baseTreeChance = 30;
         int basePlantChance = 20;
         
         // Temporary hack to make forests look less bad.
         if ( baseBiome == FOREST || baseBiome == JUNGLE )
         {
-          aLocalTile(_x,_y).baseTerrain = GRASSLAND;
+          data->aLocalTile(_x,_y).baseTerrain = GRASSLAND;
           baseTreeChance/=8;
           basePlantChance/=6;
         }
+        
+        data->aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+        data->aLocalTile(_x,_y).clearObjects();
+        data->aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
 
-        aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
-        aLocalTile(_x,_y).clearObjects();
-        aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
+        data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+        data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+        data->aSubterranean(_x,_y).clearObjects();
+        data->aSubterranean(_x,_y).height = -1;
         
         
-        aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
-        aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
-        aSubterranean(_x,_y).clearObjects();
-        aSubterranean(_x,_y).height = -1;
+        if ( hasRiver != -1 && ( (_x ==LOCAL_MAP_SIZE/2) || (_y == LOCAL_MAP_SIZE/2)) )
+        {
+          //data->aLocalTile(_x,_y).baseTerrain = OCEAN;
+        }
         
-        if (random.oneIn(200)) /* Put down some testing objects */
+        //Put down some water for drinking
+        else if (Random::oneIn(400))
+        {
+          data->aLocalTile(_x,_y).baseTerrain = OCEAN;
+          continue;
+        }
+        
+        else if (random.oneIn(200)) /* Put down some testing objects */
         {
           put(new Item_Floor, _x, _y);
           put(new Item_Sword, _x, _y);
@@ -355,22 +431,18 @@ bool World_Local::generate()
           put(new Item_Wall, _x, _y);
           put(new Item_PlantFibre, _x, _y);
           put(new Item_Knife, _x, _y);
-         
-          
-          
-          
         }
         else if (random.oneIn(baseTreeChance))
         {
-          aLocalTile(_x,_y).add(new WorldObject_Tree(1));
+          data->aLocalTile(_x,_y).add(new WorldObject_Tree(1));
         }
         else if (random.oneIn(basePlantChance))
         {
-          aLocalTile(_x,_y).add(new WorldObject_Plant());
+          data->aLocalTile(_x,_y).add(new WorldObject_Plant());
         }
         else if (random.oneIn(1000))
         {
-          aLocalTile(_x,_y).add(new WorldObject_Tree);
+          data->aLocalTile(_x,_y).add(new WorldObject_Tree);
         }
         else if (random.oneIn(1000) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
         //else if (random.oneIn(200))
@@ -391,7 +463,7 @@ bool World_Local::generate()
               rockyBoi->nGold = 100;
             }
             
-            aLocalTile(_x,_y).add(rockyBoi);
+            data->aLocalTile(_x,_y).add(rockyBoi);
           }
           
         }
@@ -405,12 +477,12 @@ bool World_Local::generate()
   {
     for ( int y=10;y<20; ++y)
     {
-      aLocalTile(x,y).hasFloor = true;
+      data->aLocalTile(x,y).hasFloor = true;
     }
   }
   
   auto sign = new WorldObject_Sign;
-  aLocalTile(21,21).add(sign);
+  data->aLocalTile(21,21).add(sign);
   }
 
   //Generate global objects
@@ -484,6 +556,7 @@ bool World_Local::generate()
 
 bool World_Local::generateTestMap()
 {
+  return false;
   
   if ( world.isSafe(globalX,globalY) == false )
   { return false; }
@@ -509,37 +582,37 @@ bool World_Local::generateTestMap()
   {
     for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
-      vAllTiles.push( new HasXY (_x,_y) );
+      //data->vAllTiles.push( new HasXY (_x,_y) );
 
-      aLocalTile(_x,_y).baseTerrain = baseBiome;
-      aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
-      aLocalTile(_x,_y).clearObjects();
-      aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
+      data->aLocalTile(_x,_y).baseTerrain = baseBiome;
+      data->aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+      data->aLocalTile(_x,_y).clearObjects();
+      data->aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
       
       
-      aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
-      aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
-      aSubterranean(_x,_y).clearObjects();
-      aSubterranean(_x,_y).height = -1;
+      data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+      data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+      data->aSubterranean(_x,_y).clearObjects();
+      data->aSubterranean(_x,_y).height = -1;
       
       if (random.oneIn(20))
       {
         //put tree
         auto tree = new WorldObject_Tree;
         tree->growth = 1;
-        aLocalTile(_x,_y).add(tree);
+        data->aLocalTile(_x,_y).add(tree);
       }
       else if (random.oneIn(1000))
       {
         auto tree = new WorldObject_Tree;
         tree->growth = 0;
-        aLocalTile(_x,_y).add(tree);
+        data->aLocalTile(_x,_y).add(tree);
       }
       
 
     }
   }
-  vAllTiles.shuffle();
+  //data->vAllTiles.shuffle();
   
   for ( int i=0; i<100; ++i)
   {
@@ -555,7 +628,7 @@ bool World_Local::generateTestMap()
     //RANDOMLY PLACE THE TRIBE CHARACTERS HERE
     Character * c = new Character;
 
-    aLocalTile(0,0).add(c);
+    data->aLocalTile(0,0).add(c);
     
   }
   delete vTribesHere;
@@ -605,7 +678,7 @@ bool World_Local::saveToFile(std::string _path)
 
 bool World_Local::put (WorldObject* _object, int _x, int _y)
 {
-  if ( aLocalTile.isSafe(_x,_y) == false )
+  if ( data->aLocalTile.isSafe(_x,_y) == false )
   { return false; }
 
   _object->worldX = globalX;
@@ -614,14 +687,14 @@ bool World_Local::put (WorldObject* _object, int _x, int _y)
   _object->y = _y;  
   _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
   _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-  aLocalTile(_x,_y).add(_object);
+  data->aLocalTile(_x,_y).add(_object);
   vObjectGeneric.push(_object);
   return true;
 }
 
 bool World_Local::put (Item* _item, int _x, int _y)
 {
-  if ( aLocalTile.isSafe(_x,_y) == false )
+  if ( data->aLocalTile.isSafe(_x,_y) == false )
   { return false; }
 
   _item->worldX = globalX;
@@ -630,13 +703,13 @@ bool World_Local::put (Item* _item, int _x, int _y)
   _item->y = _y;
   _item->fullX = _item->worldX * LOCAL_MAP_SIZE + _item->x;
   _item->fullY = _item->worldY * LOCAL_MAP_SIZE + _item->y;
-  aLocalTile(_x,_y).add(_item);
+  data->aLocalTile(_x,_y).add(_item);
   vItem.push(_item);
   return true;
 }
 bool World_Local::put (Character* _character, int _x, int _y)
 {
-  if ( aLocalTile.isSafe(_x,_y) == false )
+  if ( data->aLocalTile.isSafe(_x,_y) == false )
   { return false; }
 
   _character->worldX = globalX;
@@ -645,14 +718,14 @@ bool World_Local::put (Character* _character, int _x, int _y)
   _character->y = _y;
   _character->fullX = _character->worldX * LOCAL_MAP_SIZE + _character->x;
   _character->fullY = _character->worldY * LOCAL_MAP_SIZE + _character->y;
-  aLocalTile(_x,_y).add(_character);
+  data->aLocalTile(_x,_y).add(_character);
   vCharacter.push(_character);
   
   return true;
 }
 bool World_Local::put (Creature* _creature, int _x, int _y)
 {
-  if ( aLocalTile.isSafe(_x,_y) == false )
+  if ( data->aLocalTile.isSafe(_x,_y) == false )
   { return false; }
 
   _creature->worldX = globalX;
@@ -661,7 +734,7 @@ bool World_Local::put (Creature* _creature, int _x, int _y)
   _creature->y = _y;
   _creature->fullX = _creature->worldX * LOCAL_MAP_SIZE + _creature->x;
   _creature->fullY = _creature->worldY * LOCAL_MAP_SIZE + _creature->y;
-  aLocalTile(_x,_y).add(_creature);
+  data->aLocalTile(_x,_y).add(_creature);
   vCreature.push(_creature);
   _creature->map=this;
   
@@ -685,7 +758,7 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
   
   // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
   
-  if ( aLocalTile.isSafe(newX,newY) == false )
+  if ( data->aLocalTile.isSafe(newX,newY) == false )
   {
     // Moving between maps.
     
@@ -705,7 +778,7 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
       {
         if (world.isSafe(globalX-nMaps,globalY))
         {
-          aLocalTile(_object->x,_object->y).remove(_object);
+          data->aLocalTile(_object->x,_object->y).remove(_object);
           _object->x=newX;
           _object->y=newY;
           _object->worldX = globalX-nMaps;
@@ -715,26 +788,15 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
           
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
-          
-          //std::cout<<"World conversion:";
+
           world(_object->fullX,_object->fullY);
-          
-          
-          
-          
-          //std::cout<<"Conversion test:\n";
-          
-          
-          //void absoluteToRelative (const int _absoluteX, const int _absoluteY, int * _globalX, int * _globalY, int * _localX, int * _localY)
-          
+
           int gX = 0;
           int gY = 0;
           int lX = 0;
           int lY = 0;
           world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
-          
+
           return false;
           
         }
@@ -757,7 +819,7 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
       {
         if (world.isSafe(globalX+nMaps,globalY))
         {
-          aLocalTile(_object->x,_object->y).remove(_object);
+          data->aLocalTile(_object->x,_object->y).remove(_object);
           _object->x=newX;
           _object->y=newY;
           _object->worldX = globalX+nMaps;
@@ -799,7 +861,7 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
       {
         if (world.isSafe(globalX,globalY-nMaps))
         {
-          aLocalTile(_object->x,_object->y).remove(_object);
+          data->aLocalTile(_object->x,_object->y).remove(_object);
           _object->x=newX;
           _object->y=newY;
           _object->worldX = globalX;
@@ -842,7 +904,7 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
       {
         if (world.isSafe(globalX,globalY+nMaps))
         {
-          aLocalTile(_object->x,_object->y).remove(_object);
+          data->aLocalTile(_object->x,_object->y).remove(_object);
           _object->x=newX;
           _object->y=newY;
           _object->worldX = globalX;
@@ -876,12 +938,12 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
   
   //Moving inside of map
   
-  if ( aLocalTile(newX,newY).hasMovementBlocker() )
+  if ( data->aLocalTile(newX,newY).hasMovementBlocker() )
   {
     return false;
   }
   
-  aLocalTile(_object->x,_object->y).remove(_object);
+  data->aLocalTile(_object->x,_object->y).remove(_object);
   
 
 
@@ -893,7 +955,7 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
   _object->worldX = globalX;
   _object->worldY = globalY;
   
-  aLocalTile(newX,newY).add(_object);
+  data->aLocalTile(newX,newY).add(_object);
   
   _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
   _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
@@ -917,7 +979,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
 {
   // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
   
-  if ( aLocalTile.isSafe(newX,newY) == false )
+  if ( data->aLocalTile.isSafe(newX,newY) == false )
   {
     // Moving between maps.
     
@@ -937,7 +999,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
       {
         if (world.isSafe(globalX-nMaps,globalY))
         {
-          aLocalTile(_object->x,_object->y).remove(_object);
+          data->aLocalTile(_object->x,_object->y).remove(_object);
           _object->x=newX;
           _object->y=newY;
           _object->worldX = globalX-nMaps;
@@ -989,7 +1051,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
       {
         if (world.isSafe(globalX+nMaps,globalY))
         {
-          aLocalTile(_object->x,_object->y).remove(_object);
+          data->aLocalTile(_object->x,_object->y).remove(_object);
           _object->x=newX;
           _object->y=newY;
           _object->worldX = globalX+nMaps;
@@ -1031,7 +1093,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
       {
         if (world.isSafe(globalX,globalY-nMaps))
         {
-          aLocalTile(_object->x,_object->y).remove(_object);
+          data->aLocalTile(_object->x,_object->y).remove(_object);
           _object->x=newX;
           _object->y=newY;
           _object->worldX = globalX;
@@ -1074,7 +1136,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
       {
         if (world.isSafe(globalX,globalY+nMaps))
         {
-          aLocalTile(_object->x,_object->y).remove(_object);
+          data->aLocalTile(_object->x,_object->y).remove(_object);
           _object->x=newX;
           _object->y=newY;
           _object->worldX = globalX;
@@ -1105,19 +1167,19 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
     return false;
 
   }
-  LocalTile* destination = &aLocalTile(newX,newY);
+  LocalTile* destination = &data->aLocalTile(newX,newY);
   
   if ( destination->hasMovementBlocker() )
   {
     return false;
   }
   
-  if (aLocalTile.isSafe(_object->x,_object->y)==false)
+  if (data->aLocalTile.isSafe(_object->x,_object->y)==false)
   {
     return false;
   }
   
-  LocalTile* source = &aLocalTile(_object->x,_object->y);
+  LocalTile* source = &data->aLocalTile(_object->x,_object->y);
   
   //Moving inside of map
   // I'm sure you can do some fancy bitwise stuff here but I can't think of it right now.
@@ -1166,14 +1228,14 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
     }
   }
   
-  aLocalTile(_object->x,_object->y).remove(_object);
+  data->aLocalTile(_object->x,_object->y).remove(_object);
 
   _object->x=newX;
   _object->y=newY;
   _object->worldX = globalX;
   _object->worldY = globalY;
 
-  aLocalTile(newX,newY).add(_object);
+  data->aLocalTile(newX,newY).add(_object);
   
   _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
   _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
@@ -1206,9 +1268,9 @@ bool World_Local::wander (WorldObject* _object)
   else if ( direction==2 ) { ++newY; }
   else { --newY; }
   
-  if ( aLocalTile.isSafe(newX,newY) && aLocalTile(newX,newY).hasMovementBlocker() == false )
+  if ( data->aLocalTile.isSafe(newX,newY) && data->aLocalTile(newX,newY).hasMovementBlocker() == false )
   {
-    aLocalTile(_object->x,_object->y).remove(_object);
+    data->aLocalTile(_object->x,_object->y).remove(_object);
     put(_object,newX,newY);
     return true;
   }
@@ -1236,9 +1298,9 @@ bool World_Local::wander (Character* _object)
   else if ( direction==2 ) { ++newY; }
   else { --newY; }
   
-  if ( aLocalTile.isSafe(newX,newY) && aLocalTile(newX,newY).hasMovementBlocker() == false )
+  if ( data->aLocalTile.isSafe(newX,newY) && data->aLocalTile(newX,newY).hasMovementBlocker() == false )
   {
-    aLocalTile(_object->x,_object->y).remove(_object);
+    data->aLocalTile(_object->x,_object->y).remove(_object);
     put(_object,newX,newY);
     return true;
   }
@@ -1266,7 +1328,7 @@ bool World_Local::wander (Creature* _object)
   else if ( direction==2 ) { ++newY; }
   else { --newY; }
   
-  if ( aLocalTile.isSafe(newX,newY) && aLocalTile(newX,newY).hasMovementBlocker() == false )
+  if ( data->aLocalTile.isSafe(newX,newY) && data->aLocalTile(newX,newY).hasMovementBlocker() == false )
   {
     //aLocalTile(_object->x,_object->y).remove(_object);
     remove(_object);
@@ -1285,9 +1347,9 @@ bool World_Local::remove (WorldObject* _object )
   if ( _object==0) {return false;}
   vObjectGeneric.remove(_object);
   
-  if (aLocalTile.isSafe(_object->x,_object->y))
+  if (data->aLocalTile.isSafe(_object->x,_object->y))
   {
-    aLocalTile(_object->x,_object->y).remove(_object);
+    data->aLocalTile(_object->x,_object->y).remove(_object);
   }
   
   return false;
@@ -1298,9 +1360,9 @@ bool World_Local::remove (Item* _item )
   if ( _item==0) {return false;}
   vItem.remove(_item);
   
-  if (aLocalTile.isSafe(_item->x,_item->y))
+  if (data->aLocalTile.isSafe(_item->x,_item->y))
   {
-    aLocalTile(_item->x,_item->y).remove(_item);
+    data->aLocalTile(_item->x,_item->y).remove(_item);
   }
   
   return false;
@@ -1310,9 +1372,9 @@ bool World_Local::remove (Character* _character )
   if ( _character == 0 ) {return false;}
   vCharacter.remove(_character);
   
-  if (aLocalTile.isSafe(_character->x,_character->y))
+  if (data->aLocalTile.isSafe(_character->x,_character->y))
   {
-    aLocalTile(_character->x,_character->y).remove(_character);
+    data->aLocalTile(_character->x,_character->y).remove(_character);
   }
   
   return false;
@@ -1322,9 +1384,9 @@ bool World_Local::remove (Creature* _creature )
   if ( _creature == 0 ) {return false;}
   vCreature.remove(_creature);
   
-  if (aLocalTile.isSafe(_creature->x,_creature->y))
+  if (data->aLocalTile.isSafe(_creature->x,_creature->y))
   {
-    aLocalTile(_creature->x,_creature->y).remove(_creature);
+    data->aLocalTile(_creature->x,_creature->y).remove(_creature);
   }
   
   return false;
@@ -1335,9 +1397,9 @@ bool World_Local::erase (WorldObject* _object )
   if ( _object==0) {return false;}
   vObjectGeneric.remove(_object);
   
-  if (aLocalTile.isSafe(_object->x,_object->y))
+  if (data->aLocalTile.isSafe(_object->x,_object->y))
   {
-    aLocalTile(_object->x,_object->y).remove(_object);
+    data->aLocalTile(_object->x,_object->y).remove(_object);
   }
   delete _object;
   return false;
@@ -1348,9 +1410,9 @@ bool World_Local::erase (Item* _item )
   if ( _item==0) {return false;}
   vItem.remove(_item);
   
-  if (aLocalTile.isSafe(_item->x,_item->y))
+  if (data->aLocalTile.isSafe(_item->x,_item->y))
   {
-    aLocalTile(_item->x,_item->y).remove(_item);
+    data->aLocalTile(_item->x,_item->y).remove(_item);
   }
   delete _item;
     
@@ -1361,9 +1423,9 @@ bool World_Local::erase (Character* _character )
   if ( _character == 0 ) {return false;}
   vCharacter.remove(_character);
   
-  if (aLocalTile.isSafe(_character->x,_character->y))
+  if (data->aLocalTile.isSafe(_character->x,_character->y))
   {
-    aLocalTile(_character->x,_character->y).remove(_character);
+    data->aLocalTile(_character->x,_character->y).remove(_character);
   }
   delete _character;
   return false;
@@ -1373,9 +1435,9 @@ bool World_Local::erase (Creature* _creature )
   if ( _creature == 0 ) {return false;}
   vCreature.remove(_creature);
   
-  if (aLocalTile.isSafe(_creature->x,_creature->y))
+  if (data->aLocalTile.isSafe(_creature->x,_creature->y))
   {
-    aLocalTile(_creature->x,_creature->y).remove(_creature);
+    data->aLocalTile(_creature->x,_creature->y).remove(_creature);
   }
   delete _creature;
   return false;
@@ -1506,52 +1568,18 @@ Vector <HasXY2 <unsigned long int> *> * World_Local::rayTraceLOS (long unsigned 
   { rayMaxY = world.maximumY; }
   
   //Easy check for overflow
-  
-  
   unsigned long int tempX = rayX;
   unsigned long int tempY = rayY;
     
   auto hXY = new HasXY2 <unsigned long int>;
-    
-  // //rayTraceCoordinates.push( new HasXY(tempX,tempY) );
-  
-  // while (tempX <= rayMaxX)
-  // {
-    // rayTraceCoordinates.push( new HasXY(tempX,rayY) );
-    // rayTraceCoordinates.push( new HasXY(tempX,rayMaxY) );
-    // ++tempX;
-  // }
-  
-  // // On the Y pass we prevent doing the corners again.
-  // ++tempY;
-  // while (tempY < rayMaxY)
-  // {
-    // rayTraceCoordinates.push( new HasXY(rayX,tempY) );
-    // rayTraceCoordinates.push( new HasXY(rayMaxX,tempY) );
-    // ++tempY;
-  // }
-  
-  // // We now have a list of coordinates to raytrace.
-  // //std::cout<<"RayTrace Coordinats size: "<<rayTraceCoordinates.size()<<".\n";
-  
+
   auto vVisibleTiles = new Vector <HasXY2 <unsigned long int> *>;
-  
-  
-  for (int i=0;i<rayTraceCoordinates.size();++i)
-  {
-    //rayTrace (_x,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
-  }
-  
   
   return vVisibleTiles;
 }
 
 void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> * vVisibleTiles)
 {
-  // Old code from ECHO
-  
-  //std::cout<<"Tracing ray: ("<<_x1<<", "<<_y1<<") ("<<_x2<<", "<<_y2<<").\n";
-  
   int xDiff = 0;
   if ( _x1 > _x2 )
   { xDiff = _x2 - _x1; }
@@ -1575,7 +1603,7 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
 			// REVEAL TILE STANDING ON.
 		if ( (_x1==_x2) && (_y1==_y2) )
 		{
-			if ( aLocalTile.isSafe(_x1,_y2) == true )
+			if ( data->aLocalTile.isSafe(_x1,_y2) == true )
 			{ vVisibleTiles->push(new HasXY (_x1,_y1) ); }
 		}
     
@@ -1584,13 +1612,12 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
 		{
       do
       {
-				if ( aLocalTile.isSafe(_x1,_y1) == true )
+				if ( data->aLocalTile.isSafe(_x1,_y1) == true )
 				{
 					vVisibleTiles->push(new HasXY (_x1,_y1) );
           
           if (isBlockingView(_x1,_y1))
           { break; }
-
 				}
 				if ( _y1 < _y2 )
 				{ ++_y1; }
@@ -1603,13 +1630,6 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
       if (_y1 == _y2)
       { vVisibleTiles->push(new HasXY (_x1,_y1) );
       }
-      
-			// while ( _y1 != _y2 )
-			// {
-
-			// }
-      //Final case
-      //vVisibleTiles->push(new HasXY (_x1,_y1) );
 		}
 			//SHALLOW SLOPE
 		else if ( xDiff <= yDiff )
@@ -1619,7 +1639,6 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
 
 			double currentY = _y1;
 
-			//while (_x1 != _x2 )
       do
 			{
 
@@ -1638,7 +1657,7 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
 					roundedY = round(currentY);
 				}
 
-				if ( aLocalTile.isSafe(_x1,roundedY) == true )
+				if ( data->aLocalTile.isSafe(_x1,roundedY) == true )
 				{
 					vVisibleTiles->push(new HasXY (_x1,roundedY) );
           
@@ -1660,8 +1679,6 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
       if (_x1 == _x2)
       { vVisibleTiles->push(new HasXY (_x1,_y2) );
       }
-      //Final case
-      //vVisibleTiles->push(new HasXY (_x1,_y1) );
 		}
 			//STEEP SLOPE.
 		else
@@ -1673,7 +1690,6 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
 
 			double currentX = _x1;
 
-			//while (_y1 != _y2 )
       do
 			{
 				int roundedX=0;
@@ -1685,7 +1701,7 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
 				else
 				{ roundedX = round(currentX); }
 
-				if ( aLocalTile.isSafe(roundedX,_y1) == true )
+				if ( data->aLocalTile.isSafe(roundedX,_y1) == true )
 				{
 					vVisibleTiles->push(new HasXY (roundedX,_y1) );
           
@@ -1706,10 +1722,7 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
       if (_y1 == _y2)
       { vVisibleTiles->push(new HasXY (_x2,_y1) );
       } 
-      //Final case
-      //vVisibleTiles->push(new HasXY (_x1,_y1) );
 		}
-
 }
 
 //SEARCH FUNCTIONS
@@ -1738,7 +1751,7 @@ HasXY* World_Local::getRandomTile()
 
 bool World_Local::isBlockingView(int _x, int _y)
 {
-  return aLocalTile(_x,_y).hasViewBlocker();
+  return data->aLocalTile(_x,_y).hasViewBlocker();
 
 }
 
