@@ -33,7 +33,7 @@ World_Local::World_Local()
   hasRiver=-1;
   
 	seed = 0;
-	biome = NOTHING;
+	baseBiome = NOTHING;
 	//baseMoveCost = 0;
 	//canHaveSettlement = false;
 	baseFertility = 0;
@@ -58,7 +58,7 @@ World_Local::~World_Local()
 
 void World_Local::init(const int _globalX, const int _globalY, const enumBiome _biomeID, const int _seed = 0, const int _hasRiver=-1)
 {
-  biome = _biomeID;
+  baseBiome = _biomeID;
   seed = _seed;
   hasRiver = _hasRiver;
   
@@ -219,7 +219,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
     break;
 }
     
-    if ( biome == MOUNTAIN )
+    if ( baseBiome == MOUNTAIN )
     {
       //std::cout<<"Adding resources to mountain.\n";
       baseMetal=1000;
@@ -261,7 +261,7 @@ bool World_Local::generate()
   std::cout<<"Generate localmap: "<<globalX<<", "<<globalY<<".\n";
   
   //baseBiome = world.aWorldTile(globalX,globalY).biome;
-  baseBiome = biome;
+  //baseBiome = biome;
   seed = world.aSeed(globalX,globalY);
   
   //if ( baseBiome == OCEAN) { return false; }
@@ -275,14 +275,7 @@ bool World_Local::generate()
   
   ArrayS2 <int> aLocalHeight;
   aLocalHeight.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
-  
-  if (riverConnections!=0)
-  {
-    // We need to generate a river here.
 
-    
-  }
-  
   // If we are generating a mountain, set a summit in the middle which is 3x3 tiles.
   if ( baseBiome == MOUNTAIN )
   {
@@ -322,15 +315,15 @@ bool World_Local::generate()
   random.seed(seed);
   
   int midX = LOCAL_MAP_SIZE/2;
-  
+
+
 
   for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
   {
     for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
-      
-      
-
+      // GENERATE RIVERS
+      // FOR NOW THEY JUST RUN ALONG THE EDGE OF THE MAP
       if ( ((riverConnections & 0b01000010) == 0b01000010
        || (riverConnections & 0b00001010) == 0b00001010
        || (riverConnections & 0b11111111) == 0b00000010
@@ -341,8 +334,6 @@ bool World_Local::generate()
         data->aLocalTile(_x,_y).baseTerrain = OCEAN;  
         continue;
       }
-      
-      
       if ( ((riverConnections & 0b00011000) == 0b00011000
         || (riverConnections & 0b01010000) == 0b01010000
        || (riverConnections & 0b11111111) == 0b00001000
@@ -353,12 +344,6 @@ bool World_Local::generate()
         data->aLocalTile(_x,_y).baseTerrain = OCEAN;
         continue;
       }
-      // if ( (riverConnections & 0b01010000) == 0b01010000
-            // && _y > LOCAL_MAP_SIZE-3 )
-      // {
-        // data->aLocalTile(_x,_y).baseTerrain = OCEAN;
-        // continue;
-      // }
       if ( (riverConnections & 0b01001000) == 0b01001000
             && _y > LOCAL_MAP_SIZE-3 && _x > LOCAL_MAP_SIZE-3 )
       {
@@ -372,9 +357,7 @@ bool World_Local::generate()
         data->aLocalTile(_x,_y).baseTerrain = OCEAN;
         continue;
       }
-      
-      
-      
+
       data->aLocalTile(_x,_y).baseTerrain = baseBiome;
       
       if ( baseBiome != OCEAN )
@@ -444,7 +427,7 @@ bool World_Local::generate()
         {
           data->aLocalTile(_x,_y).add(new WorldObject_Tree);
         }
-        else if (random.oneIn(1000) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
+        else if (random.oneIn(1500) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
         //else if (random.oneIn(200))
         {
           auto deer = new Creature_Deer;
@@ -514,122 +497,6 @@ bool World_Local::generate()
     }
     
 
-  }
-  delete vTribesHere;
-  return false;
-  
-	std::cout<<"Checking map data in path: "<<world.strSavePath<<"\n";
-  
-	// strSavePath = "savedata/"+name;
-	
-		// // For now, we will just delete any worlds with the same name.
-	// //std::string systemCommmand = "exec rm -r "+strSavePath;
-	// //system(systemCommmand.c_str());
-	// FileManager::DeleteDirectory(strSavePath,true);
-	
-
-
-  std::string localMapPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + ".dat";
-	
-  std::cout<<"Savefile for this map is: "<<localMapPath<<"\n";
-	// FileManager::createDirectory(strSavePath);
-	
-	if ( FileManager::directoryExists(world.strSavePath) )
-  {
-    if ( FileManager::fileExists(localMapPath) )
-    {
-    }
-    else
-    {
-      //WRITE A FILE
-      FileManager::createFile(localMapPath);
-    }
-	}
-  else
-  {
-    std::cout<<"Error: Unable to access directory.\n";
-  }
-  
-	//aIsLand.init(3000,3000,false);
-	return false;
-}
-
-bool World_Local::generateTestMap()
-{
-  return false;
-  
-  if ( world.isSafe(globalX,globalY) == false )
-  { return false; }
-  
-  baseBiome = world.aWorldTile(globalX,globalY).biome;
-  
-  seed = world.aSeed(globalX,globalY);
-  
-  
-		// GENERATE HEIGHTMAP
-  DiamondSquareAlgorithmCustomRange dsa2;
-	dsa2.maxValue=5;
-  
-  ArrayS2 <int> aLocalHeight;
-  aLocalHeight.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
-
-  dsa2.generate(&aLocalHeight,0,0,0.75,100);
-  
-  // Take the seed for this world tile and expand it into a subseed for every local tile */
-  random.seed(666);
-  
-  for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
-  {
-    for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
-    {
-      //data->vAllTiles.push( new HasXY (_x,_y) );
-
-      data->aLocalTile(_x,_y).baseTerrain = baseBiome;
-      data->aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
-      data->aLocalTile(_x,_y).clearObjects();
-      data->aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
-      
-      
-      data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
-      data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
-      data->aSubterranean(_x,_y).clearObjects();
-      data->aSubterranean(_x,_y).height = -1;
-      
-      if (random.oneIn(20))
-      {
-        //put tree
-        auto tree = new WorldObject_Tree;
-        tree->growth = 1;
-        data->aLocalTile(_x,_y).add(tree);
-      }
-      else if (random.oneIn(1000))
-      {
-        auto tree = new WorldObject_Tree;
-        tree->growth = 0;
-        data->aLocalTile(_x,_y).add(tree);
-      }
-      
-
-    }
-  }
-  //data->vAllTiles.shuffle();
-  
-  for ( int i=0; i<100; ++i)
-  {
-    //spawn some people in.
-  }
-  
-  //Generate global objects
-  Vector <Tribe * > * vTribesHere = world.getTribesOn(globalX,globalY);
-  
-  for (int i=0;i<vTribesHere->size();++i)
-  {
-    Tribe * currentTribe = (*vTribesHere)(i);
-    //RANDOMLY PLACE THE TRIBE CHARACTERS HERE
-    Character * c = new Character;
-
-    data->aLocalTile(0,0).add(c);
-    
   }
   delete vTribesHere;
   return false;
@@ -1868,25 +1735,25 @@ int World_Local::getDominantInfluenceValue ()
 
 std::string World_Local::getTerrainName()
 {
-  return biomeName[biome];
+  return biomeName[baseBiome];
 }
 
 Texture* World_Local::currentTexture()
 {
 	//enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13};
-	if ( biome == NOTHING )
+	if ( baseBiome == NOTHING )
 	{
 		return &TEX_WORLD_TEST_00;
 	}
-	else if ( biome == OCEAN )
+	else if ( baseBiome == OCEAN )
 	{
 		return &TEX_WORLD_TERRAIN_OCEAN_00;
 	}
-	else if (biome == FOREST)
+	else if (baseBiome == FOREST)
 	{
 		return &TEX_WORLD_TERRAIN_FOREST_TREES;
 	}
-	else if (biome == DESERT)
+	else if (baseBiome == DESERT)
 	{
 		return &TEX_WORLD_TERRAIN_DESERT_00;
 	}

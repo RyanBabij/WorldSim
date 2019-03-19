@@ -97,7 +97,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	
 	// texture pointer
 	
-	enumBiome biome; /* Determines what it looks like and is called */
+	//enumBiome biome; /* Determines what it looks like and is called */
 	//short int baseMoveCost; /* how many ap to move onto the tile. */
 	//bool canHaveSettlement;
 	short int baseFertility;
@@ -200,8 +200,6 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   
 	
 	bool generate();
-  
-	bool generateTestMap();
 	
 	bool saveToFile(std::string /* path */);
   

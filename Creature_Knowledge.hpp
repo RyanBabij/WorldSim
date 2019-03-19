@@ -10,9 +10,14 @@
 
 #include <Interface/HasXY.hpp>
 
+#include "Pathing.hpp"
+
 class Creature_Knowledge
 {
 	public:
+  Pathing_Local p;
+  
+  unsigned int pathIndex;
   
     // Vector of places this Character has visited. I think most characters will only visit a handful of maps.
   //Vector <World_Local*> vMapsVisited;
@@ -41,6 +46,9 @@ class Creature_Knowledge
   void updateLOS();
   // Forget all knowledge
   void clear();
+  
+    // Return next step from path. NESW. 0 if no path.
+  char nextStep();
 	
     //returns true if the Character can currently see this tile.
   //bool canSee( World_Local* /* _map */, int /* _x */, int /* _y */ );

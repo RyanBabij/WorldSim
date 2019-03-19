@@ -36,18 +36,12 @@ class Tribe_Elf;
 
 #include "GuildCalendar.hpp"
 
-//class World_Local;
-
 #include "World_Local.hpp"
 
 class WorldObjectGlobal;
 
-
-
 #include "World_Landmass.hpp"
 #include "World_Biome.hpp"
-
-
 
 class Civ;
 class Civ_Dwarven;
@@ -61,18 +55,6 @@ class Civ_Dwarven;
 	
 	// Vector <Tribe*> vTribeID;
 	// Vector <int> vTribeValue;
-// };
-
-// The new smart way to store tile data. Array of WorldTile objects.
-
-// class WorldTile
-// {
-	// public:
-	
-	// unsigned char biomeID;
-	// unsigned char height;
-	// unsigned char [3] colour;
-	
 // };
 
 #include <IdleTick/IdleTickInterface.hpp>
@@ -103,8 +85,6 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
   
 	long long unsigned int ticksBacklog; /* World will simulate these ticks whenever it can, while still relinquishing for input etc. */
 	Timer relinquishTimer;
-	
-
 	
   /* This array stores the base terrain data. */
 	ArrayS2 <enumBiome> aTerrain;
@@ -138,14 +118,10 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	ArrayS2 <WorldObject*> aWorldObject;
 	Vector <WorldObjectGlobal*> vWorldObjectGlobal;
 	
-	
-		// All tile-specific info is to go here. Data access with array syntax eg world(x,y).biomeID;
-	//ArrayS2 <WorldTile> aWorldTile;
-    // A vector of all local maps in memory. These worlds can be rendered and simulated.
-    // This array also replaces WorldTile
+		// Stores all tile-specific information
   ArrayS2 <World_Local> aWorldTile;
+    // A vector of all local maps in memory. These worlds can be rendered and simulated.
   Vector <World_Local*> vWorldLocal;
-  
   
   // All of these should be ported into aWorldTile.
 	ArrayS2 <int> aSeed;
@@ -154,11 +130,6 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	ArrayS2 <int> aBiomeID;
   ArrayS2 <int> aRiverID; /* Contains the river ID */
   
-  
-
-  
-
-	
 	//Vector <std::string> vLandmassName;
 	Vector <World_Landmass*> vLandmass;
 	Vector <World_Biome*> vBiome;
@@ -170,12 +141,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
   // Can be optimised by shifting begin and end pointers.
 	Vector <HasXY*> vAllTiles2;
 
-	
 	unsigned char seaLevel;
 	unsigned char mountainLevel;
-
-
-
   
 	Vector <Tribe*> vTribe;
 	Vector <Civ*> vCiv;
@@ -194,10 +161,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 		// CHECK ALL CIV LOS ARRAYS, AND IF ANY OVERLAP, THEN MAKE THEM DISCOVER EACH OTHER.
 	//void updateCivContacts();
 	
-
   // Return a World_Local object for this local map. Will generate a local map if necessary. Returns null pointer for invalid request.
 	inline World_Local* operator() (const int _x, const int _y);
-
   
   //New operator: Gets tiles using global coordinates.
   // IT DOES NOT RETURN WORLD_LOCAL LIKE THE OTHER FUNCTION

@@ -9,6 +9,7 @@
 */
 
 #include <math.h>
+#include "Item.hpp"
 
 //#define PATHING_MARKERS
 
@@ -96,6 +97,8 @@ class Pathing_Local
     
     finished=false;
     flipBest = false;
+    
+    aNode.init(1,1,0);
 	}
   ~Pathing_Local()
   {
@@ -107,17 +110,47 @@ class Pathing_Local
       }
     } 
   }
-	
+
 	void init(World_Local* _map)
 	{
+
+		sourceOriginalX=0;
+		sourceOriginalY=0;
+    pathSize=0;
+    sX=0;
+    sY=0;
+    tX=0;
+    tY=0;
+    
+//    bestNode=0;
+    finalNode=0;
+    
+    finished=false;
+    flipBest = false;
+    
+    
 		map=_map;
     if (_map==0 || _map->data==0 ) { return; }
     
     if (map->data->aLocalTile.nX < 1 || map->data->aLocalTile.nY < 1)
     { return; }
+  
+    for(int y=0;y<aNode.nY;++y)
+    {
+      for(int x=0;x<aNode.nX;++x)
+      {
+        if (aNode(x,y) != 0 )
+        { delete aNode(x,y);
+        }
+        
+      }
+    } 
     
 		//Node* n = new Node;
 		aNode.init(map->data->aLocalTile.nX,map->data->aLocalTile.nY,0);
+    vNode.clear();
+    vPath.clear();
+    
 
     for(int y=0;y<aNode.nY;++y)
     {
@@ -135,22 +168,12 @@ class Pathing_Local
   // pathAway true sets best nodes as those furthest away from target.
   bool pathLocal(int _startX, int _startY, int _endX, int _endY, int _pathSize=50, bool pathAway=false)
   {
-
     if ( map == 0) { return false; }
     if (map->isSafe (_startX,_startY) == false || map->isSafe (_endX, _endY) == false)
     { return false; }
   
-    if ( pathAway )
-    { //std::cout<<"Pathing away from: "<<_endX<<", "<<_endY<<".\n";
-    }
-    else
-    { //std::cout<<"Pathing to: "<<_endX<<", "<<_endY<<".\n";
-    }
-  
-  
-		
-		sourceOriginalX=+_startX;
-		sourceOriginalY=+_startY;
+		sourceOriginalX=_startX;
+		sourceOriginalY=_startY;
 		
     pathSize = _pathSize;
     vPath.clear();
@@ -171,7 +194,7 @@ class Pathing_Local
     
     while (expandBest(pathAway) && finished==false && pathSize-- > 0)
     {
-      //std::cout<<".";
+
     }
     
     #ifdef PATHING_MARKERS
@@ -180,17 +203,9 @@ class Pathing_Local
       map->put(new Item_Marker_Red  ,vNode(i)->x,vNode(i)->y);
     }
     #endif
-    
-    //if ( )
-    //{
-      //std::cout<<"Getting path\n";
-      getPath(pathAway);
-      //std::cout<<"Done\n";
-    //}
-    
 
-    
-    
+    getPath(pathAway);
+
     std::reverse(vPath.begin(), vPath.end());
     
     if (vPath.size() > 0 )
@@ -199,15 +214,10 @@ class Pathing_Local
       {
         if (vNode(i)->x==tX && vNode(i)->y==tY)
         {
-          std::cout<<"Has target\n";
           return true;
         }
       }
-      //std::cout<<"Final path:\n";
-      //for (int i=0;i<vPath.size();++i) { std::cout<<vPath(i); } std::cout<<".\n";
-      //return true;
     }
-    std::cout<<"No path found\n";
 
     return false;
   }
@@ -485,6 +495,15 @@ class Pathing_Local
       // }
     // } std::cout<<"\n";
   }
+  
+  void printPath()
+  {
+    for (int i=0;i<vPath.size();++i)
+    {
+      std::cout<<vPath(i);
+    }
+  }
+  
 };
 
 #endif

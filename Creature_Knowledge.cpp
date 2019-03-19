@@ -12,6 +12,7 @@
 
 Creature_Knowledge::Creature_Knowledge()
 {
+  pathIndex=0;
 }
 
 void Creature_Knowledge::init()
@@ -57,5 +58,15 @@ void Creature_Knowledge::clear()
   }
 }
 
+char Creature_Knowledge::nextStep()
+{
+  if ( p.vPath.isSafe(pathIndex) )
+  {
+    return p.vPath(pathIndex++);
+  }
+  pathIndex=0;
+  p.vPath.clear();
+  return 0;
+} 
 
 #endif

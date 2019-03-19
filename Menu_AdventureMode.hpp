@@ -590,6 +590,10 @@ class Menu_AdventureMode: public GUI_Interface
     font8x8.drawText(DataTools::toString(worldViewer.hoveredXTileLocal) + ", " + DataTools::toString(worldViewer.hoveredYTileLocal),panelX1,panelY1+200,panelX1+220,panelY1+210,false,true);
     font8x8.drawText(DataTools::toString(worldViewer.hoveredAbsoluteX) + ", " + DataTools::toString(worldViewer.hoveredAbsoluteY),panelX1,panelY1+190,panelX1+220,panelY1+200,false,true);
     
+    if (playerCharacter->thirst > MAX_THIRST - 100)
+    {
+      font8x8.drawText("THIRSTY",panelX1+230,panelY1+230,panelX1+400,panelY1+240,false,true,255,0,0);
+    }
     if (playerCharacter->hunger > MAX_HUNGER - 100)
     {
       font8x8.drawText("HUNGRY",panelX1+230,panelY1+220,panelX1+400,panelY1+230,false,true,255,0,0);
@@ -602,15 +606,14 @@ class Menu_AdventureMode: public GUI_Interface
     //BARS: Health, Stamina, Hunger, Thirst, Energy
     double barWidth = 220;
     double hungerWidth = (MAX_HUNGER-playerCharacter->hunger)*(barWidth/MAX_HUNGER);
+    double thirstWidth = (MAX_THIRST-playerCharacter->thirst)*(barWidth/MAX_THIRST);
     
     Renderer::placeColour4a(255,0,0,255,panelX1,panelY1+232,panelX1+220,panelY1+234);
-    Renderer::placeColour4a(0,0,255,255,panelX1,panelY1+229,panelX1+220,panelY1+231);
+    Renderer::placeColour4a(0,0,255,255,panelX1,panelY1+229,panelX1+thirstWidth,panelY1+231);
     Renderer::placeColour4a(128,64,0,255,panelX1,panelY1+226,panelX1+hungerWidth,panelY1+228);
     Renderer::placeColour4a(128,128,255,255,panelX1,panelY1+223,panelX1+220,panelY1+225);
     Renderer::placeColour4a(255,128,0,255,panelX1,panelY1+220,panelX1+220,panelY1+222);
-
-  
-  
+    
     guiManager.render();
     
 		// DATE
@@ -1021,20 +1024,8 @@ class Menu_AdventureMode: public GUI_Interface
       // PERIOD = WAIT
     if(_keyboard->isPressed(Keyboard::PERIOD))
     {
-      std::cout<<"Player tribe: "<<playerCharacter->tribe<<".\n";
-      std::cout<<"Player tribe: "<<playerCharacter->tribe->getName()<<".\n";
       world.incrementTicksBacklog(1);
       _keyboard->keyUp(Keyboard::PERIOD);
-      
-      Pathing_Local * pl = new Pathing_Local;
-      pl->init(world(playerCharacter->worldX,playerCharacter->worldY));
-      pl->pathLocal(playerCharacter->x,playerCharacter->y,0,0,50,true);
-      
-      if ( pl->vPath.size() > 0)
-      {
-        std::cout<<"Next action: "<<pl->vPath(0)<<".\n";
-      }
-      delete pl;
     }
     
     // Hotbar selection keys

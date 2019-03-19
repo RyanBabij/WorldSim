@@ -9,13 +9,18 @@
   Currently this will consist of explored tiles for line of sight and fog of war.
 */
 
+#include "Pathing.hpp"
+
 class Character_Knowledge
 {
 	public:
+  Pathing_Local p;
   
     // Vector of places this Character has visited. I think most characters will only visit a handful of maps.
   Vector <World_Local*> vMapsVisited;
   Vector < ArrayS2 <char>* > vaTileVisited;
+  
+  Vector <char> vPath; // current path
   
   HasXY currentGoal; /* Characters can wander by moving toward a particular waypoint */
   

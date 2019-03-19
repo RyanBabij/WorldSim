@@ -872,31 +872,31 @@ void World::updateMaps()
   
   if ( playerCharacter != 0 && playerCharacter->tribe != 0 && playerCharacter->knowledge != 0 )
   {
-    if ( playerCharacter->x < 20 )
-    {
-      generateLocal(playerCharacter->worldX-1,playerCharacter->worldY);
-    }
-    if ( playerCharacter->y < 20 )
-    {
-      generateLocal(playerCharacter->worldX,playerCharacter->worldY-1);
-    }
-    if (playerCharacter->x < 20 && playerCharacter->y < 20)
-    {
-      generateLocal(playerCharacter->worldX-1,playerCharacter->worldY-1);
-    }
+    // if ( playerCharacter->x < 20 )
+    // {
+      // generateLocal(playerCharacter->worldX-1,playerCharacter->worldY);
+    // }
+    // if ( playerCharacter->y < 20 )
+    // {
+      // generateLocal(playerCharacter->worldX,playerCharacter->worldY-1);
+    // }
+    // if (playerCharacter->x < 20 && playerCharacter->y < 20)
+    // {
+      // generateLocal(playerCharacter->worldX-1,playerCharacter->worldY-1);
+    // }
     
-    if ( playerCharacter->x > LOCAL_MAP_SIZE-21 )
-    {
-      generateLocal(playerCharacter->worldX+1,playerCharacter->worldY);
-    }
-    if ( playerCharacter->y > LOCAL_MAP_SIZE-21 )
-    {
-      generateLocal(playerCharacter->worldX,playerCharacter->worldY+1);
-    }
-    if (playerCharacter->x > LOCAL_MAP_SIZE-21 && playerCharacter->y > LOCAL_MAP_SIZE-21)
-    {
-      generateLocal(playerCharacter->worldX+1,playerCharacter->worldY+1);
-    }
+    // if ( playerCharacter->x > LOCAL_MAP_SIZE-21 )
+    // {
+      // generateLocal(playerCharacter->worldX+1,playerCharacter->worldY);
+    // }
+    // if ( playerCharacter->y > LOCAL_MAP_SIZE-21 )
+    // {
+      // generateLocal(playerCharacter->worldX,playerCharacter->worldY+1);
+    // }
+    // if (playerCharacter->x > LOCAL_MAP_SIZE-21 && playerCharacter->y > LOCAL_MAP_SIZE-21)
+    // {
+      // generateLocal(playerCharacter->worldX+1,playerCharacter->worldY+1);
+    // }
     
   }
 
@@ -1343,28 +1343,40 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
         // If tile is surrounded by rivers, it becomes a lake tile.
         if ( riverConnectivity == 0b01011010 )
         {
-          aWorldTile(_x,_y).biome=OCEAN;
+          aWorldTile(_x,_y).baseBiome=OCEAN;
+          aTerrain(_x,_y) = OCEAN;
+          aIsLand(_x,_y) = false;
         }
         // All tiles surrounded on at least 3 sides by rivers become lakes.
         if ( riverConnectivity == 0b01010010 )
         {
-          aWorldTile(_x,_y).biome=OCEAN;
+          aWorldTile(_x,_y).baseBiome=OCEAN;
+          aTerrain(_x,_y) = OCEAN;
+          aIsLand(_x,_y) = false;
         }
         else if ( riverConnectivity == 0b01001010 )
         {
-          aWorldTile(_x,_y).biome=OCEAN;
+          aWorldTile(_x,_y).baseBiome=OCEAN;
+          aTerrain(_x,_y) = OCEAN;
+          aIsLand(_x,_y) = false;
         }
         else if ( riverConnectivity == 0b01010010 )
         {
-          aWorldTile(_x,_y).biome=OCEAN;
+          aWorldTile(_x,_y).baseBiome=OCEAN;
+          aTerrain(_x,_y) = OCEAN;
+          aIsLand(_x,_y) = false;
         }
         else if ( riverConnectivity == 0b01011000 )
         {
-          aWorldTile(_x,_y).biome=OCEAN;
+          aWorldTile(_x,_y).baseBiome=OCEAN;
+          aTerrain(_x,_y) = OCEAN;
+          aIsLand(_x,_y) = false;
         }
         else if ( riverConnectivity == 0b00011010 )
         {
-          aWorldTile(_x,_y).biome=OCEAN;
+          aWorldTile(_x,_y).baseBiome=OCEAN;
+          aTerrain(_x,_y) = OCEAN;
+          aIsLand(_x,_y) = false;
         }
         
       }

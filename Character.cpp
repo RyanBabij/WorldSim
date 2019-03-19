@@ -56,6 +56,7 @@ Character::Character()
 	
 	health=0;
 	hunger=0;
+  thirst=0;
 	
 	birthLocation.setXY(0,0);
 	deathLocation.setXY(0,0);
@@ -129,6 +130,7 @@ void Character::init(const int _sex /* =0 */)
 	
 	health=10;
 	hunger=0;
+	thirst=0;
 	
 	tribe=0;
   
@@ -212,8 +214,10 @@ void Character::incrementTicks(int nTicks)
 	secondsCounter+=nTicks;
 	
   hunger+=nTicks;
-  
   if (hunger > MAX_HUNGER) { hunger = MAX_HUNGER; /* isAlive=false; */ }
+  
+  thirst+=nTicks;
+  if (thirst > MAX_THIRST) { thirst = MAX_THIRST; /* isAlive=false; */ }
   
 	while(secondsCounter>=86400)
 	{ 
@@ -242,6 +246,7 @@ void Character::incrementTicks(int nTicks)
 
 void Character::wander()
 {
+  return;
   if ( map==0 ) { return; }
   
   int newX = x;
@@ -266,7 +271,9 @@ void Character::wander()
           
       if (p.vPath.size() > 0)
       {
-        moveDirection=p.vPath(0);
+        knowledge->vPath = p.vPath;
+        moveDirection=p.vPath.back();
+        p.vPath.popBack();
       }
       else // Go somewhere else.
       { knowledge->currentGoal.set(-1,-1);
@@ -591,7 +598,6 @@ void Character::initialiseKnowledge()
 {
   if ( knowledge == 0 )
   {
-    std::cout<<"INIT\n";
     knowledge = new Character_Knowledge;
     knowledge->init();
     

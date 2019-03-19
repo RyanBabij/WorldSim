@@ -74,15 +74,6 @@ void Creature::die()
 	isAlive = false;
 }
 
-
-// void Creature::attack(Creature* target)
-// {
-  // if (target == 0 || target->isAlive == false ) { return; }
-
-// }
-
-
-
 void Creature::wander()
 {
   if ( map==0 ) { return; }
@@ -110,15 +101,17 @@ void Creature::wander()
   }
 
   // Run away from threat if necessary
-  if (closestThreat != 0 && threatDistance < 5 )
+  //if (closestThreat != 0 && threatDistance < 5 )
+  if (false )
   {
-    Pathing_Local p;
-    p.init(map);
-    p.pathLocal(x, y, closestThreat->x, closestThreat->y, 10, true);
+    
+    knowledge->p.init(map);
+    knowledge->p.pathLocal(x, y, closestThreat->x, closestThreat->y, 10, true);
       
-    if (p.vPath.size() > 0)
+    if (knowledge->p.vPath.size() > 0)
     {
-      moveDirection=p.vPath(0);
+      moveDirection=knowledge->p.vPath.back();
+      //p.vPath.popBack();
     }
 
   }
@@ -136,39 +129,36 @@ void Creature::wander()
         
         knowledge->currentGoal.set(randomDestination);
         
-        Pathing_Local p;
-        p.init(map);
-        p.pathLocal(x, y, randomDestination->x, randomDestination->y, 10, false);
-            
-        if (p.vPath.size() > 0)
-        {
-          moveDirection=p.vPath(0);
-        }
-        else // Go somewhere else.
-        { knowledge->currentGoal.set(-1,-1);
-        }
-            
+        knowledge->pathIndex=0;
+        knowledge->p.vPath.clear();
+        
+        //Pathing_Local p;
+        knowledge->p.init(map);
+        knowledge->p.pathLocal(x, y, randomDestination->x, randomDestination->y, 20, false);
+
+        moveDirection=knowledge->nextStep();
+        
+
         delete randomDestination;
       }
-      else
+      else // Continue on path
       {
-        Pathing_Local p;
-        p.init(map);
-        bool pathingSuccess = p.pathLocal(x, y, knowledge->currentGoal.x, knowledge->currentGoal.y, 10, false);
+        moveDirection = knowledge->nextStep();
         
-        if (pathingSuccess == false && p.vPath.size() < 9 )
-        { knowledge->currentGoal.set(-1,-1);
-        }
-        
-        
-        if (p.vPath.size() > 0)
+        if (moveDirection==0) // There's no steps left, calculate more.
         {
-          moveDirection=p.vPath(0);
+          knowledge->p.init(map);
+
+          bool pathingSuccess = knowledge->p.pathLocal(x, y, knowledge->currentGoal.x, knowledge->currentGoal.y, 20, false);
+          
+          if (pathingSuccess == false && knowledge->p.vPath.size() < 9 )
+          { knowledge->currentGoal.set(-1,-1);
+          }
+          moveDirection = knowledge->nextStep();
         }
-        else { knowledge->currentGoal.set(-1,-1); }
+        
       }
     }
-    
   }
 
   int direction = Random::randomInt(3);

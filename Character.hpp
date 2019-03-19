@@ -50,17 +50,18 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	
 	int money; /* Gold coins or some shit. */
 	
-	int health;
-	int hunger; /* 500 = MAX_HUNGER */
+	short int health;
+	short int hunger; /* 500 = MAX_HUNGER */
+  short int thirst;
 	
 		/* Governing attributes 0-100  (Might remove later) */
-	int strength;
-	int agility;
-	int charisma;
-	int intelligence;
-	int perception;
-	int endurance;
-	int courage;
+	short int strength;
+	short int agility;
+	short int charisma;
+	short int intelligence;
+	short int perception;
+	short int endurance;
+	short int courage;
   
     /* Skills */
     

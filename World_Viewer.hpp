@@ -1008,7 +1008,6 @@ void switchTarget(World_Local* _worldLocal)
                 break;
               }
             }
-            
           }
           
 						// RENDER THE LOCAL TILE
@@ -1227,29 +1226,31 @@ void switchTarget(World_Local* _worldLocal)
             
             
               // DRAW BASE TERRAIN (BIOME)
+						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==false)
+						{
+							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
+						}
             
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == DESERT)
+						else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == DESERT)
 						{
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_00, false);
 						}
-            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == ICE)
+            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == ICE)
             {
               Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_ICE, false);
             }
-            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == SNOW)
+            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == SNOW)
             {
               Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_SNOW, false);
             }
-            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == STEPPES)
+            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == STEPPES)
             {
               Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_STEPPE, false);
             }
-            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == WETLAND)
+            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == WETLAND)
             {
               Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_SWAMP, false);
             }
-            
-            
 						else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY))
 						{
 							if (world->aSeed(tileX,tileY) % 4 == 0)
@@ -1355,33 +1356,33 @@ void switchTarget(World_Local* _worldLocal)
 								// glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
 							// }
 						}
-						else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==false)
-						{
-							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
-						}
+						// else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==false)
+						// {
+							// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
+						// }
 						
 
               // DRAW IMPROVEMENTS (FOREST, RIVER)
               // Improvements can layer over base terrain, and each other. For example a tile may have a river and forest.
             
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == FOREST)
+						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == FOREST)
 						{
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_FOREST_TREES, false);
 						}
-						else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == JUNGLE)
+						else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY) &&world->aWorldTile(tileX,tileY).baseBiome == JUNGLE)
 						{
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_JUNGLE, false);
 						}
             
             
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == MOUNTAIN)
+						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == MOUNTAIN)
 						{
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
               //glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_MOUNTAIN_00, false);
               //glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 						}
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aTerrain(tileX,tileY) == HILLY)
+						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == HILLY)
 						{
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
               //glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
@@ -1393,7 +1394,7 @@ void switchTarget(World_Local* _worldLocal)
             
             
             
-            if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aRiverID(tileX,tileY) != -1)
+            if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY) && world->aRiverID(tileX,tileY) != -1)
 						{
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_01, false);
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_RIVER_EAST, false);
