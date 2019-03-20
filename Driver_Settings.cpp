@@ -21,6 +21,8 @@
 #define PORTABLE_INT_MAX 32767
 
 
+#define SAVE_DATA // Program will save data to file. It saves a lot of data and it can end up taking up a lot of space
+
   // Player stuff.
   // The player is a character object, however he has a few special attributes which are handled differently.
   // For efficiency these are handled globally to prevent making a class which is only inherited by a single
@@ -31,7 +33,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.134 Win32 dev";
+const std::string VERSION = "0.0.135 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -88,7 +90,7 @@ const int CALENDAR_SECONDS_PER_MINUTE = 2;
 const int LOCAL_MAP_SIZE = 65;
 //const int LOCAL_MAP_SIZE = 129;
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
-const int MAX_VIEW_RANGE = 2;
+const int MAX_VIEW_RANGE = 5;
 
   // CHARACTER STUFF
 const int MAX_HUNGER = 1000;
@@ -98,7 +100,7 @@ const int MAX_THIRST = 300;
 // (One for the player's current map, and three neighboring maps).
 // However additional maps should be allocated for background processing.
 // Not currently functional
-const int MAX_LOCAL_MAPS_IN_MEMORY = 10;
+const int MAX_LOCAL_MAPS_IN_MEMORY = 12;
 
 unsigned int RESOLUTIONX=1024, RESOLUTIONY=720;
 bool RESET=false;
@@ -110,7 +112,7 @@ const bool OUTPUT_FRAMERATE = false;
 const int OUTPUT_FRAMERATE_SAMPLE_SIZE = 50;
 
 const bool LIMIT_FRAMERATE = true;
-const double FRAMERATE = 60; // SETTING IT TO A REASONABLE VALUE CAN GREATLY REDUCE STRESS ON GPU
+const double FRAMERATE = 30; // SETTING IT TO A REASONABLE VALUE CAN GREATLY REDUCE STRESS ON GPU
 const double POLLSPERSECOND = 30; // NOT CURRENTLY IMPLEMENTED
 double LOGIC_PER_SECOND = 1;
 const double PHYSICS_PER_SECOND = 10;

@@ -25,11 +25,14 @@ World_Local::World_Local()
 {
 	globalX=0;
 	globalY=0;
-	
+  
+  initialized = false;
+	active = false;
+  
 	nX=LOCAL_MAP_SIZE;
 	nY=LOCAL_MAP_SIZE;
-	active=false;
-	generated=false;
+
+
   hasRiver=-1;
   
 	seed = 0;
@@ -53,7 +56,31 @@ World_Local::World_Local()
 
 World_Local::~World_Local()
 {
+  
+  initialized = false;
+	active = false;
+  
+  vCreature.deleteAll();
+  vItem.deleteAll();
+  vObjectGeneric.deleteAll();
+  
+  if (data!=0)
+  { delete data; }
+  data=0;
 }
+
+void World_Local::unload()
+{
+	active = false;
+  
+  vCreature.deleteAll();
+  vItem.deleteAll();
+  vObjectGeneric.deleteAll();
+  
+  if (data!=0)
+  { delete data; }
+  data=0;
+} 
 
 
 void World_Local::init(const int _globalX, const int _globalY, const enumBiome _biomeID, const int _seed = 0, const int _hasRiver=-1)
@@ -233,7 +260,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 
 inline LocalTile* World_Local::operator() (int _x, int _y)
 {
-  if (isSafe(_x,_y))
+  if (data && isSafe(_x,_y))
   {
     return &data->aLocalTile(_x,_y);
   }
@@ -254,21 +281,45 @@ bool World_Local::isSafe(HasXY* xy)
 
 bool World_Local::generate()
 {
+  if ( active ) { return true; }
+  
   if ( world.isSafe(globalX,globalY) == false )
   { return false; }
   if (data==0) { data = new Data; }
+  
+  if (initialized)
+  {
+    //std::cout<<"World was already previously generated\n";
+  }
 
-  std::cout<<"Generate localmap: "<<globalX<<", "<<globalY<<".\n";
+  initialized = true;
+  active = true;
+  
+  //std::cout<<"Generate localmap: "<<globalX<<", "<<globalY<<".\n";
   
   //baseBiome = world.aWorldTile(globalX,globalY).biome;
   //baseBiome = biome;
-  seed = world.aSeed(globalX,globalY);
+  //seed = world.aSeed(globalX,globalY);
   
   //if ( baseBiome == OCEAN) { return false; }
 
   data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
   data->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+  //std::cout<<"arrays inited\n";
   
+  // if ( initialized )
+  // {
+    
+    // for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+    // {
+      // for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+      // { data->aLocalTile(_x,_y).baseTerrain = OCEAN;  
+      // }
+    // }
+    // std::cout<<"Done\n";
+    // return true;
+  // }
+  // std::cout<<"done 2\n";
 		// GENERATE HEIGHTMAP
   DiamondSquareAlgorithmCustomRange dsa2;
 	dsa2.maxValue=5;
@@ -499,52 +550,45 @@ bool World_Local::generate()
 
   }
   delete vTribesHere;
-  return false;
   
-	std::cout<<"Checking map data in path: "<<world.strSavePath<<"\n";
-  
-	// strSavePath = "savedata/"+name;
-	
-		// // For now, we will just delete any worlds with the same name.
-	// //std::string systemCommmand = "exec rm -r "+strSavePath;
-	// //system(systemCommmand.c_str());
-	// FileManager::DeleteDirectory(strSavePath,true);
-	
+  save();
 
+	return false;
+}
 
+void World_Local::save()
+{
   std::string localMapPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + ".dat";
 	
-  std::cout<<"Savefile for this map is: "<<localMapPath<<"\n";
+  //std::cout<<"Savefile for this map is: "<<localMapPath<<"\n";
 	// FileManager::createDirectory(strSavePath);
 	
-	if ( FileManager::directoryExists(world.strSavePath) )
-  {
-    if ( FileManager::fileExists(localMapPath) )
-    {
-    }
-    else
-    {
-      //WRITE A FILE
-      FileManager::createFile(localMapPath);
-    }
-	}
-  else
+	if ( FileManager::directoryExists(world.strSavePath)  == false )
   {
     std::cout<<"Error: Unable to access directory.\n";
-  }
+    return;
+	}
   
-	//aIsLand.init(3000,3000,false);
-	return false;
-}
+  // Make the file or clear it.
+  FileManager::makeNewFile(localMapPath);
+  
+  std::string saveData="";
 
-bool World_Local::saveToFile(std::string _path)
-{
-	return false;
+  // Only unload the local map if it is loaded.
+  for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+  {
+    for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+    {
+      saveData+=".";
+    } saveData+="\n";
+  }
+  FileManager::writeString(saveData, localMapPath);
 }
-
 
 bool World_Local::put (WorldObject* _object, int _x, int _y)
 {
+  if ( !data ) { return false; }
+  
   if ( data->aLocalTile.isSafe(_x,_y) == false )
   { return false; }
 
@@ -561,6 +605,8 @@ bool World_Local::put (WorldObject* _object, int _x, int _y)
 
 bool World_Local::put (Item* _item, int _x, int _y)
 {
+  if ( !data ) { return false; }
+  
   if ( data->aLocalTile.isSafe(_x,_y) == false )
   { return false; }
 
@@ -576,6 +622,7 @@ bool World_Local::put (Item* _item, int _x, int _y)
 }
 bool World_Local::put (Character* _character, int _x, int _y)
 {
+  if ( !data ) { return false; }
   if ( data->aLocalTile.isSafe(_x,_y) == false )
   { return false; }
 
@@ -592,6 +639,7 @@ bool World_Local::put (Character* _character, int _x, int _y)
 }
 bool World_Local::put (Creature* _creature, int _x, int _y)
 {
+  if ( !data ) { return false; }
   if ( data->aLocalTile.isSafe(_x,_y) == false )
   { return false; }
 
@@ -622,7 +670,7 @@ bool World_Local::put (Creature* _creature, int _x, int _y)
   // We need to implement optional map-only restriction
 bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
 {
-  
+  if ( !data ) { return false; }
   // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
   
   if ( data->aLocalTile.isSafe(newX,newY) == false )
@@ -844,6 +892,7 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
   //Yeah this is a mess.
 bool World_Local::moveObject (Character* _object, int newX, int newY )
 {
+  if ( !data ) { return false; }
   // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
   
   if ( data->aLocalTile.isSafe(newX,newY) == false )
@@ -871,6 +920,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
           _object->y=newY;
           _object->worldX = globalX-nMaps;
           _object->worldY = globalY;
+          _object->map = world(globalX-nMaps,globalY);
           
           world(globalX-nMaps,globalY)->put(_object,newX,newY);
           
@@ -880,15 +930,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
           
           //std::cout<<"World conversion:";
           world(_object->fullX,_object->fullY);
-          
-          
-          
-          
-          //std::cout<<"Conversion test:\n";
-          
-          
-          //void absoluteToRelative (const int _absoluteX, const int _absoluteY, int * _globalX, int * _globalY, int * _localX, int * _localY)
-          
+
           int gX = 0;
           int gY = 0;
           int lX = 0;
@@ -923,6 +965,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
           _object->y=newY;
           _object->worldX = globalX+nMaps;
           _object->worldY = globalY;
+          _object->map = world(globalX+nMaps,globalY);
           world(globalX+nMaps,globalY)->put(_object,newX,newY);
           
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
@@ -965,6 +1008,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
           _object->y=newY;
           _object->worldX = globalX;
           _object->worldY = globalY-nMaps;
+          _object->map = world(globalX,globalY-nMaps);
           world(globalX,globalY-nMaps)->put(_object,newX,newY);
           
           
@@ -1008,6 +1052,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
           _object->y=newY;
           _object->worldX = globalX;
           _object->worldY = globalY+nMaps;
+          _object->map = world(globalX,globalY+nMaps);
           world(globalX,globalY+nMaps)->put(_object,newX,newY);
           
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
@@ -1114,6 +1159,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
   int lX = 0;
   int lY = 0;
   world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
+  
   return true;
 }
 
@@ -1122,6 +1168,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
 bool World_Local::wander (WorldObject* _object)
 {
   if ( _object==0 ) { return false; }
+  if ( !data ) { return false; }
   
   // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
   
@@ -1151,6 +1198,7 @@ bool World_Local::wander (WorldObject* _object)
   // For now objects don't leave their map.
 bool World_Local::wander (Character* _object)
 {
+  if ( !data ) { return false; }
   if ( _object==0 ) { return false; }
   
   // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
@@ -1181,6 +1229,7 @@ bool World_Local::wander (Character* _object)
   // For now objects don't leave their map.
 bool World_Local::wander (Creature* _object)
 {
+  if ( !data ) { return false; }
   if ( _object==0 ) { return false; }
 
   // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
@@ -1211,6 +1260,7 @@ bool World_Local::wander (Creature* _object)
 
 bool World_Local::remove (WorldObject* _object )
 {
+  if ( !data ) { return false; }
   if ( _object==0) {return false;}
   vObjectGeneric.remove(_object);
   
@@ -1224,6 +1274,7 @@ bool World_Local::remove (WorldObject* _object )
 
 bool World_Local::remove (Item* _item )
 {
+  if ( !data ) { return false; }
   if ( _item==0) {return false;}
   vItem.remove(_item);
   
@@ -1236,6 +1287,7 @@ bool World_Local::remove (Item* _item )
 }
 bool World_Local::remove (Character* _character )
 {
+  if ( !data ) { return false; }
   if ( _character == 0 ) {return false;}
   vCharacter.remove(_character);
   
@@ -1248,6 +1300,7 @@ bool World_Local::remove (Character* _character )
 }
 bool World_Local::remove (Creature* _creature )
 {
+  if ( !data ) { return false; }
   if ( _creature == 0 ) {return false;}
   vCreature.remove(_creature);
   
@@ -1261,6 +1314,7 @@ bool World_Local::remove (Creature* _creature )
 
 bool World_Local::erase (WorldObject* _object )
 {
+  if ( !data ) { return false; }
   if ( _object==0) {return false;}
   vObjectGeneric.remove(_object);
   
@@ -1274,6 +1328,7 @@ bool World_Local::erase (WorldObject* _object )
 
 bool World_Local::erase (Item* _item )
 {
+  if ( !data ) { return false; }
   if ( _item==0) {return false;}
   vItem.remove(_item);
   
@@ -1287,6 +1342,7 @@ bool World_Local::erase (Item* _item )
 }
 bool World_Local::erase (Character* _character )
 {
+  if ( !data ) { return false; }
   if ( _character == 0 ) {return false;}
   vCharacter.remove(_character);
   
@@ -1299,6 +1355,7 @@ bool World_Local::erase (Character* _character )
 }
 bool World_Local::erase (Creature* _creature )
 {
+  if ( !data ) { return false; }
   if ( _creature == 0 ) {return false;}
   vCreature.remove(_creature);
   
@@ -1312,6 +1369,7 @@ bool World_Local::erase (Creature* _creature )
 
 bool World_Local::contains(WorldObject* _target)
 {
+  if ( !data ) { return false; }
   if (vObjectGeneric.contains(_target))
   {
     return true;
@@ -1319,6 +1377,7 @@ bool World_Local::contains(WorldObject* _target)
 }
 bool World_Local::contains(Character* _target)
 {
+  if ( !data ) { return false; }
   if (vCharacter.contains(_target))
   {
     return true;
@@ -1329,6 +1388,7 @@ bool World_Local::contains(Character* _target)
     // This raytrace stays within map boundaries.
 Vector <HasXY*> * World_Local::rayTraceLOS (int _x, int _y, const int RANGE)
 {
+  if ( !data ) { return 0; }
   if (RANGE <= 0) { return 0; }
   
   if (_x < 0 || _y < 0 || _x >= LOCAL_MAP_SIZE || _y >= LOCAL_MAP_SIZE )
@@ -1400,6 +1460,7 @@ Vector <HasXY*> * World_Local::rayTraceLOS (int _x, int _y, const int RANGE)
     // Yes, this is a confusing overload which should be fixed in the future.
 Vector <HasXY2 <unsigned long int> *> * World_Local::rayTraceLOS (long unsigned int _x, long unsigned int _y, const int RANGE)
 {
+  if ( !data ) { return 0; }
   if (RANGE <= 0) { return 0; }
   
   if ( _x >= (long unsigned int) LOCAL_MAP_SIZE*world.nX || _y >= (long unsigned int) LOCAL_MAP_SIZE*world.nY )
@@ -1447,6 +1508,7 @@ Vector <HasXY2 <unsigned long int> *> * World_Local::rayTraceLOS (long unsigned 
 
 void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> * vVisibleTiles)
 {
+  if ( !data ) { return; }
   int xDiff = 0;
   if ( _x1 > _x2 )
   { xDiff = _x2 - _x1; }
@@ -1596,6 +1658,7 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
 
 Vector <Character*> * World_Local::getAdjacentCharacters(int _x, int _y)
 {
+  if ( !data ) { return 0; }
   auto vNearbyCharacters = new Vector <Character*>;
   for (int i=0;i<vCharacter.size();++i)
   {
@@ -1610,6 +1673,7 @@ Vector <Character*> * World_Local::getAdjacentCharacters(int _x, int _y)
 
 HasXY* World_Local::getRandomTile()
 {
+  if ( !data ) { return 0; }
   auto xy = new HasXY ( Random::randomInt(nX-1), Random::randomInt(nY-1) );
   return xy;
 }
@@ -1618,6 +1682,7 @@ HasXY* World_Local::getRandomTile()
 
 bool World_Local::isBlockingView(int _x, int _y)
 {
+  if ( !data ) { return true; }
   return data->aLocalTile(_x,_y).hasViewBlocker();
 
 }
@@ -1625,6 +1690,7 @@ bool World_Local::isBlockingView(int _x, int _y)
 	// Increments the map by nTicks ticks. Higher values may lead to abstraction.
 void World_Local::incrementTicks(int nTicks)
 {
+  if ( !data ) { return; }
   Vector <Creature*> vToMove;
   for (int i=0;i<vCreature.size();++i)
   {
@@ -1659,6 +1725,7 @@ void World_Local::incrementTicks(int nTicks)
 
 void World_Local::addInfluence (Tribe* tribe, int amount)
 {
+  
   if ( tribe == 0 ) { return; }
   
   // Note that std::map will automatically initialise new entries.

@@ -7,6 +7,10 @@
 	Implementation of "World.hpp".
 */
 
+
+#define SAVE_DATA // Enables file operations to save generated world.
+
+
 //#include<set> /* For raytraceLOS */
 
 #include <NameGen/NameGen.hpp>
@@ -75,6 +79,11 @@ World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
   worldFilePath = "";
   
   isRaining=false;
+}
+
+World::~World()
+{
+  std::cout<<"WORLD CLEANUP\n";
 }
 
 World_Local* World::operator() (const int _x, const int _y)
@@ -902,9 +911,9 @@ void World::updateMaps()
 
 }
 
-void World::handleTickBacklog()
+bool World::handleTickBacklog()
 {
-	if (ticksBacklog<=0) { return; }
+	if (ticksBacklog<=0) { return false; }
 	
 	unsigned long long int MAXIMUM_TICKS_AT_ONCE = 2592000;
 	
@@ -918,22 +927,48 @@ void World::handleTickBacklog()
 		
 		if (relinquishTimer.uSeconds > 100 )
 		{
-			return;
+			return true;
 		}
 	}
 	
 	// We have less than maximum ticks remaining, so finish them.
 	incrementTicks(ticksBacklog);
 	ticksBacklog=0;
+  
+  return true;
 }
 
 void World::idleTick()
 {
-	handleTickBacklog();
+  if ( active == false ) { return; }
+  
   if ( playerCharacter != 0 )
   {
     playerCharacter->updateKnowledgeIdle();
   }
+  
+	if (handleTickBacklog() == false)
+  {
+    playerKeypressTimer.update();
+    
+    if (playerKeypressTimer.fullSeconds > 0.5 )
+    {
+      for (int _y=0;_y<nY;++_y)
+      {
+        for (int _x=0;_x<nX;++_x)
+        {
+          if ( aWorldTile(_x,_y).initialized==false && aWorldTile(_x,_y).active==false
+          && aWorldTile(_x,_y).baseBiome != OCEAN )
+          {
+            generateLocal(_x,_y);
+            return;
+          }
+        }
+      }
+    }
+
+  }
+
 }
 
 
@@ -1018,10 +1053,11 @@ void World::buildArrays()
 			const int lightModifier = aLightModifier2(_x,_y);
 			//const int lightModifier = 0;
 			
-			aSeed(_x,_y) = random.randInt(PORTABLE_INT_MAX-1);
+			//aSeed(_x,_y) = random.randInt(PORTABLE_INT_MAX-1);
 
         //Initialise the WorldTile with biome enum.
-      aWorldTile(_x,_y).init(_x,_y,aTerrain(_x,_y), aSeed(_x,_y),aRiverID(_x,_y));
+      //aWorldTile(_x,_y).init(_x,_y,aTerrain(_x,_y), aSeed(_x,_y),aRiverID(_x,_y));
+      aWorldTile(_x,_y).init(_x,_y,aTerrain(_x,_y), 0, aRiverID(_x,_y));
         //Initialise the subterranean tiles
 			
 			int _red;
@@ -1145,7 +1181,7 @@ void World::buildArrays()
 		}
 	}
   
-  #if SAVE_DATA
+  #ifdef SAVE_DATA
 	Png png;
 	png.encodeS3(strSavePath+"/worldmap.png",&aTopoMap);
   #endif
@@ -1171,8 +1207,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	name=_worldName;
 	
   #ifdef SAVE_DATA
-	FileManager::createDirectory("savedata");
-	if ( FileManager::directoryExists("savedata") == false )
+	FileManager::createDirectory(SAVE_FOLDER_PATH);
+	if ( FileManager::directoryExists(SAVE_FOLDER_PATH) == false )
 	{
 		std::cout<<"Error: Unable to create save directory.\n";
 		return;
@@ -1189,14 +1225,14 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	mX=x;
   landmassSeed = seed;
 	
-	strSavePath = "savedata/"+name;
+	strSavePath = SAVE_FOLDER_PATH+"/"+name;
   
   #ifdef SAVE_DATA
   
 		// For now, we will just delete any worlds with the same name.
 	//std::string systemCommmand = "exec rm -r "+strSavePath;
 	//system(systemCommmand.c_str());
-	FileManager::DeleteDirectory(strSavePath,true);
+	FileManager::deleteDirectory(strSavePath,true);
 	
 
 	
@@ -1220,7 +1256,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 
       // Lambdas look much nicer with threads.
     std::thread t1( [this,x,y] { aWorldObject.init(x,y,0); aTopoMap.init(x,y,3,0); });
-    std::thread t2( [this,x,y] { aTerrain.init(x,y,NOTHING); aSeed.init(x,y,0); });
+    //std::thread t2( [this,x,y] { aTerrain.init(x,y,NOTHING); aSeed.init(x,y,0); });
+    std::thread t2( [this,x,y] { aTerrain.init(x,y,NOTHING); });
     std::thread t3( [this,x,y] { aLandmassID.init(x,y,-1); aIsLand.init(x,y,true); });
     std::thread t4( [this,x,y] { aBiomeID.init(x,y,-1); aWorldTile.initClass(x,y); });
     std::thread t5( [this] { vWorldObjectGlobal.deleteAll(); vLandmass.deleteAll(); vBiome.deleteAll(); vTribe.clear(); });
@@ -1232,7 +1269,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 		aTopoMap.init(x,y,3,0);
 		aTerrain.init(x,y,NOTHING);
 		//aInfluence.init(x,y,0);
-		aSeed.init(x,y,0);
+		//aSeed.init(x,y,0);
 		
 		aLandmassID.init(x,y,-1);
 		aBiomeID.init(x,y,-1);
@@ -1291,6 +1328,17 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   FileManager::writeTag("SIZEX",DataTools::toString(nX),worldFilePath);
   FileManager::writeTag("SIZEY",DataTools::toString(nY),worldFilePath);
   //FileManager::writeString(DataTools::toString(landmassSeed)+"\n"+name+"\n"+DataTools::toString(nX)+"\n"+DataTools::toString(nY)+"\n",worldFilePath);
+  
+  
+  //Add the world to a master list. This is used for later loading the world from a menu.
+  // The path is where you can go to load it.
+  // The version ID allows us to see if the save will be compatible with this version (spoilers: it won't)
+  
+  std::string masterData = "";
+  masterData+="[SAVEPATH:"+strSavePath+"]";
+  masterData+="[VERSION ID:"+COMPILE_COUNT+"]";
+  
+  FileManager::writeString(masterData,SAVE_FOLDER_PATH+"/master.dat");
 	#endif
   
   #if defined THREAD_ALL || defined THREAD_WORLD_INIT 
@@ -1703,7 +1751,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 //This makes the local map visible.
 void World::generateLocal(const int _localX, const int _localY)
 {
-  if ( isSafe(_localX,_localY) == false )
+  if ( isSafe(_localX,_localY) == false || active == false )
   { return; }
 
   // Only generate this local map if it isn't already in memory.
@@ -1714,6 +1762,12 @@ void World::generateLocal(const int _localX, const int _localY)
       //std::cout<<"ALREADY GENERATED\n";
       return;
     }
+  }
+
+  if ( aWorldTile(_localX,_localY).initialized )
+  {
+    //std::cout<<"Already initialised, load from file.\n";
+    //return;
   }
 
   
@@ -1727,8 +1781,10 @@ void World::generateLocal(const int _localX, const int _localY)
   //auto worldLocal = new World_Local;
   //worldLocal->init(_localX,_localY);
   aWorldTile(_localX,_localY).generate();
+  aWorldTile(_localX,_localY).active=true;
+  aWorldTile(_localX,_localY).initialized=true;
   
-  vWorldLocal.push(&aWorldTile(_localX,_localY));
+  
   
   //There needs to be a minimum of 3 maps active at any time. (1 map the player is currently in,
     // and potentially three neighboring maps. Additional maps will likely need to be loaded in
@@ -1736,14 +1792,59 @@ void World::generateLocal(const int _localX, const int _localY)
     // I'll need to make an algorithm to decide which maps to purge.
   
   if ( vWorldLocal.size() > MAX_LOCAL_MAPS_IN_MEMORY )
+  //if ( false )
   {
+    //std::cout<<"Too many maps\n";
+    
+    // Pick a map to unload from memory.
+    // Note: Don't delete World_Local. It must always be loaded. However some internal data must be cleaned up.
+    // Don't unload tiles near player.
+    
+    Vector <World_Local*> vImportantMaps;
+    if ( playerCharacter != 0)
+    {
+      if ( aWorldTile.isSafe(playerCharacter->worldX,playerCharacter->worldY) )
+      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX,playerCharacter->worldY) ); }
+    
+      if ( aWorldTile.isSafe(playerCharacter->worldX-1,playerCharacter->worldY) )
+      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX-1,playerCharacter->worldY) ); }
+      if ( aWorldTile.isSafe(playerCharacter->worldX+1,playerCharacter->worldY) )
+      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX+1,playerCharacter->worldY) ); }
+    
+      if ( aWorldTile.isSafe(playerCharacter->worldX,playerCharacter->worldY+1) )
+      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX,playerCharacter->worldY+1) ); }
+      if ( aWorldTile.isSafe(playerCharacter->worldX-1,playerCharacter->worldY+1) )
+      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX-1,playerCharacter->worldY+1) ); }
+      if ( aWorldTile.isSafe(playerCharacter->worldX+1,playerCharacter->worldY+1) )
+      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX+1,playerCharacter->worldY+1) ); }
+    
+      if ( aWorldTile.isSafe(playerCharacter->worldX,playerCharacter->worldY-1) )
+      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX,playerCharacter->worldY-1) ); }
+      if ( aWorldTile.isSafe(playerCharacter->worldX-1,playerCharacter->worldY-1) )
+      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX-1,playerCharacter->worldY-1) ); }
+      if ( aWorldTile.isSafe(playerCharacter->worldX+1,playerCharacter->worldY-1) )
+      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX+1,playerCharacter->worldY-1) ); }
+    }
+
+    for ( int i=0;i<vWorldLocal.size();++i)
+    {
+      //if (vImportantMaps.contains(vWorldLocal)
+      if (vImportantMaps.contains(vWorldLocal(i)) == false )
+      {
+        vWorldLocal(i)->active=false;
+        vWorldLocal(i)->unload();
+        vWorldLocal.eraseSlot(i);
+        break;
+      }
+    }
+    
+    
       // UNLOAD LOCAL MAP HERE
     //delete vWorldLocal(0);
     //vWorldLocal.eraseSlot(0);
   }
+  vWorldLocal.push(&aWorldTile(_localX,_localY));
   
-  return;
-
 }
 
 void World::unloadLocal(const int _localX, const int _localY)
@@ -1751,12 +1852,64 @@ void World::unloadLocal(const int _localX, const int _localY)
   if ( isSafe(_localX,_localY) == false )
   { return; }
 
+	FileManager::createDirectory(SAVE_FOLDER_PATH);
+	if ( FileManager::directoryExists(SAVE_FOLDER_PATH) == false )
+	{
+		std::cout<<"Error: Unable to create save directory.\n";
+		return;
+	}
+
   // Only unload the local map if it is loaded.
   for ( int i=0;i<vWorldLocal.size();++i)
   {
     if ( vWorldLocal(i)->globalX == _localX && vWorldLocal(i)->globalY == _localY )
     {
-      //std::cout<<"ALREADY GENERATED\n";
+      
+      
+      //save to file
+      SaveFileManager sfm;
+      
+      std::string saveData="";
+      
+      for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+      {
+        for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+        {
+          saveData+=".";
+        } saveData+="\n";
+      }
+  
+  // WORLD INFO
+  
+  // sfm.addVariable("WORLDNAME",name);
+  // sfm.addVariable("LANDSEED",landmassSeed);
+  // sfm.addVariable("SIZEX",nX);
+  // sfm.addVariable("SIZEY",nY);
+  
+  // sfm.saveToFile(worldFilePath);
+  
+  // // SAVE BIOME INFO AS PNG.
+    // // BIOME INFO ALSO FUNCTIONS AS LANDMASS INFO.
+    
+  // ArrayS3 <unsigned char> aBiomeData (nX,nY,3,0);
+  
+	// for (int _y=0;_y<nY;++_y)
+	// {
+		// for (int _x=0;_x<nX;++_x)
+		// {
+      // enumBiome _biome = aTerrain(_x,_y);
+      
+      // aBiomeData(_x,_y,0) = biomeRed[_biome];
+      // aBiomeData(_x,_y,1) = biomeGreen[_biome];
+      // aBiomeData(_x,_y,2) = biomeBlue[_biome];
+    // }
+  // }
+    
+	// Png png;
+	// png.encodeS3(strSavePath+"/biome.png",&aBiomeData);
+  
+      
+      
       return;
     }
   }
@@ -2370,7 +2523,7 @@ bool World::loadWorld(std::string _name)
   #ifdef SAVE_DATA
   SaveFileManager sfm;
   
-	strSavePath = "savedata/"+_name;
+	strSavePath = SAVE_FOLDER_PATH+"/"+_name;
 	
   std::cout<<"Attempting to load data from: "<<strSavePath<<".\n";
 	
@@ -2438,9 +2591,9 @@ bool World::loadWorld(std::string _name)
   
   
 	aWorldObject.init(png.nX,png.nY,0);
-	aTopoMap.init(png.nX,png.nY,3,0);
+	//aTopoMap.init(png.nX,png.nY,3,0);
   aTerrain.init(png.nX,png.nY,NOTHING);
-  aSeed.init(png.nX,png.nY,1);
+  //aSeed.init(png.nX,png.nY,1);
   aLandmassID.init(png.nX,png.nY,-1);
   aBiomeID.init(png.nX,png.nY,-1);
   aIsLand.init(png.nX,png.nY,true);

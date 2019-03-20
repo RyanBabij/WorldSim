@@ -87,6 +87,14 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   
 	public:
   
+  bool initialized; /* True if the world has been loaded at least once. */
+  //bool loaded; /* True if the world is currently loaded into RAM */
+	bool active; /* Whether or not the world should be simulated. */
+	//bool generated; /* False until a world has been generated. Prevents trying to simulate a non-existent world. */
+  
+    // The generation seed for this local map.
+  int seed;
+  
   Data * data;
   
     //WORLD DATA
@@ -145,10 +153,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 		/* The size of the world, measured in tiles. */
 	short int nX, nY;
 	
-    // The generation seed for this local map.
-  int seed;
-	bool active; /* Whether or not the world should be simulated. */
-	bool generated; /* False until a world has been generated. Prevents trying to simulate a non-existent world. */
+
+
 	
 	long long unsigned int ticksBacklog; /* World will simulate these ticks whenever it can, while still relinquishing for input etc. */
 
@@ -189,6 +195,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
     // Initialisation
 	World_Local();
   virtual ~World_Local();
+  void unload();
 	void init(const int _globalX, const int _globalY, const enumBiome _biomeID, const int _seed /*=0*/, const int _hasRiver /*=-1*/);
   
   // Access
@@ -200,8 +207,9 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   
 	
 	bool generate();
+    void save();
 	
-	bool saveToFile(std::string /* path */);
+	//bool saveToFile(std::string /* path */);
   
     // PUT FUNCTION
     // Overloaded put function automatically sorts object into relevant lists.

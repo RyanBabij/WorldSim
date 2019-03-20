@@ -1,8 +1,8 @@
 /* WorldSim: Driver
   
-	Main file for WorldSim. Created by Ryan Babij.
+	Main file for WorldSim. Created by Ryan Babij (https://github.com/RyanBabij/WorldSim)
   
-  https://github.com/RyanBabij/WorldSim
+  License: CC0
 */
 
 #include <string>
@@ -127,6 +127,13 @@ class QuitChecker
     {
       std::cout<<"Time played: "<<gameTime.seconds/60<<" minutes.\n";
     }
+    
+    std::cout<<"Deleting temporary data folder ("<<SAVE_FOLDER_PATH<<")\n";
+    if (SAVE_FOLDER_PATH.length() > 0 )
+    {
+      FileManager::deleteDirectory(SAVE_FOLDER_PATH,true);
+    }
+
 	}
 };
 QuitChecker quitChecker;
@@ -152,6 +159,7 @@ Timer pollRateTimer;
 Timer logicRateTimer;
 Timer physicsRateTimer;
 Timer animationTimer;
+Timer playerKeypressTimer;
 /* Use this for checking algo speeds. */
 Timer debugTimer;
 

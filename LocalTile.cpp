@@ -256,5 +256,23 @@ bool LocalTile::canTravelWest()
   return false;
 }
 
+std::string LocalTile::getSaveData()
+{
+  std::string saveData = "";
+  
+  if ( baseTerrain == OCEAN )
+  {
+    saveData+="O";
+  }
+  else
+  {
+    saveData+="G";
+  }
+  return saveData;
+}
+void LocalTile::loadData(std::string)
+{
+}
+
 
 #endif

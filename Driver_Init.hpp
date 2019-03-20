@@ -67,6 +67,9 @@ void init()
   animationTimer.start();
 	debugTimer.init();
 	debugTimer.start();
+  
+	playerKeypressTimer.init();
+	playerKeypressTimer.start();
 
 	/* Initialise the main menu */
 	menuTitle.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);

@@ -162,6 +162,7 @@ void GL_init(int nArgs, char ** arg)
 
 static void GL_specialUpFunc(const int key, const int x, const int y)
 {
+  playerKeypressTimer.start();
 	globalKeyboard.specialKeyUp(key);
   
   if ( globalKeyboard.isPressed(Keyboard::LEFT_CTRL) == false && globalKeyboard.isPressed(Keyboard::RIGHT_CTRL) == false)
@@ -171,6 +172,7 @@ static void GL_specialUpFunc(const int key, const int x, const int y)
 }
 static void GL_specialFunc(const int key, const int x, const int y)
 {
+  playerKeypressTimer.start();
 	globalKeyboard.specialKeyDown(key);
   
   if ( globalKeyboard.isPressed(Keyboard::LEFT_CTRL) || globalKeyboard.isPressed(Keyboard::RIGHT_CTRL))
@@ -231,6 +233,7 @@ bool waitingForKeyPress=true;
 
 static void GL_keyboardUpEvent(const unsigned char key, const int x, const int y)
 {
+  playerKeypressTimer.start();
   
   // if ( key==Keyboard::LEFT_CTRL || key==Keyboard::RIGHT_CTRL)
   // {
@@ -244,6 +247,9 @@ static void GL_keyboardUpEvent(const unsigned char key, const int x, const int y
 
 static void GL_keyboardEvent(const unsigned char key, const int x, const int y)
 {
+  playerKeypressTimer.start();
+  
+  
 	globalKeyboard.keyDown(key);
   
   if ( activeMenu == MENU_TITLE )
@@ -601,7 +607,6 @@ void GL_display()
   
     /* Render everything that wants to render. */
   displayInterfaceManager.renderAll();
-    
 
 }
 

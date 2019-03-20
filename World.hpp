@@ -124,7 +124,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
   Vector <World_Local*> vWorldLocal;
   
   // All of these should be ported into aWorldTile.
-	ArrayS2 <int> aSeed;
+	//ArrayS2 <int> aSeed;
 	ArrayS2 <int> aLandmassID;
 	ArrayS2 <bool> aIsLand;
 	ArrayS2 <int> aBiomeID;
@@ -157,6 +157,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	bool isRaining;
   
 	World();
+  ~World();
 	
 		// CHECK ALL CIV LOS ARRAYS, AND IF ANY OVERLAP, THEN MAKE THEM DISCOVER EACH OTHER.
 	//void updateCivContacts();
@@ -183,7 +184,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 /* I want this to be the new method of incrementing time in the world. It will dynamically abstract things based on the amount of turns to simulate. Each tick is one second. */
 	void incrementTicks ( int /* nTicks */ );
 	void incrementTicksBacklog ( long long unsigned int /* nTicks */ );
-	void handleTickBacklog ();
+	bool handleTickBacklog ();
 	void idleTick();
 	void logicTick();
   

@@ -976,9 +976,8 @@ void switchTarget(World_Local* _worldLocal)
 			}
 			
 		}
-		else
+		else // Render in texture mode
 		{
-			
 			Renderer::setTextureMode();
 
 			for (int currentY = pixelTileY; currentY<mainViewNY; currentY+=tileSize)
@@ -1027,7 +1026,7 @@ void switchTarget(World_Local* _worldLocal)
             
             //const enumBiome localBaseBiome = world->aTerrain(world->localX,world->localY);
             const enumBiome localBaseBiome = localMap->baseBiome;
-						
+            
 						for (int localYTile = 0; localYTile<LOCAL_MAP_SIZE;++localYTile)
 						{
 							if ( nextSubY>=mainViewY1 && currentSubY <= mainViewY2 && floor(currentSubY) != floor(nextSubY) )
@@ -1169,8 +1168,6 @@ void switchTarget(World_Local* _worldLocal)
                           Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->data->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
                         }
                       }
-                      
-
                     }
                     
                     
@@ -1212,9 +1209,11 @@ void switchTarget(World_Local* _worldLocal)
 						}
 						//std::cout<<"\n";
 						//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
+            //std::cout<<"end 2\n";
 					}
-					else
+					else if ( world->isSafe(tileX,tileY) )
 					{
+            //return;
 						/* Textures are chosen here rather than from tile objects because it is highly dependent on neighboring tiles. It would be possible to delegate texture handling to tile objects, but would take too much memory maintaining pointers to neighbours. In future maybe worldtile can return hardcoded textures chosen by world object. */
 						
 						// if (world->isSafe(tileX,tileY) )
@@ -1223,51 +1222,56 @@ void switchTarget(World_Local* _worldLocal)
 						// }
             
 
-            
+            World_Local * tile = &world->aWorldTile(tileX,tileY);
+            //std::cout<<"Tile: "<<tile<<".\n";
+            //if (tile == 0 )
+            //{
+            //  break;
+            //}
             
               // DRAW BASE TERRAIN (BIOME)
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==false)
+						if(world->isLand(tileX,tileY)==false)
 						{
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
 						}
             
-						else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == DESERT)
+						else if (world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == DESERT)
 						{
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_00, false);
 						}
-            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == ICE)
+            else if (world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == ICE)
             {
               Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_ICE, false);
             }
-            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == SNOW)
+            else if (world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == SNOW)
             {
               Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_SNOW, false);
             }
-            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == STEPPES)
+            else if (world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == STEPPES)
             {
               Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_STEPPE, false);
             }
-            else if (world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == WETLAND)
+            else if (world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == WETLAND)
             {
               Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_SWAMP, false);
             }
-						else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY))
+						else if(world->isLand(tileX,tileY))
 						{
-							if (world->aSeed(tileX,tileY) % 4 == 0)
+							if (tile->seed % 4 == 0)
 							{
                 glColor4f(2.0f, 2.0f, 2.0f, 1.0f);
 								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
                 glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 							}
-							else if (world->aSeed(tileX,tileY) % 4 == 1)
+							else if (tile->seed % 4 == 1)
 							{
 								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_01, false);
 							}
-							else if (world->aSeed(tileX,tileY) % 4 == 2)
+							else if (tile->seed % 4 == 2)
 							{
 								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_02, false);
 							}
-							else if (world->aSeed(tileX,tileY) % 4 == 3)
+							else if (tile->seed % 4 == 3)
 							{
 								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_03, false);
 							}
@@ -1328,10 +1332,10 @@ void switchTarget(World_Local* _worldLocal)
 
 
 							
-							if ( world->aSeed(tileX,tileY) % 20 == 0 )
-							{
-								//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_ALCHEMY, false);
-							}
+							// if ( world->aSeed(tileX,tileY) % 20 == 0 )
+							// {
+								// //Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_ALCHEMY, false);
+							// }
 							// glVertex2s(currentX,currentY);
 							// glVertex2s(currentX,currentY+tileSize);
 							
@@ -1356,33 +1360,28 @@ void switchTarget(World_Local* _worldLocal)
 								// glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
 							// }
 						}
-						// else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==false)
-						// {
-							// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
-						// }
-						
 
               // DRAW IMPROVEMENTS (FOREST, RIVER)
               // Improvements can layer over base terrain, and each other. For example a tile may have a river and forest.
             
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == FOREST)
+						if(world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == FOREST)
 						{
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_FOREST_TREES, false);
 						}
-						else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY) &&world->aWorldTile(tileX,tileY).baseBiome == JUNGLE)
+						else if(world->isLand(tileX,tileY) &&world->aWorldTile(tileX,tileY).baseBiome == JUNGLE)
 						{
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_JUNGLE, false);
 						}
             
             
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == MOUNTAIN)
+						if(world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == MOUNTAIN)
 						{
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
               //glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
 							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_MOUNTAIN_00, false);
               //glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 						}
-						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == HILLY)
+						if(world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == HILLY)
 						{
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
               //glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
@@ -1394,7 +1393,7 @@ void switchTarget(World_Local* _worldLocal)
             
             
             
-            if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY) && world->aRiverID(tileX,tileY) != -1)
+            if(world->isLand(tileX,tileY) && world->aRiverID(tileX,tileY) != -1)
 						{
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_01, false);
 							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_RIVER_EAST, false);
@@ -1427,7 +1426,6 @@ void switchTarget(World_Local* _worldLocal)
 			
 		// Texture mode
 		//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_01, false);
-		
 	}
   rainManager.render();
     
@@ -1445,7 +1443,6 @@ void switchTarget(World_Local* _worldLocal)
 			//Renderer::placeTexture4(mainViewX1+(mainViewNX/2)-32, mainViewY1+(mainViewNY/2)-32, mainViewX1+(mainViewNX/2)+32, mainViewY1+(mainViewNY/2)+32, &TEX_WORLD_TEST_00, false);
 		normaliseCoordinates();
 
-		
 	}
 
 	

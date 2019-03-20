@@ -109,6 +109,9 @@ class LocalTile: public HasTexture
   bool canTravelSouth();
   bool canTravelWest();
 
+  
+  std::string getSaveData();
+  void loadData(std::string);
 	
 };
 
