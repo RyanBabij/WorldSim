@@ -38,6 +38,8 @@ class Creature: public WorldObject, public TableInterface
     // However herbivores can eat grass.
 	int hunger;
   int thirst;
+  
+  short int fleeCounter; /* How many more turns the Creature should flee for. */
 	
   // All loaded creatures can get a link to their world.
   World_Local* map;

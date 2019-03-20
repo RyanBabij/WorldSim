@@ -18,6 +18,7 @@ Creature_Knowledge::Creature_Knowledge()
 void Creature_Knowledge::init()
 {
   currentGoal.set(-1,-1);
+  threatLocation.set(-1,-1);
 }
 
   // Adds the tile to the Character's knowledge.
@@ -27,6 +28,11 @@ void Creature_Knowledge::addTile( World_Local* _map, int _x, int _y)
 
   vVisibleTiles.push((*_map)(_x,_y));
 
+}
+
+void Creature_Knowledge::updateThreat(short int _x, short int _y)
+{
+  threatLocation.set(_x,_y);
 }
 
   //returns true if the Character has seen this tile.

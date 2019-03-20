@@ -35,6 +35,8 @@ Creature::Creature()
   
   nPelt=0;
   nMeat=0;
+  
+  fleeCounter=0;
 }
 
   //_sex: 0 - Roll, 1 - Male, 2 - Female.
@@ -101,9 +103,14 @@ void Creature::wander()
   }
 
   // Run away from threat if necessary
-  //if (closestThreat != 0 && threatDistance < 5 )
-  if (false )
+  if (closestThreat != 0 && threatDistance < 8 )
+  //if (false )
   {
+    // update threat knowledge
+    knowledge->updateThreat(closestThreat->x, closestThreat->y);
+    
+    // Flee for 12 moves.
+    fleeCounter = 12;
     
     knowledge->p.init(map);
     knowledge->p.pathLocal(x, y, closestThreat->x, closestThreat->y, 10, true);
@@ -111,10 +118,36 @@ void Creature::wander()
     if (knowledge->p.vPath.size() > 0)
     {
       moveDirection=knowledge->p.vPath.back();
-      //p.vPath.popBack();
     }
+    
+    
+    
 
   }
+  // Cannot see a threat but was threatened recently.
+  else if (fleeCounter > 0)
+  {
+    --fleeCounter;
+    
+    if ( fleeCounter==0 )
+    {
+      // reset current goal otherwise the creature will just keep running back to it.
+        HasXY* randomDestination = map->getRandomTile();
+        knowledge->currentGoal.set(randomDestination);
+        knowledge->pathIndex=0;
+        knowledge->p.vPath.clear();
+    }
+    
+    
+    knowledge->p.init(map);
+    knowledge->p.pathLocal(x, y, knowledge->threatLocation.x, knowledge->threatLocation.y, 20, true);
+      
+    if (knowledge->p.vPath.size() > 0)
+    {
+      moveDirection=knowledge->p.vPath.back();
+    }
+  }
+  
   // Look for food or explore.
   else
   {
@@ -126,9 +159,7 @@ void Creature::wander()
       (knowledge->currentGoal.x == x && knowledge->currentGoal.y ==y))
       {
         HasXY* randomDestination = map->getRandomTile();
-        
         knowledge->currentGoal.set(randomDestination);
-        
         knowledge->pathIndex=0;
         knowledge->p.vPath.clear();
         
