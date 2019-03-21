@@ -10,7 +10,7 @@
   Characters may be either human, elven, or dwarven.
 */
 
-#include "GuildCalendar.hpp"
+#include "Time/Calendar.hpp"
 #include <Container/Table/TableInterface.hpp>
 
 #include "WorldObject.hpp"
@@ -95,9 +95,9 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
     //People this character has killed.
   Vector <Character*> vKills;
   
-	GuildDate dateOfBirth;
-	GuildDate dateOfMarriage;
-	GuildDate dateOfDeath;
+	Calendar dateOfBirth;
+	Calendar dateOfMarriage;
+	Calendar dateOfDeath;
 	
 	HasXY birthLocation;
 	HasXY deathLocation;

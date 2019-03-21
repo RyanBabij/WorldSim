@@ -18,8 +18,9 @@ LocalTile::LocalTile()
   bWall=0;
   nFish=-1;
   footprint=0;
-  
+  height=0;
   isLand=false;
+  seed=0;
 }
 
 LocalTile::~LocalTile()

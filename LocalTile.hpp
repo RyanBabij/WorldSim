@@ -48,7 +48,7 @@ class LocalTile: public HasTexture
     // This allows one-way travel, which would be useful for traps, pits, etc.
   unsigned char bWall;
   
-  int height;
+  short int height;
   
   bool isLand; /* True if not water */
   

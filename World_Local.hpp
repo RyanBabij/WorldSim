@@ -37,6 +37,8 @@
 
 */
 
+#include <Time/Calendar.hpp>
+
 // #include "Creature.hpp"
 // #include "Creature_Deer.hpp"
 class Creature;
@@ -81,6 +83,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
     // Vector <WorldObject*> vObjectGeneric;
       
   };
+  
+  Calendar localDate; /* The date that this map has been updated to. */
 	
   // Keeps track of influence values for each tribe.
   std::map<Tribe*,int> mInfluence;
@@ -274,6 +278,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   
   // LOGIC
   void incrementTicks(int nTicks);
+    void updateTickBacklog(Calendar);
 	
 };
 

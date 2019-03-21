@@ -55,6 +55,9 @@ World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
 	
 	nX=-1;
 	nY=-1;
+  
+  simX=0;
+  simY=0;
 
   maximumX = 0;
   maximumY = 0;
@@ -950,24 +953,23 @@ void World::idleTick()
   {
     playerKeypressTimer.update();
     
-    if (playerKeypressTimer.fullSeconds > 0.5 )
+    if (playerKeypressTimer.fullSeconds > 0.2 )
     {
-      for (int _y=0;_y<nY;++_y)
+      ++simX;
+      if (simX>=nX) { simX=0; ++simY; }
+      if (simY>=nY) { simY=0; }
+      
+      
+        // BACKGROUND IDLE UPDATE LOOP
+        // Eventually this should be threaded, but it would be a big job to do that.
+      if ( aWorldTile(simX,simY).active==false
+      && aWorldTile(simX,simY).baseBiome != OCEAN )
       {
-        for (int _x=0;_x<nX;++_x)
-        {
-          if ( aWorldTile(_x,_y).initialized==false && aWorldTile(_x,_y).active==false
-          && aWorldTile(_x,_y).baseBiome != OCEAN )
-          {
-            generateLocal(_x,_y);
-            return;
-          }
-        }
+        generateLocal(simX,simY);
+        return;
       }
     }
-
   }
-
 }
 
 

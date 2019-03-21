@@ -281,6 +281,9 @@ bool World_Local::isSafe(HasXY* xy)
 
 bool World_Local::generate()
 {
+  
+  
+  
   if ( active ) { return true; }
   
   if ( world.isSafe(globalX,globalY) == false )
@@ -291,6 +294,8 @@ bool World_Local::generate()
   {
     std::cout<<"World was already previously generated. We should load it from cache.\n";
     load();
+    active = true;
+    return true;
   }
 
   initialized = true;
@@ -570,16 +575,19 @@ bool World_Local::save()
   std::string saveData="";
   
   SaveChunk chonk ("TILEARRAY");
+  
+  int i=0;
 
   // Only unload the local map if it is loaded.
   for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
   {
     for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
+      ++i;
       chonk.add(data->aLocalTile(_x,_y).getSaveData());
     }
   }
-
+  
   sfm.addChunk(chonk);
   sfm.saveToFile(localMapPath);
 
@@ -606,6 +614,44 @@ bool World_Local::load()
   }
   data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
   data->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+  
+  
+  // Open the cache file for loading into memory.
+  SaveFileManager sfm;
+  
+  std::string saveData="";
+  sfm.loadFile(localMapPath);
+  
+  //SaveChunk chonk ("TILEARRAY");
+  SaveChunk* chonk = sfm.getChunk("TILEARRAY");
+  
+  if ( chonk != 0 )
+  {
+    std::cout<<"We got ourselves a chonk\n";
+    
+    std::cout<<"Chonks: "<<chonk->vData.size()<<".\n";
+    
+    //std::cout<<"Chonkyboi is: "<<chonk->toString()<<".\n";
+    
+    
+    int i=0;
+    // Only unload the local map if it is loaded.
+    for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+    {
+      for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+      {
+        data->aLocalTile(_x,_y).loadData((*chonk)(i));
+        //chonk.add(data->aLocalTile(_x,_y).getSaveData());
+        ++i;
+      }
+    }
+    delete chonk;
+  }
+  else
+  {
+    std::cout<<"Chonk fail\n";
+    return false;
+  }
   
 
   return true;
@@ -1718,6 +1764,11 @@ bool World_Local::isBlockingView(int _x, int _y)
 void World_Local::incrementTicks(int nTicks)
 {
   if ( !data ) { return; }
+  
+  localDate.advanceSecond(nTicks);
+  
+  
+  
   Vector <Creature*> vToMove;
   for (int i=0;i<vCreature.size();++i)
   {
@@ -1745,6 +1796,14 @@ void World_Local::incrementTicks(int nTicks)
   {
     vToMove2(i)->wander();
   }
+}
+
+void World_Local::updateTickBacklog(Calendar _currentDate)
+{
+  // we need to figure out how many ticks behind we are.
+  
+  
+  //int 
 }
 
 

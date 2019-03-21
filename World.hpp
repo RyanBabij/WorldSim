@@ -34,7 +34,7 @@ class Tribe_Elf;
 
 #include "LocalTile.hpp"
 
-#include "GuildCalendar.hpp"
+#include "Time/Calendar.hpp"
 
 #include "World_Local.hpp"
 
@@ -77,6 +77,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	int nX, nY;
     // The maximum global coordinate
   unsigned long int maximumX, maximumY;
+  
+  int simX, simY;
   
   //int localX, localY; /* The current local map viewed by player */
   
@@ -150,8 +152,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	ArrayS2 <unsigned char> aGoodEvil;
 
 	
-	GuildCalendar calendar;
-	GuildDate lastDate; /* The date on the last logic tick. */
+	Calendar calendar;
+	Calendar lastDate; /* The date on the last logic tick. */
 
     // STATES
 	bool isRaining;

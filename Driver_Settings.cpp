@@ -33,7 +33,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.136 Win32 dev";
+const std::string VERSION = "0.0.137 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -64,7 +64,7 @@ const int QUICKSTART_WORLD_SIZE = 129; /* Please set to (power of 2)+1. */
 long long int INITIAL_YEARS_SIMULATE = 0;
 
   // Default setting on the GUI
-const int DEFAULT_WORLD_SIZE_SLOT = 2; /* 0 = 33, 1 = 65, 129, 257, 513, 1025. You can set it lower for easier debugging. */
+const int DEFAULT_WORLD_SIZE_SLOT = 1; /* 0 = 33, 1 = 65, 129, 257, 513, 1025. You can set it lower for easier debugging. */
 
 const int DEFAULT_NUMBER_TRIBES_DWARVEN = 0;
 const int DEFAULT_NUMBER_TRIBES_HUMAN = 6;
@@ -101,11 +101,12 @@ const int MAX_THIRST = 300;
 // However additional maps should be allocated for background processing.
 // Not currently functional
 const int MAX_LOCAL_MAPS_IN_MEMORY = 12;
+const int MAX_LOCAL_MAPS_IN_BACKGROUND_MEMORY = 3;
 
-unsigned int RESOLUTIONX=1024, RESOLUTIONY=720;
+unsigned int RESOLUTIONX=1024, RESOLUTIONY=900;
 bool RESET=false;
 
-bool HOTKEYS_ENABLED = false;
+bool HOTKEYS_ENABLED = true;
 
 bool CLEAN_SAVES_ON_EXIT = true;
 

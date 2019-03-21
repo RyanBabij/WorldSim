@@ -266,7 +266,8 @@ class Menu_WorldGenerator: public GUI_Interface
 		textEntryWorldName.fieldName="World name:";
 		textEntryWorldName.characterLimit=20;
 			/* Give the world a random name */
-		textEntryWorldName.input = globalNameGen.generateName();
+		//textEntryWorldName.input = globalNameGen.generateName();
+		textEntryWorldName.input = "testworld";
 		
 		/* WORLD SEED */
 		textEntryFullSeed.setColours(&cNormal,&cHighlight);
