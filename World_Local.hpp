@@ -205,9 +205,10 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   bool isSafe(int /* x */, int /* y */);
     bool isSafe(HasXY*);
   
-	
+    // Generate a world or load from cache.
 	bool generate();
-    void save();
+    bool save();
+    bool load();
 	
 	//bool saveToFile(std::string /* path */);
   

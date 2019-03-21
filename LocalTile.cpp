@@ -270,8 +270,17 @@ std::string LocalTile::getSaveData()
   }
   return saveData;
 }
-void LocalTile::loadData(std::string)
+void LocalTile::loadData(std::string _saveData)
 {
+  if(_saveData[0] == 'O' )
+  {
+    baseTerrain=OCEAN;
+  }
+  else
+  {
+    baseTerrain = GRASSLAND;
+  }
+  
 }
 
 

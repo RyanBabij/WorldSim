@@ -128,11 +128,15 @@ class QuitChecker
       std::cout<<"Time played: "<<gameTime.seconds/60<<" minutes.\n";
     }
     
-    std::cout<<"Deleting temporary data folder ("<<SAVE_FOLDER_PATH<<")\n";
-    if (SAVE_FOLDER_PATH.length() > 0 )
+    if (CLEAN_SAVES_ON_EXIT)
     {
-      FileManager::deleteDirectory(SAVE_FOLDER_PATH,true);
+      std::cout<<"Deleting temporary data folder ("<<SAVE_FOLDER_PATH<<")\n";
+      if (SAVE_FOLDER_PATH.length() > 0 )
+      {
+        FileManager::deleteDirectory(SAVE_FOLDER_PATH,true);
+      }
     }
+
 
 	}
 };

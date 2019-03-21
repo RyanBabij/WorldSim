@@ -83,7 +83,6 @@ World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
 
 World::~World()
 {
-  std::cout<<"WORLD CLEANUP\n";
 }
 
 World_Local* World::operator() (const int _x, const int _y)

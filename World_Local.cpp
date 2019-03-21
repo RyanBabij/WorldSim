@@ -289,19 +289,13 @@ bool World_Local::generate()
   
   if (initialized)
   {
-    //std::cout<<"World was already previously generated\n";
+    std::cout<<"World was already previously generated. We should load it from cache.\n";
+    load();
   }
 
   initialized = true;
   active = true;
   
-  //std::cout<<"Generate localmap: "<<globalX<<", "<<globalY<<".\n";
-  
-  //baseBiome = world.aWorldTile(globalX,globalY).biome;
-  //baseBiome = biome;
-  //seed = world.aSeed(globalX,globalY);
-  
-  //if ( baseBiome == OCEAN) { return false; }
 
   data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
   data->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
@@ -556,7 +550,7 @@ bool World_Local::generate()
 	return false;
 }
 
-void World_Local::save()
+bool World_Local::save()
 {
   std::string localMapPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + ".dat";
 	
@@ -566,24 +560,57 @@ void World_Local::save()
 	if ( FileManager::directoryExists(world.strSavePath)  == false )
   {
     std::cout<<"Error: Unable to access directory.\n";
-    return;
+    return false;
 	}
   
   // Make the file or clear it.
   FileManager::makeNewFile(localMapPath);
+  SaveFileManager sfm;
   
   std::string saveData="";
+  
+  SaveChunk chonk ("TILEARRAY");
 
   // Only unload the local map if it is loaded.
   for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
   {
     for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
-      saveData+=".";
-    } saveData+="\n";
+      chonk.add(data->aLocalTile(_x,_y).getSaveData());
+    }
   }
-  FileManager::writeString(saveData, localMapPath);
+
+  sfm.addChunk(chonk);
+  sfm.saveToFile(localMapPath);
+
+  return true;
 }
+
+bool World_Local::load()
+{
+  std::string localMapPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + ".dat";
+  
+  std::cout<<"Attempting to load cached map: "<<localMapPath<<".\n";
+
+	if ( FileManager::directoryExists(world.strSavePath)  == false )
+  {
+    std::cout<<"Error: Unable to access directory.\n";
+    return false;
+	}
+  
+  initialized = true;
+  active = true;
+  
+  if ( data == 0 )
+  { data=new Data;
+  }
+  data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+  data->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+  
+
+  return true;
+}
+
 
 bool World_Local::put (WorldObject* _object, int _x, int _y)
 {

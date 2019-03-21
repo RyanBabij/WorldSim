@@ -33,7 +33,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.135 Win32 dev";
+const std::string VERSION = "0.0.136 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -105,7 +105,9 @@ const int MAX_LOCAL_MAPS_IN_MEMORY = 12;
 unsigned int RESOLUTIONX=1024, RESOLUTIONY=720;
 bool RESET=false;
 
-const bool HOTKEYS_ENABLED = false;
+bool HOTKEYS_ENABLED = false;
+
+bool CLEAN_SAVES_ON_EXIT = true;
 
 /* Will output the framerate. */
 const bool OUTPUT_FRAMERATE = false;

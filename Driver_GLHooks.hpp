@@ -248,9 +248,24 @@ static void GL_keyboardUpEvent(const unsigned char key, const int x, const int y
 static void GL_keyboardEvent(const unsigned char key, const int x, const int y)
 {
   playerKeypressTimer.start();
+  globalKeyboard.keyDown(key);
   
-  
-	globalKeyboard.keyDown(key);
+  if(key==Keyboard::TILDE) // SHIFT+TILDE
+  {
+    HOTKEYS_ENABLED = !HOTKEYS_ENABLED;
+    
+    if ( HOTKEYS_ENABLED )
+    {
+      std::cout<<"Debug hotkeys: ENABLED.\n";
+    }
+    else
+    {
+      std::cout<<"Debug hotkeys: DISABLED.\n";
+    }
+    
+  }
+
+	
   
   if ( activeMenu == MENU_TITLE )
   {
@@ -319,8 +334,11 @@ static void GL_keyboardEvent(const unsigned char key, const int x, const int y)
 		
 		if(key==Keyboard::CTRL_C) /* CTRL_C is value 3 and works like normal keypress. */
 		{
+      // If we exit with CTRL+C, don't erase save data.
+      CLEAN_SAVES_ON_EXIT=false;
 			exit(0);
 		}
+    
 		/* Change framerate to once per second. */
 		if(key==Keyboard::R || key==Keyboard::r)
 		{
