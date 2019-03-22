@@ -82,6 +82,10 @@ World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
   worldFilePath = "";
   
   isRaining=false;
+  
+  calendar.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
+  calendar.secondsPerMinute = 2;
+
 }
 
 World::~World()

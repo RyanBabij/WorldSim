@@ -17,7 +17,7 @@ class WorldObject: public HasTexture
 {
 	public:
   
-	int x, y;
+	short int x, y;
   
   //Implementing full global coordinates to make life easier for now.
   // This datatype should be able to hold coordinates for any reasonably-sized world.
@@ -63,6 +63,11 @@ class WorldObject: public HasTexture
     
 
 	virtual Texture* currentTexture();
+  
+  std::string getBaseData();
+  
+  std::string getSaveData();
+  void loadData(std::string);
 };
 
 

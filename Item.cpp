@@ -38,6 +38,18 @@ void Item::addToRecipeManager()
   recipeManager.addToRecipes(this);
 }
 
+std::string Item::getSaveData()
+{
+  std::string saveData = getName();
+  
+
+  return saveData;
+}
+void Item::loadData(std::string _saveData)
+{
+}
+
+
 #include "Item_All.cpp"
 
 #endif

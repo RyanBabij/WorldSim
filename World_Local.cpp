@@ -467,15 +467,16 @@ bool World_Local::generate()
         }
         else if (random.oneIn(baseTreeChance))
         {
-          data->aLocalTile(_x,_y).add(new WorldObject_Tree(1));
+          put(new WorldObject_Tree(1), _x, _y);
+          //data->aLocalTile(_x,_y).add(new WorldObject_Tree(1));
         }
         else if (random.oneIn(basePlantChance))
         {
-          data->aLocalTile(_x,_y).add(new WorldObject_Plant());
+          put(new WorldObject_Plant(),_x,_y);
         }
         else if (random.oneIn(1000))
         {
-          data->aLocalTile(_x,_y).add(new WorldObject_Tree);
+          put(new WorldObject_Tree(0), _x, _y);
         }
         else if (random.oneIn(1500) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
         //else if (random.oneIn(200))
@@ -495,8 +496,9 @@ bool World_Local::generate()
             {
               rockyBoi->nGold = 100;
             }
+            put (rockyBoi,_x,_y);
             
-            data->aLocalTile(_x,_y).add(rockyBoi);
+            //data->aLocalTile(_x,_y).add(rockyBoi);
           }
           
         }
@@ -576,19 +578,55 @@ bool World_Local::save()
   
   SaveChunk chonk ("TILEARRAY");
   
-  int i=0;
+  //int i=0;
 
   // Only unload the local map if it is loaded.
   for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
   {
     for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
-      ++i;
+      //++i;
       chonk.add(data->aLocalTile(_x,_y).getSaveData());
     }
   }
   
   sfm.addChunk(chonk);
+  
+  SaveChunk chonkObjects ("OBJECT VECTOR");
+  
+  for (int i=0;i<vObjectGeneric.size();++i)
+  {
+    chonkObjects.add(vObjectGeneric(i)->getBaseData());
+  }
+  
+  SaveChunk chonkItems ("ITEM VECTOR");
+  for (int i=0;i<vItem.size();++i)
+  {
+    chonkItems.add(vItem(i)->getBaseData());
+  }
+  
+  sfm.addChunk(chonkObjects);
+  sfm.addChunk(chonkItems);
+  
+  // Only unload the local map if it is loaded.
+  // for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+  // {
+    // for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+    // {
+      // ++i;
+      // chonk.add(data->aLocalTile(_x,_y).getSaveData());
+    // }
+  // }
+  // Vector <Creature*> vCreature;
+  // //Vector of all Characters on this map
+  // Vector <Character*> vCharacter;
+  // //Vector of all Items on this map
+  // Vector <Item*> vItem;
+  // // Vector of all non-categorised objects on this map.
+  // Vector <WorldObject*> vObjectGeneric;
+  
+  
+  
   sfm.saveToFile(localMapPath);
 
   return true;
@@ -627,13 +665,8 @@ bool World_Local::load()
   
   if ( chonk != 0 )
   {
-    std::cout<<"We got ourselves a chonk\n";
-    
-    std::cout<<"Chonks: "<<chonk->vData.size()<<".\n";
-    
-    //std::cout<<"Chonkyboi is: "<<chonk->toString()<<".\n";
-    
-    
+    //std::cout<<"Chonks: "<<chonk->vData.size()<<".\n";
+
     int i=0;
     // Only unload the local map if it is loaded.
     for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
@@ -646,6 +679,51 @@ bool World_Local::load()
       }
     }
     delete chonk;
+    
+    
+    chonk = sfm.getChunk("OBJECT VECTOR");
+    
+    //std::cout<<"Chonks2: "<<chonk->vData.size()<<".\n";
+    
+    for (i=0;i<chonk->vData.size();++i)
+    {
+      //std::cout<<"Current object chonk: "<<chonk->vData(i)<<".\n";
+      
+      //std::cout<<"Tokenising...\n";
+      
+      Vector <std::string> * vToke = DataTools::tokenize(chonk->vData(i), " \t\n\r");
+      
+      if ( vToke && vToke->size() >= 3)
+      {
+          //std::cout<<"Object type: "<<(*vToke)(0)<<".\n";
+          //std::cout<<"X: "<<(*vToke)(1)<<".\n";
+          //std::cout<<"Y: "<<(*vToke)(2)<<".\n";
+          
+          std::string objectType = (*vToke)(0);
+          short int objectX = DataTools::toShort((*vToke)(1));
+          short int objectY = DataTools::toShort((*vToke)(2));
+          
+          //std::cout<<"Tree coords: "<<objectX<<", "<<objectY<<".\n";
+          
+          
+          if (objectType == "Tree" )
+          {
+           //std::cout<<"Loading a tree.\n";
+            
+            if (isSafe( objectX, objectY ) )
+            {
+              put (new WorldObject_Tree(1), objectX, objectY);
+            }
+            
+          }
+          
+        delete vToke;
+      }
+      
+
+      
+      
+    }
   }
   else
   {

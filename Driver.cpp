@@ -119,6 +119,13 @@ class QuitChecker
 	{
 		gameTime.init();
 		gameTime.start();
+    
+    // For now we will clear the savedata on startup because it can cause some instability.
+    std::cout<<"Deleting temporary data folder ("<<SAVE_FOLDER_PATH<<")\n";
+    if (SAVE_FOLDER_PATH.length() > 0 )
+    {
+      FileManager::deleteDirectory(SAVE_FOLDER_PATH,true);
+    }
 	}
 	~QuitChecker()
 	{

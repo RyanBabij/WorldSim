@@ -49,4 +49,34 @@ Texture* WorldObject::currentTexture()
 	return &TEX_TEST_404;
 }
 
+std::string WorldObject::getBaseData()
+{
+  std::string saveData = getName();
+  saveData+=" ";
+  saveData+=DataTools::toString(x);
+  saveData+=" ";
+  saveData+=DataTools::toString(y);
+  saveData+=" ";
+  
+  if ( blocksView ) { saveData+= "[BLOCKS_VIEW] "; }
+  if ( blocksMovement ) { saveData+= "[BLOCKS_MOVEMENT] "; }
+  if ( canCook ) { saveData+= "[CAN_COOK] "; }
+  if ( canHarvest ) { saveData+= "[CAN_HARVEST] "; }
+
+  saveData+="\n";
+  return saveData;
+}
+
+std::string WorldObject::getSaveData()
+{
+  std::string saveData = getName();
+  
+
+  return saveData;
+}
+void WorldObject::loadData(std::string _saveData)
+{
+}
+
+
 #endif

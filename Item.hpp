@@ -217,6 +217,9 @@ class Item: public WorldObject
     
 
 	virtual Texture* currentTexture();
+  
+  std::string getSaveData();
+  void loadData(std::string);
 };
 
 // So it has come to this
@@ -852,6 +855,7 @@ class Item_Marker_Green_Small: public Item
   {
     return &TEX_MARKER_GREEN_SMALL;
   }
+
 
 };
 
