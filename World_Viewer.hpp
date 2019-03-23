@@ -533,6 +533,8 @@ void switchTarget(World_Local* _worldLocal)
 			//localX=hoveredXTile;
 			//localY=hoveredYTile;
       world->generateLocal(hoveredXTile,hoveredYTile);
+      DEBUG_X=hoveredXTile;
+      DEBUG_Y=hoveredYTile;
 		}
 		
 		return false;
@@ -773,7 +775,6 @@ void switchTarget(World_Local* _worldLocal)
       
       centerTileX += demoScroll;
     }
-    
     
     // Reset hovered tile coords, so we can tell if the mouse is over the worldviewer.
     

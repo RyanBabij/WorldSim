@@ -281,13 +281,14 @@ bool World_Local::isSafe(HasXY* xy)
 
 bool World_Local::generate()
 {
-  
-  
-  
+  // World is already loaded and running
   if ( active ) { return true; }
   
+  // World has invalid coordinates so we can't generate it.
   if ( world.isSafe(globalX,globalY) == false )
   { return false; }
+
+  // Create data struct if necessary.
   if (data==0) { data = new Data; }
   
   if (initialized)
@@ -297,6 +298,8 @@ bool World_Local::generate()
     active = true;
     return true;
   }
+  
+  localDate.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
 
   initialized = true;
   active = true;
@@ -304,21 +307,7 @@ bool World_Local::generate()
 
   data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
   data->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-  //std::cout<<"arrays inited\n";
-  
-  // if ( initialized )
-  // {
-    
-    // for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
-    // {
-      // for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
-      // { data->aLocalTile(_x,_y).baseTerrain = OCEAN;  
-      // }
-    // }
-    // std::cout<<"Done\n";
-    // return true;
-  // }
-  // std::cout<<"done 2\n";
+
 		// GENERATE HEIGHTMAP
   DiamondSquareAlgorithmCustomRange dsa2;
 	dsa2.maxValue=5;
@@ -352,21 +341,17 @@ bool World_Local::generate()
         aLocalHeight(_x,_y) = aLocalHeight(_x,_y)/20;
       }
     }
-    //aLocalHeight.setBorder(1);
   }
   else
   {
-	////HEIGHTMAP TABLE FREESTEPS SMOOTHING
+    //HEIGHTMAP TABLE FREESTEPS SMOOTHING
     dsa2.generate(&aLocalHeight,0,0,0.75,100);
   }
-	
   
   // Take the seed for this world tile and expand it into a subseed for every local tile */
   random.seed(seed);
   
   int midX = LOCAL_MAP_SIZE/2;
-
-
 
   for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
   {
@@ -412,18 +397,41 @@ bool World_Local::generate()
       
       if ( baseBiome != OCEAN )
       {
-        int baseTreeChance = 30;
+        int baseTreeChance = 40;
         int basePlantChance = 20;
         
-        // Temporary hack to make forests look less bad.
-        if ( baseBiome == FOREST || baseBiome == JUNGLE )
+        if ( baseBiome == FOREST )
         {
           data->aLocalTile(_x,_y).baseTerrain = GRASSLAND;
-          baseTreeChance/=8;
-          basePlantChance/=6;
+          baseTreeChance=9;
+        }
+        else if ( baseBiome == JUNGLE )
+        {
+          data->aLocalTile(_x,_y).baseTerrain = GRASSLAND;
+          baseTreeChance=5;
+        }
+        else if ( baseBiome == DESERT )
+        {
+          data->aLocalTile(_x,_y).baseTerrain = DESERT;
+          baseTreeChance=200;
+        }
+        else if (baseBiome == STEPPES )
+        {
+          data->aLocalTile(_x,_y).baseTerrain = STEPPES;
+          baseTreeChance=100;
+        }
+        else if (baseBiome == SNOW )
+        {
+          data->aLocalTile(_x,_y).baseTerrain = SNOW;
+          baseTreeChance=100;
+        }
+        else if (baseBiome == WETLAND )
+        {
+          data->aLocalTile(_x,_y).baseTerrain = WETLAND;
+          baseTreeChance=9;
         }
         
-        data->aLocalTile(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+        data->aLocalTile(_x,_y).seed = random.randInt(USHRT_MAX-1);
         data->aLocalTile(_x,_y).clearObjects();
         data->aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
 
@@ -432,19 +440,12 @@ bool World_Local::generate()
         data->aSubterranean(_x,_y).clearObjects();
         data->aSubterranean(_x,_y).height = -1;
         
-        
-        if ( hasRiver != -1 && ( (_x ==LOCAL_MAP_SIZE/2) || (_y == LOCAL_MAP_SIZE/2)) )
-        {
-          //data->aLocalTile(_x,_y).baseTerrain = OCEAN;
-        }
-        
         //Put down some water for drinking
-        else if (Random::oneIn(400))
+        if (Random::oneIn(500))
         {
           data->aLocalTile(_x,_y).baseTerrain = OCEAN;
           continue;
         }
-        
         else if (random.oneIn(200)) /* Put down some testing objects */
         {
           put(new Item_Floor, _x, _y);
@@ -468,7 +469,6 @@ bool World_Local::generate()
         else if (random.oneIn(baseTreeChance))
         {
           put(new WorldObject_Tree(1), _x, _y);
-          //data->aLocalTile(_x,_y).add(new WorldObject_Tree(1));
         }
         else if (random.oneIn(basePlantChance))
         {
@@ -479,14 +479,11 @@ bool World_Local::generate()
           put(new WorldObject_Tree(0), _x, _y);
         }
         else if (random.oneIn(1500) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
-        //else if (random.oneIn(200))
         {
           auto deer = new Creature_Deer;
           deer->init();
           put(deer,_x,_y);
         }
-
-        
         else if ( baseBiome == MOUNTAIN )
         {
           if (random.oneIn(10))

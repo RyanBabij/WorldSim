@@ -83,13 +83,14 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
     // Vector <WorldObject*> vObjectGeneric;
       
   };
-  
-  Calendar localDate; /* The date that this map has been updated to. */
-	
+
   // Keeps track of influence values for each tribe.
   std::map<Tribe*,int> mInfluence;
   
 	public:
+  
+  Calendar localDate; /* The date that this map has been updated to. */
+	
   
   bool initialized; /* True if the world has been loaded at least once. */
   //bool loaded; /* True if the world is currently loaded into RAM */

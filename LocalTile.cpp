@@ -195,6 +195,22 @@ Texture* LocalTile::currentTexture()
 	{
 		return &TEX_WORLD_TERRAIN_UNDERGROUND_00;
 	}
+	else if (baseTerrain == SNOW)
+	{
+		return &TEX_WORLD_TERRAIN_SNOW;
+	}
+	else if (baseTerrain == ICE)
+	{
+		return &TEX_WORLD_TERRAIN_SNOW;
+	}
+	else if (baseTerrain == STEPPES)
+	{
+		return &TEX_WORLD_TERRAIN_STEPPE;
+	}
+  
+  
+
+  
 	
 	//else if ( biome == GRASSLAND )
 	else
@@ -285,6 +301,10 @@ std::string LocalTile::getSaveData()
   { saveData+="G"; }
   
   saveData+=(char)height+48;
+  
+  saveData+=" ";
+  saveData+=DataTools::toString(seed);
+  
   //saveData+=DataTools::toString(height);
   return saveData;
 }
@@ -316,7 +336,13 @@ void LocalTile::loadData(std::string _saveData)
   
   height = _saveData[1] - 48;
   
+  Vector <std::string> * vToke = DataTools::tokenize(_saveData, " \t\n\r");
   
+  if (vToke && vToke->size()>1)
+  {
+    seed = DataTools::toUnsignedShort((*vToke)(1));
+    delete vToke;   
+  }
   
 }
 

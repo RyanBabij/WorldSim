@@ -153,7 +153,7 @@ void GL_init(int nArgs, char ** arg)
 	/* Set current colour to white. Alpha 255 is fully opaque. Alpha 0 is fully transparent. */
 	glColor4ub(255, 255, 255, 255);
 
-
+  RENDER_NEXT_FRAME=true;
 }
 
 
@@ -169,6 +169,7 @@ static void GL_specialUpFunc(const int key, const int x, const int y)
   {
     globalMouse.ctrlPressed=false;
   }
+  RENDER_NEXT_FRAME=true;
 }
 static void GL_specialFunc(const int key, const int x, const int y)
 {
@@ -190,6 +191,7 @@ static void GL_specialFunc(const int key, const int x, const int y)
   }
   
 	globalGuiManager.keyboardEvent(&globalKeyboard);
+  RENDER_NEXT_FRAME=true;
 }
 
 static void GL_reshape(const int WIDTH, const int HEIGHT)
@@ -223,7 +225,7 @@ static void GL_reshape(const int WIDTH, const int HEIGHT)
   menuWorldSimulator.eventResize();
 	menuAdventureMode.setPanel(0,0,RESOLUTIONX,RESOLUTIONY);
   menuAdventureMode.eventResize();
-
+  RENDER_NEXT_FRAME=true;
 }
 
 
@@ -233,6 +235,7 @@ bool waitingForKeyPress=true;
 
 static void GL_keyboardUpEvent(const unsigned char key, const int x, const int y)
 {
+
   playerKeypressTimer.start();
   
   // if ( key==Keyboard::LEFT_CTRL || key==Keyboard::RIGHT_CTRL)
@@ -242,6 +245,7 @@ static void GL_keyboardUpEvent(const unsigned char key, const int x, const int y
   
 	globalKeyboard.keyUp(key);
 	waitingForKeyPress=true;
+  RENDER_NEXT_FRAME=true;
 //mainRender.keyUp(key,x,y); waitingForKeyPress=true;
 }
 
@@ -362,6 +366,7 @@ static void GL_keyboardEvent(const unsigned char key, const int x, const int y)
 		}
 		
 	}
+  RENDER_NEXT_FRAME=true;
 }
 
 long int logicLateness=0;
@@ -420,8 +425,8 @@ void GL_idle()
 			{
 				//frameLateness = SLOW_FRAMERATE/2;
 			}
-			//glutPostRedisplay();
-      GL_display();
+			glutPostRedisplay();
+      //GL_display();
 			//frameRateTimer.init();
 			//frameRateTimer.start();
 		}
@@ -437,8 +442,8 @@ void GL_idle()
 			{
 				//frameLateness = UFRAMERATE/2;
 			}
-			//glutPostRedisplay();
-      GL_display();
+			glutPostRedisplay();
+      //GL_display();
 			//frameRateTimer.init();
 			//frameRateTimer.start();
 		}
@@ -489,9 +494,10 @@ void GL_idle()
 	idleManager.tickAll();
 	
 	/* relinquish CPU. Alpha freeglut does this automatically (?) */
-	if(RELINQUISH_CPU==true && LIMIT_LOGIC==true && world.ticksBacklog<=0)
+  playerKeypressTimer.update();
+	if(RELINQUISH_CPU==true && LIMIT_LOGIC==true && world.ticksBacklog<=0 && playerKeypressTimer.fullSeconds > 0.5)
 	{
-		MsgWaitForMultipleObjects( 0, NULL, FALSE, RELINQUISH_CPU_MSEC, QS_ALLINPUT ); /* parameter 4 is milliseconds ie 1000 = 1 second. */
+		MsgWaitForMultipleObjects( 0, NULL, FALSE, RELINQUISH_CPU_TIMEOUT, QS_ALLINPUT ); /* parameter 4 is milliseconds ie 1000 = 1 second. */
 	}
 	
 	
@@ -541,10 +547,12 @@ void GL_display()
 		{
 				/* Adjust for late frames by a maximum of 1/4 of the time between frames. */
 			frameLateness = frameRateTimer.totalUSeconds-UFRAMERATE;
-			if ( frameLateness > UFRAMERATE/4 )
+			if ( frameLateness > UFRAMERATE/3 )
 			{
-				frameLateness = UFRAMERATE/4;
+				frameLateness = UFRAMERATE/3;
 			}
+      //frameLateness = 0;
+      
 			frameRateTimer.init();
 			frameRateTimer.start();
 		}
@@ -585,52 +593,63 @@ void GL_display()
     
   }
   
-
+  if ( LAZY_RENDERING && RENDER_NEXT_FRAME )
+  {
+    RENDER_NEXT_FRAME=false;
     
-  if(DOUBLE_BUFFERING==true)
-  { glutSwapBuffers(); }
-  else
-  { glFlush(); }
 
-  glClear(GL_COLOR_BUFFER_BIT);
 
-    // NEW SYSTEM FOR MENU MANAGEMENT.
-    // No more complicated hierarchies or menu managers. Just one global variable.
-    // Submenus are still contained within their parent menu.
-  
-  if ( activeMenu == MENU_TITLE )
-  {
-    menuTitle.render();
-  }
-  else if (activeMenu == MENU_OPTIONS )
-  {
-    menuOptions.render();
-  }
-  else if (activeMenu == MENU_LOADGAME )
-  {
-    menuLoadGame.render();
-  }
-  else if (activeMenu == MENU_WORLDGENERATOR )
-  {
-    menuWorldGenerator.render();
-  }
-  else if (activeMenu == MENU_WORLDSIMULATOR )
-  {
-    menuWorldSimulator.render();
-  }
-  else if (activeMenu == MENU_ADVENTUREMODE )
-  {
-    menuAdventureMode.render();
-  }
-  
-    /* Render everything that wants to render. */
-  displayInterfaceManager.renderAll();
+    glClear(GL_COLOR_BUFFER_BIT);
 
+      // NEW SYSTEM FOR MENU MANAGEMENT.
+      // No more complicated hierarchies or menu managers. Just one global variable.
+      // Submenus are still contained within their parent menu.
+    
+    if ( activeMenu == MENU_TITLE )
+    {
+      menuTitle.render();
+      //RENDER_NEXT_FRAME=true;
+    }
+    else if (activeMenu == MENU_OPTIONS )
+    {
+      menuOptions.render();
+      //RENDER_NEXT_FRAME=true;
+    }
+    else if (activeMenu == MENU_LOADGAME )
+    {
+      menuLoadGame.render();
+      //RENDER_NEXT_FRAME=true;
+    }
+    else if (activeMenu == MENU_WORLDGENERATOR )
+    {
+      menuWorldGenerator.render();
+      //RENDER_NEXT_FRAME=true;
+    }
+    else if (activeMenu == MENU_WORLDSIMULATOR )
+    {
+      menuWorldSimulator.render();
+      //RENDER_NEXT_FRAME=true;
+    }
+    else if (activeMenu == MENU_ADVENTUREMODE )
+    {
+      menuAdventureMode.render();
+      //RENDER_NEXT_FRAME=true;
+    }
+    
+      /* Render everything that wants to render. */
+    displayInterfaceManager.renderAll();
+    
+    if(DOUBLE_BUFFERING==true)
+    { glutSwapBuffers(); }
+    else
+    { glFlush(); }
+  }
 }
 
 
 static void GL_mouseWheel (const int wheel, const int direction, const int _x, const int _y)
 {
+  
 	/* Get window size. */
 	GLint windowDimensions[4];
 	glGetIntegerv( GL_VIEWPORT, windowDimensions );
@@ -671,11 +690,13 @@ static void GL_mouseWheel (const int wheel, const int direction, const int _x, c
   {
     menuAdventureMode.mouseEvent(&globalMouse);
   }
+  RENDER_NEXT_FRAME=true;
 }
 
 
 static inline void GL_mouseClick (const int clickType, const int state, int mouseX, int mouseY)
 {
+  RENDER_NEXT_FRAME=true;
 	/* Remove negative mouse values. */
 	if(mouseX<0) { mouseX=0; }
 	if(mouseY<0) { mouseY=0; }
@@ -776,5 +797,5 @@ static void GL_mouseMove(const int mouseX, int mouseY)
   {
     menuAdventureMode.mouseEvent(&globalMouse);
   }
-
+  RENDER_NEXT_FRAME=true;
 }

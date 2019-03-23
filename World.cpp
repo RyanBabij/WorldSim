@@ -873,7 +873,7 @@ void World::incrementTicks(int nTicks)
 	// {
 		// /* MAXIMUM ABSTRACTION. */
 	// }
-
+  RENDER_NEXT_FRAME=true;
 }
 
 void World::logicTick()
@@ -933,6 +933,7 @@ bool World::handleTickBacklog()
 		
 		if (relinquishTimer.uSeconds > 100 )
 		{
+      RENDER_NEXT_FRAME=true;
 			return true;
 		}
 	}
@@ -940,7 +941,7 @@ bool World::handleTickBacklog()
 	// We have less than maximum ticks remaining, so finish them.
 	incrementTicks(ticksBacklog);
 	ticksBacklog=0;
-  
+  RENDER_NEXT_FRAME=true;
   return true;
 }
 
@@ -967,9 +968,12 @@ void World::idleTick()
         // BACKGROUND IDLE UPDATE LOOP
         // Eventually this should be threaded, but it would be a big job to do that.
       if ( aWorldTile(simX,simY).active==false
-      && aWorldTile(simX,simY).baseBiome != OCEAN )
+      && aWorldTile(simX,simY).baseBiome != OCEAN
+      && (aWorldTile(simX,simY).initialized==false || aWorldTile(simX,simY).localDate != calendar)
+      )
       {
         generateLocal(simX,simY);
+        RENDER_NEXT_FRAME=true;
         return;
       }
     }
@@ -1829,6 +1833,10 @@ void World::generateLocal(const int _localX, const int _localY)
       { vImportantMaps.push( &aWorldTile(playerCharacter->worldX-1,playerCharacter->worldY-1) ); }
       if ( aWorldTile.isSafe(playerCharacter->worldX+1,playerCharacter->worldY-1) )
       { vImportantMaps.push( &aWorldTile(playerCharacter->worldX+1,playerCharacter->worldY-1) ); }
+    }
+    if (DEBUG_X != -1 && DEBUG_Y != -1 )
+    {
+      vImportantMaps.push( &aWorldTile(DEBUG_X,DEBUG_Y) );
     }
 
     for ( int i=0;i<vWorldLocal.size();++i)

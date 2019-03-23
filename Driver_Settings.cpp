@@ -33,7 +33,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.139 Win32 dev";
+const std::string VERSION = "0.0.140 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -87,8 +87,8 @@ const int CALENDAR_SECONDS_PER_MINUTE = 2;
   depending on scaling and performance considerations.
   It will likely be set to low values during development.
 */
-const int LOCAL_MAP_SIZE = 65;
-//const int LOCAL_MAP_SIZE = 129;
+//const int LOCAL_MAP_SIZE = 65;
+const int LOCAL_MAP_SIZE = 129;
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 const int MAX_VIEW_RANGE = 5;
 
@@ -103,10 +103,14 @@ const int MAX_THIRST = 300;
 const int MAX_LOCAL_MAPS_IN_MEMORY = 12;
 const int MAX_LOCAL_MAPS_IN_BACKGROUND_MEMORY = 3;
 
+// Coordinates of the map loaded for debugging.
+int DEBUG_X=-1;
+int DEBUG_Y=-1;
+
 unsigned int RESOLUTIONX=1024, RESOLUTIONY=900;
 bool RESET=false;
 
-bool HOTKEYS_ENABLED = true;
+bool HOTKEYS_ENABLED = false;
 
 bool CLEAN_SAVES_ON_EXIT = true;
 
@@ -114,8 +118,8 @@ bool CLEAN_SAVES_ON_EXIT = true;
 const bool OUTPUT_FRAMERATE = false;
 const int OUTPUT_FRAMERATE_SAMPLE_SIZE = 50;
 
-const bool LIMIT_FRAMERATE = true;
-const double FRAMERATE = 30; // SETTING IT TO A REASONABLE VALUE CAN GREATLY REDUCE STRESS ON GPU
+const bool LIMIT_FRAMERATE = false;
+const double FRAMERATE = 120; // SETTING IT TO A REASONABLE VALUE CAN GREATLY REDUCE STRESS ON GPU
 const double POLLSPERSECOND = 30; // NOT CURRENTLY IMPLEMENTED
 double LOGIC_PER_SECOND = 1;
 const double PHYSICS_PER_SECOND = 10;
@@ -136,16 +140,19 @@ int CURRENT_ANIMATION_FRAME = 0; /* 0 - 99 */
   // RENDER AND FRAME STUFF
 
 /* Double buffering will make the frame transitions smoother, but it is slower. */
-const bool DOUBLE_BUFFERING = false;
+const bool DOUBLE_BUFFERING = true;
 
 /* BUSY_WAIT will cause the program to enter a busy wait if rendering is almost ready. Not sure if it works very well. */
 const bool BUSY_WAIT = false;
 const int BUSY_WAIT_USEC = 2000;
 
 /* If CPU isn't relinquished, then OpenGL tends to run at 100% CPU for some reason. */
+/* This uses MsgWaitForMultipleObjects, which will let the OS do other things until any kind of input event occurs */
 const bool RELINQUISH_CPU = true;
-const unsigned int RELINQUISH_CPU_MSEC = 1; /* Previous value: 1. Anywhere from 10-100 seems to be okay. 1000 = 1 second? */
+const unsigned int RELINQUISH_CPU_TIMEOUT = 50; /* Anywhere from 10-100 seems to be okay. Maximum amount of time to relinquish */
 
+bool RENDER_NEXT_FRAME=true; /* If there has been no input or state change, there's no need to render */
+const bool LAZY_RENDERING=true; /* Only render if something happened */
 
 
 // GLOBAL FLAGS
@@ -156,7 +163,7 @@ bool LIMIT_LOGIC = true; /* Press S. */
 bool FORCE_LOGIC_FRAME = false; /* True will trigger next logic frame immediately. */
 bool PAUSE_LOGIC = false; /* True will suspend logic. */
   // MAKES COUT MUCH FASTER BUT DOES NOT GUARANTEE ORDER OR COMPLETION BEFORE EXIT/CRASH.
-const bool FAST_COUT = false;
+const bool FAST_COUT = true;
 
 bool EMULATE_2_BUTTON_MIDDLE_CLICK = true; // Allows middle click with mice without middle click by pressing left and right click.
 

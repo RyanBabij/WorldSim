@@ -35,7 +35,7 @@ class LocalTile: public HasTexture
   
   /* Every local tile must have a seed to help determine random things,
     for example which variant of texture to draw. */
-  int seed;
+  unsigned short int seed;
   enumBiome baseTerrain;
     //Base terrain can be overlaid with a floor.
     // For now just a bool.
@@ -52,7 +52,7 @@ class LocalTile: public HasTexture
   
   bool isLand; /* True if not water */
   
-  bool isUphill [8]; /* Clockwise starting north */
+ // bool isUphill [8]; /* Clockwise starting north */
   
   
   /* INTERACTION STUFF */

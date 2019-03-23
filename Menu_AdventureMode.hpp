@@ -947,6 +947,7 @@ class Menu_AdventureMode: public GUI_Interface
       _keyboard->keyUp(Keyboard::RIGHT);
       _keyboard->keyUp(Keyboard::D);
       _keyboard->keyUp(Keyboard::d);
+      RENDER_NEXT_FRAME=true;
     }
     if(_keyboard->isPressed(Keyboard::LEFT) || _keyboard->isPressed(Keyboard::A) || _keyboard->isPressed(Keyboard::a))
     {
@@ -972,6 +973,7 @@ class Menu_AdventureMode: public GUI_Interface
       _keyboard->keyUp(Keyboard::LEFT);
       _keyboard->keyUp(Keyboard::A);
       _keyboard->keyUp(Keyboard::a);
+      RENDER_NEXT_FRAME=true;
     }
     if(_keyboard->isPressed(Keyboard::UP) || _keyboard->isPressed(Keyboard::W) || _keyboard->isPressed(Keyboard::w))
     {
@@ -996,6 +998,7 @@ class Menu_AdventureMode: public GUI_Interface
       _keyboard->keyUp(Keyboard::UP);
       _keyboard->keyUp(Keyboard::W);
       _keyboard->keyUp(Keyboard::w);
+      RENDER_NEXT_FRAME=true;
     }
     if(_keyboard->isPressed(Keyboard::DOWN) || _keyboard->isPressed(Keyboard::S) || _keyboard->isPressed(Keyboard::s))
     {
@@ -1020,12 +1023,14 @@ class Menu_AdventureMode: public GUI_Interface
       _keyboard->keyUp(Keyboard::DOWN);
       _keyboard->keyUp(Keyboard::S);
       _keyboard->keyUp(Keyboard::s);
+      RENDER_NEXT_FRAME=true;
     }
       // PERIOD = WAIT
     if(_keyboard->isPressed(Keyboard::PERIOD))
     {
       world.incrementTicksBacklog(1);
       _keyboard->keyUp(Keyboard::PERIOD);
+      RENDER_NEXT_FRAME=true;
     }
     
     // Hotbar selection keys
