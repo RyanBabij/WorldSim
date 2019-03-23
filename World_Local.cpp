@@ -679,8 +679,7 @@ bool World_Local::load()
       }
     }
     delete chonk;
-    
-    
+
     chonk = sfm.getChunk("OBJECT VECTOR");
     
     //std::cout<<"Chonks2: "<<chonk->vData.size()<<".\n";

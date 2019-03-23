@@ -262,25 +262,61 @@ std::string LocalTile::getSaveData()
   std::string saveData = "";
   
   if ( baseTerrain == OCEAN )
-  {
-    saveData+="O";
-  }
+  { saveData+="O"; }
+  else if ( baseTerrain == FOREST )
+  { saveData+="F"; }
+  else if ( baseTerrain == DESERT )
+  { saveData+="D"; }
+  else if ( baseTerrain == MOUNTAIN )
+  { saveData+="M"; }
+  else if ( baseTerrain == SNOW )
+  { saveData+="S"; }
+  else if ( baseTerrain == HILLY )
+  { saveData+="H"; }
+  else if ( baseTerrain == JUNGLE )
+  { saveData+="J"; }
+  else if ( baseTerrain == WETLAND )
+  { saveData+="W"; }
+  else if ( baseTerrain == STEPPES )
+  { saveData+="P"; }
+  else if ( baseTerrain == ICE )
+  { saveData+="I"; }
   else
-  {
-    saveData+="G";
-  }
+  { saveData+="G"; }
+  
+  saveData+=(char)height+48;
+  //saveData+=DataTools::toString(height);
   return saveData;
 }
 void LocalTile::loadData(std::string _saveData)
 {
-  if(_saveData[0] == 'O' )
-  {
-    baseTerrain=OCEAN;
-  }
+  
+  if ( _saveData[0] == 'O'  )
+  { baseTerrain=OCEAN; }
+  else if ( _saveData[0] == 'F' )
+  { baseTerrain=FOREST; }
+  else if ( _saveData[0] == 'D' )
+  { baseTerrain=DESERT; }
+  else if ( _saveData[0] == 'M' )
+  { baseTerrain=MOUNTAIN; }
+  else if ( _saveData[0] == 'S' )
+  { baseTerrain=SNOW; }
+  else if ( _saveData[0] == 'H' )
+  { baseTerrain=HILLY; }
+  else if ( _saveData[0] == 'J' )
+  { baseTerrain=JUNGLE; }
+  else if ( _saveData[0] == 'W' )
+  { baseTerrain=WETLAND; }
+  else if ( _saveData[0] == 'P' )
+  { baseTerrain=STEPPES; }
+  else if ( _saveData[0] == 'I' )
+  { baseTerrain=ICE; }
   else
-  {
-    baseTerrain = GRASSLAND;
-  }
+  { baseTerrain = GRASSLAND; }
+  
+  height = _saveData[1] - 48;
+  
+  
   
 }
 
