@@ -33,7 +33,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.140 Win32 dev";
+const std::string VERSION = "0.0.141 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -88,7 +88,7 @@ const int CALENDAR_SECONDS_PER_MINUTE = 2;
   It will likely be set to low values during development.
 */
 //const int LOCAL_MAP_SIZE = 65;
-const int LOCAL_MAP_SIZE = 129;
+const int LOCAL_MAP_SIZE = 65;
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 const int MAX_VIEW_RANGE = 5;
 
@@ -149,7 +149,8 @@ const int BUSY_WAIT_USEC = 2000;
 /* If CPU isn't relinquished, then OpenGL tends to run at 100% CPU for some reason. */
 /* This uses MsgWaitForMultipleObjects, which will let the OS do other things until any kind of input event occurs */
 const bool RELINQUISH_CPU = true;
-const unsigned int RELINQUISH_CPU_TIMEOUT = 50; /* Anywhere from 10-100 seems to be okay. Maximum amount of time to relinquish */
+const unsigned int RELINQUISH_CPU_TIMEOUT = 100; /* Anywhere from 10-100 seems to be okay. Maximum amount of time to relinquish */
+  bool NO_BACKLOG=false;
 
 bool RENDER_NEXT_FRAME=true; /* If there has been no input or state change, there's no need to render */
 const bool LAZY_RENDERING=true; /* Only render if something happened */
@@ -163,7 +164,7 @@ bool LIMIT_LOGIC = true; /* Press S. */
 bool FORCE_LOGIC_FRAME = false; /* True will trigger next logic frame immediately. */
 bool PAUSE_LOGIC = false; /* True will suspend logic. */
   // MAKES COUT MUCH FASTER BUT DOES NOT GUARANTEE ORDER OR COMPLETION BEFORE EXIT/CRASH.
-const bool FAST_COUT = true;
+const bool FAST_COUT = false;
 
 bool EMULATE_2_BUTTON_MIDDLE_CLICK = true; // Allows middle click with mice without middle click by pressing left and right click.
 

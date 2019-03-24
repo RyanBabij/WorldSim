@@ -226,6 +226,9 @@ const std::string PATH_TEX_ITEM_SHOVEL = "Textures/Item/Shovel.png";
 Texture TEX_ITEM_AXE;
 const std::string PATH_TEX_ITEM_AXE = "Textures/Item/Axe.png";
 
+Texture TEX_ITEM_PICKAXE;
+const std::string PATH_TEX_ITEM_PICKAXE = "Textures/Item/Pickaxe.png";
+
 Texture TEX_OBJECT_LOG;
 const std::string PATH_TEX_OBJECT_LOG = "Textures/Object/Log.png";
 
@@ -452,6 +455,7 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   loadTextureVerbose(PATH_TEX_ITEM_FISHROD,&TEX_ITEM_FISHROD);
   loadTextureVerbose(PATH_TEX_ITEM_SHOVEL,&TEX_ITEM_SHOVEL);
   loadTextureVerbose(PATH_TEX_ITEM_AXE,&TEX_ITEM_AXE);
+  loadTextureVerbose(PATH_TEX_ITEM_PICKAXE,&TEX_ITEM_PICKAXE);
   loadTextureVerbose(PATH_TEX_OBJECT_LOG,&TEX_OBJECT_LOG);
   loadTextureVerbose(PATH_TEX_OBJECT_FISH,&TEX_OBJECT_FISH);
   loadTextureVerbose(PATH_TEX_ITEM_WATERSKIN,&TEX_ITEM_WATERSKIN);

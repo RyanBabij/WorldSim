@@ -31,9 +31,10 @@ World_Local::World_Local()
   
 	nX=LOCAL_MAP_SIZE;
 	nY=LOCAL_MAP_SIZE;
-
-
+  
   hasRiver=-1;
+  hasCave=false;
+  hasRuin=false;
   
 	seed = 0;
 	baseBiome = NOTHING;
@@ -357,6 +358,18 @@ bool World_Local::generate()
   {
     for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
+      
+      data->aLocalTile(_x,_y).seed = random.randInt(USHRT_MAX-1);
+      //data->aLocalTile(_x,_y).clearObjects();
+      data->aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
+
+      data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+      data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+      //data->aSubterranean(_x,_y).clearObjects();
+      data->aSubterranean(_x,_y).height = 0;
+        
+      data->aSubterranean(_x,_y).hasGems=Random::oneIn(10);
+        
       // GENERATE RIVERS
       // FOR NOW THEY JUST RUN ALONG THE EDGE OF THE MAP
       if ( ((riverConnections & 0b01000010) == 0b01000010
@@ -431,15 +444,6 @@ bool World_Local::generate()
           baseTreeChance=9;
         }
         
-        data->aLocalTile(_x,_y).seed = random.randInt(USHRT_MAX-1);
-        data->aLocalTile(_x,_y).clearObjects();
-        data->aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
-
-        data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
-        data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
-        data->aSubterranean(_x,_y).clearObjects();
-        data->aSubterranean(_x,_y).height = -1;
-        
         //Put down some water for drinking
         if (Random::oneIn(500))
         {
@@ -465,6 +469,7 @@ bool World_Local::generate()
           put(new Item_Wall, _x, _y);
           put(new Item_PlantFibre, _x, _y);
           put(new Item_Knife, _x, _y);
+          put(new Item_Pickaxe, _x, _y);
         }
         else if (random.oneIn(baseTreeChance))
         {
@@ -505,16 +510,39 @@ bool World_Local::generate()
   
   if ( baseBiome == GRASSLAND && random.oneIn(100) )
   {
-  for ( int x = 10; x<20; ++x)
-  {
-    for ( int y=10;y<20; ++y)
+    for ( int x = 10; x<20; ++x)
     {
-      data->aLocalTile(x,y).hasFloor = true;
+      for ( int y=10;y<20; ++y)
+      {
+        data->aLocalTile(x,y).hasFloor = true;
+      }
     }
+    
+    auto sign = new WorldObject_Sign;
+    data->aLocalTile(21,21).add(sign);
   }
   
-  auto sign = new WorldObject_Sign;
-  data->aLocalTile(21,21).add(sign);
+  
+  //BUILD CAVE
+  //if (Random::oneIn(2))
+  if (true)
+  {
+    hasCave=true;
+    //Basically random walk with extras, and then occasionally breach the surface in the form of a cave tile.
+    
+    //int caveSize = Random::randomInt(LOCAL_MAP_SIZE*5)+3;
+    int caveSize = Random::multiRoll(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+
+    HasXY* caveXY = getRandomTile();
+    if ( caveXY )
+    {
+      data->aSubterranean(caveXY).baseTerrain = GRASSLAND;
+      for (int i=0;i<caveSize;++i)
+      {
+        caveXY = getRandomNeighbor(caveXY);
+        data->aSubterranean(caveXY).baseTerrain = GRASSLAND;
+      }
+    }
   }
 
   //Generate global objects
@@ -670,7 +698,18 @@ bool World_Local::load()
     {
       for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
       {
+        //data->aLocalTile(_x,_y).clearObjects();
         data->aLocalTile(_x,_y).loadData((*chonk)(i));
+        
+        data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+        data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+        //data->aSubterranean(_x,_y).clearObjects();
+        data->aSubterranean(_x,_y).height = 0;
+
+        //data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+        //data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+        //data->aSubterranean(_x,_y).clearObjects();
+        //data->aSubterranean(_x,_y).height = 0;
         //chonk.add(data->aLocalTile(_x,_y).getSaveData());
         ++i;
       }
@@ -1824,7 +1863,26 @@ HasXY* World_Local::getRandomTile()
   auto xy = new HasXY ( Random::randomInt(nX-1), Random::randomInt(nY-1) );
   return xy;
 }
+
+HasXY* World_Local::getRandomNeighbor(HasXY* _source)
+{
+  if ( !data ) { return 0; }
+  if (isSafe(_source->x,_source->y) == false) { return 0; }
   
+  Vector <HasXY*> * vN = data->aLocalTile.getNeighborsOrthogonal(_source->x,_source->y,false,true);
+  
+
+  if ( vN && vN->size()>0 )
+  {
+    HasXY * returnValue = new HasXY((*vN)(0));
+    //returnValue->set((*vN)(0));
+    delete vN;
+    return returnValue;
+  }
+  if ( vN ) { delete vN; }
+  
+  return 0;
+}
   
 
 bool World_Local::isBlockingView(int _x, int _y)
@@ -1989,17 +2047,17 @@ Texture* World_Local::currentTexture()
 	else
 	{
 		//std::cout<<"Returning grassyboi\n";
-		if ( seed %4 == 0 )
+		if ( seed==0 || seed %4 == 0 )
 		{
 			//std::cout<<"0\n";
 			return &TEX_WORLD_TERRAIN_GRASS_00;
 		}
-		if ( seed %4 == 1 )
+		else if ( seed %4 == 1 )
 		{
 			//std::cout<<"1\n";
 			return &TEX_WORLD_TERRAIN_GRASS_01;
 		}
-		if ( seed %4 == 2 )
+		else if ( seed %4 == 2 )
 		{
 			//std::cout<<"2\n";
 			return &TEX_WORLD_TERRAIN_GRASS_02;

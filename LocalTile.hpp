@@ -51,6 +51,7 @@ class LocalTile: public HasTexture
   char height;
   
   bool isLand; /* True if not water */
+  bool hasGems;
   
  // bool isUphill [8]; /* Clockwise starting north */
   
@@ -94,7 +95,7 @@ class LocalTile: public HasTexture
 	virtual Texture* currentTexture();
   
     // Return vector of all textures to be drawn, to be drawn from index 0 to n-1.
-  virtual Vector <HasTexture*> * currentTextures();
+  virtual Vector <Texture*> * currentTextures();
   
     // Returns true is this tile has an object that can block line of sight. */
   bool hasViewBlocker();

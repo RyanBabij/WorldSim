@@ -14,13 +14,15 @@
 
 LocalTile::LocalTile()
 {
-  hasFloor = false;
+  hasFloor = 0;
   bWall=0;
   nFish=-1;
   footprint=0;
   height=0;
   isLand=false;
   seed=0;
+  
+  hasGems=false;
 }
 
 LocalTile::~LocalTile()
@@ -166,6 +168,8 @@ bool LocalTile::hasMovementBlocker()
 
 Texture* LocalTile::currentTexture()
 {
+  //return &TEX_LOCAL_FLOOR;
+  
   if ( hasFloor==1 )
   {
     return &TEX_LOCAL_FLOOR;
@@ -216,15 +220,15 @@ Texture* LocalTile::currentTexture()
 	else
 	{
 
-		if ( seed %4 == 0 )
+		if ( seed==0 || seed %4 == 0 )
 		{
 			return &TEX_WORLD_TERRAIN_GRASS_00;
 		}
-		if ( seed %4 == 1 )
+		else if ( seed %4 == 1 )
 		{
 			return &TEX_WORLD_TERRAIN_GRASS_01;
 		}
-		if ( seed %4 == 2 )
+		else if ( seed %4 == 2 )
 		{
 			return &TEX_WORLD_TERRAIN_GRASS_02;
 		}
@@ -235,9 +239,85 @@ Texture* LocalTile::currentTexture()
 	return &TEX_WORLD_TEST_00;
 }
 
-Vector <HasTexture*> * LocalTile::currentTextures()
+Vector <Texture*> * LocalTile::currentTextures()
 {
-  return 0;
+  auto vTexture = new Vector <Texture*>;
+  //vTexture->push(&TEX_WORLD_TERRAIN_OCEAN_00);
+  //vTexture->push(currentTexture());
+  //return vTexture;
+  
+  //return &TEX_LOCAL_FLOOR;
+  
+  if ( hasFloor==1 )
+  {
+    vTexture->push(&TEX_LOCAL_FLOOR);
+  }
+  else if (hasFloor==2)
+  {
+    vTexture->push(&TEX_FLOOR_WOOD);
+  }
+  
+	//enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13};
+	if ( baseTerrain == NOTHING )
+	{
+    vTexture->push(&TEX_WORLD_TEST_00);
+	}
+	else if ( baseTerrain == OCEAN )
+	{
+    vTexture->push(&TEX_WORLD_TERRAIN_OCEAN_00);
+	}
+	else if (baseTerrain == FOREST)
+	{
+    vTexture->push(&TEX_WORLD_TERRAIN_FOREST_TREE);
+	}
+	else if (baseTerrain == DESERT)
+	{
+    vTexture->push(&TEX_WORLD_TERRAIN_DESERT_00);
+	}
+	else if (baseTerrain == UNDERGROUND)
+	{
+    vTexture->push(&TEX_WORLD_TERRAIN_UNDERGROUND_00);
+	}
+	else if (baseTerrain == SNOW)
+	{
+    vTexture->push(&TEX_WORLD_TERRAIN_SNOW);
+	}
+	else if (baseTerrain == ICE)
+	{
+    vTexture->push(&TEX_WORLD_TERRAIN_SNOW);
+	}
+	else if (baseTerrain == STEPPES)
+	{
+    vTexture->push(&TEX_WORLD_TERRAIN_STEPPE);
+	}
+  
+
+	//else if ( biome == GRASSLAND )
+	else
+	{
+
+		if ( seed==0 || seed %4 == 0 )
+		{
+      vTexture->push(&TEX_WORLD_TERRAIN_GRASS_00);
+		}
+		else if ( seed %4 == 1 )
+		{
+      vTexture->push(&TEX_WORLD_TERRAIN_GRASS_01);
+		}
+		else if ( seed %4 == 2 )
+		{
+      vTexture->push(&TEX_WORLD_TERRAIN_GRASS_02);
+		}
+    vTexture->push(&TEX_WORLD_TERRAIN_GRASS_03);
+	}
+  
+  if (hasGems)
+  {
+  vTexture->push(&TEX_WORLD_ARTIFACT_GEMS);
+  }
+
+  
+  return vTexture;
 }
 
 bool LocalTile::canTravelNorth()

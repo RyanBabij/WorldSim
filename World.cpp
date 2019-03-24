@@ -768,6 +768,8 @@ void World::incrementTicksBacklog(long long unsigned int nTicks)
 	// Increments the world by nTicks ticks. Higher values may lead to abstraction.
 void World::incrementTicks(int nTicks)
 {
+  
+  worldViewer.rainManager.updateRain();
 
 	//ticksBacklog+=nTicks;
 	dailyCounter+=nTicks;
@@ -967,15 +969,36 @@ void World::idleTick()
       
         // BACKGROUND IDLE UPDATE LOOP
         // Eventually this should be threaded, but it would be a big job to do that.
-      if ( aWorldTile(simX,simY).active==false
-      && aWorldTile(simX,simY).baseBiome != OCEAN
-      && (aWorldTile(simX,simY).initialized==false || aWorldTile(simX,simY).localDate != calendar)
-      )
+      // if ( aWorldTile(simX,simY).active==false
+      // && aWorldTile(simX,simY).baseBiome != OCEAN
+      // && (aWorldTile(simX,simY).initialized==false || aWorldTile(simX,simY).localDate != calendar)
+      // )
+      // {
+        // generateLocal(simX,simY);
+        // // Update and sync
+        // aWorldTile(simX,simY).localDate.set(&calendar);
+        // RENDER_NEXT_FRAME=true;
+        // return;
+      // }
+      
+      for (int i=0;i<vAllTiles2.size();++i)
       {
-        generateLocal(simX,simY);
-        RENDER_NEXT_FRAME=true;
-        return;
+        HasXY * tXY = vAllTiles2(i);
+        if ( aWorldTile(tXY).active==false
+        && aWorldTile(tXY).baseBiome != OCEAN
+        && (aWorldTile(tXY).initialized==false || aWorldTile(tXY).localDate != calendar)
+        )
+        {
+          generateLocal(tXY);
+          // Update and sync
+          aWorldTile(tXY).localDate.set(&calendar);
+          RENDER_NEXT_FRAME=true;
+          NO_BACKLOG=false;
+          return;
+        }
       }
+      NO_BACKLOG=true;
+      
     }
   }
 }
@@ -1679,7 +1702,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	
 	generated = true;
 	
-  isRaining=false;
+  isRaining=true;
 	
 	// Build and shuffle the tile vector
 	//Vector < Vector <HasXY> > vAllTiles;
@@ -1859,6 +1882,7 @@ void World::generateLocal(const int _localX, const int _localY)
   vWorldLocal.push(&aWorldTile(_localX,_localY));
   
 }
+void World::generateLocal(HasXY* _xy) { generateLocal(_xy->x,_xy->y); }
 
 void World::unloadLocal(const int _localX, const int _localY)
 {

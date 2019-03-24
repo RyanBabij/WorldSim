@@ -326,6 +326,28 @@ class Item_Longbow: public Item
 
 };
 
+class Item_Pickaxe: public Item
+{
+  public:
+  
+  Item_Pickaxe()
+  {
+    
+  }
+  std::string getName() override { return "Pickaxe"; }
+  
+  
+  Texture* currentTexture() override
+  {
+    return &TEX_ITEM_PICKAXE;
+  }
+  
+  //virtual Vector <std::string>* getInteractNames(Creature* _target) override;
+  
+  //virtual void interact(Creature* _target, int interactType=0) override;
+
+};
+
 class Item_Fishrod: public Item
 {
   public:
@@ -572,6 +594,9 @@ class Item_Campfire: public Item
 
   Texture* currentTexture()
   {
+    if (CURRENT_ANIMATION_FRAME==0)
+    { return &TEX_OBJECT_CAMPFIRE[0];
+    }
     return &TEX_OBJECT_CAMPFIRE[CURRENT_ANIMATION_FRAME%5];
   }
 

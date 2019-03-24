@@ -90,6 +90,10 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	public:
   
   Calendar localDate; /* The date that this map has been updated to. */
+  
+  /* Special features */
+    bool hasCave;
+    bool hasRuin;
 	
   
   bool initialized; /* True if the world has been loaded at least once. */
@@ -260,6 +264,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   Vector <Character*> * getAdjacentCharacters(int /* _x */, int /* _y */);
   
   HasXY* getRandomTile();
+    HasXY* getRandomNeighbor(HasXY*);
   
 // LINE OF SIGHT
     

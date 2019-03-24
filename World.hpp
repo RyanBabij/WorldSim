@@ -202,6 +202,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	void generateWorld (const std::string /* _name */, const int /* x */, const int /* y */, int /* seed */, int /* fragmentation */, const bool /* islandMode */, const bool /* wrapX */, const bool /* wrapY */, const double /* landPercent */);
 		// Generate a local map so it can be viewed and interacted with.
 	void generateLocal(const int /* worldX */, const int /* worldY */);
+    void generateLocal(HasXY*);
     //Unload a local map from RAM and into a save file.
 	void unloadLocal(const int /* worldX */, const int /* worldY */);
   

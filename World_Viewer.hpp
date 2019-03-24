@@ -136,8 +136,6 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 	int mainViewX1, mainViewX2, mainViewY1, mainViewY2;
 	int mainViewNX, mainViewNY;
   
-  //RAIN
-  RainManager rainManager;
   double localTileMantissa;
   
   // Here is what we should really be drawing, rather than deciding during the render call.
@@ -145,6 +143,8 @@ class WorldViewer: public DisplayInterface, public MouseInterface
   ArrayS2 <Vector <Texture* > > aScene;
   
 	public:
+  //RAIN
+  RainManager rainManager;
 	
 	bool active;
 	
@@ -230,7 +230,7 @@ WorldViewer()
   
   tilesToSkip=0;
   
-  territoryView = false;
+
   
   centerLocalX=LOCAL_MAP_SIZE/2;
   centerLocalY=LOCAL_MAP_SIZE/2;
@@ -242,6 +242,7 @@ WorldViewer()
   firstTileAbsX=0;
   firstTileAbsY=0;
   
+  territoryView = false;
   tilesetMode = true;
   subterraneanMode = false;
   
@@ -1038,11 +1039,40 @@ void switchTarget(World_Local* _worldLocal)
 								{
 									if ( nextPixel>=mainViewX1 && currentPixel <= mainViewX2 && floor(currentPixel) != floor(nextPixel) )
 									{
+                    //if ( subterraneanMode )
                     if ( subterraneanMode )
                     {
                       LocalTile* localTile = &localMap->data->aSubterranean(localXTile,localYTile);
+                      //LocalTile* localTile2 = &localMap->data->aLocalTile(localXTile,localYTile);
+                      //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile2->currentTexture(), false);
+                      
                         // There is deliberate overlap of 1 pixel to prevent artifacts when zooming out.
-                      Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                        
+                        Vector <Texture*> * vText = localTile->currentTextures();
+                        
+                        if ( vText != 0)
+                        {
+                          for (int i=0;i<vText->size();++i)
+                          {
+                            Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), (*vText)(i), false);
+                          }
+                        }
+                        delete vText;
+
+                          // // Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                          // delete vText;
+                          // // std::cout<<"2";
+                        // }
+                        // else
+                        // {
+                          // Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                        // }
+                      // }
+                      // else
+                      // {
+                        // std::cout<<"BASTILE\n";
+                      // }
+
                     }
                     else
                     {
@@ -1258,7 +1288,7 @@ void switchTarget(World_Local* _worldLocal)
             }
 						else if(world->isLand(tileX,tileY))
 						{
-							if (tile->seed % 4 == 0)
+							if (tile->seed==0 || tile->seed % 4 == 0)
 							{
                 glColor4f(2.0f, 2.0f, 2.0f, 1.0f);
 								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
@@ -1455,7 +1485,7 @@ void RainManager::render()
 {
   if (world==0) {return;}
   
-  updateRain();
+  //updateRain();
   
   if (worldViewer.pixelsPerLocalTile < 1)
   { return;
