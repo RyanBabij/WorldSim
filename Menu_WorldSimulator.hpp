@@ -255,13 +255,14 @@ class Menu_WorldSimulator: public GUI_Interface
 
     Renderer::placeColour4a(200,200,250,250,panelX1,panelY1,panelX1+220,panelY1+120);
     
-    if (world.queryWorldX != -1 && world.queryWorldY != -1)
+    //if (world.queryWorldX != -1 && world.queryWorldY != -1)
+    if ( world.isSafe(world.queryWorldX,world.queryWorldY) )
     {
       World_Local * tile = world.getTile(world.queryWorldX,world.queryWorldY);
       
       if ( tile != 0 )
       {
-        //font8x8.drawText("QUERY",panelX1,panelY1,panelX1+220,panelY1+120,true,true);
+        // //font8x8.drawText("QUERY",panelX1,panelY1,panelX1+220,panelY1+120,true,true);
         font8x8.drawText(Stream() << tile->getTerrainName() << " ("<<world.queryWorldX<<", "<<world.queryWorldY<<")",panelX1,panelY1+110,panelX1+220,panelY1+120,false,true);
         font8x8.drawText(Stream() << "Landmass: "<< world.getLandmassName(world.queryWorldX,world.queryWorldY),panelX1,panelY1+100,panelX1+220,panelY1+110,false,true);
         font8x8.drawText(Stream() << "Biome: "<< world.getBiomeName(world.queryWorldX,world.queryWorldY),panelX1,panelY1+90,panelX1+220,panelY1+100,false,true);
@@ -397,7 +398,7 @@ class Menu_WorldSimulator: public GUI_Interface
           menuWorld.active = false;
           menuCharacter.active = false;
           menuBiome.active = false;
-          active = false;
+          //active = false;
       
         }
         else

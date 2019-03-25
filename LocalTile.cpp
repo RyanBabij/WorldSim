@@ -20,6 +20,7 @@ LocalTile::LocalTile()
   footprint=0;
   height=0;
   isLand=false;
+  isCave=false;
   seed=0;
   
   hasGems=false;
@@ -313,9 +314,13 @@ Vector <Texture*> * LocalTile::currentTextures()
   
   if (hasGems)
   {
-  vTexture->push(&TEX_WORLD_ARTIFACT_GEMS);
+    vTexture->push(&TEX_WORLD_ARTIFACT_GEMS);
   }
-
+  if (isCave)
+  {
+    vTexture->push(&TEX_LOCAL_FLOOR);
+    //vTexture->push(&TEX_WORLD_ARTIFACT_GEMS);
+  }
   
   return vTexture;
 }

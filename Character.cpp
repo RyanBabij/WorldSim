@@ -85,6 +85,7 @@ Character::Character()
   
   map = 0;
 	
+  isUnderground=false;
 }
 
   //_sex: 0 - Roll, 1 - Male, 2 - Female.

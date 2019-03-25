@@ -96,6 +96,8 @@ void Tribe_Human::wander()
 	
 	//aTerrain.getNeighborVector(_x,_y,&vTerrain,false /* DON'T INCLUDE SELF */);
 	Vector <HasXY*> * vXY  = world->aTerrain.getNeighbors(worldX, worldY, false /* includeself */, true /* shuffle */);
+  
+  if (vXY==0) { return; }
 	
 	HasXY* xyDestination = 0;
   
@@ -428,6 +430,9 @@ void Tribe_Human::incrementTicks ( int nTicks )
     int nFreeTiles = 0;
     
     Vector <HasXY*> * vXY  = world->aTerrain.getNeighbors(worldX, worldY, false, true /* shuffle */);
+    
+    if (vXY==0) { return; }
+    
     bool canExpand = false;
     for (auto xy : *vXY)
     {

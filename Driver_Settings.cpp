@@ -88,7 +88,7 @@ const int CALENDAR_SECONDS_PER_MINUTE = 2;
   It will likely be set to low values during development.
 */
 //const int LOCAL_MAP_SIZE = 65;
-const int LOCAL_MAP_SIZE = 65;
+const int LOCAL_MAP_SIZE = 129;
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 const int MAX_VIEW_RANGE = 5;
 

@@ -522,9 +522,6 @@ void switchTarget(World_Local* _worldLocal)
 		
 		if ( mouse->isLeftClick == true )
 		{
-			//if ( isSafe(hover
-			//std::cout<<"Clicked on: "<<hoveredXTile<<", "<<hoveredYTile<<".\n";
-			
 			world->queryTile(hoveredXTile,hoveredYTile);
 		}
 		

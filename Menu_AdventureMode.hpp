@@ -556,6 +556,10 @@ class Menu_AdventureMode: public GUI_Interface
   
   void render()
   {
+    
+    if (playerCharacter==0)
+    { return; }
+  
     /* Render adventure mode interface.
     Yes it is very messy at the moment, however it works fine and is just a GUI
     so it doesn't matter too much. */
@@ -917,8 +921,15 @@ class Menu_AdventureMode: public GUI_Interface
       // Make sure to relinquish control of character.
 		if(_keyboard->isPressed(Keyboard::TAB))
 		{
-      _keyboard->keyUp(Keyboard::TAB);
+      playerCharacter=0;
+      
+      
+      //menuWorldSimulator.active = true;
+      
+      
       activeMenu = MENU_WORLDSIMULATOR;
+      
+      _keyboard->keyUp(Keyboard::TAB);
 		}
     
     if(_keyboard->isPressed(Keyboard::RIGHT) || _keyboard->isPressed(Keyboard::D) || _keyboard->isPressed(Keyboard::d))
@@ -1033,6 +1044,27 @@ class Menu_AdventureMode: public GUI_Interface
       RENDER_NEXT_FRAME=true;
     }
     
+      // SHIFT+, and SHIFT+.
+      // Move view up or down
+      // Basically just toggles subterranean mode right now.
+    if(_keyboard->isPressed(Keyboard::LEFT_CHEVRON))
+    {
+      worldViewer.subterraneanMode=true;
+      if (playerCharacter!=0)
+      {
+        playerCharacter->isUnderground=true;
+      }
+    }
+      // Move view up or down
+    if(_keyboard->isPressed(Keyboard::RIGHT_CHEVRON))
+    {
+      worldViewer.subterraneanMode=false;
+      if (playerCharacter!=0)
+      {
+        playerCharacter->isUnderground=false;
+      }
+    }
+
     // Hotbar selection keys
 		if(_keyboard->isPressed(Keyboard::ONE))
 		{
@@ -1092,6 +1124,10 @@ class Menu_AdventureMode: public GUI_Interface
   
 	bool mouseEvent (Mouse* _mouse)
 	{
+    
+    if (playerCharacter==0)
+    { return false; }
+    
     //int itemClicked = 0; /* 0-99 == Inventory. 100-119 == Ground */
     mouseX = _mouse->x;
     mouseY = _mouse->y;
@@ -1317,7 +1353,7 @@ class Menu_AdventureMode: public GUI_Interface
               // floor inventory
             if (row == 10 || row == 11 )
             {
-                ++currentFloorItem;
+              ++currentFloorItem;
             }
             
             if ( row==0 )

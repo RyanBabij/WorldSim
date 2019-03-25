@@ -1995,6 +1995,10 @@ int World::getSurroundingFertility(const int _x, const int _y)
 	int totalFertility = 0;
 
 	Vector < HasXY* >* vTerrain = aTerrain.getNeighbors(_x,_y,true);
+  if ( vTerrain==0 )
+  {
+    return 0;
+  }
 	
 	//aTerrain.getNeighborVector(_x,_y,&vTerrain,true /* INCLUDE SELF */);
 	
@@ -2175,25 +2179,29 @@ HasXY* World::getRandomTileOfType(enumBiome _type)
 }
 
 
-void World::queryTile( int hoveredXTile, int hoveredYTile)
+void World::queryTile( const int hoveredXTile, const int hoveredYTile)
 {
-	if ( hoveredXTile < 0 || hoveredYTile < 0 || hoveredXTile >= nX || hoveredYTile >= nY )
-	{ return; }
+	// if ( hoveredXTile < 0 || hoveredYTile < 0 || hoveredXTile >= nX || hoveredYTile >= nY )
+	// { return; }
+  if ( isSafe (hoveredXTile,hoveredXTile) == false )
+  {
+    return;
+  }
   
   queryWorldX = hoveredXTile;
   queryWorldY = hoveredYTile;
 
 
   //bool hasObject = false;
-	for (int i=0;i<vWorldObjectGlobal.size();++i)
-	{
-		if ( vWorldObjectGlobal(i)->worldX == hoveredXTile && vWorldObjectGlobal(i)->worldY == hoveredYTile)
-		{
-			//std::cout<<vWorldObjectGlobal(i)->nameType<<": "<<vWorldObjectGlobal(i)->name<<".\n";
-      //Console (Stream() <<vWorldObjectGlobal(i)->nameType<<": "<<vWorldObjectGlobal(i)->name);
-      //hasObject = true;
-		}
-	}
+	// for (int i=0;i<vWorldObjectGlobal.size();++i)
+	// {
+		// if ( vWorldObjectGlobal(i)->worldX == hoveredXTile && vWorldObjectGlobal(i)->worldY == hoveredYTile)
+		// {
+			// //std::cout<<vWorldObjectGlobal(i)->nameType<<": "<<vWorldObjectGlobal(i)->name<<".\n";
+      // //Console (Stream() <<vWorldObjectGlobal(i)->nameType<<": "<<vWorldObjectGlobal(i)->name);
+      // //hasObject = true;
+		// }
+	// }
   //if ( hasObject )
   //{ Console (Stream() <<"Objects:"); }
 
@@ -2339,9 +2347,11 @@ std::string World::getBiomeName(const int _x, const int _y)
 {
   if ( isSafe(_x,_y) )
   {
-    return vBiome(aBiomeID(_x,_y))->name;
+    if (vBiome.isSafe(aBiomeID(_x,_y)))
+    {
+      return vBiome(aBiomeID(_x,_y))->name;
+    }
   }
-  
   return "";
 }
     

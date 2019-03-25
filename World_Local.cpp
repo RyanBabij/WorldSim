@@ -368,7 +368,7 @@ bool World_Local::generate()
       //data->aSubterranean(_x,_y).clearObjects();
       data->aSubterranean(_x,_y).height = 0;
         
-      data->aSubterranean(_x,_y).hasGems=Random::oneIn(10);
+      // data->aSubterranean(_x,_y).hasGems=Random::oneIn(10);
         
       // GENERATE RIVERS
       // FOR NOW THEY JUST RUN ALONG THE EDGE OF THE MAP
@@ -523,27 +523,48 @@ bool World_Local::generate()
   }
   
   
-  //BUILD CAVE
-  //if (Random::oneIn(2))
-  if (true)
-  {
-    hasCave=true;
-    //Basically random walk with extras, and then occasionally breach the surface in the form of a cave tile.
-    
-    //int caveSize = Random::randomInt(LOCAL_MAP_SIZE*5)+3;
-    int caveSize = Random::multiRoll(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-
-    HasXY* caveXY = getRandomTile();
-    if ( caveXY )
+    //BUILD CAVE
+    //if (Random::oneIn(2))
+    if (true)
     {
-      data->aSubterranean(caveXY).baseTerrain = GRASSLAND;
-      for (int i=0;i<caveSize;++i)
+      hasCave=true;
+      //Basically random walk with extras, and then occasionally breach the surface in the form of a cave tile.
+      
+      //int caveSize = Random::randomInt(LOCAL_MAP_SIZE*5)+3;
+      int caveSize = Random::multiRoll(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+      
+      Vector <HasXY*> vCaveMap;
+
+      HasXY* caveXY = getRandomTile();
+      if ( caveXY )
       {
-        caveXY = getRandomNeighbor(caveXY);
         data->aSubterranean(caveXY).baseTerrain = GRASSLAND;
+        for (int i2=0;i2<caveSize;++i2)
+        {
+          caveXY = getRandomNeighbor(caveXY);
+          data->aSubterranean(caveXY).baseTerrain = GRASSLAND;
+          vCaveMap.push(caveXY);
+        }
+
+        //delete caveXY;
       }
+      vCaveMap.shuffle();
+      
+      int nEntrances = Random::randomInt(5);
+      
+      for (int i2=0;i2<nEntrances;++i2)
+      {
+        if ( vCaveMap.isSafe(i2) )
+        {
+          //put entrance here.
+          //std::cout<<"...\n";
+          data->aLocalTile(vCaveMap(i2)).isCave=true;
+          data->aSubterranean(vCaveMap(i2)).isCave=true;
+        }
+      }
+      
+      vCaveMap.deleteAll();
     }
-  }
 
   //Generate global objects
   Vector <Tribe * > * vTribesHere = world.getTribesOn(globalX,globalY);
@@ -759,6 +780,51 @@ bool World_Local::load()
       
       
     }
+    
+    //BUILD CAVE
+    //if (Random::oneIn(2))
+    if (true)
+    {
+      hasCave=true;
+      //Basically random walk with extras, and then occasionally breach the surface in the form of a cave tile.
+      
+      //int caveSize = Random::randomInt(LOCAL_MAP_SIZE*5)+3;
+      int caveSize = Random::multiRoll(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+      
+      Vector <HasXY*> vCaveMap;
+
+      HasXY* caveXY = getRandomTile();
+      if ( caveXY )
+      {
+        data->aSubterranean(caveXY).baseTerrain = GRASSLAND;
+        for (int i2=0;i2<caveSize;++i2)
+        {
+          caveXY = getRandomNeighbor(caveXY);
+          data->aSubterranean(caveXY).baseTerrain = GRASSLAND;
+          vCaveMap.push(caveXY);
+        }
+
+        //delete caveXY;
+      }
+      vCaveMap.shuffle();
+      
+      int nEntrances = Random::randomInt((vCaveMap.size()/25)+1);
+      
+      for (int i2=0;i2<nEntrances;++i2)
+      {
+        if ( vCaveMap.isSafe(i2) )
+        {
+          //put entrance here.
+          //std::cout<<"...\n";
+          data->aLocalTile(vCaveMap(i2)).isCave=true;
+          data->aSubterranean(vCaveMap(i2)).isCave=true;
+        }
+      }
+      
+      vCaveMap.deleteAll();
+    }
+    
+    
   }
   else
   {
@@ -1637,7 +1703,7 @@ Vector <HasXY*> * World_Local::rayTraceLOS (int _x, int _y, const int RANGE)
     rayTrace (_x,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
   }
   
-  
+  rayTraceCoordinates.clearData();
   return vVisibleTiles;
 }
 
@@ -1872,14 +1938,15 @@ HasXY* World_Local::getRandomNeighbor(HasXY* _source)
   Vector <HasXY*> * vN = data->aLocalTile.getNeighborsOrthogonal(_source->x,_source->y,false,true);
   
 
-  if ( vN && vN->size()>0 )
+  if ( vN!=0 && vN->size()>0 )
   {
     HasXY * returnValue = new HasXY((*vN)(0));
     //returnValue->set((*vN)(0));
+    vN->clearData();
     delete vN;
     return returnValue;
   }
-  if ( vN ) { delete vN; }
+  if ( vN !=0 ) { delete vN; }
   
   return 0;
 }

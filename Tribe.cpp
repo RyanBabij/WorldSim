@@ -130,6 +130,8 @@ void Tribe::wander()
 	
 	//aTerrain.getNeighborVector(_x,_y,&vTerrain,false /* DON'T INCLUDE SELF */);
 	Vector <HasXY*> * vXY  = world->aTerrain.getNeighbors(worldX, worldY, false, true);
+  
+  if (vXY==0) { return; }
 
 	HasXY* xyDestination = 0;
 	
