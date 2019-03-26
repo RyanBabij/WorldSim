@@ -185,6 +185,9 @@ const std::string PATH_TEX_WORLD_TERRAIN_COAST_PENINSULA_00 = "Textures/World/Te
 Texture TEX_WORLD_TERRAIN_ISLAND_00;
 const std::string PATH_TEX_WORLD_TERRAIN_ISLAND_00 = "Textures/World/Terrain/Island/00.png";
 
+Texture TEX_WORLD_TERRAIN_CAVE_ENTRANCE;
+const std::string PATH_TEX_WORLD_TERRAIN_CAVE_ENTRANCE = "Textures/World/Terrain/Cave/Cave-Entrance.png";
+
 Texture TEX_WORLD_TEST_00;
 const std::string PATH_TEX_WORLD_TEST_00 = "Textures/Test/00.png";
 
@@ -399,6 +402,8 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
 	//loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_COAST_01,&TEX_WORLD_TERRAIN_COAST_01);
 	
 	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_ISLAND_00,&TEX_WORLD_TERRAIN_ISLAND_00);
+  
+	loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_CAVE_ENTRANCE,&TEX_WORLD_TERRAIN_CAVE_ENTRANCE);
 
 
 	loadTextureVerbose(PATH_TEX_ALCHEMY,&TEX_ALCHEMY);

@@ -1046,7 +1046,6 @@ void switchTarget(World_Local* _worldLocal)
                         // There is deliberate overlap of 1 pixel to prevent artifacts when zooming out.
                         
                         Vector <Texture*> * vText = localTile->currentTextures();
-                        
                         if ( vText != 0)
                         {
                           for (int i=0;i<vText->size();++i)
@@ -1100,7 +1099,20 @@ void switchTarget(World_Local* _worldLocal)
                         
                         unsigned char lightValue = 80;
                         glColor3ub(lightValue,lightValue,lightValue);
-                        Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                        //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                        
+                        Vector <Texture*> * vText = localTile->currentTextures();
+                        if ( vText != 0)
+                        {
+                          for (int i=0;i<vText->size();++i)
+                          {
+                            Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), (*vText)(i), false);
+                          }
+                        }
+                        delete vText;
+                        
+                        
+                        
                         glColor3ub(255,255,255);
                         
                         
@@ -1143,8 +1155,16 @@ void switchTarget(World_Local* _worldLocal)
                         }
                          
 
-                        
-                        Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                        Vector <Texture*> * vText = localTile->currentTextures();
+                        if ( vText != 0)
+                        {
+                          for (int i=0;i<vText->size();++i)
+                          {
+                            Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), (*vText)(i), false);
+                          }
+                        }
+                        delete vText;
+                        //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
                         
                         // Draw footprint
                         if (localTile->footprint != 0)

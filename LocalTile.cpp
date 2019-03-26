@@ -318,7 +318,7 @@ Vector <Texture*> * LocalTile::currentTextures()
   }
   if (isCave)
   {
-    vTexture->push(&TEX_LOCAL_FLOOR);
+    vTexture->push(&TEX_WORLD_TERRAIN_CAVE_ENTRANCE);
     //vTexture->push(&TEX_WORLD_ARTIFACT_GEMS);
   }
   

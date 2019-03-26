@@ -265,6 +265,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   
   HasXY* getRandomTile();
     HasXY* getRandomNeighbor(HasXY*);
+    
+  Vector <HasXY*> * getRandomWalk(int /* nSteps */);
   
 // LINE OF SIGHT
     

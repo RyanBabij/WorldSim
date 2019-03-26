@@ -352,6 +352,19 @@ bool World_Local::generate()
   // Take the seed for this world tile and expand it into a subseed for every local tile */
   random.seed(seed);
   
+  int nGemSeams = random.randomInt(10);
+
+  while (nGemSeams-- > 0)
+  {
+    Vector <HasXY*> * vGemSeam = getRandomWalk(random.randomInt(27)+3);
+    
+    for (int i=0;i<vGemSeam->size();++i)
+    {
+      data->aSubterranean((*vGemSeam)(i)).hasGems=true;
+    }
+    vGemSeam->deleteAll();
+  }
+  
   int midX = LOCAL_MAP_SIZE/2;
 
   for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
@@ -368,7 +381,11 @@ bool World_Local::generate()
       //data->aSubterranean(_x,_y).clearObjects();
       data->aSubterranean(_x,_y).height = 0;
         
-      // data->aSubterranean(_x,_y).hasGems=Random::oneIn(10);
+      //data->aSubterranean(_x,_y).hasGems=Random::oneIn(100);
+      if (Random::oneIn(100))
+      {
+        data->aSubterranean(_x,_y).hasGems=true;
+      }
         
       // GENERATE RIVERS
       // FOR NOW THEY JUST RUN ALONG THE EDGE OF THE MAP
@@ -533,37 +550,22 @@ bool World_Local::generate()
       //int caveSize = Random::randomInt(LOCAL_MAP_SIZE*5)+3;
       int caveSize = Random::multiRoll(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
       
-      Vector <HasXY*> vCaveMap;
-
-      HasXY* caveXY = getRandomTile();
-      if ( caveXY )
-      {
-        data->aSubterranean(caveXY).baseTerrain = GRASSLAND;
-        for (int i2=0;i2<caveSize;++i2)
-        {
-          caveXY = getRandomNeighbor(caveXY);
-          data->aSubterranean(caveXY).baseTerrain = GRASSLAND;
-          vCaveMap.push(caveXY);
-        }
-
-        //delete caveXY;
-      }
-      vCaveMap.shuffle();
+      Vector <HasXY*> * vCaveMap = getRandomWalk(caveSize);
+        
+      int nEntrances = Random::randomInt((vCaveMap->size()/1200));
+      if (nEntrances > 5) { nEntrances=5; }
       
-      int nEntrances = Random::randomInt(5);
-      
-      for (int i2=0;i2<nEntrances;++i2)
+      for (int i2=0;i2<vCaveMap->size();++i2)
       {
-        if ( vCaveMap.isSafe(i2) )
+        data->aSubterranean((*vCaveMap)(i2)).baseTerrain = GRASSLAND;
+        
+        if (i2<nEntrances)
         {
-          //put entrance here.
-          //std::cout<<"...\n";
-          data->aLocalTile(vCaveMap(i2)).isCave=true;
-          data->aSubterranean(vCaveMap(i2)).isCave=true;
+          data->aLocalTile((*vCaveMap)(i2)).isCave=true;
+          data->aSubterranean((*vCaveMap)(i2)).isCave=true;
         }
       }
-      
-      vCaveMap.deleteAll();
+      vCaveMap->deleteAll();
     }
 
   //Generate global objects
@@ -781,6 +783,19 @@ bool World_Local::load()
       
     }
     
+  int nGemSeams = random.randomInt(10);
+
+  while (nGemSeams-- > 0)
+  {
+    Vector <HasXY*> * vGemSeam = getRandomWalk(random.randomInt(27)+3);
+    
+    for (i=0;i<vGemSeam->size();++i)
+    {
+      data->aSubterranean((*vGemSeam)(i)).hasGems=true;
+    }
+    vGemSeam->deleteAll();
+  }
+    
     //BUILD CAVE
     //if (Random::oneIn(2))
     if (true)
@@ -791,37 +806,22 @@ bool World_Local::load()
       //int caveSize = Random::randomInt(LOCAL_MAP_SIZE*5)+3;
       int caveSize = Random::multiRoll(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
       
-      Vector <HasXY*> vCaveMap;
-
-      HasXY* caveXY = getRandomTile();
-      if ( caveXY )
-      {
-        data->aSubterranean(caveXY).baseTerrain = GRASSLAND;
-        for (int i2=0;i2<caveSize;++i2)
-        {
-          caveXY = getRandomNeighbor(caveXY);
-          data->aSubterranean(caveXY).baseTerrain = GRASSLAND;
-          vCaveMap.push(caveXY);
-        }
-
-        //delete caveXY;
-      }
-      vCaveMap.shuffle();
+      Vector <HasXY*> * vCaveMap = getRandomWalk(caveSize);
+        
+      int nEntrances = Random::randomInt((vCaveMap->size()/1200));
+      if (nEntrances > 5) { nEntrances=5; }
       
-      int nEntrances = Random::randomInt((vCaveMap.size()/25)+1);
-      
-      for (int i2=0;i2<nEntrances;++i2)
+      for (int i2=0;i2<vCaveMap->size();++i2)
       {
-        if ( vCaveMap.isSafe(i2) )
+        data->aSubterranean((*vCaveMap)(i2)).baseTerrain = GRASSLAND;
+        
+        if (i2<nEntrances)
         {
-          //put entrance here.
-          //std::cout<<"...\n";
-          data->aLocalTile(vCaveMap(i2)).isCave=true;
-          data->aSubterranean(vCaveMap(i2)).isCave=true;
+          data->aLocalTile((*vCaveMap)(i2)).isCave=true;
+          data->aSubterranean((*vCaveMap)(i2)).isCave=true;
         }
       }
-      
-      vCaveMap.deleteAll();
+      vCaveMap->deleteAll();
     }
     
     
@@ -1949,6 +1949,27 @@ HasXY* World_Local::getRandomNeighbor(HasXY* _source)
   if ( vN !=0 ) { delete vN; }
   
   return 0;
+}
+
+Vector <HasXY*> * World_Local::getRandomWalk(int _nSteps)
+{
+  auto vTile = new Vector <HasXY*>;
+  
+  HasXY* xy = getRandomTile();
+  if ( xy )
+  {
+    for (int i2=0;i2<_nSteps;++i2)
+    {
+      if ( xy )
+      {
+        xy = getRandomNeighbor(xy);
+        vTile->pushUnique(xy);
+      }
+    }
+  }
+  vTile->shuffle();
+
+  return vTile;
 }
   
 
