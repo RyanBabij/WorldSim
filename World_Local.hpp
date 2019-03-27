@@ -213,6 +213,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
     // Returns true if the coordinate is inside this map
   bool isSafe(int /* x */, int /* y */);
     bool isSafe(HasXY*);
+    bool isSafe(WorldObject*);
   
     // Generate a world or load from cache.
 	bool generate();
@@ -250,6 +251,10 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   bool moveObject (WorldObject* , int /* newX */, int /* newY */ );
     bool moveObject (Character* , int /* newX */, int /* newY */ );
   
+  bool moveDown(WorldObject*);
+    bool moveDown(Character*);
+  bool moveUp(WorldObject*);
+    bool moveUp(Character*);
   
   
   bool wander (WorldObject* /* _object */);

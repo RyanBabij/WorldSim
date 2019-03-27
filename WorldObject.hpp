@@ -19,6 +19,8 @@ class WorldObject: public HasTexture
   
 	short int x, y;
   
+  bool isUnderground; /* True if the object is on the subterranean layer */
+  
   //Implementing full global coordinates to make life easier for now.
   // This datatype should be able to hold coordinates for any reasonably-sized world.
   long unsigned int fullX, fullY;

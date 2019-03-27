@@ -22,6 +22,8 @@ WorldObject::WorldObject()
   canCook = false;
   canHarvest = false;
   
+  isUnderground=false;
+  
   worldX=-1; worldY=-1;
   
   chopAmount = -1;

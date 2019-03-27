@@ -263,6 +263,10 @@ const std::string PATH_TEX_ITEM_FOOD_STEAK_RAW = "Textures/Item/Food/Steak-Raw.p
 Texture TEX_FLORA_ADDERTONGUE;
 const std::string PATH_TEX_FLORA_ADDERTONGUE = "Textures/Flora/AdderTongue-32.png";
 
+  //ORE
+Texture TEX_WORLD_TERRAIN_ORE_METAL;
+const std::string PATH_TEX_WORLD_TERRAIN_ORE_METAL = "Textures/World/Terrain/Ore/ore-32-3.png";
+
   // CRAFTING
 Texture TEX_CRAFTING_FLAX;
 const std::string PATH_TEX_CRAFTING_FLAX = "Textures/Crafting/FlaxBundle.png";
@@ -492,6 +496,10 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   
     // FLOOR
   loadTextureVerbose(PATH_TEX_FLOOR_WOOD,&TEX_FLOOR_WOOD);
+  
+  //ORE
+  loadTextureVerbose(PATH_TEX_WORLD_TERRAIN_ORE_METAL,&TEX_WORLD_TERRAIN_ORE_METAL);
+  
   
   // CRAFTING
   loadTextureVerbose(PATH_TEX_CRAFTING_FLAX,&TEX_CRAFTING_FLAX);

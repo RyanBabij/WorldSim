@@ -1053,6 +1053,10 @@ void switchTarget(World_Local* _worldLocal)
                             Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), (*vText)(i), false);
                           }
                         }
+                        for(int i=0;i<localMap->data->aSubterranean(localXTile,localYTile).vObject.size();++i)
+                        {
+                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->data->aSubterranean(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                        }
                         delete vText;
 
                           // // Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);

@@ -808,7 +808,7 @@ class Menu_AdventureMode: public GUI_Interface
 	}
   
 	bool keyboardEvent (Keyboard* _keyboard)
-	{    
+	{ 
 			// ESCAPE - Close all submenus and go back to main game.
 			// If all submenus are already closed, bring up main menu.
 		if(_keyboard->isPressed(Keyboard::ESCAPE)) /* Flush console. */
@@ -967,13 +967,13 @@ class Menu_AdventureMode: public GUI_Interface
       {
         if (playerCharacter->isAlive)
         {
-        wl->moveObject(playerCharacter,playerCharacter->x-1,playerCharacter->y);
-        worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
-        world.updateMaps();
-        playerCharacter->updateKnowledge();
-        
-        if (playerCharacter->isSneaking ) { world.incrementTicksBacklog(2); }
-        else { world.incrementTicksBacklog(1); }
+          wl->moveObject(playerCharacter,playerCharacter->x-1,playerCharacter->y);
+          worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
+          world.updateMaps();
+          playerCharacter->updateKnowledge();
+          
+          if (playerCharacter->isSneaking ) { world.incrementTicksBacklog(2); }
+          else { world.incrementTicksBacklog(1); }
         }
         else
         {
@@ -1049,19 +1049,41 @@ class Menu_AdventureMode: public GUI_Interface
       // Basically just toggles subterranean mode right now.
     if(_keyboard->isPressed(Keyboard::LEFT_CHEVRON))
     {
-      worldViewer.subterraneanMode=true;
-      if (playerCharacter!=0)
+      if (playerCharacter)
       {
-        playerCharacter->isUnderground=true;
+        World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
+        if (world(playerCharacter->fullX,playerCharacter->fullY)->isCave)
+        {
+          if (wl->moveDown(playerCharacter))
+          {
+            worldViewer.subterraneanMode=true;
+          }
+          else
+          {
+            Console("There's no way down here");
+          }
+        }
+
       }
     }
       // Move view up or down
     if(_keyboard->isPressed(Keyboard::RIGHT_CHEVRON))
     {
-      worldViewer.subterraneanMode=false;
-      if (playerCharacter!=0)
+      if (playerCharacter)
       {
-        playerCharacter->isUnderground=false;
+        World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
+        if (world(playerCharacter->fullX,playerCharacter->fullY)->isCave)
+        {
+          if (wl->moveUp(playerCharacter))
+          {
+            worldViewer.subterraneanMode=false;
+          }
+          else
+          {
+            Console("There's no way up here");
+          }
+        }
+
       }
     }
 

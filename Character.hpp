@@ -48,7 +48,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	bool isAlive;
 	bool isMarried; /* Change to partner pointer */
   
-  bool isUnderground; /* Is on the subterranean layer. */
+  //bool isUnderground; /* Is on the subterranean layer. */
 	
 	int money; /* Gold coins or some shit. */
 	

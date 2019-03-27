@@ -52,6 +52,7 @@ class LocalTile: public HasTexture
   
   bool isLand; /* True if not water */
   bool hasGems;
+  bool hasMetal;
   bool isCave;
   
  // bool isUphill [8]; /* Clockwise starting north */

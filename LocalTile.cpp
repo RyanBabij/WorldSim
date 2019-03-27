@@ -24,6 +24,7 @@ LocalTile::LocalTile()
   seed=0;
   
   hasGems=false;
+  hasMetal=false;
 }
 
 LocalTile::~LocalTile()
@@ -114,6 +115,11 @@ bool LocalTile::hasViewBlocker()
     // Returns true is this tile has an object that can block movement.
 bool LocalTile::hasMovementBlocker()
 {
+  if (baseTerrain==UNDERGROUND)
+  {
+    return true;
+  }
+  
   for ( int i=0; i<vObject.size();++i)
   {
     if (vObject(i)->blocksMovement)
@@ -315,6 +321,10 @@ Vector <Texture*> * LocalTile::currentTextures()
   if (hasGems)
   {
     vTexture->push(&TEX_WORLD_ARTIFACT_GEMS);
+  }
+  if (hasMetal)
+  {
+    vTexture->push(&TEX_WORLD_TERRAIN_ORE_METAL);
   }
   if (isCave)
   {

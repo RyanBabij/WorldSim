@@ -279,6 +279,11 @@ bool World_Local::isSafe(HasXY* xy)
   if (data==0) { return false; }
   return data->aLocalTile.isSafe(xy);
 }
+bool World_Local::isSafe(WorldObject* _object)
+{
+  if (data==0) { return false; }
+  return data->aLocalTile.isSafe(_object->x,_object->y);
+}
 
 bool World_Local::generate()
 {
@@ -294,7 +299,7 @@ bool World_Local::generate()
   
   if (initialized)
   {
-    std::cout<<"World was already previously generated. We should load it from cache.\n";
+    //std::cout<<"World was already previously generated. We should load it from cache.\n";
     load();
     active = true;
     return true;
@@ -352,11 +357,10 @@ bool World_Local::generate()
   // Take the seed for this world tile and expand it into a subseed for every local tile */
   random.seed(seed);
   
-  int nGemSeams = random.randomInt(10);
-
+  int nGemSeams = random.randomInt(4);
   while (nGemSeams-- > 0)
   {
-    Vector <HasXY*> * vGemSeam = getRandomWalk(random.randomInt(27)+3);
+    Vector <HasXY*> * vGemSeam = getRandomWalk(random.randomInt(40)+10);
     
     for (int i=0;i<vGemSeam->size();++i)
     {
@@ -365,13 +369,24 @@ bool World_Local::generate()
     vGemSeam->deleteAll();
   }
   
+  int nMetalSeams = random.randomInt(4);
+  while (nMetalSeams-- > 0)
+  {
+    Vector <HasXY*> * vMetalSeam = getRandomWalk(random.randomInt(40)+10);
+    
+    for (int i=0;i<vMetalSeam->size();++i)
+    {
+      data->aSubterranean((*vMetalSeam)(i)).hasMetal=true;
+    }
+    vMetalSeam->deleteAll();
+  }
+  
   int midX = LOCAL_MAP_SIZE/2;
 
   for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
   {
     for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
-      
       data->aLocalTile(_x,_y).seed = random.randInt(USHRT_MAX-1);
       //data->aLocalTile(_x,_y).clearObjects();
       data->aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
@@ -382,9 +397,9 @@ bool World_Local::generate()
       data->aSubterranean(_x,_y).height = 0;
         
       //data->aSubterranean(_x,_y).hasGems=Random::oneIn(100);
-      if (Random::oneIn(100))
+      if (Random::oneIn(1000))
       {
-        data->aSubterranean(_x,_y).hasGems=true;
+        //data->aSubterranean(_x,_y).hasGems=true;
       }
         
       // GENERATE RIVERS
@@ -684,7 +699,7 @@ bool World_Local::load()
 {
   std::string localMapPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + ".dat";
   
-  std::cout<<"Attempting to load cached map: "<<localMapPath<<".\n";
+  //std::cout<<"Attempting to load cached map: "<<localMapPath<<".\n";
 
 	if ( FileManager::directoryExists(world.strSavePath)  == false )
   {
@@ -1105,42 +1120,53 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
   
   //Moving inside of map
   
-  if ( data->aLocalTile(newX,newY).hasMovementBlocker() )
+  if (_object->isUnderground)
   {
-    return false;
+    if ( data->aSubterranean(newX,newY).hasMovementBlocker() )
+    {
+      return false;
+    }
+    data->aSubterranean(_object->x,_object->y).remove(_object);
+    
+  
+    _object->x=newX;
+    _object->y=newY;
+    _object->worldX = globalX;
+    _object->worldY = globalY;
+    
+    data->aSubterranean(newX,newY).add(_object);
   }
-  
-  data->aLocalTile(_object->x,_object->y).remove(_object);
-  
+  else
+  {
+    if ( data->aLocalTile(newX,newY).hasMovementBlocker() )
+    {
+      return false;
+    }
+    data->aLocalTile(_object->x,_object->y).remove(_object);
+    
+    
+    _object->x=newX;
+    _object->y=newY;
+    _object->worldX = globalX;
+    _object->worldY = globalY;
+    
+    data->aLocalTile(newX,newY).add(_object);
+  }
 
-
-
-
-  
-  _object->x=newX;
-  _object->y=newY;
-  _object->worldX = globalX;
-  _object->worldY = globalY;
-  
-  data->aLocalTile(newX,newY).add(_object);
-  
   _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
   _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-  //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
-  
-  //std::cout<<"World conversion:";
-  
+
   world(_object->fullX,_object->fullY);
-  
   
   int gX = 0;
   int gY = 0;
   int lX = 0;
   int lY = 0;
   world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-  //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
+
   return true;
 }
+
   //Yeah this is a mess.
 bool World_Local::moveObject (Character* _object, int newX, int newY )
 {
@@ -1177,10 +1203,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
           world(globalX-nMaps,globalY)->put(_object,newX,newY);
           
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
-          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
-          
-          //std::cout<<"World conversion:";
+
           world(_object->fullX,_object->fullY);
 
           int gX = 0;
@@ -1188,8 +1211,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
           int lX = 0;
           int lY = 0;
           world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
-          
+
           return false;
           
         }
@@ -1205,8 +1227,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
         ++nMaps;
       }
       --newX;
-      //std::cout<<"NEWX: "<<newX<<".\n";
-      
+
       //PUT OBJECT
       if (nMaps > 0 )
       {
@@ -1222,9 +1243,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
           
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
-          
-          //std::cout<<"World conversion:";
+
           world(_object->fullX,_object->fullY);
           
           int gX = 0;
@@ -1232,8 +1251,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
           int lX = 0;
           int lY = 0;
           world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
-          
+
           return false;
           
         }
@@ -1263,12 +1281,9 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
           _object->map = world(globalX,globalY-nMaps);
           world(globalX,globalY-nMaps)->put(_object,newX,newY);
           
-          
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
-          
-          //std::cout<<"World conversion:";
+
           world(_object->fullX,_object->fullY);
           
           int gX = 0;
@@ -1276,8 +1291,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
           int lX = 0;
           int lY = 0;
           world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
-          
+
           return false;
           
         }
@@ -1309,10 +1323,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
           
           _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
           _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
-          
-          
-          //std::cout<<"World conversion:";
+
           world(_object->fullX,_object->fullY);
           
           int gX = 0;
@@ -1320,8 +1331,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
           int lX = 0;
           int lY = 0;
           world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
-          
+
           return false;
           
         }
@@ -1331,7 +1341,19 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
     return false;
 
   }
-  LocalTile* destination = &data->aLocalTile(newX,newY);
+  
+  LocalTile* destination;
+  LocalTile* source;
+  if ( _object->isUnderground )
+  {
+    destination = &data->aSubterranean(newX,newY);
+    source = &data->aSubterranean(_object->x,_object->y);
+  }
+  else
+  {
+    destination = &data->aLocalTile(newX,newY);
+    source = &data->aLocalTile(_object->x,_object->y);
+  }
   
   if ( destination->hasMovementBlocker() )
   {
@@ -1342,8 +1364,6 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
   {
     return false;
   }
-  
-  LocalTile* source = &data->aLocalTile(_object->x,_object->y);
   
   //Moving inside of map
   // I'm sure you can do some fancy bitwise stuff here but I can't think of it right now.
@@ -1392,15 +1412,39 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
     }
   }
   
-  data->aLocalTile(_object->x,_object->y).remove(_object);
-
-  _object->x=newX;
-  _object->y=newY;
-  _object->worldX = globalX;
-  _object->worldY = globalY;
-
-  data->aLocalTile(newX,newY).add(_object);
+  if (_object->isUnderground)
+  {
+    if ( data->aSubterranean(newX,newY).hasMovementBlocker() )
+    {
+      return false;
+    }
+    data->aSubterranean(_object->x,_object->y).remove(_object);
+    
   
+    _object->x=newX;
+    _object->y=newY;
+    _object->worldX = globalX;
+    _object->worldY = globalY;
+    
+    data->aSubterranean(newX,newY).add(_object);
+  }
+  else
+  {
+    if ( data->aLocalTile(newX,newY).hasMovementBlocker() )
+    {
+      return false;
+    }
+    data->aLocalTile(_object->x,_object->y).remove(_object);
+    
+    
+    _object->x=newX;
+    _object->y=newY;
+    _object->worldX = globalX;
+    _object->worldY = globalY;
+    
+    data->aLocalTile(newX,newY).add(_object);
+  }
+
   _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
   _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
 
@@ -1413,6 +1457,75 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
   world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
   
   return true;
+}
+
+bool World_Local::moveDown(WorldObject* _object)
+{
+  if ( !data || !_object ) { return false; }
+
+  if ( isSafe(_object) )
+  {
+    if ( data->aLocalTile(_object->x,_object->y).isCave )
+    {
+      data->aLocalTile(_object->x,_object->y).remove(_object);
+      _object->isUnderground=true;
+      data->aSubterranean(_object->x,_object->y).add(_object);
+      return true;
+    }
+  }
+  return false;
+
+}
+bool World_Local::moveDown(Character* _object)
+{
+  if ( !data || !_object ) { return false; }
+
+  if ( isSafe(_object) )
+  {
+    if ( data->aLocalTile(_object->x,_object->y).isCave )
+    {
+      data->aLocalTile(_object->x,_object->y).remove(_object);
+      _object->isUnderground=true;
+      data->aSubterranean(_object->x,_object->y).add(_object);
+      return true;
+    }
+  }
+  return false;
+}
+
+
+bool World_Local::moveUp(WorldObject* _object)
+{
+  if ( !data || !_object ) { return false; }
+
+  if ( isSafe(_object) )
+  {
+    if ( data->aLocalTile(_object->x,_object->y).isCave )
+    {
+      data->aSubterranean(_object->x,_object->y).remove(_object);
+      _object->isUnderground=false;
+      data->aLocalTile(_object->x,_object->y).add(_object);
+      return true;
+    }
+  }
+  return false;
+
+}
+bool World_Local::moveUp(Character* _object)
+{
+  if ( !data || !_object ) { return false; }
+
+  if ( isSafe(_object) )
+  {
+    if ( data->aLocalTile(_object->x,_object->y).isCave )
+    {
+      data->aSubterranean(_object->x,_object->y).remove(_object);
+      _object->isUnderground=false;
+      data->aLocalTile(_object->x,_object->y).add(_object);
+      return true;
+    }
+  }
+  return false;
 }
 
   // Move object in random direction
@@ -1645,7 +1758,6 @@ Vector <HasXY*> * World_Local::rayTraceLOS (int _x, int _y, const int RANGE)
   
   if (_x < 0 || _y < 0 || _x >= LOCAL_MAP_SIZE || _y >= LOCAL_MAP_SIZE )
   { return 0; }
-  
   
   //Step 1: Get all raytrace coordinates.
   
