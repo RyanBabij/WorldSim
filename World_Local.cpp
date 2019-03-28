@@ -12,9 +12,10 @@
 
 #include "WorldObject.hpp"
   #include "WorldObject_Tree.hpp"
-  #include "WorldObject_Plant.hpp"
+  #include "WorldObject_Flora.hpp"
   #include "WorldObject_Rock.hpp"
   #include "WorldObject_Sign.hpp"
+
 
 #include "Creature.hpp"
   #include "Creature_Deer.hpp"
@@ -510,7 +511,7 @@ bool World_Local::generate()
         }
         else if (random.oneIn(basePlantChance))
         {
-          put(new WorldObject_Plant(),_x,_y);
+          put(new WorldObject_Flora(),_x,_y);
         }
         else if (random.oneIn(1000))
         {
