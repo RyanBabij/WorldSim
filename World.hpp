@@ -171,7 +171,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
   // IT DOES NOT RETURN WORLD_LOCAL LIKE THE OTHER FUNCTION
   // Yeah this is a confusing overload which needs to be fixed in the future.
   // This will generate a local map if necessary.
-	inline LocalTile* operator() (unsigned long int _x, unsigned long int _y);
+	inline LocalTile* operator() (unsigned long int _x, unsigned long int _y, const bool subterranean=false);
   
   // COORDINATE CONVERSIONS
   
@@ -226,8 +226,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
       Character* getRandomCharacter();
       
       // Return vector of coordinates visible from given coordinate.
-      Vector <HasXY2 <unsigned long int> *> * rayTraceLOS (unsigned long int _x, unsigned long int _y, const int RANGE, const bool /* isSneaking = false */);
-      void rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned long int _x2, unsigned long int _y2, Vector <HasXY2 <unsigned long int> *> * vVisibleTiles);
+      Vector <HasXY2 <unsigned long int> *> * rayTraceLOS (unsigned long int _x, unsigned long int _y, const int RANGE, const bool /* isSneaking = false */, const bool subterranean=false);
+      void rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned long int _x2, unsigned long int _y2, Vector <HasXY2 <unsigned long int> *> * vVisibleTiles, bool subterranean=false);
 	
   /* WORLD QUERIES */
 		/* Returns population of all characters (Human, Dwarven, Elven)

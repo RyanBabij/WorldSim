@@ -1065,6 +1065,7 @@ class Menu_AdventureMode: public GUI_Interface
         }
 
       }
+      _keyboard->keyUp(Keyboard::LEFT_CHEVRON);
     }
       // Move view up or down
     if(_keyboard->isPressed(Keyboard::RIGHT_CHEVRON))
@@ -1085,6 +1086,7 @@ class Menu_AdventureMode: public GUI_Interface
         }
 
       }
+      _keyboard->keyUp(Keyboard::RIGHT_CHEVRON);
     }
 
     // Hotbar selection keys

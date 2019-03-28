@@ -129,6 +129,16 @@ const std::string PATH_TEX_WORLD_TERRAIN_FOREST_SAPLING = "Textures/World/Terrai
 Texture TEX_FLORA_PLANT;
 const std::string PATH_TEX_FLORA_PLANT = "Textures/Flora/Plant-small.png";
 
+Texture TEX_FLORA_BLACKWEED;
+const std::string PATH_TEX_FLORA_BLACKWEED = "Textures/Flora/Blackweed/Blackweed.png";
+
+Texture TEX_FLORA_REDWEED;
+const std::string PATH_TEX_FLORA_REDWEED = "Textures/Flora/Redweed/Redweed.png";
+
+Texture TEX_FLORA_BLUEWEED;
+const std::string PATH_TEX_FLORA_BLUEWEED = "Textures/Flora/Blueweed/Blueweed.png";
+
+
 Texture TEX_WORLD_TERRAIN_MOUNTAIN_00;
 const std::string PATH_TEX_WORLD_TERRAIN_MOUNTAIN_00 = "Textures/World/Terrain/Mountain/01.png";
 
@@ -156,6 +166,11 @@ const std::string PATH_TEX_CREATURE_DOE_DED = "Textures/Creature/Deer/Doe-ded.pn
 
 Texture TEX_CREATURE_DEER_FOOTPRINT;
 const std::string PATH_TEX_CREATURE_DEER_FOOTPRINT = "Textures/Creature/Deer/Deer-footprint.png";
+
+Texture TEX_CREATURE_BAT;
+const std::string PATH_TEX_CREATURE_BAT = "Textures/Creature/Bat/Zubat.png";
+Texture TEX_CREATURE_BAT_DED;
+const std::string PATH_TEX_CREATURE_BAT_DED = "Textures/Creature/Bat/Zubat-ded.png";
 
 
 Texture TEX_WORLD_TERRAIN_DESERT_00;
@@ -453,6 +468,10 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   loadTextureVerbose(PATH_TEX_CREATURE_DOE,&TEX_CREATURE_DOE);
   loadTextureVerbose(PATH_TEX_CREATURE_DOE_DED,&TEX_CREATURE_DOE_DED);
   loadTextureVerbose(PATH_TEX_CREATURE_DEER_FOOTPRINT,&TEX_CREATURE_DEER_FOOTPRINT);
+  
+  
+  loadTextureVerbose(PATH_TEX_CREATURE_BAT,&TEX_CREATURE_BAT);
+  loadTextureVerbose(PATH_TEX_CREATURE_BAT_DED,&TEX_CREATURE_BAT_DED);
   
   loadTextureVerbose(PATH_TEX_PORTRAIT_SNEK,&TEX_PORTRAIT_SNEK);
   loadTextureVerbose(PATH_TEX_PORTRAIT_LING,&TEX_PORTRAIT_LING);

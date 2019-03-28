@@ -18,6 +18,7 @@
 
 #include "Creature.hpp"
   #include "Creature_Deer.hpp"
+  #include "Creature_All.hpp"
 
 
 
@@ -517,9 +518,20 @@ bool World_Local::generate()
         }
         else if (random.oneIn(1500) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
         {
-          auto deer = new Creature_Deer;
-          deer->init();
-          put(deer,_x,_y);
+          if ( Random::oneIn(3) )
+          {
+            auto creature = new Creature_Bat;
+            creature->init();
+            put(creature,_x,_y);
+          }
+          else
+          {
+            auto deer = new Creature_Deer;
+            deer->init();
+            put(deer,_x,_y);
+          }
+          
+
         }
         else if ( baseBiome == MOUNTAIN )
         {
@@ -573,6 +585,11 @@ bool World_Local::generate()
       for (int i2=0;i2<vCaveMap->size();++i2)
       {
         data->aSubterranean((*vCaveMap)(i2)).baseTerrain = GRASSLAND;
+        
+        if (Random::oneIn(100))
+        {
+          //BAT
+        }
         
         if (i2<nEntrances)
         {
@@ -1751,7 +1768,7 @@ bool World_Local::contains(Character* _target)
 
     //Return a vector of coordinates visible from the given location.
     // This raytrace stays within map boundaries.
-Vector <HasXY*> * World_Local::rayTraceLOS (int _x, int _y, const int RANGE)
+Vector <HasXY*> * World_Local::rayTraceLOS (int _x, int _y, const int RANGE, bool subterranean)
 {
   if ( !data ) { return 0; }
   if (RANGE <= 0) { return 0; }
@@ -1812,7 +1829,7 @@ Vector <HasXY*> * World_Local::rayTraceLOS (int _x, int _y, const int RANGE)
   
   for (int i=0;i<rayTraceCoordinates.size();++i)
   {
-    rayTrace (_x,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
+    rayTrace (_x,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles, subterranean);
   }
   
   rayTraceCoordinates.clearData();
@@ -1870,7 +1887,7 @@ Vector <HasXY2 <unsigned long int> *> * World_Local::rayTraceLOS (long unsigned 
   return vVisibleTiles;
 }
 
-void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> * vVisibleTiles)
+void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> * vVisibleTiles, bool subterranean)
 {
   if ( !data ) { return; }
   int xDiff = 0;

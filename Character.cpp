@@ -672,7 +672,7 @@ void Character::initialiseKnowledge()
     
     //std::cout<<"coordinates to raytrace from: "<<fullX<<", "<<fullY<<".\n";
     
-    Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(fullX,fullY,MAX_VIEW_RANGE/2);
+    Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(fullX,fullY,MAX_VIEW_RANGE/2,false,isUnderground);
     
     if ( vVisibleTiles!=0 )
     {
@@ -702,8 +702,6 @@ void Character::initialiseKnowledge()
     if ( knowledge == 0 ) { return; }
     if ( tribe == 0 ) { return; }
     
-    
-
     //Update the LOS backlog during idle time.
     
       //For now this simply wipes LOS from last turn.
@@ -718,7 +716,7 @@ void Character::initialiseKnowledge()
       knowledge->addTile(moveToProcess->x,moveToProcess->y);
       
 
-      Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(moveToProcess->x,moveToProcess->y,MAX_VIEW_RANGE);
+      Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(moveToProcess->x,moveToProcess->y,MAX_VIEW_RANGE,false,isUnderground);
       
       if ( vVisibleTiles!=0 )
       {
@@ -741,8 +739,7 @@ void Character::initialiseKnowledge()
 
       knowledge->addTile(moveToProcess->x,moveToProcess->y);
       
-
-      Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(moveToProcess->x,moveToProcess->y,MAX_VIEW_RANGE,true);
+      Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(moveToProcess->x,moveToProcess->y,MAX_VIEW_RANGE,true,isUnderground);
       
       if ( vVisibleTiles!=0 )
       {
@@ -757,8 +754,6 @@ void Character::initialiseKnowledge()
       delete moveToProcess;
       vMovesToProcessSneak.removeSlot(0);
     }
-
-    
   }
   
 // INHERITED FUNCTIONS

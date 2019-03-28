@@ -117,7 +117,7 @@ World_Local* World::operator() (const int _x, const int _y)
   return 0;
 }
 
-inline LocalTile* World::operator() (unsigned long int _x, unsigned long int _y)
+inline LocalTile* World::operator() (unsigned long int _x, unsigned long int _y, const bool subterranean)
 {
   //std::cout<<"WORLD ABSOLUTE QUERY\n";
   
@@ -137,6 +137,10 @@ inline LocalTile* World::operator() (unsigned long int _x, unsigned long int _y)
   {
     if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY && vWorldLocal(i)->data )
     {
+      if ( subterranean )
+      {
+        return &vWorldLocal(i)->data->aSubterranean(lX,lY);
+      }
       return &vWorldLocal(i)->data->aLocalTile(lX,lY);
     }
   }
@@ -148,6 +152,10 @@ inline LocalTile* World::operator() (unsigned long int _x, unsigned long int _y)
   {
     if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY && vWorldLocal(i)->data )
     {
+      if ( subterranean )
+      {
+        return &vWorldLocal(i)->data->aSubterranean(lX,lY);
+      }
       return &vWorldLocal(i)->data->aLocalTile(lX,lY);
     }
   }
@@ -324,7 +332,7 @@ Character* World::getRandomCharacter()
 }
 
     //Return a vector of coordinates visible from the given location.
-Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x, unsigned long int _y, const int RANGE, const bool isSneaking = false)
+Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x, unsigned long int _y, const int RANGE, const bool isSneaking = false, bool subterranean)
 {
   if (RANGE <= 0) { return 0; }
   
@@ -392,7 +400,7 @@ Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x
   
   for (int i=0;i<rayTraceCoordinates.size();++i)
   {
-    rayTrace (_x,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
+    rayTrace (_x,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles, subterranean);
     
     // Very bad implementation of peeking. Should be optimised in future.
     if (isSneaking)
@@ -409,7 +417,7 @@ Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x
   return vVisibleTiles;
 }
 
-void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned long int _x2, unsigned long int _y2, Vector <HasXY2 <unsigned long int> *> * vVisibleTiles)
+void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned long int _x2, unsigned long int _y2, Vector <HasXY2 <unsigned long int> *> * vVisibleTiles, bool subterranean)
 {
   // Old code from ECHO
   
@@ -479,7 +487,7 @@ void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned lon
           delete temp;
         }
         
-        LocalTile * lt = (*this)(_x1, _y1);
+        LocalTile * lt = (*this)(_x1, _y1,subterranean);
         if (lt != 0 && lt->hasViewBlocker())
         { break; }
       }
@@ -538,7 +546,7 @@ void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned lon
           delete temp;
         }
         
-        LocalTile * lt = (*this)(_x1, roundedY);
+        LocalTile * lt = (*this)(_x1, roundedY, subterranean);
         if (lt != 0 && lt->hasViewBlocker())
         { break; }
 
@@ -596,7 +604,7 @@ void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned lon
           delete temp;
         }
         
-        LocalTile * lt = (*this)(roundedX, _y1);
+        LocalTile * lt = (*this)(roundedX, _y1, subterranean);
         if (lt != 0 && lt->hasViewBlocker())
         { break; }
 

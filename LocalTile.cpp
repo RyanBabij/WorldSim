@@ -98,6 +98,12 @@ void LocalTile::clearObjects()
     // Returns true is this tile has an object that can block line of sight.
 bool LocalTile::hasViewBlocker()
 {
+  if (baseTerrain==UNDERGROUND)
+  {
+    return true;
+  }
+  
+  
   if (bWall != 0)
   {
     return true;

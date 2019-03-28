@@ -1036,15 +1036,40 @@ void switchTarget(World_Local* _worldLocal)
 								{
 									if ( nextPixel>=mainViewX1 && currentPixel <= mainViewX2 && floor(currentPixel) != floor(nextPixel) )
 									{
-                    //if ( subterraneanMode )
                     if ( subterraneanMode )
                     {
-                      LocalTile* localTile = &localMap->data->aSubterranean(localXTile,localYTile);
-                      //LocalTile* localTile2 = &localMap->data->aLocalTile(localXTile,localYTile);
-                      //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile2->currentTexture(), false);
-                      
-                        // There is deliberate overlap of 1 pixel to prevent artifacts when zooming out.
+
+                      //Very basic player line of sight check here (only if we're in Adventure mode)
+                      // Unseen tiles
+                      if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == 0 )
+                      {
+                      }
+                      //Previously seen tiles
+                      else if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == 1 )
+                      {
+                        //Draw tile very dark to symbolise fog of war
+                        LocalTile* localTile = &localMap->data->aSubterranean(localXTile,localYTile);
                         
+                        unsigned char lightValue = 80;
+                        glColor3ub(lightValue,lightValue,lightValue);
+                        //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                        
+                        Vector <Texture*> * vText = localTile->currentTextures();
+                        if ( vText != 0)
+                        {
+                          for (int i=0;i<vText->size();++i)
+                          {
+                            Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), (*vText)(i), false);
+                          }
+                        }
+                        delete vText;
+
+                        glColor3ub(255,255,255);
+
+                      }
+                      else /* DRAW VISIBLE TILES */
+                      {
+                        LocalTile* localTile = &localMap->data->aSubterranean(localXTile,localYTile);
                         Vector <Texture*> * vText = localTile->currentTextures();
                         if ( vText != 0)
                         {
@@ -1058,21 +1083,7 @@ void switchTarget(World_Local* _worldLocal)
                           Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->data->aSubterranean(localXTile,localYTile).vObject(i)->currentTexture(), false);
                         }
                         delete vText;
-
-                          // // Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
-                          // delete vText;
-                          // // std::cout<<"2";
-                        // }
-                        // else
-                        // {
-                          // Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
-                        // }
-                      // }
-                      // else
-                      // {
-                        // std::cout<<"BASTILE\n";
-                      // }
-
+                      }
                     }
                     else
                     {
@@ -1479,7 +1490,10 @@ void switchTarget(World_Local* _worldLocal)
 		// Texture mode
 		//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_01, false);
 	}
-  rainManager.render();
+  if(subterraneanMode==false)
+  {
+    rainManager.render();
+  }
     
 		Renderer::restoreViewPort();
 		

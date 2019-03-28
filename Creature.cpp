@@ -241,7 +241,7 @@ void Creature::wander()
     
     knowledge->addTile(map,x,y);
     
-    Vector <HasXY *> * vVisibleTiles = map->rayTraceLOS(x,y,MAX_VIEW_RANGE);
+    Vector <HasXY *> * vVisibleTiles = map->rayTraceLOS(x,y,MAX_VIEW_RANGE,isUnderground);
     
     if ( vVisibleTiles!=0 )
     {

@@ -90,7 +90,7 @@ const int CALENDAR_SECONDS_PER_MINUTE = 2;
 //const int LOCAL_MAP_SIZE = 65;
 const int LOCAL_MAP_SIZE = 129;
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
-const int MAX_VIEW_RANGE = 5;
+const int MAX_VIEW_RANGE = 20;
 
   // CHARACTER STUFF
 const int MAX_HUNGER = 1000;

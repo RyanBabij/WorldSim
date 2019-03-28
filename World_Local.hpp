@@ -279,7 +279,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   bool isBlockingView(int /* _x */, int /* _y */);
   
     //Return a vector of coordinates visible from the given location.
-  Vector <HasXY*> * rayTraceLOS (int /* _x */, int /* _y */, const int /* RANGE */);
+  Vector <HasXY*> * rayTraceLOS (int /* _x */, int /* _y */, const int /* RANGE */, const bool subterranean=false);
   
     //Return a vector of coordinates visible from the given location.
     // New version using global coordinates
@@ -287,7 +287,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   
   
     // Trace 1 ray, and adds visible coords to vector.
-  void rayTrace (int /* _x */, int /* _y */, int /* _x2 */, int /* _y2 */, Vector <HasXY*> * /* vVisibleTiles */ );
+  void rayTrace (int /* _x */, int /* _y */, int /* _x2 */, int /* _y2 */, Vector <HasXY*> * /* vVisibleTiles */ , const bool subterranean=false);
   
   // LOGIC
   void incrementTicks(int nTicks);
