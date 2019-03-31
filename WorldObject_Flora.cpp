@@ -52,11 +52,7 @@ std::string Flora_Blackweed::getName()
 
 Texture* Flora_Blackweed::currentTexture()
 {
-  if ( growth==0 )
-  {
-    return &TEX_FLORA_PLANT;
-  }
-	return &TEX_FLORA_PLANT;
+	return &TEX_FLORA_BLACKWEED;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,11 +71,7 @@ std::string Flora_Redweed::getName()
 
 Texture* Flora_Redweed::currentTexture()
 {
-  if ( growth==0 )
-  {
-    return &TEX_FLORA_PLANT;
-  }
-	return &TEX_FLORA_PLANT;
+	return &TEX_FLORA_REDWEED;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,11 +90,7 @@ std::string Flora_Blueweed::getName()
 
 Texture* Flora_Blueweed::currentTexture()
 {
-  if ( growth==0 )
-  {
-    return &TEX_FLORA_PLANT;
-  }
-	return &TEX_FLORA_PLANT;
+	return &TEX_FLORA_BLUEWEED;
 }
 
 #endif

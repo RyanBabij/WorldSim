@@ -988,21 +988,23 @@ void World::idleTick()
         // RENDER_NEXT_FRAME=true;
         // return;
       // }
-      
-      for (int i=0;i<vAllTiles2.size();++i)
+      if ( ENABLE_BACKGROUND_SIMULATION )
       {
-        HasXY * tXY = vAllTiles2(i);
-        if ( aWorldTile(tXY).active==false
-        && aWorldTile(tXY).baseBiome != OCEAN
-        && (aWorldTile(tXY).initialized==false || aWorldTile(tXY).localDate != calendar)
-        )
+        for (int i=0;i<vAllTiles2.size();++i)
         {
-          generateLocal(tXY);
-          // Update and sync
-          aWorldTile(tXY).localDate.set(&calendar);
-          RENDER_NEXT_FRAME=true;
-          NO_BACKLOG=false;
-          return;
+          HasXY * tXY = vAllTiles2(i);
+          if ( aWorldTile(tXY).active==false
+          && aWorldTile(tXY).baseBiome != OCEAN
+          && (aWorldTile(tXY).initialized==false || aWorldTile(tXY).localDate != calendar)
+          )
+          {
+            generateLocal(tXY);
+            // Update and sync
+            aWorldTile(tXY).localDate.set(&calendar);
+            RENDER_NEXT_FRAME=true;
+            NO_BACKLOG=false;
+            return;
+          }
         }
       }
       NO_BACKLOG=true;

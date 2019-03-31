@@ -41,6 +41,7 @@ class WorldObject_Flora: public WorldObject
 
 class Flora_Blackweed: public WorldObject_Flora
 {
+  public:
   Flora_Blackweed();
 	virtual ~Flora_Blackweed() {}
 
@@ -50,6 +51,7 @@ class Flora_Blackweed: public WorldObject_Flora
 
 class Flora_Redweed: public WorldObject_Flora
 {
+  public:
   Flora_Redweed();
 	virtual ~Flora_Redweed() {}
 
@@ -59,6 +61,7 @@ class Flora_Redweed: public WorldObject_Flora
 
 class Flora_Blueweed: public WorldObject_Flora
 {
+  public:
   Flora_Blueweed();
 	virtual ~Flora_Blueweed() {}
 

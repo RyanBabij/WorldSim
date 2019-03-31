@@ -505,6 +505,9 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   //FLORA
   loadTextureVerbose(PATH_TEX_FLORA_ADDERTONGUE,&TEX_FLORA_ADDERTONGUE);
   loadTextureVerbose(PATH_TEX_FLORA_PLANT,&TEX_FLORA_PLANT);
+  loadTextureVerbose(PATH_TEX_FLORA_BLACKWEED,&TEX_FLORA_BLACKWEED);
+  loadTextureVerbose(PATH_TEX_FLORA_REDWEED,&TEX_FLORA_REDWEED);
+  loadTextureVerbose(PATH_TEX_FLORA_BLUEWEED,&TEX_FLORA_BLUEWEED);
   
   //OBJECTS
   loadTextureVerbose(PATH_TEX_OBJECT_STUMP,&TEX_OBJECT_STUMP);

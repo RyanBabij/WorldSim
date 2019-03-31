@@ -1038,7 +1038,7 @@ void switchTarget(World_Local* _worldLocal)
 									{
                     if ( subterraneanMode )
                     {
-
+                      glColor4ub(255,255,255,255);
                       //Very basic player line of sight check here (only if we're in Adventure mode)
                       // Unseen tiles
                       if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == 0 )
@@ -1050,8 +1050,8 @@ void switchTarget(World_Local* _worldLocal)
                         //Draw tile very dark to symbolise fog of war
                         LocalTile* localTile = &localMap->data->aSubterranean(localXTile,localYTile);
                         
-                        unsigned char lightValue = 80;
-                        glColor3ub(lightValue,lightValue,lightValue);
+                        //unsigned char lightValue = 80;
+                        //glColor3ub(lightValue,lightValue,lightValue);
                         //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
                         
                         Vector <Texture*> * vText = localTile->currentTextures();
@@ -1063,9 +1063,6 @@ void switchTarget(World_Local* _worldLocal)
                           }
                         }
                         delete vText;
-
-                        glColor3ub(255,255,255);
-
                       }
                       else /* DRAW VISIBLE TILES */
                       {

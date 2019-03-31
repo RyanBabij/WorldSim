@@ -369,6 +369,7 @@ bool World_Local::generate()
       data->aSubterranean((*vGemSeam)(i)).hasGems=true;
     }
     vGemSeam->deleteAll();
+    delete vGemSeam;
   }
   
   int nMetalSeams = random.randomInt(4);
@@ -381,6 +382,7 @@ bool World_Local::generate()
       data->aSubterranean((*vMetalSeam)(i)).hasMetal=true;
     }
     vMetalSeam->deleteAll();
+    delete vMetalSeam;
   }
   
   int midX = LOCAL_MAP_SIZE/2;
@@ -511,7 +513,25 @@ bool World_Local::generate()
         }
         else if (random.oneIn(basePlantChance))
         {
-          put(new WorldObject_Flora(),_x,_y);
+          int plantType = random.randomInt(3);
+          if (plantType==0)
+          {
+            put(new WorldObject_Flora(),_x,_y);
+          }
+          else if (plantType==1)
+          {
+            put(new Flora_Blackweed(),_x,_y);
+          }
+          else if (plantType==2)
+          {
+            put(new Flora_Redweed(),_x,_y);
+          }
+          else
+          {
+            put(new Flora_Blueweed(),_x,_y);
+          }
+          
+          
         }
         else if (random.oneIn(1000))
         {
@@ -568,38 +588,45 @@ bool World_Local::generate()
   }
   
   
-    //BUILD CAVE
-    //if (Random::oneIn(2))
-    if (true)
+  //BUILD CAVE
+  //if (Random::oneIn(2))
+  if (true)
+  {
+    hasCave=true;
+    //Basically random walk with extras, and then occasionally breach the surface in the form of a cave tile.
+    
+    //int caveSize = Random::randomInt(LOCAL_MAP_SIZE*5)+3;
+    int caveSize = Random::multiRoll(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+    
+    Vector <HasXY*> * vCaveMap = getRandomWalk(caveSize);
+      
+    int nEntrances = Random::randomInt((vCaveMap->size()/1200));
+    //if (nEntrances > 5) { nEntrances=5; }
+    nEntrances = 10;
+    
+    for (int i2=0;i2<vCaveMap->size();++i2)
     {
-      hasCave=true;
-      //Basically random walk with extras, and then occasionally breach the surface in the form of a cave tile.
+      data->aSubterranean((*vCaveMap)(i2)).baseTerrain = GRASSLAND;
       
-      //int caveSize = Random::randomInt(LOCAL_MAP_SIZE*5)+3;
-      int caveSize = Random::multiRoll(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-      
-      Vector <HasXY*> * vCaveMap = getRandomWalk(caveSize);
-        
-      int nEntrances = Random::randomInt((vCaveMap->size()/1200));
-      if (nEntrances > 5) { nEntrances=5; }
-      
-      for (int i2=0;i2<vCaveMap->size();++i2)
+      if (Random::oneIn(100))
       {
-        data->aSubterranean((*vCaveMap)(i2)).baseTerrain = GRASSLAND;
-        
-        if (Random::oneIn(100))
-        {
-          //BAT
-        }
-        
-        if (i2<nEntrances)
-        {
-          data->aLocalTile((*vCaveMap)(i2)).isCave=true;
-          data->aSubterranean((*vCaveMap)(i2)).isCave=true;
-        }
+        //BAT
       }
-      vCaveMap->deleteAll();
+      
+      if (Random::oneIn(3))
+      {
+        put(new Flora_Blackweed(),(*vCaveMap)(i2),true);
+      }
+      
+      if (i2<nEntrances)
+      {
+        data->aLocalTile((*vCaveMap)(i2)).isCave=true;
+        data->aSubterranean((*vCaveMap)(i2)).isCave=true;
+      }
     }
+    vCaveMap->deleteAll();
+    delete vCaveMap;
+  }
 
   //Generate global objects
   Vector <Tribe * > * vTribesHere = world.getTribesOn(globalX,globalY);
@@ -827,6 +854,7 @@ bool World_Local::load()
       data->aSubterranean((*vGemSeam)(i)).hasGems=true;
     }
     vGemSeam->deleteAll();
+    delete vGemSeam;
   }
     
     //BUILD CAVE
@@ -855,6 +883,7 @@ bool World_Local::load()
         }
       }
       vCaveMap->deleteAll();
+      delete vCaveMap;
     }
     
     
@@ -870,7 +899,7 @@ bool World_Local::load()
 }
 
 
-bool World_Local::put (WorldObject* _object, int _x, int _y)
+bool World_Local::put (WorldObject* _object, int _x, int _y, bool subterranean)
 {
   if ( !data ) { return false; }
   
@@ -883,12 +912,25 @@ bool World_Local::put (WorldObject* _object, int _x, int _y)
   _object->y = _y;  
   _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
   _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-  data->aLocalTile(_x,_y).add(_object);
+  
+  if ( subterranean )
+  {
+    data->aSubterranean(_x,_y).add(_object);
+  }
+  else
+  {
+    data->aLocalTile(_x,_y).add(_object);
+  }
+
   vObjectGeneric.push(_object);
   return true;
 }
+bool World_Local::put (WorldObject* _object, HasXY* _xy, bool subterranean)
+{ return put(_object, _xy->x, _xy->y, subterranean); }
+bool World_Local::put (WorldObject* _object, HasXY _xy, bool subterranean)
+{ return put(_object, _xy.x, _xy.y, subterranean); }
 
-bool World_Local::put (Item* _item, int _x, int _y)
+bool World_Local::put (Item* _item, int _x, int _y, bool subterranean)
 {
   if ( !data ) { return false; }
   
@@ -901,11 +943,27 @@ bool World_Local::put (Item* _item, int _x, int _y)
   _item->y = _y;
   _item->fullX = _item->worldX * LOCAL_MAP_SIZE + _item->x;
   _item->fullY = _item->worldY * LOCAL_MAP_SIZE + _item->y;
-  data->aLocalTile(_x,_y).add(_item);
+
+  
+  if ( subterranean )
+  {
+    data->aSubterranean(_x,_y).add(_item);
+  }
+  else
+  {
+    data->aLocalTile(_x,_y).add(_item);
+  }
+
+  
   vItem.push(_item);
   return true;
 }
-bool World_Local::put (Character* _character, int _x, int _y)
+bool World_Local::put (Item* _object, HasXY* _xy, bool subterranean)
+{ return put(_object, _xy->x, _xy->y, subterranean); }
+bool World_Local::put (Item* _object, HasXY _xy, bool subterranean)
+{ return put(_object, _xy.x, _xy.y, subterranean); }
+
+bool World_Local::put (Character* _character, int _x, int _y, bool subterranean)
 {
   if ( !data ) { return false; }
   if ( data->aLocalTile.isSafe(_x,_y) == false )
@@ -917,12 +975,26 @@ bool World_Local::put (Character* _character, int _x, int _y)
   _character->y = _y;
   _character->fullX = _character->worldX * LOCAL_MAP_SIZE + _character->x;
   _character->fullY = _character->worldY * LOCAL_MAP_SIZE + _character->y;
-  data->aLocalTile(_x,_y).add(_character);
+
+  if ( subterranean )
+  {
+    data->aSubterranean(_x,_y).add(_character);
+  }
+  else
+  {
+    data->aLocalTile(_x,_y).add(_character);
+  }
+  
   vCharacter.push(_character);
   
   return true;
 }
-bool World_Local::put (Creature* _creature, int _x, int _y)
+bool World_Local::put (Character* _object, HasXY* _xy, bool subterranean)
+{ return put(_object, _xy->x, _xy->y, subterranean); }
+bool World_Local::put (Character* _object, HasXY _xy, bool subterranean)
+{ return put(_object, _xy.x, _xy.y, subterranean); }
+
+bool World_Local::put (Creature* _creature, int _x, int _y, bool subterranean)
 {
   if ( !data ) { return false; }
   if ( data->aLocalTile.isSafe(_x,_y) == false )
@@ -934,12 +1006,27 @@ bool World_Local::put (Creature* _creature, int _x, int _y)
   _creature->y = _y;
   _creature->fullX = _creature->worldX * LOCAL_MAP_SIZE + _creature->x;
   _creature->fullY = _creature->worldY * LOCAL_MAP_SIZE + _creature->y;
-  data->aLocalTile(_x,_y).add(_creature);
+
+  if ( subterranean )
+  {
+    data->aSubterranean(_x,_y).add(_creature);
+  }
+  else
+  {
+    data->aLocalTile(_x,_y).add(_creature);
+  }
+  
+  
   vCreature.push(_creature);
   _creature->map=this;
   
   return true;
 }
+bool World_Local::put (Creature* _object, HasXY* _xy, bool subterranean)
+{ return put(_object, _xy->x, _xy->y, subterranean); }
+bool World_Local::put (Creature* _object, HasXY _xy, bool subterranean)
+{ return put(_object, _xy.x, _xy.y, subterranean); }
+
 // bool World_Local::put (Creature_Deer* _creature, int _x, int _y)
 // {
   // if ( aLocalTile.isSafe(_x,_y) == false )
@@ -2093,7 +2180,7 @@ Vector <HasXY*> * World_Local::getRandomWalk(int _nSteps)
       if ( xy )
       {
         xy = getRandomNeighbor(xy);
-        vTile->pushUnique(xy);
+        vTile->pushUniquePtr(xy);
       }
     }
   }

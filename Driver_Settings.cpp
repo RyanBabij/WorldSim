@@ -33,7 +33,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.145 Win32 dev";
+const std::string VERSION = "0.0.147 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -54,6 +54,7 @@ bool FOG_OF_WAR = false; // Enable/disable fog rendering
 bool QUICKSTART_GENERATOR = true; // Skip menu stuff and immediately generate a default world.
   //Quickly go straight into the simulator.
 const bool QUICKSTART_SIMULATOR = false; // Skip menu stuff and jump right into the game. (Will use defaults). 
+const bool ENABLE_BACKGROUND_SIMULATION = true; /* Generating maps in the background can cause choppy performance when debugging */
 
 int worldPop = 0;
 int lastline = 0;

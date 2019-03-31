@@ -226,11 +226,21 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
     // Overloaded put function automatically sorts object into relevant lists.
     // It's important to account for all categories otherwise it will implicitly
     // overload to a generic. And you will never see it again.
-  bool put (WorldObject* , int /* _x */, int /* _y */);
-    bool put (Item* , int /* _x */, int /* _y */);
-    bool put (Character* , int /* _x */, int /* _y */);
-    bool put (Creature* , int /* _x */, int /* _y */);
+  bool put (WorldObject* , int /* _x */, int /* _y */, bool subterranean=false);
+    bool put (Item* , int /* _x */, int /* _y */, bool subterranean=false);
+    bool put (Character* , int /* _x */, int /* _y */, bool subterranean=false);
+    bool put (Creature* , int /* _x */, int /* _y */, bool subterranean=false);
     
+  bool put (WorldObject* _object, HasXY* _xy, bool subterranean=false);
+    bool put (Item* _object, HasXY* _xy, bool subterranean=false);
+    bool put (Character* _object, HasXY* _xy, bool subterranean=false);
+    bool put (Creature* _object, HasXY* _xy, bool subterranean=false);
+    
+  bool put (WorldObject* _object, HasXY _xy, bool subterranean=false);
+    bool put (Item* _object, HasXY _xy, bool subterranean=false);
+    bool put (Character* _object, HasXY _xy, bool subterranean=false);
+    bool put (Creature* _object, HasXY _xy, bool subterranean=false);
+      
     // Remove object from world, but don't delete it.
     // For example if somebody picks it up.
   bool remove (WorldObject*);
