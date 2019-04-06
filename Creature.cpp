@@ -80,6 +80,11 @@ void Creature::wander()
 {
   if ( map==0 ) { return; }
   
+  if (isUnderground)
+  {
+    return;
+  }
+  
   int newX = x;
   int newY = y;
   char moveDirection = '?';

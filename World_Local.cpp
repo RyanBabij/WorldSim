@@ -509,50 +509,33 @@ bool World_Local::generate()
         }
         else if (random.oneIn(baseTreeChance))
         {
-          put(new WorldObject_Tree(1), _x, _y);
+          if (random.oneIn(10))
+          {
+            put(new WorldObject_Tree(0), _x, _y);
+          }
+          else
+          {
+            put(new WorldObject_Tree(1), _x, _y);
+          }
+
         }
         else if (random.oneIn(basePlantChance))
         {
-          int plantType = random.randomInt(3);
-          if (plantType==0)
-          {
-            put(new WorldObject_Flora(),_x,_y);
-          }
-          else if (plantType==1)
-          {
-            put(new Flora_Blackweed(),_x,_y);
-          }
-          else if (plantType==2)
-          {
-            put(new Flora_Redweed(),_x,_y);
-          }
-          else
+          if (random.oneIn(500))
           {
             put(new Flora_Blueweed(),_x,_y);
           }
+          else
+          {
+            put(new WorldObject_Flora(),_x,_y);
+          }
           
-          
-        }
-        else if (random.oneIn(1000))
-        {
-          put(new WorldObject_Tree(0), _x, _y);
         }
         else if (random.oneIn(1500) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
         {
-          if ( Random::oneIn(3) )
-          {
-            auto creature = new Creature_Bat;
-            creature->init();
-            put(creature,_x,_y);
-          }
-          else
-          {
-            auto deer = new Creature_Deer;
-            deer->init();
-            put(deer,_x,_y);
-          }
-          
-
+          auto deer = new Creature_Deer;
+          deer->init();
+          put(deer,_x,_y);
         }
         else if ( baseBiome == MOUNTAIN )
         {
@@ -564,8 +547,6 @@ bool World_Local::generate()
               rockyBoi->nGold = 100;
             }
             put (rockyBoi,_x,_y);
-            
-            //data->aLocalTile(_x,_y).add(rockyBoi);
           }
           
         }
@@ -610,10 +591,12 @@ bool World_Local::generate()
       
       if (Random::oneIn(100))
       {
-        //BAT
+        //auto creature = new Creature_Bat;
+        //creature->init();
+        //put(creature,(*vCaveMap)(i2),true);
       }
       
-      if (Random::oneIn(3))
+      if (Random::oneIn(25))
       {
         put(new Flora_Blackweed(),(*vCaveMap)(i2),true);
       }
@@ -1045,201 +1028,59 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
   if ( !data ) { return false; }
   // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
   
-  if ( data->aLocalTile.isSafe(newX,newY) == false )
-  {
-    // Moving between maps.
-    
-      //LEFT
-    if ( newX < 0 )
-    {
-      int nMaps = 0;
-      while ( newX < 0 )
-      {
-        newX += LOCAL_MAP_SIZE-1;
-        ++nMaps;
-      }
-      ++newX;
-      
-      //PUT OBJECT
-      if (nMaps > 0 )
-      {
-        if (world.isSafe(globalX-nMaps,globalY))
-        {
-          data->aLocalTile(_object->x,_object->y).remove(_object);
-          _object->x=newX;
-          _object->y=newY;
-          _object->worldX = globalX-nMaps;
-          _object->worldY = globalY;
-          
-          world(globalX-nMaps,globalY)->put(_object,newX,newY);
-          
-          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
-          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-
-          world(_object->fullX,_object->fullY);
-
-          int gX = 0;
-          int gY = 0;
-          int lX = 0;
-          int lY = 0;
-          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-
-          return false;
-          
-        }
-      }
-    }
-      //RIGHT
-    else if (newX > LOCAL_MAP_SIZE-1)
-    {
-      int nMaps = 0;
-      while ( newX > LOCAL_MAP_SIZE-1 )
-      {
-        newX -= LOCAL_MAP_SIZE-1;
-        ++nMaps;
-      }
-      --newX;
-      //std::cout<<"NEWX: "<<newX<<".\n";
-      
-      //PUT OBJECT
-      if (nMaps > 0 )
-      {
-        if (world.isSafe(globalX+nMaps,globalY))
-        {
-          data->aLocalTile(_object->x,_object->y).remove(_object);
-          _object->x=newX;
-          _object->y=newY;
-          _object->worldX = globalX+nMaps;
-          _object->worldY = globalY;
-          world(globalX+nMaps,globalY)->put(_object,newX,newY);
-          
-          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
-          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
-          
-          //std::cout<<"World conversion:";
-          world(_object->fullX,_object->fullY);
-          
-          int gX = 0;
-          int gY = 0;
-          int lX = 0;
-          int lY = 0;
-          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
-          
-          return false;
-          
-        }
-      }
-    }
-      //DOWN
-    if ( newY < 0 )
-    {
-      int nMaps = 0;
-      while ( newY < 0 )
-      {
-        newY += LOCAL_MAP_SIZE-1;
-        ++nMaps;
-      }
-      ++newY;
-      
-      //PUT OBJECT
-      if (nMaps > 0 )
-      {
-        if (world.isSafe(globalX,globalY-nMaps))
-        {
-          data->aLocalTile(_object->x,_object->y).remove(_object);
-          _object->x=newX;
-          _object->y=newY;
-          _object->worldX = globalX;
-          _object->worldY = globalY-nMaps;
-          world(globalX,globalY-nMaps)->put(_object,newX,newY);
-          
-          
-          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
-          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
-          
-          //std::cout<<"World conversion:";
-          world(_object->fullX,_object->fullY);
-          
-          int gX = 0;
-          int gY = 0;
-          int lX = 0;
-          int lY = 0;
-          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
-          
-          return false;
-          
-        }
-      }
-    }
-      //UP
-    else if (newY > LOCAL_MAP_SIZE-1)
-    {
-      int nMaps = 0;
-      while ( newY > LOCAL_MAP_SIZE-1 )
-      {
-        newY -= LOCAL_MAP_SIZE-1;
-        ++nMaps;
-      }
-      --newY;
-
-      //PUT OBJECT
-      if (nMaps > 0 )
-      {
-        if (world.isSafe(globalX,globalY+nMaps))
-        {
-          data->aLocalTile(_object->x,_object->y).remove(_object);
-          _object->x=newX;
-          _object->y=newY;
-          _object->worldX = globalX;
-          _object->worldY = globalY+nMaps;
-          world(globalX,globalY+nMaps)->put(_object,newX,newY);
-          
-          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
-          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-          //std::cout<<"New gps coords: "<<_object->fullX<<", "<<_object->fullY<<".\n";
-          
-          
-          //std::cout<<"World conversion:";
-          world(_object->fullX,_object->fullY);
-          
-          int gX = 0;
-          int gY = 0;
-          int lX = 0;
-          int lY = 0;
-          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-          //std::cout<<"Abs to rel: "<<gX<<", "<<gY<<", "<<lX<<", "<<lY<<".\n";
-          
-          return false;
-          
-        }
-      }
-    }
-      
-    return false;
-
-  }
+    // Calculate new map if we're moving between maps.
   
-  //Moving inside of map
+  int destinationGlobalX = globalX;
+  int destinationGlobalY = globalY;
+  
+  // Left/right
+  while ( newX < 0 )
+  {
+    newX += LOCAL_MAP_SIZE;
+    --destinationGlobalX;
+  }
+
+  while ( newX > LOCAL_MAP_SIZE-1 )
+  {
+    newX -= LOCAL_MAP_SIZE;
+    ++destinationGlobalX;
+  }
+
+  // Up/down
+  while ( newY < 0 )
+  {
+    newY += LOCAL_MAP_SIZE;
+    --destinationGlobalY;
+  }
+
+  while ( newY > LOCAL_MAP_SIZE-1 )
+  {
+    newY -= LOCAL_MAP_SIZE;
+    ++destinationGlobalY;
+  }
+
+  
+  if ( world.isSafe(destinationGlobalX, destinationGlobalY) == false )
+  { return false; }
+  
+  World_Local * destination = world(destinationGlobalX, destinationGlobalY);
+  
+  if ( destination == 0 || destination->data == 0 || destination->isSafe (newX,newY) == false ) { return false; }
+  
   
   if (_object->isUnderground)
   {
     if ( data->aSubterranean(newX,newY).hasMovementBlocker() )
-    {
-      return false;
-    }
+    { return false; }
+  
     data->aSubterranean(_object->x,_object->y).remove(_object);
     
-  
     _object->x=newX;
     _object->y=newY;
-    _object->worldX = globalX;
-    _object->worldY = globalY;
+    _object->worldX = destinationGlobalX;
+    _object->worldY = destinationGlobalY;
     
-    data->aSubterranean(newX,newY).add(_object);
+    destination->put(_object,newX,newY,true);
   }
   else
   {
@@ -1255,16 +1096,16 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
     _object->worldX = globalX;
     _object->worldY = globalY;
     
-    data->aLocalTile(newX,newY).add(_object);
+    destination->put(_object,newX,newY);
   }
 
   _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
   _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
 
-  world(_object->fullX,_object->fullY);
+  //world(_object->fullX,_object->fullY);
   
-  int gX = 0;
-  int gY = 0;
+   int gX = 0;
+   int gY = 0;
   int lX = 0;
   int lY = 0;
   world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
@@ -1278,290 +1119,204 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
   if ( !data ) { return false; }
   // Needs to be updated. Currently performs 2 placements, one for up/down, one for left/right
   
-  if ( data->aLocalTile.isSafe(newX,newY) == false )
-  {
-    // Moving between maps.
-    
-      //LEFT
-    if ( newX < 0 )
-    {
-      int nMaps = 0;
-      while ( newX < 0 )
-      {
-        newX += LOCAL_MAP_SIZE-1;
-        ++nMaps;
-      }
-      ++newX;
-      
-      //PUT OBJECT
-      if (nMaps > 0 )
-      {
-        if (world.isSafe(globalX-nMaps,globalY))
-        {
-          data->aLocalTile(_object->x,_object->y).remove(_object);
-          _object->x=newX;
-          _object->y=newY;
-          _object->worldX = globalX-nMaps;
-          _object->worldY = globalY;
-          _object->map = world(globalX-nMaps,globalY);
-          
-          world(globalX-nMaps,globalY)->put(_object,newX,newY);
-          
-          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
-
-          world(_object->fullX,_object->fullY);
-
-          int gX = 0;
-          int gY = 0;
-          int lX = 0;
-          int lY = 0;
-          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-
-          return false;
-          
-        }
-      }
-    }
-      //RIGHT
-    else if (newX > LOCAL_MAP_SIZE-1)
-    {
-      int nMaps = 0;
-      while ( newX > LOCAL_MAP_SIZE-1 )
-      {
-        newX -= LOCAL_MAP_SIZE-1;
-        ++nMaps;
-      }
-      --newX;
-
-      //PUT OBJECT
-      if (nMaps > 0 )
-      {
-        if (world.isSafe(globalX+nMaps,globalY))
-        {
-          data->aLocalTile(_object->x,_object->y).remove(_object);
-          _object->x=newX;
-          _object->y=newY;
-          _object->worldX = globalX+nMaps;
-          _object->worldY = globalY;
-          _object->map = world(globalX+nMaps,globalY);
-          world(globalX+nMaps,globalY)->put(_object,newX,newY);
-          
-          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
-          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-
-          world(_object->fullX,_object->fullY);
-          
-          int gX = 0;
-          int gY = 0;
-          int lX = 0;
-          int lY = 0;
-          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-
-          return false;
-          
-        }
-      }
-    }
-      //DOWN
-    if ( newY < 0 )
-    {
-      int nMaps = 0;
-      while ( newY < 0 )
-      {
-        newY += LOCAL_MAP_SIZE-1;
-        ++nMaps;
-      }
-      ++newY;
-      
-      //PUT OBJECT
-      if (nMaps > 0 )
-      {
-        if (world.isSafe(globalX,globalY-nMaps))
-        {
-          data->aLocalTile(_object->x,_object->y).remove(_object);
-          _object->x=newX;
-          _object->y=newY;
-          _object->worldX = globalX;
-          _object->worldY = globalY-nMaps;
-          _object->map = world(globalX,globalY-nMaps);
-          world(globalX,globalY-nMaps)->put(_object,newX,newY);
-          
-          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
-          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-
-          world(_object->fullX,_object->fullY);
-          
-          int gX = 0;
-          int gY = 0;
-          int lX = 0;
-          int lY = 0;
-          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-
-          return false;
-          
-        }
-      }
-    }
-      //UP
-    else if (newY > LOCAL_MAP_SIZE-1)
-    {
-      int nMaps = 0;
-      while ( newY > LOCAL_MAP_SIZE-1 )
-      {
-        newY -= LOCAL_MAP_SIZE-1;
-        ++nMaps;
-      }
-      --newY;
-
-      //PUT OBJECT
-      if (nMaps > 0 )
-      {
-        if (world.isSafe(globalX,globalY+nMaps))
-        {
-          data->aLocalTile(_object->x,_object->y).remove(_object);
-          _object->x=newX;
-          _object->y=newY;
-          _object->worldX = globalX;
-          _object->worldY = globalY+nMaps;
-          _object->map = world(globalX,globalY+nMaps);
-          world(globalX,globalY+nMaps)->put(_object,newX,newY);
-          
-          _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
-          _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
-
-          world(_object->fullX,_object->fullY);
-          
-          int gX = 0;
-          int gY = 0;
-          int lX = 0;
-          int lY = 0;
-          world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-
-          return false;
-          
-        }
-      }
-    }
-      
-    return false;
-
-  }
+    // Calculate new map if we're moving between maps.
   
-  LocalTile* destination;
-  LocalTile* source;
-  if ( _object->isUnderground )
-  {
-    destination = &data->aSubterranean(newX,newY);
-    source = &data->aSubterranean(_object->x,_object->y);
-  }
-  else
-  {
-    destination = &data->aLocalTile(newX,newY);
-    source = &data->aLocalTile(_object->x,_object->y);
-  }
+  int destinationGlobalX = globalX;
+  int destinationGlobalY = globalY;
   
-  if ( destination->hasMovementBlocker() )
+  // Left/right
+  while ( newX < 0 )
   {
-    return false;
+    newX += LOCAL_MAP_SIZE;
+    --destinationGlobalX;
   }
-  
-  if (data->aLocalTile.isSafe(_object->x,_object->y)==false)
+
+  while ( newX > LOCAL_MAP_SIZE-1 )
   {
-    return false;
+    newX -= LOCAL_MAP_SIZE;
+    ++destinationGlobalX;
   }
-  
-  //Moving inside of map
-  // I'm sure you can do some fancy bitwise stuff here but I can't think of it right now.
-  // It'll probably have to be done in future when pathfinding is optimised.
-  //char combinedCollision = source->bWall | destination->bWall;
-  
-  // Check walls
-  if (source->bWall!=0 || destination->bWall!=0)
+
+  // Up/down
+  while ( newY < 0 )
   {
-    //return false;
-    // West
-    if ( newX < _object->x)
-    {
-      if ( (source->bWall & 0b00010000) == 0b00010000
-      ||   (destination->bWall & 0b00000100) == 0b00000100 )
-      {
-        return false;
-      }
-    }
-    //East
-    else if (newX > _object->x)
-    {
-      if ( (source->bWall & 0b01000000) == 0b01000000
-      ||   (destination->bWall & 0b00000001) == 0b00000001 )
-      {
-        return false;
-      }
-    }
-    //North
-    else if (newY > _object->y)
-    {
-      if ( (source->bWall & 0b10000000) == 0b10000000
-      ||   (destination->bWall & 0b00000010) == 0b00000010 )
-      {
-        return false;
-      }
-    }
-    //South
-    else if (newY < _object->y)
-    {
-      if ( (source->bWall & 0b00100000) == 0b00100000
-      ||   (destination->bWall & 0b00001000) == 0b00001000 )
-      {
-        return false;
-      }
-    }
+    newY += LOCAL_MAP_SIZE;
+    --destinationGlobalY;
   }
+
+  while ( newY > LOCAL_MAP_SIZE-1 )
+  {
+    newY -= LOCAL_MAP_SIZE;
+    ++destinationGlobalY;
+  }
+
+  
+  if ( world.isSafe(destinationGlobalX, destinationGlobalY) == false )
+  { return false; }
+  
+  World_Local * destination = world(destinationGlobalX, destinationGlobalY);
+  
+  if ( destination == 0 || destination->data == 0 || destination->isSafe (newX,newY) == false ) { return false; }
+  
   
   if (_object->isUnderground)
   {
-    if ( data->aSubterranean(newX,newY).hasMovementBlocker() )
-    {
-      return false;
-    }
+    if ( destination->data->aSubterranean(newX,newY).hasMovementBlocker() )
+    { return false; }
+  
     data->aSubterranean(_object->x,_object->y).remove(_object);
     
-  
     _object->x=newX;
     _object->y=newY;
-    _object->worldX = globalX;
-    _object->worldY = globalY;
-    
-    data->aSubterranean(newX,newY).add(_object);
+    _object->worldX = destinationGlobalX;
+    _object->worldY = destinationGlobalY;
+
+    destination->put(_object,newX,newY,true);
   }
   else
   {
-    if ( data->aLocalTile(newX,newY).hasMovementBlocker() )
-    {
-      return false;
-    }
+    if ( destination->data->aLocalTile(newX,newY).hasMovementBlocker() )
+    { return false; }
+  
     data->aLocalTile(_object->x,_object->y).remove(_object);
-    
     
     _object->x=newX;
     _object->y=newY;
     _object->worldX = globalX;
     _object->worldY = globalY;
     
-    data->aLocalTile(newX,newY).add(_object);
+    destination->put(_object,newX,newY);
   }
-
+  
+  _object->map = destination;
   _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
   _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
 
-  world(_object->fullX,_object->fullY);
+  //world(_object->fullX,_object->fullY);
   
-  int gX = 0;
-  int gY = 0;
+   int gX = 0;
+   int gY = 0;
   int lX = 0;
   int lY = 0;
   world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
-  
+
   return true;
+  
+  // LocalTile* destination;
+  // LocalTile* source;
+  // if ( _object->isUnderground )
+  // {
+    // destination = &data->aSubterranean(newX,newY);
+    // source = &data->aSubterranean(_object->x,_object->y);
+  // }
+  // else
+  // {
+    // destination = &data->aLocalTile(newX,newY);
+    // source = &data->aLocalTile(_object->x,_object->y);
+  // }
+  
+  // if ( destination->hasMovementBlocker() )
+  // {
+    // return false;
+  // }
+  
+  // if (data->aLocalTile.isSafe(_object->x,_object->y)==false)
+  // {
+    // return false;
+  // }
+  
+  // //Moving inside of map
+  // // I'm sure you can do some fancy bitwise stuff here but I can't think of it right now.
+  // // It'll probably have to be done in future when pathfinding is optimised.
+  // //char combinedCollision = source->bWall | destination->bWall;
+  
+  // // Check walls
+  // if (source->bWall!=0 || destination->bWall!=0)
+  // {
+    // //return false;
+    // // West
+    // if ( newX < _object->x)
+    // {
+      // if ( (source->bWall & 0b00010000) == 0b00010000
+      // ||   (destination->bWall & 0b00000100) == 0b00000100 )
+      // {
+        // return false;
+      // }
+    // }
+    // //East
+    // else if (newX > _object->x)
+    // {
+      // if ( (source->bWall & 0b01000000) == 0b01000000
+      // ||   (destination->bWall & 0b00000001) == 0b00000001 )
+      // {
+        // return false;
+      // }
+    // }
+    // //North
+    // else if (newY > _object->y)
+    // {
+      // if ( (source->bWall & 0b10000000) == 0b10000000
+      // ||   (destination->bWall & 0b00000010) == 0b00000010 )
+      // {
+        // return false;
+      // }
+    // }
+    // //South
+    // else if (newY < _object->y)
+    // {
+      // if ( (source->bWall & 0b00100000) == 0b00100000
+      // ||   (destination->bWall & 0b00001000) == 0b00001000 )
+      // {
+        // return false;
+      // }
+    // }
+  // }
+  
+  // if (_object->isUnderground)
+  // {
+    // if ( data->aSubterranean(newX,newY).hasMovementBlocker() )
+    // {
+      // return false;
+    // }
+    // data->aSubterranean(_object->x,_object->y).remove(_object);
+    
+  
+    // _object->x=newX;
+    // _object->y=newY;
+    // _object->worldX = globalX;
+    // _object->worldY = globalY;
+    
+    // data->aSubterranean(newX,newY).add(_object);
+  // }
+  // else
+  // {
+    // if ( data->aLocalTile(newX,newY).hasMovementBlocker() )
+    // {
+      // return false;
+    // }
+    // data->aLocalTile(_object->x,_object->y).remove(_object);
+    
+    
+    // _object->x=newX;
+    // _object->y=newY;
+    // _object->worldX = globalX;
+    // _object->worldY = globalY;
+    
+    // data->aLocalTile(newX,newY).add(_object);
+  // }
+
+  // _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
+  // _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
+
+  // world(_object->fullX,_object->fullY);
+  
+  // int gX = 0;
+  // int gY = 0;
+  // int lX = 0;
+  // int lY = 0;
+  // world.absoluteToRelative (_object->fullX,_object->fullY,&gX,&gY,&lX,&lY);
+  
+  // return true;
 }
 
 bool World_Local::moveDown(WorldObject* _object)

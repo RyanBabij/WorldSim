@@ -257,7 +257,9 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   bool contains(WorldObject*);
     bool contains(Character*);
   
-  
+    // Uses local map coordinates, but will automatically move object to adjacent maps if necessary.
+    // This shouldn't be used too much because most movement will probably be discrete steps NESW, in order to calculate
+    // wall collision and whatnot. This is more of a teleport function.
   bool moveObject (WorldObject* , int /* newX */, int /* newY */ );
     bool moveObject (Character* , int /* newX */, int /* newY */ );
   
