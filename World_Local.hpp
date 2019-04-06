@@ -262,7 +262,15 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
     // wall collision and whatnot. This is more of a teleport function.
   bool moveObject (WorldObject* , int /* newX */, int /* newY */ );
     bool moveObject (Character* , int /* newX */, int /* newY */ );
+    
+    
+    // Move object one move in the passed direction (NORTH, EAST, SOUTH, WEST).
+    // Multiple moves can just repeatedly call this function if necessary.
+  bool moveObject(WorldObject*, const enumDirection);
   
+
+  
+  // Move object up or down the z layer. Currently there are only 2 z-layers.
   bool moveDown(WorldObject*);
     bool moveDown(Character*);
   bool moveUp(WorldObject*);

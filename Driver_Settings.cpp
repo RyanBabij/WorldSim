@@ -33,7 +33,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.148 Win32 dev";
+const std::string VERSION = "0.0.149 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -41,6 +41,9 @@ const std::string SAVE_FOLDER_PATH = "savedata";
 enum enumMenu { MENU_UNKNOWN, MENU_TITLE, MENU_OPTIONS, MENU_LOADGAME, MENU_WORLDGENERATOR, MENU_WORLDSIMULATOR, MENU_ADVENTUREMODE };
 // Should be MENU_TITLE but I'm bypassing it for now because the main menu has no function atm.
 enumMenu activeMenu = MENU_WORLDGENERATOR;
+
+  // DIRECTION ENUMS
+enum enumDirection { NORTH, EAST, SOUTH, WEST };
 
   // RACE ENUM
 enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
@@ -50,7 +53,7 @@ enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
 
   //DEBUG SETTINGS
 
-bool FOG_OF_WAR = false; // Enable/disable fog rendering
+bool FOG_OF_WAR = true; // Enable/disable fog rendering
 bool QUICKSTART_GENERATOR = true; // Skip menu stuff and immediately generate a default world.
   //Quickly go straight into the simulator.
 const bool QUICKSTART_SIMULATOR = false; // Skip menu stuff and jump right into the game. (Will use defaults). 

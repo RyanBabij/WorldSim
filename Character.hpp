@@ -199,7 +199,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
     // KNOWLEDGE
     
     //returns true if the Character has seen this tile.
-  char hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */ );
+  char hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */, bool isSubterranean = false );
   
   
 	/* TABLE INTERFACE */
@@ -219,7 +219,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
     //Update knowledge with current instance.
   void updateKnowledge();
   // Extra processing available
-  void updateKnowledgeIdle();
+  bool updateKnowledgeIdle();
 
 	
 };

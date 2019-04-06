@@ -613,12 +613,12 @@ void Character::initialiseKnowledge()
   }
 }
   
-  char Character::hasSeen( World_Local* _map, int _x, int _y )
+  char Character::hasSeen( World_Local* _map, int _x, int _y, bool isSubterranean )
   {
     if (knowledge==0) { return false; }
     
     
-    return ( knowledge->hasSeen(_map,_x,_y) );
+    return ( knowledge->hasSeen(_map,_x,_y,isSubterranean) );
   }
 
     //Update knowledge with current instance.
@@ -640,7 +640,7 @@ void Character::initialiseKnowledge()
     //knowledge->addTile(world(worldX,worldY), x,y);
     
     //std::cout<<"Adding tile: "<<fullX<<", "<<fullY<<"\n";
-    knowledge->addTile(fullX,fullY);
+    knowledge->addTile(fullX,fullY,isUnderground);
     
     // knowledge->addTile(tribe->getCurrentMap(), x-1,y);
     // knowledge->addTile(tribe->getCurrentMap(), x+1,y);
@@ -691,70 +691,73 @@ void Character::initialiseKnowledge()
     { vMovesToProcess.push(new HasXY2 <unsigned long int> (fullX,fullY)); }
   }
   
-    //Update knowledge with current instance.
-  void Character::updateKnowledgeIdle()
+  //Update knowledge with current instance.
+bool Character::updateKnowledgeIdle()
+{
+  // Implement a basic delay to prevent idle flickering in.
+  ++idleCounter;
+  if (idleCounter > 10) { idleCounter=10; }
+  
+  if ( vMovesToProcess.size() == 0 && vMovesToProcessSneak.size() == 0 ) { return false; }
+  if ( knowledge == 0 ) { return false; }
+  if ( tribe == 0 ) { return false; }
+  
+  //Update the LOS backlog during idle time.
+  
+    //For now this simply wipes LOS from last turn.
+  knowledge->updateLOS();
+  
+  if (vMovesToProcess.size() > 0)
   {
-    // Implement a basic delay to prevent idle flickering in.
-    ++idleCounter;
-    if (idleCounter > 10) { idleCounter=10; }
+    vMovesToProcess.shuffle();
     
-    if ( vMovesToProcess.size() == 0 && vMovesToProcessSneak.size() == 0 ) { return; }
-    if ( knowledge == 0 ) { return; }
-    if ( tribe == 0 ) { return; }
+    auto moveToProcess = vMovesToProcess(0);
+
+    knowledge->addTile(moveToProcess->x,moveToProcess->y,isUnderground);
     
-    //Update the LOS backlog during idle time.
+
+    Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(moveToProcess->x,moveToProcess->y,MAX_VIEW_RANGE,false,isUnderground);
     
-      //For now this simply wipes LOS from last turn.
-    knowledge->updateLOS();
-    
-    if (vMovesToProcess.size() > 0)
+    if ( vVisibleTiles!=0 )
     {
-      vMovesToProcess.shuffle();
-      
-      auto moveToProcess = vMovesToProcess(0);
-
-      knowledge->addTile(moveToProcess->x,moveToProcess->y);
-      
-
-      Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(moveToProcess->x,moveToProcess->y,MAX_VIEW_RANGE,false,isUnderground);
-      
-      if ( vVisibleTiles!=0 )
+      for (int i=0; i<vVisibleTiles->size(); ++i)
       {
-        for (int i=0; i<vVisibleTiles->size(); ++i)
-        {
-          //std::cout<<"ADDING\n";
-          knowledge->addTile((*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
-          delete (*vVisibleTiles)(i);
-        }
+        //std::cout<<"ADDING\n";
+        knowledge->addTile((*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y,isUnderground);
+        delete (*vVisibleTiles)(i);
       }
-      
-      delete moveToProcess;
-      vMovesToProcess.removeSlot(0);
     }
-    else if ( vMovesToProcessSneak.size() > 0)
-    {
-      vMovesToProcessSneak.shuffle();
-      
-      auto moveToProcess = vMovesToProcessSneak(0);
-
-      knowledge->addTile(moveToProcess->x,moveToProcess->y);
-      
-      Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(moveToProcess->x,moveToProcess->y,MAX_VIEW_RANGE,true,isUnderground);
-      
-      if ( vVisibleTiles!=0 )
-      {
-        for (int i=0; i<vVisibleTiles->size(); ++i)
-        {
-          //std::cout<<"ADDING\n";
-          knowledge->addTile((*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y);
-          delete (*vVisibleTiles)(i);
-        }
-      }
-      
-      delete moveToProcess;
-      vMovesToProcessSneak.removeSlot(0);
-    }
+    
+    delete moveToProcess;
+    vMovesToProcess.removeSlot(0);
+    return true;
   }
+  else if ( vMovesToProcessSneak.size() > 0)
+  {
+    vMovesToProcessSneak.shuffle();
+    
+    auto moveToProcess = vMovesToProcessSneak(0);
+
+    knowledge->addTile(moveToProcess->x,moveToProcess->y,isUnderground);
+    
+    Vector <HasXY2 <unsigned long int> *> * vVisibleTiles = world.rayTraceLOS(moveToProcess->x,moveToProcess->y,MAX_VIEW_RANGE,true,isUnderground);
+    
+    if ( vVisibleTiles!=0 )
+    {
+      for (int i=0; i<vVisibleTiles->size(); ++i)
+      {
+        //std::cout<<"ADDING\n";
+        knowledge->addTile((*vVisibleTiles)(i)->x,  (*vVisibleTiles)(i)->y,isUnderground);
+        delete (*vVisibleTiles)(i);
+      }
+    }
+    
+    delete moveToProcess;
+    vMovesToProcessSneak.removeSlot(0);
+    return true;
+  }
+  return false;
+}
   
 // INHERITED FUNCTIONS
 

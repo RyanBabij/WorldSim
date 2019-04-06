@@ -1319,6 +1319,16 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
   // return true;
 }
 
+bool World_Local::moveObject(WorldObject*, const enumDirection direction)
+{
+  
+  if ( direction == NORTH )
+  {
+  }
+  
+  return false;
+}
+
 bool World_Local::moveDown(WorldObject* _object)
 {
   if ( !data || !_object ) { return false; }

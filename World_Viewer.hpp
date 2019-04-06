@@ -1041,11 +1041,11 @@ void switchTarget(World_Local* _worldLocal)
                       glColor4ub(255,255,255,255);
                       //Very basic player line of sight check here (only if we're in Adventure mode)
                       // Unseen tiles
-                      if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == 0 )
+                      if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile,true) == 0 )
                       {
                       }
                       //Previously seen tiles
-                      else if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == 1 )
+                      else if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile,true) == 1 )
                       {
                         //Draw tile very dark to symbolise fog of war
                         LocalTile* localTile = &localMap->data->aSubterranean(localXTile,localYTile);

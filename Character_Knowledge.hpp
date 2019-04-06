@@ -20,6 +20,10 @@ class Character_Knowledge
   Vector <World_Local*> vMapsVisited;
   Vector < ArrayS2 <char>* > vaTileVisited;
   
+    // Same but for subterranean tiles
+  Vector <World_Local*> vSubMapsVisited;
+  Vector < ArrayS2 <char>* > vaSubTileVisited;
+  
   Vector <char> vPath; // current path
   
   HasXY currentGoal; /* Characters can wander by moving toward a particular waypoint */
@@ -32,14 +36,14 @@ class Character_Knowledge
 
   
     // Add this tile into the Character's knowledge (if it isn't already)
-  void addTile( World_Local* /* _map */, int /* _x */, int /* _y */ );
+  void addTile( World_Local* /* _map */, int /* _x */, int /* _y */, bool isSubterranean = false);
   
   // Adds the tile to the Character's knowledge.
   // Overloaded to allow absolute coordinates.
-  void addTile( unsigned long int /* _x */, unsigned long int /* _y */);
+  void addTile( unsigned long int /* _x */, unsigned long int /* _y */, bool isSubterranean = false);
   
     //returns true if the Character has seen this tile. 0 = no. 1 = has seen. 2 = currently visible.
-  char hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */ );
+  char hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */, bool isSubterranean = false);
   
   
   // Sets all 2 to 1 for LOS update.

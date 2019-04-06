@@ -27,6 +27,11 @@ class Creature: public WorldObject, public TableInterface
 	int age; /* In ticks */
 	int daysCounter; /* 0-360 */
 	int secondsCounter; /* 0 - 86,400 */
+  
+  bool isCarnivore; /* Creature can eat other animals. Otherwise the creature is a herbivore */
+  /* Herbivores are reliant on the grass and plants on their map */
+  // Home biome - Biome the creature is evolved for.
+
 	
 	int actionPoints; /* Base: 100. Points are deducted for each action. */
 

@@ -1047,16 +1047,20 @@ class Menu_AdventureMode: public GUI_Interface
       // SHIFT+, and SHIFT+.
       // Move view up or down
       // Basically just toggles subterranean mode right now.
-    if(_keyboard->isPressed(Keyboard::LEFT_CHEVRON))
+    if(_keyboard->isPressed(Keyboard::RIGHT_CHEVRON))
     {
       if (playerCharacter)
       {
+        // update LOS backlog because it currently can't handle layers.
+        while ( playerCharacter->updateKnowledgeIdle() ) {}
+        
         World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
         if (world(playerCharacter->fullX,playerCharacter->fullY)->isCave)
         {
           if (wl->moveDown(playerCharacter))
           {
             worldViewer.subterraneanMode=true;
+            playerCharacter->updateKnowledge();
           }
           else
           {
@@ -1065,19 +1069,24 @@ class Menu_AdventureMode: public GUI_Interface
         }
 
       }
+      _keyboard->keyUp(Keyboard::RIGHT_CHEVRON);
       _keyboard->keyUp(Keyboard::LEFT_CHEVRON);
     }
       // Move view up or down
-    if(_keyboard->isPressed(Keyboard::RIGHT_CHEVRON))
+    if(_keyboard->isPressed(Keyboard::LEFT_CHEVRON))
     {
       if (playerCharacter)
       {
+        // update LOS backlog because it currently can't handle layers.
+        while ( playerCharacter->updateKnowledgeIdle() ) {}
+    
         World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
         if (world(playerCharacter->fullX,playerCharacter->fullY)->isCave)
         {
           if (wl->moveUp(playerCharacter))
           {
             worldViewer.subterraneanMode=false;
+            playerCharacter->updateKnowledge();
           }
           else
           {
@@ -1087,6 +1096,55 @@ class Menu_AdventureMode: public GUI_Interface
 
       }
       _keyboard->keyUp(Keyboard::RIGHT_CHEVRON);
+      _keyboard->keyUp(Keyboard::LEFT_CHEVRON);
+    }
+      // Move view up or down
+    if(_keyboard->isPressed(Keyboard::Q) || _keyboard->isPressed(Keyboard::q))
+    {
+      if (playerCharacter)
+      {
+        // update LOS backlog because it currently can't handle layers.
+        while ( playerCharacter->updateKnowledgeIdle() ) {}
+    
+        World_Local* wl = world(playerCharacter->worldX,playerCharacter->worldY);
+        if (world(playerCharacter->fullX,playerCharacter->fullY)->isCave)
+        {
+          // Move up
+          if ( playerCharacter->isUnderground )
+          {
+            if (wl->moveUp(playerCharacter))
+            {
+              worldViewer.subterraneanMode=false;
+              playerCharacter->updateKnowledge();
+            }
+            else
+            {
+              Console("There's no way up here");
+            }
+          }
+          // move down
+          else
+          {
+            if (wl->moveDown(playerCharacter))
+            {
+              worldViewer.subterraneanMode=true;
+              playerCharacter->updateKnowledge();
+            }
+            else
+            {
+              Console("There's no way down here");
+            }
+          }
+        }
+        else
+        {
+          Console("There's no way up or down here");
+        }
+
+
+      }
+      _keyboard->keyUp(Keyboard::Q);
+      _keyboard->keyUp(Keyboard::q);
     }
 
     // Hotbar selection keys
