@@ -23,8 +23,8 @@ LocalTile::LocalTile()
   isCave=false;
   seed=0;
   
-  hasGems=false;
-  hasMetal=false;
+  nGems=0;
+  nMetal=0;
 }
 
 LocalTile::~LocalTile()
@@ -324,11 +324,11 @@ Vector <Texture*> * LocalTile::currentTextures()
     vTexture->push(&TEX_WORLD_TERRAIN_GRASS_03);
 	}
   
-  if (hasGems)
+  if (nGems>0)
   {
     vTexture->push(&TEX_WORLD_ARTIFACT_GEMS);
   }
-  if (hasMetal)
+  if (nMetal>0)
   {
     vTexture->push(&TEX_WORLD_TERRAIN_ORE_METAL);
   }
@@ -398,6 +398,8 @@ std::string LocalTile::getSaveData()
   { saveData+="P"; }
   else if ( baseTerrain == ICE )
   { saveData+="I"; }
+  else if ( baseTerrain == UNDERGROUND )
+  { saveData+="U"; }
   else
   { saveData+="G"; }
   
@@ -432,6 +434,8 @@ void LocalTile::loadData(std::string _saveData)
   { baseTerrain=STEPPES; }
   else if ( _saveData[0] == 'I' )
   { baseTerrain=ICE; }
+  else if ( _saveData[0] == 'U' )
+  { baseTerrain=UNDERGROUND; }
   else
   { baseTerrain = GRASSLAND; }
   

@@ -399,6 +399,8 @@ class Menu_WorldSimulator: public GUI_Interface
           menuCharacter.active = false;
           menuBiome.active = false;
           //active = false;
+          
+          worldViewer.subterraneanMode=playerCharacter->isUnderground;
       
         }
         else

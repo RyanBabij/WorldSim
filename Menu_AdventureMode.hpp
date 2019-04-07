@@ -922,7 +922,7 @@ class Menu_AdventureMode: public GUI_Interface
 		if(_keyboard->isPressed(Keyboard::TAB))
 		{
       playerCharacter=0;
-      
+      worldViewer.subterraneanMode=false;
       
       //menuWorldSimulator.active = true;
       

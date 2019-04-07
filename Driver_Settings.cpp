@@ -33,7 +33,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.149 Win32 dev";
+const std::string VERSION = "0.0.150 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -53,7 +53,7 @@ enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
 
   //DEBUG SETTINGS
 
-bool FOG_OF_WAR = true; // Enable/disable fog rendering
+bool FOG_OF_WAR = false; // Enable/disable fog rendering
 bool QUICKSTART_GENERATOR = true; // Skip menu stuff and immediately generate a default world.
   //Quickly go straight into the simulator.
 const bool QUICKSTART_SIMULATOR = false; // Skip menu stuff and jump right into the game. (Will use defaults). 
@@ -114,7 +114,7 @@ int DEBUG_Y=-1;
 unsigned int RESOLUTIONX=1024, RESOLUTIONY=900;
 bool RESET=false;
 
-bool HOTKEYS_ENABLED = false;
+bool HOTKEYS_ENABLED = true;
 
 bool CLEAN_SAVES_ON_EXIT = true;
 

@@ -51,9 +51,12 @@ class LocalTile: public HasTexture
   char height;
   
   bool isLand; /* True if not water */
-  bool hasGems;
-  bool hasMetal;
+  //bool hasGems;
+  //bool hasMetal;
   bool isCave;
+  
+  unsigned short int nGems;
+  unsigned short int nMetal;
   
  // bool isUphill [8]; /* Clockwise starting north */
   

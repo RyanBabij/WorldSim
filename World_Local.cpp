@@ -359,27 +359,27 @@ bool World_Local::generate()
   // Take the seed for this world tile and expand it into a subseed for every local tile */
   random.seed(seed);
   
-  int nGemSeams = random.randomInt(4);
+  int nGemSeams = random.randomInt(3);
   while (nGemSeams-- > 0)
   {
     Vector <HasXY*> * vGemSeam = getRandomWalk(random.randomInt(40)+10);
     
     for (int i=0;i<vGemSeam->size();++i)
     {
-      data->aSubterranean((*vGemSeam)(i)).hasGems=true;
+      data->aSubterranean((*vGemSeam)(i)).nGems=random.multiRoll(3,3);
     }
     vGemSeam->deleteAll();
     delete vGemSeam;
   }
   
-  int nMetalSeams = random.randomInt(4);
+  int nMetalSeams = random.randomInt(6);
   while (nMetalSeams-- > 0)
   {
     Vector <HasXY*> * vMetalSeam = getRandomWalk(random.randomInt(40)+10);
     
     for (int i=0;i<vMetalSeam->size();++i)
     {
-      data->aSubterranean((*vMetalSeam)(i)).hasMetal=true;
+      data->aSubterranean((*vMetalSeam)(i)).nMetal=random.multiRoll(3,3);
     }
     vMetalSeam->deleteAll();
     delete vMetalSeam;
@@ -399,6 +399,7 @@ bool World_Local::generate()
       data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
       //data->aSubterranean(_x,_y).clearObjects();
       data->aSubterranean(_x,_y).height = 0;
+      
         
       //data->aSubterranean(_x,_y).hasGems=Random::oneIn(100);
       if (Random::oneIn(1000))
@@ -486,7 +487,7 @@ bool World_Local::generate()
           data->aLocalTile(_x,_y).baseTerrain = OCEAN;
           continue;
         }
-        else if (random.oneIn(200)) /* Put down some testing objects */
+        else if (random.oneIn(400)) /* Put down some testing objects */
         {
           put(new Item_Floor, _x, _y);
           put(new Item_Sword, _x, _y);
@@ -581,13 +582,15 @@ bool World_Local::generate()
     
     Vector <HasXY*> * vCaveMap = getRandomWalk(caveSize);
       
-    int nEntrances = Random::randomInt((vCaveMap->size()/1200));
-    //if (nEntrances > 5) { nEntrances=5; }
-    nEntrances = 10;
+    int nEntrances = Random::randomInt((vCaveMap->size()/500));
+    if (nEntrances > 10) { nEntrances=10; }
+    //nEntrances = 10;
     
     for (int i2=0;i2<vCaveMap->size();++i2)
     {
       data->aSubterranean((*vCaveMap)(i2)).baseTerrain = GRASSLAND;
+      data->aSubterranean((*vCaveMap)(i2)).nGems=0;
+      data->aSubterranean((*vCaveMap)(i2)).nMetal=0;
       
       if (Random::oneIn(100))
       {
@@ -650,6 +653,9 @@ bool World_Local::generate()
 
 bool World_Local::save()
 {
+  // Can't save world if it's not fully generated.
+  if ( data==0 ) { return false; }
+  
   std::string localMapPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + ".dat";
 	
   //std::cout<<"Savefile for this map is: "<<localMapPath<<"\n";
@@ -667,21 +673,35 @@ bool World_Local::save()
   
   std::string saveData="";
   
-  SaveChunk chonk ("TILEARRAY");
+  SaveChunk chonk ("TILE ARRAY");
   
-  //int i=0;
-
   // Only unload the local map if it is loaded.
   for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
   {
     for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
-      //++i;
       chonk.add(data->aLocalTile(_x,_y).getSaveData());
     }
   }
   
   sfm.addChunk(chonk);
+  
+  SaveChunk chonkSub ("SUBTERRANEAN ARRAY");
+  SaveChunk chonkGem ("GEM ARRAY");
+  SaveChunk chonkMetal ("METAL ARRAY");
+  
+  for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+  {
+    for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+    {
+      chonkSub.add(data->aSubterranean(_x,_y).getSaveData());
+      chonkGem.add(DataTools::toString(data->aSubterranean(_x,_y).nGems));
+      chonkMetal.add(DataTools::toString(data->aSubterranean(_x,_y).nMetal));
+    }
+  }
+  sfm.addChunk(chonkSub);
+  sfm.addChunk(chonkGem);
+  sfm.addChunk(chonkMetal);
   
   SaveChunk chonkObjects ("OBJECT VECTOR");
   
@@ -752,7 +772,7 @@ bool World_Local::load()
   sfm.loadFile(localMapPath);
   
   //SaveChunk chonk ("TILEARRAY");
-  SaveChunk* chonk = sfm.getChunk("TILEARRAY");
+  SaveChunk* chonk = sfm.getChunk("TILE ARRAY");
   
   if ( chonk != 0 )
   {
@@ -781,6 +801,45 @@ bool World_Local::load()
       }
     }
     delete chonk;
+    
+    SaveChunk* chonkSub = sfm.getChunk("SUBTERRANEAN ARRAY");
+    SaveChunk* chonkGem = sfm.getChunk("GEM ARRAY");
+    SaveChunk* chonkMetal = sfm.getChunk("METAL ARRAY");
+    
+    if ( chonkSub != 0 )
+    {
+      //std::cout<<"Chonks: "<<chonk->vData.size()<<".\n";
+
+      i=0;
+      // Only unload the local map if it is loaded.
+      for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+      {
+        for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+        {
+          data->aSubterranean(_x,_y).loadData((*chonkSub)(i));
+          data->aSubterranean(_x,_y).nGems=DataTools::toUnsignedShort((*chonkGem)(i));
+          data->aSubterranean(_x,_y).nMetal=DataTools::toUnsignedShort((*chonkMetal)(i));
+          
+          //data->aLocalTile(_x,_y).clearObjects();
+          //data->aLocalTile(_x,_y).loadData((*chonk)(i));
+          
+          // data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+          // data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+          // //data->aSubterranean(_x,_y).clearObjects();
+          // data->aSubterranean(_x,_y).height = 0;
+
+          //data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+          //data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+          //data->aSubterranean(_x,_y).clearObjects();
+          //data->aSubterranean(_x,_y).height = 0;
+          //chonk.add(data->aLocalTile(_x,_y).getSaveData());
+          ++i;
+        }
+      }
+      delete chonkSub;
+    }
+    
+  
 
     chonk = sfm.getChunk("OBJECT VECTOR");
     
@@ -796,87 +855,38 @@ bool World_Local::load()
       
       if ( vToke && vToke->size() >= 3)
       {
-          //std::cout<<"Object type: "<<(*vToke)(0)<<".\n";
-          //std::cout<<"X: "<<(*vToke)(1)<<".\n";
-          //std::cout<<"Y: "<<(*vToke)(2)<<".\n";
+        //std::cout<<"Object type: "<<(*vToke)(0)<<".\n";
+        //std::cout<<"X: "<<(*vToke)(1)<<".\n";
+        //std::cout<<"Y: "<<(*vToke)(2)<<".\n";
+        
+        std::string objectType = (*vToke)(0);
+        short int objectX = DataTools::toShort((*vToke)(1));
+        short int objectY = DataTools::toShort((*vToke)(2));
+        
+        //std::cout<<"Tree coords: "<<objectX<<", "<<objectY<<".\n";
+        
+        
+        if (objectType == "Tree" )
+        {
+         //std::cout<<"Loading a tree.\n";
           
-          std::string objectType = (*vToke)(0);
-          short int objectX = DataTools::toShort((*vToke)(1));
-          short int objectY = DataTools::toShort((*vToke)(2));
-          
-          //std::cout<<"Tree coords: "<<objectX<<", "<<objectY<<".\n";
-          
-          
-          if (objectType == "Tree" )
+          if (isSafe( objectX, objectY ) )
           {
-           //std::cout<<"Loading a tree.\n";
-            
-            if (isSafe( objectX, objectY ) )
-            {
-              put (new WorldObject_Tree(1), objectX, objectY);
-            }
-            
+            put (new WorldObject_Tree(1), objectX, objectY);
           }
           
+        }
+        
         delete vToke;
       }
-      
 
-      
-      
     }
-    
-  int nGemSeams = random.randomInt(10);
-
-  while (nGemSeams-- > 0)
-  {
-    Vector <HasXY*> * vGemSeam = getRandomWalk(random.randomInt(27)+3);
-    
-    for (i=0;i<vGemSeam->size();++i)
-    {
-      data->aSubterranean((*vGemSeam)(i)).hasGems=true;
-    }
-    vGemSeam->deleteAll();
-    delete vGemSeam;
-  }
-    
-    //BUILD CAVE
-    //if (Random::oneIn(2))
-    if (true)
-    {
-      hasCave=true;
-      //Basically random walk with extras, and then occasionally breach the surface in the form of a cave tile.
-      
-      //int caveSize = Random::randomInt(LOCAL_MAP_SIZE*5)+3;
-      int caveSize = Random::multiRoll(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-      
-      Vector <HasXY*> * vCaveMap = getRandomWalk(caveSize);
-        
-      int nEntrances = Random::randomInt((vCaveMap->size()/1200));
-      if (nEntrances > 5) { nEntrances=5; }
-      
-      for (int i2=0;i2<vCaveMap->size();++i2)
-      {
-        data->aSubterranean((*vCaveMap)(i2)).baseTerrain = GRASSLAND;
-        
-        if (i2<nEntrances)
-        {
-          data->aLocalTile((*vCaveMap)(i2)).isCave=true;
-          data->aSubterranean((*vCaveMap)(i2)).isCave=true;
-        }
-      }
-      vCaveMap->deleteAll();
-      delete vCaveMap;
-    }
-    
-    
   }
   else
   {
     std::cout<<"Chonk fail\n";
     return false;
   }
-  
 
   return true;
 }
