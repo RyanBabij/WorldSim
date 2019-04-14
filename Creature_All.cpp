@@ -35,6 +35,61 @@ void Creature_Bat::init(const int _sex  /*=0*/ )
 
 }
 
+void Creature_Bat::incrementTicks(int nTicks)
+{
+  
+  if ( map == 0 ) { return; }
+  
+  //std::cout<<"batty tick\n";
+  
+  //std::cout<<"Finding nearest Character.\n";
+  
+  wander();
+  
+  int closestDistance = -1;
+  Character* closestCharacter = 0;
+  
+  if (map!=0)
+  {
+    for (int i=0;i<map->vCharacter.size();++i)
+    {
+      Character* target = map->vCharacter(i);
+      
+      if ( isUnderground == target->isUnderground && ( closestCharacter == 0 || distanceTo(target) < closestDistance ))
+      {
+        closestCharacter = target;
+        closestDistance = distanceTo(target);
+      }
+    }
+  }
+  
+  
+  if ( closestDistance != -1 && closestDistance < 2 )
+  {
+    //std::cout<<"Closest character is "<<closestDistance<<" tiles away\n";
+    if ( closestCharacter == playerCharacter )
+    {
+      Console("A BAT ATTAC");
+    }
+  }
+  
+  
+  //Bat AI will be simple. Fly around and attack any Characters nearby.
+  
+	secondsCounter+=nTicks;
+	
+	while(secondsCounter>=86400)
+	{
+		++daysCounter;
+		secondsCounter-=86400;
+	}
+	while(daysCounter >=360)
+	{
+		age++;
+		daysCounter-=360;
+	}
+}
+
 Texture* Creature_Bat::currentTexture()
 {
   if (isAlive)
@@ -47,5 +102,6 @@ std::string Creature_Bat::getName()
 {
   return "Bat";
 }
+
 
 #endif

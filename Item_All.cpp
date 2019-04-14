@@ -543,6 +543,37 @@ void Item_Longbow::interact(Creature* _target, int interactType)
   _target->die();
 }
 
+// PICKAXE
+
+Vector <std::string>* Item_Pickaxe::getInteractNames(LocalTile* _w)
+{
+  if (_w==0) { return 0; }
+  
+  auto vInteract = new Vector <std::string>;
+  vInteract->push("Mine tile");
+  return vInteract;
+}
+
+void Item_Pickaxe::interact (LocalTile* _tile, int interactionType /* =0 */)
+{
+  // For testing you can catch a fish on any tile.
+  //if (_tile->getName() == "Ocean")
+  if (_tile->nGems>0)
+  {
+    Console("Mining gems");
+  }
+  else if (_tile->nMetal>0)
+  {
+    Console("Mining metal");
+  }
+  else
+  {
+    Console("Mining dirt");
+    _tile->baseTerrain=DESERT;
+  }
+
+}
+
 // DEER PELT
 
 void Item_DeerPelt::addToRecipeManager()

@@ -65,7 +65,7 @@ class Creature: public WorldObject, public TableInterface
 		/* AI FUNCTIONS
 		
 		*/
-	void incrementTicks(int = 1);
+	virtual void incrementTicks(int = 1);
 	
   virtual void wander();
   

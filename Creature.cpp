@@ -57,6 +57,10 @@ void Creature::init(const int _sex /* =0 */)
 
 void Creature::incrementTicks(int nTicks)
 {
+  if (nTicks <= 0 ) { return; }
+  
+  wander();
+  
 	secondsCounter+=nTicks;
 	
 	while(secondsCounter>=86400)
@@ -79,11 +83,6 @@ void Creature::die()
 void Creature::wander()
 {
   if ( map==0 ) { return; }
-  
-  if (isUnderground)
-  {
-    return;
-  }
   
   int newX = x;
   int newY = y;
@@ -185,7 +184,7 @@ void Creature::wander()
         {
           knowledge->p.init(map);
 
-          bool pathingSuccess = knowledge->p.pathLocal(x, y, knowledge->currentGoal.x, knowledge->currentGoal.y, 20, false);
+          bool pathingSuccess = knowledge->p.pathLocal(x, y, knowledge->currentGoal.x, knowledge->currentGoal.y, 10, false);
           
           if (pathingSuccess == false && knowledge->p.vPath.size() < 9 )
           { knowledge->currentGoal.set(-1,-1);
@@ -216,9 +215,9 @@ void Creature::wander()
   if ( map->isSafe(newX,newY) && map->data->aLocalTile(newX,newY).hasMovementBlocker() == false )
   {
     map->remove(this);
-    if (map->put(this,newX,newY) == false)
+    if (map->put(this,newX,newY,isUnderground) == false)
     {
-      map->put(this,x,y);
+      map->put(this,x,y,isUnderground);
     }
     
     if (Random::oneIn(10))

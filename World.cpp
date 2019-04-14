@@ -1712,7 +1712,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	
 	generated = true;
 	
-  isRaining=true;
+  //isRaining=true;
+  isRaining=false;
 	
 	// Build and shuffle the tile vector
 	//Vector < Vector <HasXY> > vAllTiles;

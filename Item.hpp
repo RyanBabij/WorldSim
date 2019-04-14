@@ -342,9 +342,9 @@ class Item_Pickaxe: public Item
     return &TEX_ITEM_PICKAXE;
   }
   
-  //virtual Vector <std::string>* getInteractNames(Creature* _target) override;
+  virtual Vector <std::string>* getInteractNames(LocalTile* _target) override;
   
-  //virtual void interact(Creature* _target, int interactType=0) override;
+  virtual void interact(LocalTile* _target, int interactType=0) override;
 
 };
 

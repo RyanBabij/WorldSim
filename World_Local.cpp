@@ -594,9 +594,9 @@ bool World_Local::generate()
       
       if (Random::oneIn(100))
       {
-        //auto creature = new Creature_Bat;
-        //creature->init();
-        //put(creature,(*vCaveMap)(i2),true);
+        auto creature = new Creature_Bat;
+        creature->init();
+        put(creature,(*vCaveMap)(i2),true);
       }
       
       if (Random::oneIn(25))
@@ -906,6 +906,8 @@ bool World_Local::put (WorldObject* _object, int _x, int _y, bool subterranean)
   _object->fullX = _object->worldX * LOCAL_MAP_SIZE + _object->x;
   _object->fullY = _object->worldY * LOCAL_MAP_SIZE + _object->y;
   
+  _object->isUnderground = subterranean;
+  
   if ( subterranean )
   {
     data->aSubterranean(_x,_y).add(_object);
@@ -936,6 +938,8 @@ bool World_Local::put (Item* _item, int _x, int _y, bool subterranean)
   _item->y = _y;
   _item->fullX = _item->worldX * LOCAL_MAP_SIZE + _item->x;
   _item->fullY = _item->worldY * LOCAL_MAP_SIZE + _item->y;
+  
+  _item->isUnderground = subterranean;
 
   
   if ( subterranean )
@@ -968,6 +972,8 @@ bool World_Local::put (Character* _character, int _x, int _y, bool subterranean)
   _character->y = _y;
   _character->fullX = _character->worldX * LOCAL_MAP_SIZE + _character->x;
   _character->fullY = _character->worldY * LOCAL_MAP_SIZE + _character->y;
+  
+  _character->isUnderground = subterranean;
 
   if ( subterranean )
   {
@@ -999,6 +1005,8 @@ bool World_Local::put (Creature* _creature, int _x, int _y, bool subterranean)
   _creature->y = _y;
   _creature->fullX = _creature->worldX * LOCAL_MAP_SIZE + _creature->x;
   _creature->fullY = _creature->worldY * LOCAL_MAP_SIZE + _creature->y;
+  
+  _creature->isUnderground = subterranean;
 
   if ( subterranean )
   {
@@ -1509,7 +1517,15 @@ bool World_Local::remove (WorldObject* _object )
   if ( _object==0) {return false;}
   vObjectGeneric.remove(_object);
   
-  if (data->aLocalTile.isSafe(_object->x,_object->y))
+  
+  if (_object->isUnderground)
+  {
+    if (data->aSubterranean.isSafe(_object->x,_object->y))
+    {
+      data->aSubterranean(_object->x,_object->y).remove(_object);
+    }
+  }
+  else if (data->aLocalTile.isSafe(_object->x,_object->y))
   {
     data->aLocalTile(_object->x,_object->y).remove(_object);
   }
@@ -1523,7 +1539,14 @@ bool World_Local::remove (Item* _item )
   if ( _item==0) {return false;}
   vItem.remove(_item);
   
-  if (data->aLocalTile.isSafe(_item->x,_item->y))
+  if (_item->isUnderground)
+  {
+    if (data->aSubterranean.isSafe(_item->x,_item->y))
+    {
+      data->aSubterranean(_item->x,_item->y).remove(_item);
+    }
+  }
+  else if (data->aLocalTile.isSafe(_item->x,_item->y))
   {
     data->aLocalTile(_item->x,_item->y).remove(_item);
   }
@@ -1536,7 +1559,14 @@ bool World_Local::remove (Character* _character )
   if ( _character == 0 ) {return false;}
   vCharacter.remove(_character);
   
-  if (data->aLocalTile.isSafe(_character->x,_character->y))
+  if (_character->isUnderground)
+  {
+    if (data->aSubterranean.isSafe(_character->x,_character->y))
+    {
+      data->aSubterranean(_character->x,_character->y).remove(_character);
+    }
+  }
+  else if (data->aLocalTile.isSafe(_character->x,_character->y))
   {
     data->aLocalTile(_character->x,_character->y).remove(_character);
   }
@@ -1549,7 +1579,14 @@ bool World_Local::remove (Creature* _creature )
   if ( _creature == 0 ) {return false;}
   vCreature.remove(_creature);
   
-  if (data->aLocalTile.isSafe(_creature->x,_creature->y))
+  if (_creature->isUnderground)
+  {
+    if (data->aSubterranean.isSafe(_creature->x,_creature->y))
+    {
+      data->aSubterranean(_creature->x,_creature->y).remove(_creature);
+    }
+  }
+  else if (data->aLocalTile.isSafe(_creature->x,_creature->y))
   {
     data->aLocalTile(_creature->x,_creature->y).remove(_creature);
   }
@@ -1992,7 +2029,8 @@ void World_Local::incrementTicks(int nTicks)
   for (int i=0;i<vToMove.size();++i)
   {
     //wander(vToMove(i));
-    vToMove(i)->wander();
+    vToMove(i)->incrementTicks(1);
+    //vToMove(i)->wander();
   }
 
   

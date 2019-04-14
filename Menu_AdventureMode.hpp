@@ -238,6 +238,11 @@ class InteractManager: public GUI_Interface
   // Return false if there's nothing to interact with.
   bool build(Item* _sourceItem, unsigned long int _x, unsigned long int _y)
   {
+    if (playerCharacter == 0)
+    {
+      return false;
+    }
+    
     vGeneric.clear();
     vItem.clear();
     vCharacter.clear();
@@ -246,7 +251,14 @@ class InteractManager: public GUI_Interface
     
     x=_x;
     y=_y;
-    localSelected=world(x,y);
+    localSelected=world(x,y,playerCharacter->isUnderground);
+    
+    // if (playerCharacter->isUnderground)
+    // {
+    // }
+    
+
+    
     sourceItem = _sourceItem;
     
       std::cout<<"Building interactions for: "<<x<<", "<<y<<".\n";

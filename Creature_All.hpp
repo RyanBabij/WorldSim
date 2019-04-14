@@ -18,6 +18,8 @@ class Creature_Bat: public Creature
   
 	void init( int _sex = 0);
   
+  virtual void incrementTicks (int nTicks);
+  
 	virtual Texture* currentTexture();
   virtual std::string getName();
 };
