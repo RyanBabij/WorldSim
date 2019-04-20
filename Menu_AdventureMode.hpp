@@ -467,6 +467,8 @@ class Menu_AdventureMode: public GUI_Interface
     
     int mouseX, mouseY;
     
+    Vector <HasXY2 <unsigned long int> * > * vLineOfFire; /* Vector of tiles to highlight for line of fire overlay */
+    
   public:
   
 
@@ -476,6 +478,7 @@ class Menu_AdventureMode: public GUI_Interface
 	{	
 		backgroundTexture=&TEX_NEW_GAME_BACKGROUND;
     font = &font8x8;
+    vLineOfFire=0;
 	}
   
   void init()
@@ -553,6 +556,9 @@ class Menu_AdventureMode: public GUI_Interface
     
     selectedHotbar=0;
     
+    delete vLineOfFire;
+    vLineOfFire= new Vector <HasXY2 <unsigned long int> * >;
+    
     //Initialise inventory grid.
     for (int _y=0;_y<10;++_y)
     {
@@ -602,6 +608,7 @@ class Menu_AdventureMode: public GUI_Interface
     Renderer::placeColour4a(150,150,150,250,panelX1,panelY1+220,panelX1+220,panelY1+320);
     font8x8.drawText("Action Menu",panelX1,panelY1+220,panelX1+220,panelY1+320,true,true);
     
+    // HOVERED TILE COORDINATES. BOTH ABSOLUTE AND RELATIVE. FOR DEBUGGING.
     font8x8.drawText(DataTools::toString(worldViewer.hoveredXTile) + ", " + DataTools::toString(worldViewer.hoveredYTile),panelX1,panelY1+210,panelX1+220,panelY1+220,false,true);
     font8x8.drawText(DataTools::toString(worldViewer.hoveredXTileLocal) + ", " + DataTools::toString(worldViewer.hoveredYTileLocal),panelX1,panelY1+200,panelX1+220,panelY1+210,false,true);
     font8x8.drawText(DataTools::toString(worldViewer.hoveredAbsoluteX) + ", " + DataTools::toString(worldViewer.hoveredAbsoluteY),panelX1,panelY1+190,panelX1+220,panelY1+200,false,true);
@@ -812,6 +819,37 @@ class Menu_AdventureMode: public GUI_Interface
       }
     }
     
+    
+    // Draw a line of fire overlay so the player can see the path his missile will take.
+    if ( itemSelectionActive && world.isSafe(worldViewer.hoveredAbsoluteX,worldViewer.hoveredAbsoluteY) )
+    {
+      // Clear previous overlay tiles.
+      for ( int i=0;i<vLineOfFire->size();++i)
+      {
+        world((*vLineOfFire)(i))->shotOverlay=false;
+      }
+      vLineOfFire->deleteAll();
+      delete vLineOfFire;
+      vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
+      
+      //Build new line of sight overlay.
+      unsigned long int shootDistance = DataTools::manhattanDistance(playerCharacter->fullX, playerCharacter->fullY, worldViewer.hoveredAbsoluteX, worldViewer.hoveredAbsoluteY);
+      
+      //Only draw the overlay if the player is hovering the mouse more than 1 tile away, but not too far away.
+      if ( shootDistance > 1 && shootDistance <= MAX_VIEW_RANGE )
+      {
+        // Raytrace
+        world.rayTrace(playerCharacter->fullX, playerCharacter->fullY,worldViewer.hoveredAbsoluteX, worldViewer.hoveredAbsoluteY,vLineOfFire,playerCharacter->isUnderground);
+        
+        
+        for ( int i=0;i<vLineOfFire->size();++i)
+        {
+          world((*vLineOfFire)(i))->shotOverlay=true;
+        }
+        
+      }
+    }
+    
   }
   
 	void logicTick()
@@ -833,6 +871,16 @@ class Menu_AdventureMode: public GUI_Interface
       characterSheetActive=false;
       inventoryActive=false;
       itemSelectionActive=false;
+      
+      // Clear previous overlay tiles.
+      for ( int i=0;i<vLineOfFire->size();++i)
+      {
+        world((*vLineOfFire)(i))->shotOverlay=false;
+      }
+      vLineOfFire->deleteAll();
+      delete vLineOfFire;
+      vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
+      
       craftingMenuActive=false;
       worldViewer.showHoveredTile = false;
 			_keyboard->keyUp(Keyboard::ESCAPE);	
@@ -908,6 +956,17 @@ class Menu_AdventureMode: public GUI_Interface
     if(_keyboard->isPressed(Keyboard::E) || _keyboard->isPressed(Keyboard::e))
     {
       itemSelectionActive = !itemSelectionActive;
+      
+      
+      // Clear previous overlay tiles.
+      for ( int i=0;i<vLineOfFire->size();++i)
+      {
+        world((*vLineOfFire)(i))->shotOverlay=false;
+      }
+      vLineOfFire->deleteAll();
+      delete vLineOfFire;
+      vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
+      
       if ( selectedHotbar >= 0 && selectedHotbar < 10 )
       {
         useItem = inventoryGrid[selectedHotbar][0];
@@ -920,6 +979,23 @@ class Menu_AdventureMode: public GUI_Interface
 
       _keyboard->keyUp(Keyboard::E);
       _keyboard->keyUp(Keyboard::e);
+    }
+    
+      // Pay respects
+    if(_keyboard->isPressed(Keyboard::F) || _keyboard->isPressed(Keyboard::f))
+    {
+      if (playerCharacter != 0)
+      {
+        LocalTile* wl = world(playerCharacter->fullX,playerCharacter->fullY);
+        if ( wl != 0 )
+        {
+          wl->shotOverlay=true;
+        }
+      }
+
+
+      _keyboard->keyUp(Keyboard::F);
+      _keyboard->keyUp(Keyboard::f);
     }
     
       // Disable keyboard if we're in a menu.
@@ -1237,6 +1313,17 @@ class Menu_AdventureMode: public GUI_Interface
       if (subItemSelectionActive==false && _mouse->isRightClick)
       {
         itemSelectionActive=false;
+        
+        // Clear previous overlay tiles.
+        for ( int i=0;i<vLineOfFire->size();++i)
+        {
+          world((*vLineOfFire)(i))->shotOverlay=false;
+        }
+        vLineOfFire->deleteAll();
+        delete vLineOfFire;
+        vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
+        
+        
         localTileSelected=0;
         worldViewer.showHoveredTile = false;
       }

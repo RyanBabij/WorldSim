@@ -36,6 +36,7 @@ static Texture TEX_GUI_DECREMENT;
 static Texture TEX_GUI_EXPAND;
 static Texture TEX_GUI_TILE_SELECTION;
 
+
 Texture TEX_GUI_CENTER_CAMERA;
 const std::string PATH_TEX_GUI_CENTER_CAMERA = "Textures/GUI/CenterCamera.png";
 
@@ -50,6 +51,11 @@ const std::string PATH_TEX_WORLD_ARTIFACT_GEMS = "Textures/World/Artifact/Gems2.
 
 Texture TEX_WORLD_ARTIFACT_BATTLE;
 const std::string PATH_TEX_WORLD_ARTIFACT_BATTLE = "Textures/World/Artifact/BattleSite.png";
+
+
+//GUI
+Texture TEX_GUI_TILE_SELECTION_FULL;
+const std::string PATH_TEX_GUI_TILE_SELECTION_FULL = "Textures/GUI/Grey33A.png";
 
 // WORLD UNIT TEXTURES
 Texture TEX_WORLD_UNIT_NOMAD_01;
@@ -370,6 +376,7 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
     preloadTextureVerbose("Textures/GUI/Decrement.png",&TEX_GUI_DECREMENT);
     preloadTextureVerbose("Textures/GUI/Expand.png",&TEX_GUI_EXPAND);
     preloadTextureVerbose("Textures/GUI/HotbarSelection32.png",&TEX_GUI_TILE_SELECTION );
+    preloadTextureVerbose(PATH_TEX_GUI_TILE_SELECTION_FULL,&TEX_GUI_TILE_SELECTION_FULL);
     
       // LOAD LOCAL OBJECT TEXTURES
     preloadTextureVerbose("Textures/NPC.png",&TEX_NPC);
@@ -398,6 +405,7 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   bindNearestNeighbour(&TEX_GUI_DECREMENT);
   bindNearestNeighbour(&TEX_GUI_EXPAND);
   bindNearestNeighbour(&TEX_GUI_TILE_SELECTION);
+  bindNearestNeighbour(&TEX_GUI_TILE_SELECTION_FULL);
   
   bindNearestNeighbour(&TEX_NPC);
   bindNearestNeighbour(&TEX_NPC_DED);

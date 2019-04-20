@@ -173,6 +173,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
   // This will generate a local map if necessary.
 	inline LocalTile* operator() (unsigned long int _x, unsigned long int _y, const bool subterranean=false);
   
+	inline LocalTile* operator() (HasXY2 <unsigned long int>*, const bool subterranean=false);
+  
   // COORDINATE CONVERSIONS
   
     // Pass absolute coordinates and recieve world and local relative coordinates.

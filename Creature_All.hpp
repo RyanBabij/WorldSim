@@ -18,10 +18,15 @@ class Creature_Bat: public Creature
   
 	void init( int _sex = 0);
   
-  virtual void incrementTicks (int nTicks);
+  virtual void incrementTicks (int nTicks) override;
   
-	virtual Texture* currentTexture();
-  virtual std::string getName();
+  virtual void attack (Creature*, Creature_Attack*) override;
+  virtual void attack (Character*, Creature_Attack*) override;
+  
+  virtual void wander() override;
+  
+	virtual Texture* currentTexture() override;
+  virtual std::string getName() override;
 };
 
 #endif

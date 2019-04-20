@@ -53,6 +53,7 @@ void init()
 	idleManager.add(&world);
 	logicTickManager.add(&world);
 
+  initCreatureAttacks();
 
 	/* Start timers. */
 	frameRateTimer.init();

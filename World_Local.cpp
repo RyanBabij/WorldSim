@@ -578,13 +578,13 @@ bool World_Local::generate()
     //Basically random walk with extras, and then occasionally breach the surface in the form of a cave tile.
     
     //int caveSize = Random::randomInt(LOCAL_MAP_SIZE*5)+3;
-    int caveSize = Random::multiRoll(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+    int caveSize = Random::multiRoll(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE)*2;
     
     Vector <HasXY*> * vCaveMap = getRandomWalk(caveSize);
       
     int nEntrances = Random::randomInt((vCaveMap->size()/500));
     if (nEntrances > 10) { nEntrances=10; }
-    //nEntrances = 10;
+    nEntrances = 15;
     
     for (int i2=0;i2<vCaveMap->size();++i2)
     {

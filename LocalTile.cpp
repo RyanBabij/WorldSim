@@ -25,6 +25,8 @@ LocalTile::LocalTile()
   
   nGems=0;
   nMetal=0;
+  
+  shotOverlay=false;
 }
 
 LocalTile::~LocalTile()
@@ -336,6 +338,11 @@ Vector <Texture*> * LocalTile::currentTextures()
   {
     vTexture->push(&TEX_WORLD_TERRAIN_CAVE_ENTRANCE);
     //vTexture->push(&TEX_WORLD_ARTIFACT_GEMS);
+  }
+  
+  if ( shotOverlay )
+  {
+    vTexture->push(&TEX_GUI_TILE_SELECTION_FULL);
   }
   
   return vTexture;

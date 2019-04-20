@@ -33,14 +33,14 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.151 Win32 dev";
+const std::string VERSION = "0.0.152 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
 // WINDOW STUFF
 
 unsigned int RESOLUTIONX=1024, RESOLUTIONY=900;
-const bool MAXIMISE_WINDOW = true;
+const bool MAXIMISE_WINDOW = false;
 
   // MAIN MENU ENUMS
 enum enumMenu { MENU_UNKNOWN, MENU_TITLE, MENU_OPTIONS, MENU_LOADGAME, MENU_WORLDGENERATOR, MENU_WORLDSIMULATOR, MENU_ADVENTUREMODE };

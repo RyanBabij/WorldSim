@@ -64,6 +64,9 @@ class LocalTile: public HasTexture
   /* INTERACTION STUFF */
   int nFish; /* How many fish this tile has. Set to -1 if fishing is not possible here */
   
+  /* RENDER STUFF */
+  bool shotOverlay; /* Show the line of fire highlight for this tile */
+  
   
     // Vector of objects on this tile.
     // This list includes all subclasses.

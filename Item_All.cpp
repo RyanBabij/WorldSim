@@ -171,11 +171,12 @@ void Item_Hand::interact(WorldObject* _target, int interactType /* =0 */)
   {
     if (_w==0) { return 0; }
     
-    auto vInteract = new Vector <std::string>;
-    vInteract->push("Stab "+_w->getName());
-    vInteract->push("Slash "+_w->getName());
+    //auto vInteract = new Vector <std::string>;
+    //vInteract->push("Stab "+_w->getName());
+    //vInteract->push("Slash "+_w->getName());
+    return 0;
     
-    return vInteract;
+    //return vInteract;
   }
   
     Vector <std::string>* Item_Log::getInteractNames(Item* _w)
@@ -540,6 +541,10 @@ void Item_Longbow::interact(Creature* _target, int interactType)
   if (_target==0) { return; }
   
   Console("You shoot the "+_target->getName());
+  
+  
+  //Shooting calculations go here.
+  
   _target->die();
 }
 

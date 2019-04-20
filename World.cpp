@@ -163,6 +163,10 @@ inline LocalTile* World::operator() (unsigned long int _x, unsigned long int _y,
   return 0;
 }
 
+inline LocalTile* World::operator() (HasXY2 <unsigned long int>* _xy, const bool subterranean)
+{
+  return (*this)(_xy->x,_xy->y,subterranean);
+}
   
   // COORDINATE CONVERSIONS
   

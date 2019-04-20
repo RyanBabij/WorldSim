@@ -19,6 +19,10 @@
 
 class World_Local;
 
+#include "Creature_Attack.hpp"
+
+
+
 class Creature: public WorldObject, public TableInterface
 {
 	public:
@@ -55,6 +59,17 @@ class Creature: public WorldObject, public TableInterface
     // INTERACTION
     int nPelt; /* How many pelts you can harvest from the creature. */
     int nMeat; /* How many meats you can harvest from the creature. */
+    
+      // ATTACK
+      // Creatures might get a choice of attacks kinda like Pokemon.
+      // For example an elephant might gore you with its tusks, or stomp on you.
+      // A dragon might slash you with its claws or breathe fire.
+      // Creatures may pick these attacks randomly or intelligently, depending on the creature.
+    Vector <Creature_Attack*> vAttack;
+      
+    // short int baseAtkSlash;
+    // short int baseAtkStab;
+    // short int baseAtkBlunt;
   
 
 		// INITIALIZATION
@@ -71,10 +86,8 @@ class Creature: public WorldObject, public TableInterface
   
 	Texture* currentTexture () override;
 	
-	
 	void die();
-	
-
+  
     // KNOWLEDGE
     
     //returns true if the Creature has seen this tile.
@@ -82,17 +95,15 @@ class Creature: public WorldObject, public TableInterface
   
   
 	/* TABLE INTERFACE */
-  
 	std::string getColumn(std::string _column) override;
 	std::string getColumnType(std::string _column) override;
   
-  
 
-  
   /* COMBAT FUNCTIONS */
   
     //Attack a Creature once.
-  //void attack (Creature*);
+  virtual void attack (Creature*, Creature_Attack*) {}
+  virtual void attack (Character*, Creature_Attack*) {}
   
     //Update knowledge with current instance.
   void updateKnowledge();
