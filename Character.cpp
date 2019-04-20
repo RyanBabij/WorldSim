@@ -55,6 +55,7 @@ Character::Character()
 	courage=0;
 	
 	health=0;
+  maxHealth=0;
 	hunger=0;
   thirst=0;
 	
@@ -130,6 +131,7 @@ void Character::init(const int _sex /* =0 */)
 
 	
 	health=10;
+  maxHealth=10;
 	hunger=0;
 	thirst=0;
 	
@@ -568,6 +570,20 @@ void Character::attack(Character* target)
   //std::cout<<"Attack missed.\n";
   
   
+}
+
+  //Get attacked by a Creature
+void Character::getAttacked (Creature* _creature, Creature_Attack* _atk)
+{
+  if ( health == 0 ) { return; }
+  
+  if ( health > 0 ) { --health; }
+  
+  if (health==0)
+  {
+    isAlive=false;
+    Console("You are kill");
+  }
 }
 
 

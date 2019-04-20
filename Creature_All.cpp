@@ -73,6 +73,58 @@ void Creature_Bat::incrementTicks(int nTicks)
       //Creature_Attack* atk = vAttack(0);
     }
   }
+  // If near an enemy, move toward it.
+  else if (closestDistance != -1 && closestDistance < 8 && knowledge)
+  {
+    Console("BAT MOVING");
+    
+    int newX = x;
+    int newY = y;
+    char moveDirection = '?';
+    
+          //Pathing_Local p;
+    knowledge->p.init(map);
+    knowledge->p.pathLocal(x, y, closestCharacter->x, closestCharacter->y, 5, false);
+    
+    if (knowledge->p.vPath.size() > 0)
+    {
+      moveDirection=knowledge->p.vPath.back();
+      
+      int direction = Random::randomInt(3);
+  
+      if ( moveDirection == 'E' )
+      { direction = 0; }
+      else if (moveDirection == 'N')
+      { direction = 2; }
+      else if (moveDirection == 'S')
+      { direction = 3; }
+      else if (moveDirection == 'W')
+      { direction = 1; }
+      
+      if ( direction==0 ) { ++newX; }
+      else if ( direction==1 ) { --newX; }
+      else if ( direction==2 ) { ++newY; }
+      else { --newY; }
+      
+      if ( map->isSafe(newX,newY) && map->data->aLocalTile(newX,newY).hasMovementBlocker() == false )
+      {
+        map->remove(this);
+        if (map->put(this,newX,newY,isUnderground) == false)
+        {
+          map->put(this,x,y,isUnderground);
+        }
+        
+        if (Random::oneIn(10))
+        {
+          delete map->data->aLocalTile(x,y).footprint;
+          map->data->aLocalTile(x,y).footprint = new Creature_Footprint;
+        }
+      }
+      updateKnowledge();
+      
+      
+    }
+  }
   else
   {
     wander();
@@ -105,6 +157,7 @@ void Creature_Bat::attack (Character* _target, Creature_Attack* _attack)
 {
   if (_target==0) { return; }
   std::cout<<"BAT ATACK CHR\n";
+  _target->getAttacked(this,_attack);
 }
 
 void Creature_Bat::wander()

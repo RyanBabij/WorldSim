@@ -343,6 +343,12 @@ Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x
   if (_x > maximumX || _y > maximumY )
   { return 0; }
   
+  if (FOG_OF_WAR == false)
+  {
+    auto vVisibleTiles = new Vector <HasXY2 <unsigned long int> *>;
+    return vVisibleTiles;
+  }
+  
   //Step 1: Get all raytrace coordinates.
   Vector <HasXY2 <unsigned long int> *> rayTraceCoordinates;
   

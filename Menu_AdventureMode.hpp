@@ -623,15 +623,16 @@ class Menu_AdventureMode: public GUI_Interface
     }
     if (playerCharacter->isAlive == false)
     {
-      font8x8.drawText("DED",panelX1+230,panelY1+210,panelX1+400,panelY1+220,false,true,255,0,0);
+      font8x8.drawText("RIP (TAB TO EXIT)",panelX1+230,panelY1+210,panelX1+500,panelY1+220,false,true,255,0,0);
     }
     
     //BARS: Health, Stamina, Hunger, Thirst, Energy
     double barWidth = 220;
     double hungerWidth = (MAX_HUNGER-playerCharacter->hunger)*(barWidth/MAX_HUNGER);
     double thirstWidth = (MAX_THIRST-playerCharacter->thirst)*(barWidth/MAX_THIRST);
+    double healthWidth = barWidth-(playerCharacter->maxHealth-playerCharacter->health)*(barWidth/playerCharacter->maxHealth);
     
-    Renderer::placeColour4a(255,0,0,255,panelX1,panelY1+232,panelX1+220,panelY1+234);
+    Renderer::placeColour4a(255,0,0,255,panelX1,panelY1+232,panelX1+healthWidth,panelY1+234);
     Renderer::placeColour4a(0,0,255,255,panelX1,panelY1+229,panelX1+thirstWidth,panelY1+231);
     Renderer::placeColour4a(128,64,0,255,panelX1,panelY1+226,panelX1+hungerWidth,panelY1+228);
     Renderer::placeColour4a(128,128,255,255,panelX1,panelY1+223,panelX1+220,panelY1+225);
@@ -1038,7 +1039,7 @@ class Menu_AdventureMode: public GUI_Interface
         }
         else
         {
-          Console ("BOI U DED, U AINT GOIN NOWHERE");
+          //Console ("BOI U DED, U AINT GOIN NOWHERE");
         }
         
       }
@@ -1065,7 +1066,7 @@ class Menu_AdventureMode: public GUI_Interface
         }
         else
         {
-          Console ("BOI U DED, U AINT GOIN NOWHERE");
+          //Console ("BOI U DED, U AINT GOIN NOWHERE");
         }
       }
       
@@ -1091,7 +1092,7 @@ class Menu_AdventureMode: public GUI_Interface
         }
         else
         {
-          Console ("BOI U DED, U AINT GOIN NOWHERE");
+          //Console ("BOI U DED, U AINT GOIN NOWHERE");
         }
       }
       _keyboard->keyUp(Keyboard::UP);
@@ -1116,7 +1117,7 @@ class Menu_AdventureMode: public GUI_Interface
         }
         else
         {
-          Console ("BOI U DED, U AINT GOIN NOWHERE");
+          //Console ("BOI U DED, U AINT GOIN NOWHERE");
         }
       }
       _keyboard->keyUp(Keyboard::DOWN);

@@ -52,6 +52,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	
 	int money; /* Gold coins or some shit. */
 	
+  short int maxHealth;
 	short int health;
 	short int hunger; /* 500 = MAX_HUNGER */
   short int thirst;
@@ -212,6 +213,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
     //Attack a character once.
   void attack (Character*);
   
+    //Get attacked by a Creature
+  void getAttacked (Creature*, Creature_Attack*);
   
     //Ensure the character's knowledge object exists.
   void initialiseKnowledge();
