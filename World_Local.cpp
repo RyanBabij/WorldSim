@@ -2032,6 +2032,7 @@ void World_Local::incrementTicks(int nTicks)
     vToMove(i)->incrementTicks(1);
     //vToMove(i)->wander();
   }
+  return;
 
   
   Vector <Character*> vToMove2;

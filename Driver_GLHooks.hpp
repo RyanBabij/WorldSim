@@ -171,6 +171,7 @@ void GL_init(int nArgs, char ** arg)
 
 static void GL_specialUpFunc(const int key, const int x, const int y)
 {
+ //std::cout<<"s Key: "<<(int)key<<".\n";
   playerKeypressTimer.start();
 	globalKeyboard.specialKeyUp(key);
   
@@ -244,7 +245,6 @@ bool waitingForKeyPress=true;
 
 static void GL_keyboardUpEvent(const unsigned char key, const int x, const int y)
 {
-
   playerKeypressTimer.start();
   
   // if ( key==Keyboard::LEFT_CTRL || key==Keyboard::RIGHT_CTRL)
@@ -260,6 +260,7 @@ static void GL_keyboardUpEvent(const unsigned char key, const int x, const int y
 
 static void GL_keyboardEvent(const unsigned char key, const int x, const int y)
 {
+  //std::cout<<"Key: "<<(int)key<<".\n";
   playerKeypressTimer.start();
   globalKeyboard.keyDown(key);
   

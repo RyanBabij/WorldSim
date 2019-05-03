@@ -58,6 +58,8 @@ class WorldObject: public HasTexture
 	virtual std::string getExtendedInfo() { return "N/A"; }
 	
 	
+    // DISTANCES
+    // We should add manhattan and normal
 	int distanceTo(WorldObject*); /* Chebyshev (this one is distances where diagonal movement is allowed.) */
 		int distanceFrom(WorldObject*); /* Alias. */
     

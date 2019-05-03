@@ -834,7 +834,8 @@ class Menu_AdventureMode: public GUI_Interface
       vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
       
       //Build new line of sight overlay.
-      unsigned long int shootDistance = DataTools::manhattanDistance(playerCharacter->fullX, playerCharacter->fullY, worldViewer.hoveredAbsoluteX, worldViewer.hoveredAbsoluteY);
+      // Diagonals are allowed for the first move, but not for subsequent moves.
+      unsigned long int shootDistance = DataTools::chebyshevDistance(playerCharacter->fullX, playerCharacter->fullY, worldViewer.hoveredAbsoluteX, worldViewer.hoveredAbsoluteY);
       
       //Only draw the overlay if the player is hovering the mouse more than 1 tile away, but not too far away.
       if ( shootDistance > 1 && shootDistance <= MAX_VIEW_RANGE )
@@ -1335,6 +1336,15 @@ class Menu_AdventureMode: public GUI_Interface
         _mouse->isRightClick=false;
         _mouse->isLeftClick=false;
         localTileSelected=0;
+				
+        // Clear previous overlay tiles.
+				for ( int i=0;i<vLineOfFire->size();++i)
+				{
+					world((*vLineOfFire)(i))->shotOverlay=false;
+				}
+				vLineOfFire->deleteAll();
+				delete vLineOfFire;
+				vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
       }
       else if (subItemSelectionActive)
       {
@@ -1346,6 +1356,15 @@ class Menu_AdventureMode: public GUI_Interface
           worldViewer.showHoveredTile = false;
           localTileSelected=0;
           selectedItemSlot=0;
+					
+					// Clear previous overlay tiles.
+					for ( int i=0;i<vLineOfFire->size();++i)
+					{
+						world((*vLineOfFire)(i))->shotOverlay=false;
+					}
+					vLineOfFire->deleteAll();
+					delete vLineOfFire;
+					vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
         }
       }
       else if (subItemSelectionActive==false && _mouse->isLeftClick)
@@ -1376,6 +1395,15 @@ class Menu_AdventureMode: public GUI_Interface
             
           }
         }
+        // Clear previous overlay tiles.
+				for ( int i=0;i<vLineOfFire->size();++i)
+				{
+					world((*vLineOfFire)(i))->shotOverlay=false;
+				}
+				vLineOfFire->deleteAll();
+				delete vLineOfFire;
+				vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
+				
         _mouse->isLeftClick=false;
       }
       
@@ -1568,6 +1596,15 @@ class Menu_AdventureMode: public GUI_Interface
       {
         std::cout<<"Default hand action\n";
       }
+			
+			// Clear previous overlay tiles.
+			for ( int i=0;i<vLineOfFire->size();++i)
+			{
+				world((*vLineOfFire)(i))->shotOverlay=false;
+			}
+			vLineOfFire->deleteAll();
+			delete vLineOfFire;
+			vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
     }
     
     
@@ -1650,6 +1687,21 @@ class Menu_AdventureMode: public GUI_Interface
       }
 			buttonSneak.unclick();
 		}
+    
+    
+    if (_mouse->isRightClick)
+    {
+      std::cout<<"Move here\n";
+      std::cout<<"Move to: "<<worldViewer.hoveredXTileLocal<<", "<<worldViewer.hoveredYTileLocal<<".\n";
+      std::cout<<"Move to: "<<worldViewer.hoveredXTile<<", "<<worldViewer.hoveredYTile<<".\n";
+      _mouse->isRightClick=false;
+      
+      if ( playerCharacter->worldX == worldViewer.hoveredXTile && playerCharacter->worldY == worldViewer.hoveredYTile )
+      {
+        //path here.
+      }
+      
+    }
     
 		worldViewer.mouseEvent(_mouse);
 		return false;

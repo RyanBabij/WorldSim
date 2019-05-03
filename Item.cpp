@@ -18,6 +18,8 @@ Item::Item()
   throwDamage = 0;
   ammunitionType = 0;
   
+  reach = 0;
+  
   owner = 0;
   
   consumeTime=-1;

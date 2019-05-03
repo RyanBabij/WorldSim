@@ -59,6 +59,11 @@ void Creature::incrementTicks(int nTicks)
 {
   if (nTicks <= 0 ) { return; }
   
+  if (distanceTo(playerCharacter) > MAX_VIEW_RANGE && Random::oneIn(10)==false)
+  {
+    return;
+  }
+  
   wander();
   
 	secondsCounter+=nTicks;
@@ -117,7 +122,7 @@ void Creature::wander()
     fleeCounter = 12;
     
     knowledge->p.init(map);
-    knowledge->p.pathLocal(x, y, closestThreat->x, closestThreat->y, 10, true);
+    knowledge->p.pathLocal(x, y, closestThreat->x, closestThreat->y, 8, true);
       
     if (knowledge->p.vPath.size() > 0)
     {
@@ -144,7 +149,7 @@ void Creature::wander()
     
     
     knowledge->p.init(map);
-    knowledge->p.pathLocal(x, y, knowledge->threatLocation.x, knowledge->threatLocation.y, 20, true);
+    knowledge->p.pathLocal(x, y, knowledge->threatLocation.x, knowledge->threatLocation.y, 8, true);
       
     if (knowledge->p.vPath.size() > 0)
     {
@@ -169,7 +174,7 @@ void Creature::wander()
         
         //Pathing_Local p;
         knowledge->p.init(map);
-        knowledge->p.pathLocal(x, y, randomDestination->x, randomDestination->y, 20, false);
+        knowledge->p.pathLocal(x, y, randomDestination->x, randomDestination->y, 8, false);
 
         moveDirection=knowledge->nextStep();
         
@@ -220,7 +225,7 @@ void Creature::wander()
       map->put(this,x,y,isUnderground);
     }
     
-    if (Random::oneIn(10))
+    if (Random::oneIn(12))
     {
       delete map->data->aLocalTile(x,y).footprint;
       map->data->aLocalTile(x,y).footprint = new Creature_Footprint;

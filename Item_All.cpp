@@ -328,6 +328,49 @@ void Item_Hand::interact(WorldObject* _target, int interactType /* =0 */)
     return vInteract;
   }
   
+  void Item_Sword::interact (Character* _target, int interactType /* =0 */)
+  {
+    if ( owner && _target )
+    {
+      if ( owner->distanceTo(_target) > 1 )
+      {
+        Console("Too far away");
+      }
+      else
+      {
+        Console ("You stab the character");
+        _target->isAlive=false;
+      }
+    }
+    else
+    {
+      std::cout<<"Error: No owner or target.\n";
+    }
+    
+
+  }
+  
+  void Item_Sword::interact (Creature* _target, int interactType /* =0 */)
+  {
+    if ( owner && _target )
+    {
+      if ( owner->distanceTo(_target) > 1 )
+      {
+        Console("Too far away");
+      }
+      else
+      {
+        Console ("You stab the creature");
+        _target->isAlive=false;
+      }
+    }
+    else
+    {
+      std::cout<<"Error: No owner or target.\n";
+    }
+  }
+  
+  
   // KNIFE
   
     Vector <std::string>* Item_Knife::getInteractNames(Creature* _target)
@@ -538,14 +581,32 @@ Vector <std::string>* Item_Longbow::getInteractNames(Creature* _target)
 }
 void Item_Longbow::interact(Creature* _target, int interactType)
 {
-  if (_target==0) { return; }
+  if (_target==0 || owner == 0) { return; }
+  
+  
   
   Console("You shoot the "+_target->getName());
   
   
   //Shooting calculations go here.
   
-  _target->die();
+  auto vShotPath = new Vector <HasXY2 <unsigned long int> *>;
+  
+  world.rayTrace(owner->fullX,owner->fullY,_target->fullX,_target->fullY,vShotPath);
+  
+  
+  for (int i=0;i<vShotPath->size();++i)
+  {
+    HasXY2 <unsigned long int> * currentXY = (*vShotPath)(i);
+
+    if (currentXY->x == _target->fullX && currentXY->y == _target->fullY)
+    {
+      Console("Shot hits");
+      _target->die();
+      return;
+    }
+  }
+  Console("Shot misses");
 }
 
 // PICKAXE

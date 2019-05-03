@@ -42,7 +42,11 @@ void Creature_Bat::init(const int _sex  /*=0*/ )
 void Creature_Bat::incrementTicks(int nTicks)
 {
   if ( map == 0 ) { return; }
- 
+  
+  if (distanceTo(playerCharacter) > MAX_VIEW_RANGE && Random::oneIn(10)==false)
+  {
+    return;
+  }
   
   int closestDistance = -1;
   Character* closestCharacter = 0;
@@ -114,13 +118,13 @@ void Creature_Bat::incrementTicks(int nTicks)
           map->put(this,x,y,isUnderground);
         }
         
-        if (Random::oneIn(10))
-        {
-          delete map->data->aLocalTile(x,y).footprint;
-          map->data->aLocalTile(x,y).footprint = new Creature_Footprint;
-        }
+        // if (Random::oneIn(10))
+        // {
+          // delete map->data->aLocalTile(x,y).footprint;
+          // map->data->aLocalTile(x,y).footprint = new Creature_Footprint;
+        // }
       }
-      updateKnowledge();
+      //updateKnowledge();
       
       
     }

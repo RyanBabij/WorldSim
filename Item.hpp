@@ -41,12 +41,14 @@ class Item: public WorldObject
 {
 	public:
 	//int x, y;
-  int count; /* How many of this object there is (for example ammo) */
+  short int count; /* How many of this object there is (for example ammo) */
   
-  int type; /* The type of item. */
+  short int type; /* The type of item. */
   
-  int meleeDamage; /* Base damage if you hit someone with this. 0 = not possible. */
-  int throwDamage; /* Base damage if you throw this at someone. 0 = not possible */
+  short int meleeDamage; /* Base damage if you hit someone with this. 0 = not possible. */
+  short int throwDamage; /* Base damage if you throw this at someone. 0 = not possible */
+  
+  short int reach;
   
   /* Ammunition might as well be hardcoded since there won't be too many different types. */
   char ammunitionType;
@@ -260,7 +262,7 @@ class Item_Sword: public Item
   
   Item_Sword()
   {
-    
+    reach=1;
   }
   std::string getName() { return "Sword"; }
   
@@ -269,6 +271,9 @@ class Item_Sword: public Item
     virtual Vector <std::string>* getInteractNames(Character* _w);
     virtual Vector <std::string>* getInteractNames(Creature* _w);
   virtual Vector <std::string>* getInteractNames(LocalTile* _w);
+  
+  virtual void interact (Creature* obj, int interactionType=0);
+  virtual void interact (Character* obj, int interactionType=0);
 
   Texture* currentTexture()
   {
@@ -354,7 +359,7 @@ class Item_Fishrod: public Item
   
   Item_Fishrod()
   {
-    
+    reach=1;
   }
   std::string getName() { return "Fishing rod"; }
   
