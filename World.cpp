@@ -1251,7 +1251,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 		std::cout<<"Error: World must have a name.\n";
 		return;
 	}
-	if (DataTools::isAlphaNumeric(_worldName)==false)
+	if (DataTools::isAlphaNumeric(_worldName,true)==false)
 	{
 		std::cout<<"Error: World name must be alphanumeric.\n";
 		return;

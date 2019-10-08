@@ -719,7 +719,7 @@ class Menu_WorldGenerator: public GUI_Interface
     {
       std::cout<<"Error: World needs a name.\n";
     }
-    else if (DataTools::isAlphaNumeric(textEntryWorldName.input) == false)
+    else if (DataTools::isAlphaNumeric(textEntryWorldName.input,true) == false)
     {
       std::cout<<"Error: World name must be alphanumeric.\n";
       textEntryWorldName.input="";
