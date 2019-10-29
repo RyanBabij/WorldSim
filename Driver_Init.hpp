@@ -52,7 +52,7 @@ void init()
 	else
 	{	
 		fontPng.load(fileData,fileSize);
-		if(font8x8.loadData(&fontPng,10,10)==false)
+		if(font8x8.loadData(&fontPng,8,8)==false)
 		{ std::cout<<"ERROR: Font did not load.\n"; }
 		delete [] fileData;
 	}
