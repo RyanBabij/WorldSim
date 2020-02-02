@@ -8,7 +8,7 @@
 	fff
 */
 
-#include <GUI/GUI_Table.hpp>
+#include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
 
 #include <Data/DataTools.hpp>

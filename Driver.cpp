@@ -12,7 +12,7 @@
 //#define WILDCAT_USE_DIRECT3D
 
 	// What OS we are compiling for. Currently only Windows and Linux are supported cos I don't got a Mac.
-#include <Wildcat/Windows.hpp> //#define WILDCAT_WINDOWS
+#include <System/Windows.hpp> //#define WILDCAT_WINDOWS
 //#define WILDCAT_LINUX
 
 	// DYNAMICALLY GENERATED HEADER FILE WITH STRING WHICH COUNTS COMPILATIONS.
@@ -62,12 +62,13 @@ class Stream
   // Class for managing world save files.
 SaveFileManager saveFileManager;
 
-#include <GL/GLee.h> // THIS CURRENTLY FIXES LINKER CRAP. Also allows RGBA_COMPRESSED, it would seem.
-#include <GL/freeglut.h> //
+#define GLEW_STATIC
+// Need to figure out which of this is better. I think GLEW is more supported.
+#include <Graphics/OpenGL/glew.h> // THIS CURRENTLY FIXES LINKER CRAP. Also allows RGBA_COMPRESSED, it would seem.
+#define FREEGLUT_STATIC 
+#include <Graphics/OpenGL/freeglut.h> //
 
-
-#include <Render/Renderer.cpp>
-
+#include <Graphics/Render/Renderer.cpp>
 #include <Graphics/Texture/Texture.hpp>
 #include <Graphics/Texture/TextureLoader.hpp>
 
@@ -164,7 +165,7 @@ Mouse globalMouse;
 Keyboard globalKeyboard;
 
 
-#include <Time/Timer.hpp>
+#include <System/Time/Timer.hpp>
 Timer frameRateTimer;
 Timer pollRateTimer;
 Timer logicRateTimer;
@@ -238,18 +239,18 @@ MouseInterfaceManager mouseInterfaceManager;
 /* Global keyboard interface manager. To handle all objects that recieve keyboard events. */
 KeyboardInterfaceManager keyboardInterfaceManager;
 
-# include <GUI/GUI_Manager.hpp>
-#include <GUI/GUI.hpp>
+#include <Graphics/GUI/GUI_Manager.hpp>
+#include <Graphics/GUI/GUI.hpp>
 /* GUI manager. Manages all GUI controls. */
 GUI_Manager globalGuiManager;
 
 
-#include <LogicTick/LogicTickInterface.hpp>
-#include <LogicTick/LogicTickManager.hpp>
+#include <Interface/LogicTick/LogicTickInterface.hpp>
+#include <Interface/LogicTick/LogicTickManager.hpp>
 LogicTickManager logicTickManager;
 
-#include <IdleTick/IdleTickInterface.hpp>
-#include <IdleTick/IdleTickManager.hpp>
+#include <Interface/IdleTick/IdleTickInterface.hpp>
+#include <Interface/IdleTick/IdleTickManager.hpp>
 IdleTickManager idleManager;
 
 
@@ -286,7 +287,7 @@ void shutDown()
 /* OpenGL function hooks go here. */
 #include "Driver_GLHooks.hpp"
 
-#include <Misc/ArgReader.hpp>
+#include <Data/ArgReader.hpp>
 
 
 int main(int nArgs, char ** arg)

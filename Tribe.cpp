@@ -15,7 +15,7 @@
 
 #include <Graphics/Texture/Texture.hpp>
 
-#include <NameGen/NameGen.hpp>
+#include <Game/NameGen/NameGen.hpp>
 
 Tribe::Tribe()
 {

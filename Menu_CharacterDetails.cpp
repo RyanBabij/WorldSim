@@ -8,7 +8,7 @@
 	
 */
 
-#include <GUI/GUI_Table.hpp>
+#include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
 
 class Menu_CharacterDetails: public GUI_Interface

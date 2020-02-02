@@ -10,7 +10,7 @@
 */
 
 
-#include <WorldGenerator/WorldGenerator2.hpp>
+#include <Game/WorldGenerator/WorldGenerator2.hpp>
 #include <Container/Table/TableInterface.hpp>
 
 class World_Biome: public TableInterface

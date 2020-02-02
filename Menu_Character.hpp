@@ -8,7 +8,7 @@
 	This menu shows a database of all tribes in the world. The player can click a tribe to get a detailed view of the tribe.
 */
 
-#include <GUI/GUI_Table.hpp>
+#include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
 
 #include "Menu_CharacterDetails.cpp"

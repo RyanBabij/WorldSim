@@ -5,9 +5,9 @@
 
 #include <Device/Display/DisplayInterface.hpp>
 #include <Device/Mouse/MouseInterface.hpp>
-#include <Render/Renderer.hpp>
+#include <Graphics/Render/Renderer.hpp>
 
-#include <WorldGenerator/Biome.hpp> // For rendering biomes (Wow this is terrible).
+#include <Game/WorldGenerator/Biome.hpp> // For rendering biomes (Wow this is terrible).
 
 /* #include "World_Viewer.hpp"
 

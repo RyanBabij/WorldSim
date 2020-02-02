@@ -13,12 +13,12 @@
 
 //#include<set> /* For raytraceLOS */
 
-#include <NameGen/NameGen.hpp>
-#include <WorldGenerator/WorldGenerator2.hpp>
+#include <Game/NameGen/NameGen.hpp>
+#include <Game/WorldGenerator/WorldGenerator2.hpp>
 
 #include <File/FileLog.hpp>
 
-#include <Time/Timer.hpp> // To manage work chunks and benchmark worldgen time.
+#include <System/Time/Timer.hpp> // To manage work chunks and benchmark worldgen time.
 
 #include <thread>
 #include <mutex>
@@ -38,7 +38,7 @@
   #include "Settlement_Dwarven.hpp"
 
 #include "WorldObjectGlobal.hpp"
-#include <WorldGenerator/Biome.hpp>
+#include <Game/WorldGenerator/Biome.hpp>
 
 #include "WorldObject.hpp"
   #include "WorldObject_Tree.hpp"
@@ -258,9 +258,6 @@ bool World::removeObject(WorldObjectGlobal* _object)
   vWorldObjectGlobal.remove(_object);
   return false;
 }
-
-#include <Time\RyanTime.hpp>
-
 
 Vector <WorldObjectGlobal*>* World::getNeighboringObjects(WorldObjectGlobal* _obj)
 {

@@ -10,11 +10,11 @@
 
 */
 
-#include <GUI/GUI.hpp>
+#include <Graphics/GUI/GUI.hpp>
 
 #include <Device/Display/DisplayInterface.hpp>
 #include <Device/Mouse/MouseInterface.hpp>
-#include <Debug/DebugMacro.hpp>
+#include <Data/Debug/DebugMacro.hpp>
 
 #include <Data/DataTools.hpp> /* To check if seed is numeric */
 

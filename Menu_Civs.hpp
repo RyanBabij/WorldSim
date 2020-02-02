@@ -7,7 +7,7 @@
 	This menu shows a database of all civs in the world. The player can click a civ to get a detailed view of the civ.
 */
 
-#include <GUI/GUI_Table.hpp>
+#include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
 
 #include "Menu_CivDetails.hpp"

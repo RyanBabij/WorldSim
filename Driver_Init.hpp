@@ -11,7 +11,7 @@ Initialize main menus, start timers, initialise any important data.
 
 */
 
-#include <NameGen/NameGen.hpp>
+#include <Game/NameGen/NameGen.hpp>
 NameGen ng;
 
 void init()

@@ -2,8 +2,8 @@
 #ifndef WORLDSIM_WORLD_LOCAL_HPP
 #define WORLDSIM_WORLD_LOCAL_HPP
 
-#include <IdleTick/IdleTickInterface.hpp>
-#include <LogicTick/LogicTickInterface.hpp>
+#include <Interface/IdleTick/IdleTickInterface.hpp>
+#include <Interface/LogicTick/LogicTickInterface.hpp>
 
 /* WorldSim: World_Local.hpp
 	#include "World_Local.hpp"
@@ -37,7 +37,7 @@
 
 */
 
-#include <Time/Calendar.hpp>
+#include <System/Time/Calendar.hpp>
 
 // #include "Creature.hpp"
 // #include "Creature_Deer.hpp"

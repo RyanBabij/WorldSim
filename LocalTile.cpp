@@ -4,7 +4,7 @@
 
 #include "LocalTile.hpp"
 
-#include <WorldGenerator/Biome.hpp>
+#include <Game/WorldGenerator/Biome.hpp>
 
 #include "Creature.hpp"
 

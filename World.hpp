@@ -19,12 +19,12 @@
 
 #include <Math/Random/GlobalRandom.hpp>
 
-#include <NameGen/NameGen.hpp>
+#include <Game/NameGen/NameGen.hpp>
 NameGen globalNameGen;
 
 
-#include <LogicTick/LogicTickInterface.hpp>
-#include <Time/Calendar.hpp>
+#include <Interface/LogicTick/LogicTickInterface.hpp>
+#include <System/Time/Calendar.hpp>
 
 class Character;
 class Tribe;
@@ -34,7 +34,7 @@ class Tribe_Elf;
 
 #include "LocalTile.hpp"
 
-#include "Time/Calendar.hpp"
+#include <System/Time/Calendar.hpp>
 
 #include "World_Local.hpp"
 
@@ -57,9 +57,9 @@ class Civ_Dwarven;
 	// Vector <int> vTribeValue;
 // };
 
-#include <IdleTick/IdleTickInterface.hpp>
+#include <Interface/IdleTick/IdleTickInterface.hpp>
 
-#include <Time/Timer.hpp>
+#include <System/Time/Timer.hpp>
 
 /*! A test class */
 
