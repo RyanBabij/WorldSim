@@ -992,21 +992,19 @@ void switchTarget(World_Local* _worldLocal)
 				
 				for (int currentX = pixelTileX; currentX<mainViewNX+tileSize; currentX+=tileSize)
 				{
-          
-            // Check if we're supposed to render a local map on this tile.
-          World_Local * localMap = 0;
-          if ( tileSize >= 12 && world->isSafe(tileX,tileY) )
-          {
-            
-            for ( int i=0;i<world->vWorldLocal.size();++i)
-            {
-              if ( world->vWorldLocal(i)->globalX == tileX && world->vWorldLocal(i)->globalY == tileY )
-              {
-                localMap = world->vWorldLocal(i);
-                break;
-              }
-            }
-          }
+               // Check if we're supposed to render a local map on this tile.
+               World_Local * localMap = 0;
+               if ( tileSize >= 12 && world->isSafe(tileX,tileY) )
+               {
+                  for ( int i=0;i<world->vWorldLocal.size();++i)
+                  {
+                     if ( world->vWorldLocal(i)->globalX == tileX && world->vWorldLocal(i)->globalY == tileY )
+                     {
+                        localMap = world->vWorldLocal(i);
+                        break;
+                     }
+                  }
+               }
           
 						// RENDER THE LOCAL TILE
             // Should be it's own function

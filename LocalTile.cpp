@@ -190,7 +190,8 @@ Texture* LocalTile::currentTexture()
     return &TEX_LOCAL_FLOOR;
   }
   else if (hasFloor==2)
-  { return &TEX_FLOOR_WOOD;
+  {
+     return &TEX_FLOOR_WOOD;
   }
   
 	//enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13};
@@ -254,6 +255,8 @@ Texture* LocalTile::currentTexture()
 	return &TEX_WORLD_TEST_00;
 }
 
+
+   // Push in reverse rendering order
 Vector <Texture*> * LocalTile::currentTextures()
 {
   auto vTexture = new Vector <Texture*>;
@@ -263,14 +266,7 @@ Vector <Texture*> * LocalTile::currentTextures()
   
   //return &TEX_LOCAL_FLOOR;
   
-  if ( hasFloor==1 )
-  {
-    vTexture->push(&TEX_LOCAL_FLOOR);
-  }
-  else if (hasFloor==2)
-  {
-    vTexture->push(&TEX_FLOOR_WOOD);
-  }
+
   
 	//enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13};
 	if ( baseTerrain == NOTHING )
@@ -338,6 +334,15 @@ Vector <Texture*> * LocalTile::currentTextures()
   {
     vTexture->push(&TEX_WORLD_TERRAIN_CAVE_ENTRANCE);
     //vTexture->push(&TEX_WORLD_ARTIFACT_GEMS);
+  }
+  
+   if ( hasFloor==1 )
+  {
+    vTexture->push(&TEX_LOCAL_FLOOR);
+  }
+  else if (hasFloor==2)
+  {
+    vTexture->push(&TEX_FLOOR_WOOD);
   }
   
   if ( shotOverlay )

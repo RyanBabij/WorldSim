@@ -1,19 +1,27 @@
 /* WorldSim: Driver
   
 	Main file for WorldSim. Created by Ryan Babij (https://github.com/RyanBabij/WorldSim)
-  
-  License: CC0
+   
+  All code and binaries in WorldSim repo are copyrighted.
+  Wildcat code is public domain.
 */
 
 #include <string>
 
-
 #define WILDCAT_USE_OPENGL
 //#define WILDCAT_USE_DIRECT3D
 
-	// What OS we are compiling for. Currently only Windows and Linux are supported cos I don't got a Mac.
+   // What OS we are compiling for. Currently only Windows and Linux are supported cos I don't got a Mac.
 #include <System/Windows.hpp> //#define WILDCAT_WINDOWS
 //#define WILDCAT_LINUX
+
+//#define WILDCAT_AUDIO
+
+#define GLEW_STATIC
+// Need to figure out which of this is better. I think GLEW is more supported.
+#include <Graphics/OpenGL/glew.h> // THIS CURRENTLY FIXES LINKER CRAP. Also allows RGBA_COMPRESSED, it would seem.
+#define FREEGLUT_STATIC 
+#include <Graphics/OpenGL/freeglut.h> //
 
 	// DYNAMICALLY GENERATED HEADER FILE WITH STRING WHICH COUNTS COMPILATIONS.
 #include "CompileCount.hpp"
@@ -61,12 +69,6 @@ class Stream
 #include <File/SaveFileManager.hpp>
   // Class for managing world save files.
 SaveFileManager saveFileManager;
-
-#define GLEW_STATIC
-// Need to figure out which of this is better. I think GLEW is more supported.
-#include <Graphics/OpenGL/glew.h> // THIS CURRENTLY FIXES LINKER CRAP. Also allows RGBA_COMPRESSED, it would seem.
-#define FREEGLUT_STATIC 
-#include <Graphics/OpenGL/freeglut.h> //
 
 #include <Graphics/Render/Renderer.cpp>
 #include <Graphics/Texture/Texture.hpp>

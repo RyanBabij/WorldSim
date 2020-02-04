@@ -264,8 +264,19 @@ void Item_Hand::interact(WorldObject* _target, int interactType /* =0 */)
 
   void Item_Fish::interact (Character* _character, int interactType /* =0 */)
   {
-    Console ("You eat the fish");
-    owner->consume(this);
+     if (isCooked)
+     {
+        Console ("You eat the cooked fish");
+       owner->consume(this);
+     }
+     else
+     {
+        Console ("Nice sushi");
+       owner->consume(this);
+     }
+
+     
+
   }
   
   void Item_Fish::addToRecipeManager()
@@ -273,6 +284,57 @@ void Item_Hand::interact(WorldObject* _target, int interactType /* =0 */)
     recipeManager.addToRecipes(this);
   }
 
+   // DEER MEAT
+   
+  Vector <std::string>* Item_DeerMeat::getInteractNames(Item* _w)
+  {
+    if (_w==0) { return 0; }
+    
+    auto vInteract = new Vector <std::string>;
+    if (_w->canCook)
+    {
+      vInteract->push("Cook meat");
+    }    
+    return vInteract;
+  }
+  Vector <std::string>* Item_DeerMeat::getInteractNames(Character* _w)
+  {
+    if (_w==0) { return 0; }
+    
+    auto vInteract = new Vector <std::string>;
+      vInteract->push("Eat deer meat");
+    return vInteract;
+  }
+    
+  void Item_DeerMeat::interact (Item* _item, int interactType /* =0 */)
+  {
+      // Check if we can cook with this object
+    if ( _item->canCook )
+    {
+      
+      Console ("You cook the deer meat");
+      isCooked=true;
+    }
+  }
+  
+  void Item_DeerMeat::interact (WorldObject* _target, int interactType /* =0 */)
+  {
+      // Check if we can cook with this object
+    Console ("Generic deer meat");
+  }
+
+  void Item_DeerMeat::interact (Character* _character, int interactType /* =0 */)
+  {
+     if (isCooked)
+     {
+        Console ("You eat the deer meat");
+       owner->consume(this);
+     }
+     else
+     {
+        Console ("It's fucking raw");
+     }
+  }
   
   // SWORD
   
@@ -563,6 +625,7 @@ void Item_Plank::addToRecipeManager()
   {
     if ( interactionType==0) /* Build floor */
     {
+       Console("Building floor");
       obj->hasFloor = 2;
     }
     else /* Demolish floor */

@@ -731,19 +731,39 @@ class Item_DeerPelt: public Item
 class Item_DeerMeat: public Item
 {
   public:
+  bool isCooked;
   
   Item_DeerMeat()
   {
+     isCooked=false;
+    consumeTime = 5;
+    hungerRestore = 250;
   }
   virtual ~Item_DeerMeat()
   {
   }
-  std::string getName() override { return "Deer Meat"; }
+  std::string getName() override
+  {
+    if (isCooked)
+    {
+      return "Cooked deer meat";
+    }
+    return "Raw deer meat";
+   }
   
-  
+  virtual void interact (Item*, int interactType=0) override; /* cook */
+  virtual void interact (Character*, int interactType=0) override; /* eat */
+  virtual void interact (WorldObject*, int interactType=0) override; /* eat */
+
+  virtual Vector <std::string>* getInteractNames(Item* _w) override;
+  virtual Vector <std::string>* getInteractNames(Character* _w) override;
   
   Texture* currentTexture() override
   {
+     if (isCooked )
+     {
+        return &TEX_ITEM_FOOD_STEAK_COOKED;
+     }
     return &TEX_ITEM_FOOD_STEAK_RAW;
   }
 };
