@@ -3,7 +3,7 @@
 #define WORLDSIM_MENU_WORLD_GENERATOR_HPP
 
 /* WorldSim: Menu_WorldGenerator.hpp
-	#include"Menu_WorldGenerator.hpp"
+	#include "Menu_WorldGenerator.hpp"
 	
 	Implementation of GUI interface.
 	This menu is displayed upon starting the game app. It allows the player to start a new game, load a saved game, access the options menu, and quit the application.
@@ -18,9 +18,7 @@
 
 #include <Data/DataTools.hpp> /* To check if seed is numeric */
 
-
 #include "Menu_AdventureMode.hpp"
-
 
 class Menu_WorldGenerator: public GUI_Interface
 {
@@ -90,7 +88,6 @@ class Menu_WorldGenerator: public GUI_Interface
     
     bool fullScreenPreview;
 	
-
 	public:
 	
 	Menu_WorldGenerator()
@@ -550,14 +547,14 @@ class Menu_WorldGenerator: public GUI_Interface
       return true;
     }
     
-    if(_keyboard->isPressed(Keyboard::ONE)) /* Flush console. */
+    else if(_keyboard->isPressed(Keyboard::ONE)) /* Flush console. */
     {
       eventGenerate();
       _keyboard->unpress(Keyboard::ONE);
       return true;
     }
     
-    if(_keyboard->isPressed(Keyboard::TWO)) /* Flush console. */
+    else if(_keyboard->isPressed(Keyboard::TWO)) /* Flush console. */
     {
       _keyboard->unpress(Keyboard::TWO);
       if (world.generated == true)
@@ -571,30 +568,18 @@ class Menu_WorldGenerator: public GUI_Interface
       {
         std::cout<<"You must first generate a world.\n";
       }
-		}
+   }
+   else
+   {
+      worldViewer.keyboardEvent(_keyboard);
+   }
 		
 		return false;
-		
-		// //textEntryWorldName.keyboardEvent(_keyboard);
-
-		// else if(guiManager.keyboardEvent(_keyboard)==true)
-		// {
-			// std::cout<<"worldgen got kb\n";
-			// return true;
-			// //textEntryWorldName.keyboardEvent(_keyboard);
-		// }
-		// else
-		// {
-			// return worldViewer.keyboardEvent(_keyboard);
-		// }
-		// return false;
 	}
 	
 	bool mouseEvent (Mouse* _mouse)
 	{
-
     worldViewer.mouseEvent(_mouse);
-    //buttonExpandMap.mouseEvent(_mouse);
 
     /* If the guiManager did something with the mouse event. */
     if(guiManager.mouseEvent(_mouse)==true)
@@ -603,7 +588,6 @@ class Menu_WorldGenerator: public GUI_Interface
       if(buttonBack.clicked==true)
       {
         buttonBack.unclick();
-        //std::cout<<"Back.\n";
         active=false;
       }
       if(buttonGenerate.clicked==true)
@@ -618,7 +602,6 @@ class Menu_WorldGenerator: public GUI_Interface
         /* World preview takes top-right quarter of screen. */
         if(fullScreenPreview==false)
         {
-        
           /* Shrink the preview window. Restore GUI. */
         
           int panelSizeX = panelX2-panelX1;
@@ -626,10 +609,7 @@ class Menu_WorldGenerator: public GUI_Interface
           
           int worldPreviewX1=panelX1+(panelSizeX/2);
           int worldPreviewY1=panelY1+(panelSizeY/2);
-      
-          //worldViewer.setPanel(worldPreviewX1,worldPreviewY1,panelX2,panelY2);
-          //buttonExpandPreviewWindow.setPanel(worldPreviewX1,worldPreviewY1,worldPreviewX1+16,worldPreviewY1+16);
-          
+
           buttonSimWorld.active=true;
           buttonExportData.active=true;
           buttonLoadWorld.active=true;
@@ -658,18 +638,7 @@ class Menu_WorldGenerator: public GUI_Interface
         else
         {
           /* Expand the preview window. Hide GUI. */
-        
-          //worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
-          //buttonExpandPreviewWindow.setPanel(panelX1,panelY1,panelX1+16,panelY1+16);
           worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
-          
-          //buttonSimWorld.active=true;
-          //buttonGenerate.active=true;
-          //textEntryWorldName.active=true;
-          //textWorldSize.active=true;
-          //buttonBack.active=true;
-          //worldSize.active=true;
-          
         }
         buttonExpandPreviewWindow.unclick();
       }
@@ -697,11 +666,7 @@ class Menu_WorldGenerator: public GUI_Interface
       if ( buttonLoadWorld.clicked==true)
       {
         buttonLoadWorld.unclick();
-        //std::cout<<"Load world data.\n";
-        //eventLoad();
-        
       }
-      
     }
 		return false;
 	}
@@ -778,9 +743,6 @@ class Menu_WorldGenerator: public GUI_Interface
       world.generateWorld(textEntryWorldName.input,worldSizeV,worldSizeV,seed,fragmentation,islandMode,wrapX,wrapY,landPercent); /* MEMORY LEAK */
       world.generateTribes(nTribe.currentValue,nTribeDwarven.currentValue,nTribeElven.currentValue);
       world.nameRegions();
-      
-      //worldViewer.active=true;
-
     }
   }
   

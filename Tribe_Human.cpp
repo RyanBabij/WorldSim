@@ -99,7 +99,7 @@ void Tribe_Human::wander()
   
   if (vXY==0) { return; }
 	
-	HasXY* xyDestination = 0;
+	//HasXY* xyDestination = 0;
   
   
   // IF THE TRIBE IS NOT IN ITS OWN TERRITORY, BUT ADJACENT TO IT, MOVE BACK.
@@ -112,7 +112,7 @@ void Tribe_Human::wander()
         // If we own this tile, move to it.
 				if ( world->getDominantInfluence(xy) == this )
 				{
-					xyDestination=xy;
+					//xyDestination=xy;
 					
 					worldX=xy->x;
 					worldY=xy->y;
@@ -151,7 +151,7 @@ void Tribe_Human::wander()
         {
           if ( world->getHighestInfluence(xy) == 0 )
           {
-            xyDestination=xy;
+            //xyDestination=xy;
             
             worldX=xy->x;
             worldY=xy->y;
