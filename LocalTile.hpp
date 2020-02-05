@@ -4,20 +4,17 @@
 
 /*
 	LocalTile stores tile info on the local maps. Stuff like objects on that tile, etc.
+   
+   Basic details like heightmap are stored as a seed, to cut down on memory footprint. Tile can be constructed into an array on demand. Modifications to the world are stored seperately.
+   
+   At 1:1 scale a tile is 5km by 5km, ie, 5,000 * 5000 tiles, however we will probably end up using tiles of size 513 because anything larger will have a huge memory footprint without special code.
+   
+   In the future we might have polymorphic classes to distinguish simulated tiles from abstract tiles. Abstract tiles will basically be tiles that nobody has seen, and therefore they don't need data. However this may not be possible if wildlife is to be simulated.
 */
-
-/* Basic details like heightmap are stored as a seed, to cut down on memory footprint. Tile can be constructed into an array on demand. Modifications to the world are stored seperately.
-
-A tile is 5km by 5km, ie, 5,000 * 5000 tiles. */
-
-// In the future we might have polymorphic classes to distinguish simulated tiles from abstract tiles. However for now it's not a major concern as the world map should need less than 100MB of RAM.
 
 #include <Interface/HasTexture.hpp>
 
 #include <Game/WorldGenerator/Biome.hpp>
-
-//class Tribe;
-//#include "Tribe.hpp"
 
 class WorldObject;
   class Item;

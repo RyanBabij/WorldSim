@@ -357,29 +357,29 @@ bool World_Local::generate()
   }
   
   // Take the seed for this world tile and expand it into a subseed for every local tile */
-  random.seed(seed);
+  rng.seed(seed);
   
-  int nGemSeams = random.randomInt(3);
+  int nGemSeams = rng.rand8(3);
   while (nGemSeams-- > 0)
   {
-    Vector <HasXY*> * vGemSeam = getRandomWalk(random.randomInt(40)+10);
+    Vector <HasXY*> * vGemSeam = getRandomWalk(rng.rand8(40)+10);
     
     for (int i=0;i<vGemSeam->size();++i)
     {
-      data->aSubterranean((*vGemSeam)(i)).nGems=random.multiRoll(3,3);
+      data->aSubterranean((*vGemSeam)(i)).nGems=rng.multiRoll8(3,3);
     }
     vGemSeam->deleteAll();
     delete vGemSeam;
   }
   
-  int nMetalSeams = random.randomInt(6);
+  int nMetalSeams = rng.rand8(6);
   while (nMetalSeams-- > 0)
   {
-    Vector <HasXY*> * vMetalSeam = getRandomWalk(random.randomInt(40)+10);
+    Vector <HasXY*> * vMetalSeam = getRandomWalk(rng.rand8(40)+10);
     
     for (int i=0;i<vMetalSeam->size();++i)
     {
-      data->aSubterranean((*vMetalSeam)(i)).nMetal=random.multiRoll(3,3);
+      data->aSubterranean((*vMetalSeam)(i)).nMetal=rng.multiRoll8(3,3);
     }
     vMetalSeam->deleteAll();
     delete vMetalSeam;
@@ -391,18 +391,18 @@ bool World_Local::generate()
   {
     for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
-      data->aLocalTile(_x,_y).seed = random.randInt(USHRT_MAX-1);
+      data->aLocalTile(_x,_y).seed = rng.rand32(USHRT_MAX-1);
       //data->aLocalTile(_x,_y).clearObjects();
       data->aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
 
       data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
-      data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+      data->aSubterranean(_x,_y).seed = rng.rand32(PORTABLE_INT_MAX-1);
       //data->aSubterranean(_x,_y).clearObjects();
       data->aSubterranean(_x,_y).height = 0;
       
         
       //data->aSubterranean(_x,_y).hasGems=Random::oneIn(100);
-      if (Random::oneIn(1000))
+      if (rng.oneIn(1000))
       {
         //data->aSubterranean(_x,_y).hasGems=true;
       }
@@ -482,12 +482,12 @@ bool World_Local::generate()
         }
         
         //Put down some water for drinking
-        if (Random::oneIn(500))
+        if (rng.oneIn(500))
         {
           data->aLocalTile(_x,_y).baseTerrain = OCEAN;
           continue;
         }
-        else if (random.oneIn(400)) /* Put down some testing objects */
+        else if (rng.oneIn(400)) /* Put down some testing objects */
         {
           put(new Item_Floor, _x, _y);
           put(new Item_Sword, _x, _y);
@@ -508,9 +508,9 @@ bool World_Local::generate()
           put(new Item_Knife, _x, _y);
           put(new Item_Pickaxe, _x, _y);
         }
-        else if (random.oneIn(baseTreeChance))
+        else if (rng.oneIn(baseTreeChance))
         {
-          if (random.oneIn(10))
+          if (rng.oneIn(10))
           {
             put(new WorldObject_Tree(0), _x, _y);
           }
@@ -520,9 +520,9 @@ bool World_Local::generate()
           }
 
         }
-        else if (random.oneIn(basePlantChance))
+        else if (rng.oneIn(basePlantChance))
         {
-          if (random.oneIn(500))
+          if (rng.oneIn(500))
           {
             put(new Flora_Blueweed(),_x,_y);
           }
@@ -532,7 +532,7 @@ bool World_Local::generate()
           }
           
         }
-        else if (random.oneIn(1500) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
+        else if (rng.oneIn(1500) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
         {
           auto deer = new Creature_Deer;
           deer->init();
@@ -540,10 +540,10 @@ bool World_Local::generate()
         }
         else if ( baseBiome == MOUNTAIN )
         {
-          if (random.oneIn(10))
+          if (rng.oneIn(10))
           {
             auto * rockyBoi = new WorldObject_Rock;
-            if ( random.oneIn(10) )
+            if ( rng.oneIn(10) )
             {
               rockyBoi->nGold = 100;
             }
@@ -555,7 +555,7 @@ bool World_Local::generate()
     }
   }
   
-  if ( baseBiome == GRASSLAND && random.oneIn(100) )
+  if ( baseBiome == GRASSLAND && rng.oneIn(100) )
   {
     for ( int x = 10; x<20; ++x)
     {
@@ -776,7 +776,7 @@ bool World_Local::load()
   
   if ( chonk != 0 )
   {
-    //std::cout<<"Chonks: "<<chonk->vData.size()<<".\n";
+    std::cout<<"Chonks: "<<chonk->vData.size()<<".\n";
 
     int i=0;
     // Only unload the local map if it is loaded.
@@ -788,7 +788,7 @@ bool World_Local::load()
         data->aLocalTile(_x,_y).loadData((*chonk)(i));
         
         data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
-        data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+        data->aSubterranean(_x,_y).seed = rng.rand32(PORTABLE_INT_MAX-1);
         //data->aSubterranean(_x,_y).clearObjects();
         data->aSubterranean(_x,_y).height = 0;
 
@@ -1428,7 +1428,7 @@ bool World_Local::wander (WorldObject* _object)
   int newX = _object->x;
   int newY = _object->y;
   
-  int direction = random.randomInt(3);
+  int direction = rng.rand8(3);
   
   if ( direction==0 ) { ++newX; }
   else if ( direction==1 ) { --newX; }
@@ -1459,7 +1459,7 @@ bool World_Local::wander (Character* _object)
   int newX = _object->x;
   int newY = _object->y;
   
-  int direction = random.randomInt(3);
+  int direction = rng.rand8(3);
   
   if ( direction==0 ) { ++newX; }
   else if ( direction==1 ) { --newX; }
@@ -1490,7 +1490,7 @@ bool World_Local::wander (Creature* _object)
   int newX = _object->x;
   int newY = _object->y;
   
-  int direction = random.randomInt(3);
+  int direction = rng.rand8(3);
   
   if ( direction==0 ) { ++newX; }
   else if ( direction==1 ) { --newX; }

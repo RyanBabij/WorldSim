@@ -97,8 +97,12 @@ const int CALENDAR_SECONDS_PER_MINUTE = 2;
 */
 //const int LOCAL_MAP_SIZE = 65;
 // 129 is good for testing, but we will probably want to go much higher for release.
-const int LOCAL_MAP_SIZE = 257;
-int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
+const int LOCAL_MAP_SIZE = 129;
+int TIME_SCALE = 10; /* How many seconds of gametime pass per logic tick. */
+// Timescale should be based on distances between cells.
+// At 1:1 scale a cell is 5km*5km. Such a cell should take about 1 hour to walk across.
+// Final local map size will probably be 513, and therefore timescale is 3600/512, or 7 seconds per tile.
+// We can round this up to 10 for simplicity.
 const int MAX_VIEW_RANGE = 20;
 
   // CHARACTER STUFF

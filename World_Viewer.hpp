@@ -1009,7 +1009,7 @@ void switchTarget(World_Local* _worldLocal)
 						// RENDER THE LOCAL TILE
             // Should be it's own function
 					//if (tileSize > 4 && localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
-          if ( localMap != 0 && localMap->data != 0 && tileSize > 4)
+               if ( localMap != 0 && localMap->data != 0 && tileSize > 4)
 					{
 						float currentSubY = currentY;
 						float nextSubY = currentY + pixelsPerLocalTile;
@@ -1018,8 +1018,8 @@ void switchTarget(World_Local* _worldLocal)
 						if (subTileSize < 1) { subTileSize = 1; }
 						
             // First we must seed the RNG with the seed for this local tile.
-						RandomNonStatic r1;
-						r1.seed (localMap->seed);
+						//RandomNonStatic r1;
+						//r1.seed (localMap->seed);
             
             //const enumBiome localBaseBiome = world->aTerrain(world->localX,world->localY);
             const enumBiome localBaseBiome = localMap->baseBiome;
@@ -1265,14 +1265,12 @@ void switchTarget(World_Local* _worldLocal)
 							currentSubY=nextSubY;
 							nextSubY+=pixelsPerLocalTile;
 						}
-						//std::cout<<"\n";
-						//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
-            //std::cout<<"end 2\n";
 					}
 					else if ( world->isSafe(tileX,tileY) )
-					{
-            //return;
+					{ // Render tile on world view
 						/* Textures are chosen here rather than from tile objects because it is highly dependent on neighboring tiles. It would be possible to delegate texture handling to tile objects, but would take too much memory maintaining pointers to neighbours. In future maybe worldtile can return hardcoded textures chosen by world object. */
+                  
+                  //UPDATE: Textures should be assigned to World_Local at generation/modification, to save cycles on render time.
 						
 						// if (world->isSafe(tileX,tileY) )
 						// {
@@ -1281,22 +1279,16 @@ void switchTarget(World_Local* _worldLocal)
             
 
             World_Local * tile = &world->aWorldTile(tileX,tileY);
-            //std::cout<<"Tile: "<<tile<<".\n";
-            //if (tile == 0 )
-            //{
-            //  break;
-            //}
-            
-              // DRAW BASE TERRAIN (BIOME)
-						if(world->isLand(tileX,tileY)==false)
-						{
-							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
-						}
-            
-						else if (world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == DESERT)
-						{
-							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_00, false);
-						}
+
+            // DRAW BASE TERRAIN (BIOME)
+            if(world->isLand(tileX,tileY)==false)
+            {
+               Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
+            }
+            else if (world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == DESERT)
+            {
+               Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_00, false);
+            }
             else if (world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == ICE)
             {
               Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_ICE, false);
@@ -1315,24 +1307,28 @@ void switchTarget(World_Local* _worldLocal)
             }
 						else if(world->isLand(tileX,tileY))
 						{
-							if (tile->seed==0 || tile->seed % 4 == 0)
-							{
-                glColor4f(2.0f, 2.0f, 2.0f, 1.0f);
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
-                glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-							}
-							else if (tile->seed % 4 == 1)
-							{
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_01, false);
-							}
-							else if (tile->seed % 4 == 2)
-							{
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_02, false);
-							}
-							else if (tile->seed % 4 == 3)
-							{
-								Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_03, false);
-							}
+                     Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, tile->currentTexture(), false);
+                     
+                     
+                     
+							// if (tile->seed==0 || tile->seed % 4 == 0)
+							// {
+                // glColor4f(2.0f, 2.0f, 2.0f, 1.0f);
+								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
+                // glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+							// }
+							// else if (tile->seed % 4 == 1)
+							// {
+								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_01, false);
+							// }
+							// else if (tile->seed % 4 == 2)
+							// {
+								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_02, false);
+							// }
+							// else if (tile->seed % 4 == 3)
+							// {
+								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_03, false);
+							// }
 
                 // THIS CODE DRAWS COASTLINES. IT IS IMCOMPLETE AND UGLY.
 							
@@ -1485,28 +1481,19 @@ void switchTarget(World_Local* _worldLocal)
 		// Texture mode
 		//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_01, false);
 	}
-  if(subterraneanMode==false)
-  {
-    rainManager.render();
-  }
-    
-		Renderer::restoreViewPort();
-		
+      if(subterraneanMode==false)
+      {
+       rainManager.render();
+      }
+       
+      Renderer::restoreViewPort();
 
-		
-		
-		/* Now render the icons on the world map. */
-		renderWorldIcons();
-    
+      /* Now render the icons on the world map. */
+      renderWorldIcons();
 
-    
-    
-			//Renderer::placeTexture4(mainViewX1+(mainViewNX/2)-32, mainViewY1+(mainViewNY/2)-32, mainViewX1+(mainViewNX/2)+32, mainViewY1+(mainViewNY/2)+32, &TEX_WORLD_TEST_00, false);
-		normaliseCoordinates();
-
+      normaliseCoordinates();
 	}
 
-	
 };
 WorldViewer worldViewer;
 

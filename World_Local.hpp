@@ -39,22 +39,21 @@
 
 #include <System/Time/Calendar.hpp>
 
-// #include "Creature.hpp"
-// #include "Creature_Deer.hpp"
 class Creature;
-
 class Item;
 
-
 //Wew this uses a lot of RAM
-RandomNonStatic random;
+//RandomNonStatic random;
+#include <Math/Random/RandomLehmer.hpp>
 
-
-
-
-class World_Local: public LogicTickInterface, public IdleTickInterface
+class World_Local: public LogicTickInterface, public IdleTickInterface, public HasTexture
 {
 	private:
+   
+    // The generation seed for this local map.
+  unsigned int seed;
+  
+  RandomLehmer rng;
   
   // Data stores all data which is only present in generated maps.
   // This is done to keep memory footprint low, because million of maps are generated on large worlds.
@@ -101,9 +100,6 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
 	bool active; /* Whether or not the world should be simulated. */
 	//bool generated; /* False until a world has been generated. Prevents trying to simulate a non-existent world. */
   
-    // The generation seed for this local map.
-  int seed;
-  
   Data * data;
   
     //WORLD DATA
@@ -149,11 +145,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
     // Return the value of the greatest influence on the tile.
   int getDominantInfluenceValue ();
 	
-		// This returns the base texture.
-	virtual Texture* currentTexture();
-	
 
-  
   // LOCAL MAP DATA
   
   // Local RNG
@@ -313,6 +305,9 @@ class World_Local: public LogicTickInterface, public IdleTickInterface
   void incrementTicks(int nTicks);
     void updateTickBacklog(Calendar);
 	
+   // HASTEXTURE
+   // Return map tile texture
+	virtual Texture* currentTexture();
 };
 
 
