@@ -33,12 +33,11 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.159 Win32 dev";
+const std::string VERSION = "0.0.160 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
 // WINDOW STUFF
-
 unsigned int RESOLUTIONX=1024, RESOLUTIONY=900;
 const bool MAXIMISE_WINDOW = false;
 
@@ -97,7 +96,8 @@ const int CALENDAR_SECONDS_PER_MINUTE = 2;
   It will likely be set to low values during development.
 */
 //const int LOCAL_MAP_SIZE = 65;
-const int LOCAL_MAP_SIZE = 129;
+// 129 is good for testing, but we will probably want to go much higher for release.
+const int LOCAL_MAP_SIZE = 257;
 int TIME_SCALE = 60; /* How many seconds of gametime pass per logic tick. */
 const int MAX_VIEW_RANGE = 20;
 
@@ -108,8 +108,11 @@ const int MAX_THIRST = 300;
 // The number of local maps to hold in memory at once. Minimum should be 4.
 // (One for the player's current map, and three neighboring maps).
 // However additional maps should be allocated for background processing.
+// This should be set and adjusted based on the amount of RAM the user has.
 // Not currently functional
-const int MAX_LOCAL_MAPS_IN_MEMORY = 10;
+
+// For rippling we'll probably want a minimum of 25 cells around the player permanently loaded.
+const int MAX_LOCAL_MAPS_IN_MEMORY = 3;
 const int MAX_LOCAL_MAPS_IN_BACKGROUND_MEMORY = 3;
 
 // Coordinates of the map loaded for debugging.
@@ -148,7 +151,7 @@ int CURRENT_ANIMATION_FRAME = 0; /* 0 - 99 */
   // RENDER AND FRAME STUFF
 
 /* Double buffering will make the frame transitions smoother, but it is slower. */
-const bool DOUBLE_BUFFERING = true;
+const bool DOUBLE_BUFFERING = false;
 
 /* BUSY_WAIT will cause the program to enter a busy wait if rendering is almost ready. Not sure if it works very well. */
 const bool BUSY_WAIT = false;
@@ -163,6 +166,7 @@ const unsigned int RELINQUISH_CPU_TIMEOUT = 100; /* Anywhere from 10-100 seems t
 bool RENDER_NEXT_FRAME=true; /* If there has been no input or state change, there's no need to render */
 const bool LAZY_RENDERING=true; /* Only render if something happened */
 
+const bool COMPRESS_TEXTURES = false; /* Probably saves graphics memory, however seems to significantly slow rendering */
 
 // GLOBAL FLAGS
 

@@ -396,26 +396,26 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
   t2.join();
 #endif
 
-  bindNearestNeighbour(&TEX_TITLE);
-  bindNearestNeighbour(&TEX_OPTIONS_BACKGROUND);
-  bindNearestNeighbour(&TEX_LOAD_GAME_BACKGROUND);
-  bindNearestNeighbour(&TEX_NEW_GAME_BACKGROUND);
+  bindNearestNeighbour(&TEX_TITLE,true);
+  bindNearestNeighbour(&TEX_OPTIONS_BACKGROUND,true);
+  bindNearestNeighbour(&TEX_LOAD_GAME_BACKGROUND,true);
+  bindNearestNeighbour(&TEX_NEW_GAME_BACKGROUND,true);
   
-  bindNearestNeighbour(&TEX_GUI_INCREMENT);
-  bindNearestNeighbour(&TEX_GUI_DECREMENT);
-  bindNearestNeighbour(&TEX_GUI_EXPAND);
-  bindNearestNeighbour(&TEX_GUI_TILE_SELECTION);
-  bindNearestNeighbour(&TEX_GUI_TILE_SELECTION_FULL);
+  bindNearestNeighbour(&TEX_GUI_INCREMENT,COMPRESS_TEXTURES);
+  bindNearestNeighbour(&TEX_GUI_DECREMENT,COMPRESS_TEXTURES);
+  bindNearestNeighbour(&TEX_GUI_EXPAND,COMPRESS_TEXTURES);
+  bindNearestNeighbour(&TEX_GUI_TILE_SELECTION,COMPRESS_TEXTURES);
+  bindNearestNeighbour(&TEX_GUI_TILE_SELECTION_FULL,COMPRESS_TEXTURES);
   
-  bindNearestNeighbour(&TEX_NPC);
-  bindNearestNeighbour(&TEX_NPC_DED);
+  bindNearestNeighbour(&TEX_NPC,COMPRESS_TEXTURES);
+  bindNearestNeighbour(&TEX_NPC_DED,COMPRESS_TEXTURES);
   
-  bindNearestNeighbour(&TEX_WORLD_UNIT_NOMAD_01);
-  bindNearestNeighbour(&TEX_WORLD_UNIT_DWARF_01);
-  bindNearestNeighbour(&TEX_WORLD_UNIT_ELF_01);
+  bindNearestNeighbour(&TEX_WORLD_UNIT_NOMAD_01,COMPRESS_TEXTURES);
+  bindNearestNeighbour(&TEX_WORLD_UNIT_DWARF_01,COMPRESS_TEXTURES);
+  bindNearestNeighbour(&TEX_WORLD_UNIT_ELF_01,COMPRESS_TEXTURES);
   
-  bindNearestNeighbour(&TEX_WORLD_SETTLEMENT_DWARFFORT_01);
-  bindNearestNeighbour(&TEX_WORLD_SETTLEMENT_TOWN_URBAN01);
+  bindNearestNeighbour(&TEX_WORLD_SETTLEMENT_DWARFFORT_01,COMPRESS_TEXTURES);
+  bindNearestNeighbour(&TEX_WORLD_SETTLEMENT_TOWN_URBAN01,COMPRESS_TEXTURES);
 
 	
 	loadTextureRotate(PATH_TEX_WORLD_TERRAIN_GRASS_05,&TEX_WORLD_TERRAIN_GRASS_00,&TEX_WORLD_TERRAIN_GRASS_01,&TEX_WORLD_TERRAIN_GRASS_02,&TEX_WORLD_TERRAIN_GRASS_03);
