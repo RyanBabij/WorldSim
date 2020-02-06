@@ -423,6 +423,18 @@ std::string LocalTile::getSaveData()
   //saveData+=DataTools::toString(height);
   return saveData;
 }
+
+std::string LocalTile::getAbstractData()
+{
+  std::string saveData = "";
+  
+  if ( hasMovementBlocker() )
+  {
+     return "T";
+  }
+  return "F";
+}
+
 void LocalTile::loadData(std::string _saveData)
 {
   

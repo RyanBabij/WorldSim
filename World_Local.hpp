@@ -87,6 +87,9 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    public:
    Data * data;
 
+   // Texture of map from far away. This texture is used to rende the tile when zoomed out far.
+   Texture texFar;
+
    Calendar localDate; /* The date that this map has been updated to. */
 
    /* Special features */

@@ -117,6 +117,9 @@ class LocalTile: public HasTexture
 
   
   std::string getSaveData();
+  
+  //Abstract data is just the bare minimum data to run simulations: Collision data and food values for wildlife.
+  std::string getAbstractData();
   void loadData(std::string);
 	
 };

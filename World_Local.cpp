@@ -25,36 +25,36 @@
 
 World_Local::World_Local()
 {
-	globalX=0;
-	globalY=0;
-  
-  initialized = false;
-	active = false;
-  
-	nX=LOCAL_MAP_SIZE;
-	nY=LOCAL_MAP_SIZE;
-  
-  hasRiver=-1;
-  hasCave=false;
-  hasRuin=false;
-  
-	seed = 0;
-	baseBiome = NOTHING;
-	//baseMoveCost = 0;
-	//canHaveSettlement = false;
-	baseFertility = 0;
-	canMove = 0;
-	//baseLogisticsCost = 0;
-	//defensiveBonus = 0;
-  baseMetal=0;
-  
-  //vAllTiles.reserve(0);
-  vCreature.reserve(0);
-  vCharacter.reserve(0);
-  vItem.reserve(0);
-  vObjectGeneric.reserve(0);
-  
-  data=0;
+   globalX=0;
+   globalY=0;
+
+   initialized = false;
+   active = false;
+
+   nX=LOCAL_MAP_SIZE;
+   nY=LOCAL_MAP_SIZE;
+
+   hasRiver=-1;
+   hasCave=false;
+   hasRuin=false;
+
+   seed = 0;
+   baseBiome = NOTHING;
+   //baseMoveCost = 0;
+   //canHaveSettlement = false;
+   baseFertility = 0;
+   canMove = 0;
+   //baseLogisticsCost = 0;
+   //defensiveBonus = 0;
+   baseMetal=0;
+
+   //vAllTiles.reserve(0);
+   vCreature.reserve(0);
+   vCharacter.reserve(0);
+   vItem.reserve(0);
+   vObjectGeneric.reserve(0);
+
+   data=0;
 }
 
 World_Local::~World_Local()
@@ -89,6 +89,7 @@ void World_Local::unload()
 void World_Local::init(const int _globalX, const int _globalY, const enumBiome _biomeID, const int _seed = 0, const int _hasRiver=-1)
 {
   baseBiome = _biomeID;
+
   seed = _seed;
   hasRiver = _hasRiver;
   
@@ -311,6 +312,8 @@ bool World_Local::generate()
 
   initialized = true;
   active = true;
+  
+  texFar.create(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0,false);
   
 
   data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
@@ -646,6 +649,20 @@ bool World_Local::generate()
   }
   delete vTribesHere;
   
+  //generate texture
+  for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+  {
+    for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+    {
+      const Texture * t =data->aLocalTile(_x,_y).currentTexture();
+       texFar.setPixel(_x,_y,0,t->averageRed);
+       texFar.setPixel(_x,_y,1,t->averageGreen);
+       texFar.setPixel(_x,_y,2,t->averageBlue);
+       texFar.setPixel(_x,_y,3,255);
+    }
+  }
+  bindNearestNeighbour(&texFar,COMPRESS_TEXTURES);
+  
   save();
 
 	return false;
@@ -657,11 +674,12 @@ bool World_Local::save()
   if ( data==0 ) { return false; }
   
   std::string localMapPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + ".dat";
+  std::string abstractPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + "-abstract.dat";
 	
   //std::cout<<"Savefile for this map is: "<<localMapPath<<"\n";
 	// FileManager::createDirectory(strSavePath);
 	
-	if ( FileManager::directoryExists(world.strSavePath)  == false )
+	if (FileManager::directoryExists(world.strSavePath) == false)
   {
     std::cout<<"Error: Unable to access directory.\n";
     return false;
@@ -669,11 +687,14 @@ bool World_Local::save()
   
   // Make the file or clear it.
   FileManager::makeNewFile(localMapPath);
+  FileManager::makeNewFile(abstractPath);
   SaveFileManager sfm;
+  SaveFileManager sfmAbstract;
   
   std::string saveData="";
   
   SaveChunk chonk ("TILE ARRAY");
+  SaveChunk abstractChonk("ABSTRACT");
   
   // Only unload the local map if it is loaded.
   for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
@@ -681,9 +702,11 @@ bool World_Local::save()
     for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
     {
       chonk.add(data->aLocalTile(_x,_y).getSaveData());
+      abstractChonk.add(data->aLocalTile(_x,_y).getAbstractData());
     }
   }
   
+  sfmAbstract.addChunk(abstractChonk);
   sfm.addChunk(chonk);
   
   SaveChunk chonkSub ("SUBTERRANEAN ARRAY");
@@ -739,6 +762,7 @@ bool World_Local::save()
   
   
   sfm.saveToFile(localMapPath);
+  sfmAbstract.saveToFile(abstractPath);
 
   return true;
 }
@@ -2144,12 +2168,18 @@ std::string World_Local::getTerrainName()
 
 Texture* World_Local::currentTexture()
 {
+   if ( active )
+   {
+      return &texFar;
+   }
+
+   
 	//enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13};
 	if ( baseBiome == NOTHING )
 	{
 		return &TEX_WORLD_TEST_00;
 	}
-	else if ( baseBiome == OCEAN )
+	else if (baseBiome == OCEAN )
 	{
 		return &TEX_WORLD_TERRAIN_OCEAN_00;
 	}
@@ -2161,6 +2191,23 @@ Texture* World_Local::currentTexture()
 	{
 		return &TEX_WORLD_TERRAIN_DESERT_00;
 	}
+	else if (baseBiome == ICE)
+	{
+		return &TEX_WORLD_TERRAIN_ICE;
+	}
+	else if (baseBiome == SNOW)
+	{
+		return &TEX_WORLD_TERRAIN_SNOW;
+	}
+	else if (baseBiome == STEPPES)
+	{
+		return &TEX_WORLD_TERRAIN_STEPPE;
+	}
+	else if (baseBiome == WETLAND)
+	{
+		return &TEX_WORLD_TERRAIN_SWAMP;
+	}
+
 	
 	//else if ( biome == GRASSLAND )
 	else
