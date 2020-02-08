@@ -422,7 +422,7 @@ void Tribe_Human::incrementTicks ( int nTicks )
     // TRIBE SPLIT CALCULATIONS
     // OCCURS IF: TOO MANY PEOPLE IN TRIBE, THERE IS A VIABLE AMOUNT OF FREE SPACE, RANDOM ELEMENT.
     // ONLY SPLIT INTO EMPTY TERRITORY.
-    int landmassID = world->aLandmassID(worldX,worldY);
+    int landmassID = world->aWorldTile(worldX,worldY).landID;
     // WHAT LANDMASS ARE WE ON?
     // DOES THE LANDMASS HAVE A SPARE TILE?
     // NEW IDEA: Only split if there are at least 3 free tiles. This will reduce requirement

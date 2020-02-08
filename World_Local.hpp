@@ -214,6 +214,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
   bool isSafe(int /* x */, int /* y */);
     bool isSafe(HasXY*);
     bool isSafe(WorldObject*);
+    
+    bool isLand(); // returns true if this is a land tile.
   
     // Generate a world or load from cache.
 	bool generate();

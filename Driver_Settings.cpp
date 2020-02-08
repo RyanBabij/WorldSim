@@ -35,7 +35,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.164 Win32 dev";
+const std::string VERSION = "0.0.165 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 

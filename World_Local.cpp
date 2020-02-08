@@ -2166,6 +2166,11 @@ std::string World_Local::getTerrainName()
   return biomeName[baseBiome];
 }
 
+bool World_Local::isLand()
+{
+   return (baseBiome!=OCEAN);
+}
+
 Texture* World_Local::currentTexture()
 {
    if ( active )

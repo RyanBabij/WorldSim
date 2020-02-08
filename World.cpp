@@ -49,9 +49,9 @@
 
 class Item;
 
-#include "World_ThreadManager.cpp"
+#include "World_MapManager.cpp"
 
-World::World(): SaveFileInterface(), wtm(this), seaLevel(0), mountainLevel(0)
+World::World(): SaveFileInterface(),/* mapManager(this),*/ seaLevel(0), mountainLevel(0)
 {
 	random.seed();
 	
@@ -88,7 +88,7 @@ World::World(): SaveFileInterface(), wtm(this), seaLevel(0), mountainLevel(0)
   calendar.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
   calendar.secondsPerMinute = 2;
   
-  wtm.main();
+  mapManager.main();
 
 }
 
@@ -1122,9 +1122,6 @@ void World::buildArrays()
 				_red=50;
 				_green=50;
 				_blue=240;
-				
-				
-				aIsLand(_x,_y) = false;
 			}
 			else if ( aTerrain(_x,_y) == RIVER )
 			{
@@ -1311,8 +1308,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
     std::thread t1( [this,x,y] { aWorldObject.init(x,y,0); aTopoMap.init(x,y,3,0); });
     //std::thread t2( [this,x,y] { aTerrain.init(x,y,NOTHING); aSeed.init(x,y,0); });
     std::thread t2( [this,x,y] { aTerrain.init(x,y,NOTHING); });
-    std::thread t3( [this,x,y] { aLandmassID.init(x,y,-1); aIsLand.init(x,y,true); });
-    std::thread t4( [this,x,y] { aBiomeID.init(x,y,-1); aWorldTile.initClass(x,y); });
+   // std::thread t3( [this,x,y] { /*aLandmassID.init(x,y,-1);*/ aIsLand.init(x,y,true); });
+    std::thread t4( [this,x,y] { aBiomeID.init(x,y,-1); aWorldTile.initClass(x,y); mapManager.init(x,y); });
     std::thread t5( [this] { vWorldObjectGlobal.deleteAll(); vLandmass.deleteAll(); vBiome.deleteAll(); vTribe.clear(); });
 
   #else
@@ -1324,10 +1321,11 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 		//aInfluence.init(x,y,0);
 		//aSeed.init(x,y,0);
 		
-		aLandmassID.init(x,y,-1);
+		//aLandmassID.init(x,y,-1);
 		aBiomeID.init(x,y,-1);
 		aIsLand.init(x,y,true);
     aWorldTile.initClass(x,y);
+    mapManager.init(x,y);
     
 	// vTribe does not need to be deleted, because all Tribe objects are in vWorldObjectGlobal
   // However, the vector must be cleared.
@@ -1397,7 +1395,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   #if defined THREAD_ALL || defined THREAD_WORLD_INIT 
 		t1.join();
 		t2.join();
-		t3.join();
+		//t3.join();
 		t4.join();
 		t5.join();
 	#endif
@@ -1446,38 +1444,38 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
         {
           aWorldTile(_x,_y).baseBiome=OCEAN;
           aTerrain(_x,_y) = OCEAN;
-          aIsLand(_x,_y) = false;
+          //aIsLand(_x,_y) = false;
         }
         // All tiles surrounded on at least 3 sides by rivers become lakes.
         if ( riverConnectivity == 0b01010010 )
         {
           aWorldTile(_x,_y).baseBiome=OCEAN;
           aTerrain(_x,_y) = OCEAN;
-          aIsLand(_x,_y) = false;
+          //aIsLand(_x,_y) = false;
         }
         else if ( riverConnectivity == 0b01001010 )
         {
           aWorldTile(_x,_y).baseBiome=OCEAN;
           aTerrain(_x,_y) = OCEAN;
-          aIsLand(_x,_y) = false;
+          //aIsLand(_x,_y) = false;
         }
         else if ( riverConnectivity == 0b01010010 )
         {
           aWorldTile(_x,_y).baseBiome=OCEAN;
           aTerrain(_x,_y) = OCEAN;
-          aIsLand(_x,_y) = false;
+          //aIsLand(_x,_y) = false;
         }
         else if ( riverConnectivity == 0b01011000 )
         {
           aWorldTile(_x,_y).baseBiome=OCEAN;
           aTerrain(_x,_y) = OCEAN;
-          aIsLand(_x,_y) = false;
+          //aIsLand(_x,_y) = false;
         }
         else if ( riverConnectivity == 0b00011010 )
         {
           aWorldTile(_x,_y).baseBiome=OCEAN;
           aTerrain(_x,_y) = OCEAN;
-          aIsLand(_x,_y) = false;
+          //aIsLand(_x,_y) = false;
         }
         
       }
@@ -1492,19 +1490,33 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
     int currentOceanID = 0;
 
     std::cout<<"Building landmass info.\n";
+    
+   // first build an array of isLand() to do flood fill easier
+   ArrayS2 <bool> aIsLand(nX,nY,false);
+   for ( int _y=0;_y<nY;++_y)
+   {
+      for ( int _x=0;_x<nX;++_x)
+      {
+         aIsLand(_x,_y)=aWorldTile(_x,_y).isLand();
+      }
+   }
+   
       
     for ( int _y=0;_y<nY;++_y)
     {
       for ( int _x=0;_x<nX;++_x)
       {
-        if (aLandmassID(_x,_y) == -1 && aIsLand(_x,_y) == true )
+        //if (aWorldTile(_x,_y).landID == -1 && aIsLand(_x,_y) == true )
+        if (aWorldTile(_x,_y).landID == -1 && aWorldTile(_x,_y).isLand() == true )
         {
           Vector <HasXY*>* vFill = aIsLand.floodFillVector(_x,_y,false);
           
           for (int i=0;i<vFill->size();++i)
           {
             HasXY* v = (*vFill)(i);
-            aLandmassID(v->x,v->y) = currentLandmassID;
+            
+            aWorldTile(v->x,v->y).landID = currentLandmassID;
+            //aLandmassID(v->x,v->y) = currentLandmassID;
 
           }
           
@@ -1519,10 +1531,10 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
           
           ++currentLandmassID;
         }
-        else if (aBiomeID(_x,_y) == -1 && aIsLand(_x,_y) == false)// fill ocean
-        {
+        // else if (aBiomeID(_x,_y) == -1 && aIsLand(_x,_y) == false)// fill ocean
+        // {
           
-        }
+        // }
         
       }
     }
@@ -2351,9 +2363,9 @@ int World::getHighestInfluence(const int _x, const int _y)
 	
 std::string World::getLandmassName(const int _x, const int _y)
 {
-  if ( aLandmassID.isSafe(_x,_y) )
+  if ( aWorldTile.isSafe(_x,_y) )
   {
-    const int id = aLandmassID(_x,_y);
+    const int id = aWorldTile(_x,_y).landID;
     if (id != -1)
     {
       return vLandmass(id)->name;
@@ -2378,71 +2390,90 @@ std::string World::getBiomeName(const int _x, const int _y)
 }
     
 
-  bool World::hasFreeTerritory(int landmassID)
-  {
-    Vector <HasXY*>* vLandmassTiles = 0;
-    
-    for ( int _y=0;_y<nY;++_y)
-    {
+bool World::hasFreeTerritory(int landmassID)
+{
+   Vector <HasXY*>* vLandmassTiles = 0;
+
+   // Todo: Optimize. We don't need to use aIsLand if we already have landmass IDs
+   // first build an array of isLand() to do flood fill easier
+   ArrayS2 <bool> aIsLand(nX,nY,false);
+   for ( int _y=0;_y<nY;++_y)
+   {
       for ( int _x=0;_x<nX;++_x)
       {
-        if (aLandmassID(_x,_y) == landmassID && aIsLand(_x,_y) == true )
-        {
-          // GET ALL COORDINATES OF THIS 
-          vLandmassTiles = aIsLand.floodFillVector(_x,_y,false);
-          
-          for (int i=0;i<vLandmassTiles->size();++i)
-          {
-            if ( getHighestInfluence( (*vLandmassTiles)(i) ) == 0)
-            {
-              delete vLandmassTiles;
-              return true;
-            }
-          }
-          delete vLandmassTiles;
-          return false;
-
-        }
-        
+         aIsLand(_x,_y)=aWorldTile(_x,_y).isLand();
       }
-    }
-    delete vLandmassTiles;
-    return false;
-  }
+   }
+
+   for ( int _y=0;_y<nY;++_y)
+   {
+      for ( int _x=0;_x<nX;++_x)
+      {
+         if (aWorldTile(_x,_y).landID == landmassID && aWorldTile(_x,_y).isLand() == true )
+         {
+            // GET ALL COORDINATES OF THIS 
+            vLandmassTiles = aIsLand.floodFillVector(_x,_y,false);
+
+            for (int i=0;i<vLandmassTiles->size();++i)
+            {
+               if ( getHighestInfluence( (*vLandmassTiles)(i) ) == 0)
+               {
+                  delete vLandmassTiles;
+                  return true;
+               }
+            }
+            delete vLandmassTiles;
+            return false;
+         }
+      }
+   }
+   delete vLandmassTiles;
+   return false;
+}
   
-  int World::nFreeTerritory(int landmassID)
-  {
-    Vector <HasXY*>* vLandmassTiles = 0;
-    
-    int nUnclaimed = 0;
-    
-    for ( int _y=0;_y<nY;++_y)
-    {
+int World::nFreeTerritory(int landmassID)
+{
+   Vector <HasXY*>* vLandmassTiles = 0;
+   
+   // Todo: Optimize. We don't need to use aIsLand if we already have landmass IDs
+   // first build an array of isLand() to do flood fill easier
+   ArrayS2 <bool> aIsLand(nX,nY,false);
+   for ( int _y=0;_y<nY;++_y)
+   {
       for ( int _x=0;_x<nX;++_x)
       {
-        if (aLandmassID(_x,_y) == landmassID && aIsLand(_x,_y) == true )
-        {
-          // GET ALL COORDINATES OF THIS LANDMASS
-          vLandmassTiles = aIsLand.floodFillVector(_x,_y,false);
-          
-          for (int i=0;i<vLandmassTiles->size();++i)
-          {
-            if ( getHighestInfluence( (*vLandmassTiles)(i) ) == 0)
-            {
-              ++nUnclaimed;
-              //delete vLandmassTiles;
-              //return true;
-            }
-          }
-          delete vLandmassTiles;
-          return nUnclaimed;
-
-        }
+         aIsLand(_x,_y)=aWorldTile(_x,_y).isLand();
       }
-    }
-    delete vLandmassTiles;
-    return 0;
-  }
+   }
+
+   int nUnclaimed = 0;
+
+   for ( int _y=0;_y<nY;++_y)
+   {
+      for ( int _x=0;_x<nX;++_x)
+      {
+         if (aWorldTile(_x,_y).landID == landmassID && aWorldTile(_x,_y).isLand() == true )
+         {
+            // GET ALL COORDINATES OF THIS LANDMASS
+            vLandmassTiles = aIsLand.floodFillVector(_x,_y,false);
+
+            for (int i=0;i<vLandmassTiles->size();++i)
+            {
+               if ( getHighestInfluence( (*vLandmassTiles)(i) ) == 0)
+               {
+                  ++nUnclaimed;
+                  //delete vLandmassTiles;
+                  //return true;
+               }
+            }
+            delete vLandmassTiles;
+            return nUnclaimed;
+         }
+      }
+   }
+   delete vLandmassTiles;
+   return 0;
+}
   
   // Generate local map if necessary.
   // Update worldviewer.
@@ -2511,13 +2542,13 @@ Tribe * World::getNearestConnectedTribe (Tribe * _tribe, bool sameRace /* =true 
   // STEP 1: FIND TRIBE ON SAME LANDMASS
   int distance = -1;
   Tribe* closestTribe = 0;
-  int landmass = aLandmassID(_tribe->worldX, _tribe->worldY);
+  int landmass = aWorldTile(_tribe->worldX, _tribe->worldY).landID;
   
   for (int i=0;i<vTribe.size();++i)
   {
     if ( vTribe(i) != _tribe && vTribe(i)->isAlive && (sameRace==false || _tribe->race == vTribe(i)->race ) )
     {
-      if ( aLandmassID(vTribe(i)->worldX,vTribe(i)->worldY) == landmass )
+      if ( aWorldTile(vTribe(i)->worldX,vTribe(i)->worldY).landID == landmass )
       {
         int distance2 = _tribe->distanceTo(vTribe(i));
         if ( closestTribe == 0 || distance2 < distance )
@@ -2663,9 +2694,9 @@ bool World::loadWorld(std::string _name)
 	//aTopoMap.init(png.nX,png.nY,3,0);
   aTerrain.init(png.nX,png.nY,NOTHING);
   //aSeed.init(png.nX,png.nY,1);
-  aLandmassID.init(png.nX,png.nY,-1);
+  //aLandmassID.init(png.nX,png.nY,-1);
   aBiomeID.init(png.nX,png.nY,-1);
-  aIsLand.init(png.nX,png.nY,true);
+//aIsLand.init(png.nX,png.nY,true);
 
 	for(int x=0;x<png.nX;++x)
 	{

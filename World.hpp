@@ -61,19 +61,26 @@ class Civ_Dwarven;
 
 #include <System/Time/Timer.hpp>
 
-#include "World_ThreadManager.hpp"
+#include "World_MapManager.hpp"
+
+#include <atomic>
 
 class World: public LogicTickInterface, public IdleTickInterface, public SaveFileInterface
 {
   private:
     RandomNonStatic random;
-    World_ThreadManager wtm;
+    World_MapManager mapManager;
 
 	public:
   
 	bool active; /* Whether or not the world should be simulated. */
+   
+#if defined THREAD_ALL
+   std::atomic <bool> generated;
+#else
 	bool generated; /* False until a world has been generated. Prevents trying to simulate a non-existent world. */
-  
+#endif
+
 		/* The size of the world, measured in tiles. */
 	int nX, nY;
     // The maximum global coordinate
@@ -128,8 +135,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
   
   // All of these should be ported into aWorldTile.
 	//ArrayS2 <int> aSeed;
-	ArrayS2 <int> aLandmassID;
-	ArrayS2 <bool> aIsLand;
+	//ArrayS2 <int> aLandmassID; porting into World_Local
+	//ArrayS2 <bool> aIsLand;
 	ArrayS2 <int> aBiomeID;
   ArrayS2 <int> aRiverID; /* Contains the river ID */
   

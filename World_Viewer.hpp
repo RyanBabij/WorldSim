@@ -932,7 +932,8 @@ void switchTarget(World_Local* _worldLocal)
 
 						
 							// Basic landmass view
-						if ( world->aIsLand(tileX,tileY) )
+						//if ( world->aIsLand(tileX,tileY) )
+						if ( world->aWorldTile(tileX,tileY).isLand())
 						{
 							//glColor3ub(50,200,50);
 						}
