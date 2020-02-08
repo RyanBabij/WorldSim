@@ -308,23 +308,23 @@ bool World_Local::generate()
     return true;
   }
   
-  localDate.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
+   localDate.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
 
-  initialized = true;
-  active = true;
-  
-  texFar.create(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0,false);
-  
+   initialized = true;
+   active = true;
 
-  data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-  data->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+   texFar.create(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0,false);
 
-		// GENERATE HEIGHTMAP
-  DiamondSquareAlgorithmCustomRange dsa2;
-	dsa2.maxValue=5;
-  
-  ArrayS2 <int> aLocalHeight;
-  aLocalHeight.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
+
+   data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+   data->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+
+   // GENERATE HEIGHTMAP
+   DiamondSquareAlgorithmCustomRange dsa2;
+   dsa2.maxValue=5;
+
+   ArrayS2 <int> aLocalHeight;
+   aLocalHeight.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
 
   // If we are generating a mountain, set a summit in the middle which is 3x3 tiles.
   if ( baseBiome == MOUNTAIN )

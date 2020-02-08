@@ -61,12 +61,13 @@ class Civ_Dwarven;
 
 #include <System/Time/Timer.hpp>
 
-/*! A test class */
+#include "World_ThreadManager.hpp"
 
 class World: public LogicTickInterface, public IdleTickInterface, public SaveFileInterface
 {
   private:
     RandomNonStatic random;
+    World_ThreadManager wtm;
 
 	public:
   
@@ -326,6 +327,5 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
   virtual void save();
   
 };
-
 
 #endif

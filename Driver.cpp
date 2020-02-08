@@ -291,7 +291,6 @@ void shutDown()
 
 #include <Data/ArgReader.hpp>
 
-
 int main(int nArgs, char ** arg)
 {
 	ArgReader argReader;
@@ -310,6 +309,18 @@ int main(int nArgs, char ** arg)
 	
 	/* Initialise game. Load textures, fonts etc. */
 	init();
+   
+#if defined THREAD_ALL
+  std::thread testThread( []
+  {
+     Sleep(1000);
+     while(true)
+     {
+        std::cout<<"Hello, I'm a thread\n";
+        Sleep(1000);
+     }
+  });
+#endif
   
 	/* Reshape is called here. */
 	glutMainLoop();

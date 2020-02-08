@@ -49,7 +49,9 @@
 
 class Item;
 
-World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
+#include "World_ThreadManager.cpp"
+
+World::World(): SaveFileInterface(), wtm(this), seaLevel(0), mountainLevel(0)
 {
 	random.seed();
 	
@@ -85,6 +87,8 @@ World::World(): SaveFileInterface(), seaLevel(0), mountainLevel(0)
   
   calendar.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
   calendar.secondsPerMinute = 2;
+  
+  wtm.main();
 
 }
 

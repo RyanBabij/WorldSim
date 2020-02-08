@@ -20,6 +20,8 @@
 // that out later.
 #define PORTABLE_INT_MAX 32767
 
+#define THREAD_ALL // activates all threading code
+
 
 #define SAVE_DATA // Program will save data to file. It saves a lot of data and it can end up taking up a lot of space
 
@@ -33,7 +35,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.163 Win32 dev";
+const std::string VERSION = "0.0.164 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -97,7 +99,7 @@ const int CALENDAR_SECONDS_PER_MINUTE = 2;
 */
 //const int LOCAL_MAP_SIZE = 65;
 // 129 is good for testing, but we will probably want to go much higher for release.
-const int LOCAL_MAP_SIZE = 127;
+const int LOCAL_MAP_SIZE = 129;
 int TIME_SCALE = 10; /* How many seconds of gametime pass per logic tick. */
 // Timescale should be based on distances between cells.
 // At 1:1 scale a cell is 5km*5km. Such a cell should take about 1 hour to walk across.
