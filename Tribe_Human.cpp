@@ -95,19 +95,16 @@ void Tribe_Human::wander()
 	//  Move to unexplored territory
 	
 	//aTerrain.getNeighborVector(_x,_y,&vTerrain,false /* DON'T INCLUDE SELF */);
-	Vector <HasXY*> * vXY  = world->aTerrain.getNeighbors(worldX, worldY, false /* includeself */, true /* shuffle */);
+	Vector <HasXY*> * vXY  = world->aWorldTile.getNeighbors(worldX, worldY, false /* includeself */, true /* shuffle */);
   
   if (vXY==0) { return; }
 	
-	//HasXY* xyDestination = 0;
-  
-  
   // IF THE TRIBE IS NOT IN ITS OWN TERRITORY, BUT ADJACENT TO IT, MOVE BACK.
   if ( world->getDominantInfluence(worldX,worldY) != this)
   {
 		for (auto xy : *vXY)
 		{
-			if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+			if (world->aWorldTile.isSafe(xy) && world->isLand(xy) )
 			{
         // If we own this tile, move to it.
 				if ( world->getDominantInfluence(xy) == this )
@@ -132,7 +129,7 @@ void Tribe_Human::wander()
     {
       for (auto xy : *vXY)
       {
-        if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+        if (world->aWorldTile.isSafe(xy) && world->isLand(xy) )
         {
           worldX=xy->x;
           worldY=xy->y;
@@ -147,12 +144,10 @@ void Tribe_Human::wander()
     {
       for (auto xy : *vXY)
       {
-        if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+        if (world->aWorldTile.isSafe(xy) && world->isLand(xy) )
         {
           if ( world->getHighestInfluence(xy) == 0 )
           {
-            //xyDestination=xy;
-            
             worldX=xy->x;
             worldY=xy->y;
             combat(world->combatCheck(this));
@@ -162,11 +157,10 @@ void Tribe_Human::wander()
       }
     }
     
-    
     // MOVE AROUND WITHIN OWNED TERRITORY
     for (auto xy : *vXY)
     {
-      if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+      if (world->aWorldTile.isSafe(xy) && world->isLand(xy) )
       {
         if ( world->getDominantInfluence(xy)==this)
         {
@@ -178,8 +172,6 @@ void Tribe_Human::wander()
         }
       }
     }
-
-    
     
       /* Otherwise move to a weak territory to reinforce/capture it */
    // if ( random.oneIn(2) )
@@ -246,7 +238,7 @@ void Tribe_Human::wander()
   // IF ALL ELSE FAILS, MOVE RANDOMLY (INCLUDING INTO ENEMY TERRITORY
   for (auto xy : *vXY)
   {
-    if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+    if (world->aWorldTile.isSafe(xy) && world->isLand(xy) )
     {
       worldX=xy->x;
       worldY=xy->y;
@@ -429,14 +421,14 @@ void Tribe_Human::incrementTicks ( int nTicks )
     // To check entire landmass. And prevent tribes from splitting into single free tiles.
     int nFreeTiles = 0;
     
-    Vector <HasXY*> * vXY  = world->aTerrain.getNeighbors(worldX, worldY, false, true /* shuffle */);
+    Vector <HasXY*> * vXY  = world->aWorldTile.getNeighbors(worldX, worldY, false, true /* shuffle */);
     
     if (vXY==0) { return; }
     
     bool canExpand = false;
     for (auto xy : *vXY)
     {
-      if (world->aTerrain.isSafe(xy) && world->isLand(xy) && world->getHighestInfluence(xy) == 0)
+      if (world->aWorldTile.isSafe(xy) && world->isLand(xy) && world->getHighestInfluence(xy) == 0)
       {
         //canExpand=true;
         nFreeTiles++;
@@ -454,7 +446,7 @@ void Tribe_Human::incrementTicks ( int nTicks )
       // CHECK TO SEE IF THERE'S A TILE TO SPLIT INTO.
       for (auto xy : *vXY)
       {
-        if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+        if (world->aWorldTile.isSafe(xy) && world->isLand(xy) )
         {
           if ( world->getHighestInfluence(xy) == 0 )
           {

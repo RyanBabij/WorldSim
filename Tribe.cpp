@@ -129,7 +129,7 @@ void Tribe::wander()
 	//  Move to unexplored territory
 	
 	//aTerrain.getNeighborVector(_x,_y,&vTerrain,false /* DON'T INCLUDE SELF */);
-	Vector <HasXY*> * vXY  = world->aTerrain.getNeighbors(worldX, worldY, false, true);
+	Vector <HasXY*> * vXY  = world->aWorldTile.getNeighbors(worldX, worldY, false, true);
   
   if (vXY==0) { return; }
 
@@ -138,10 +138,9 @@ void Tribe::wander()
 	// Explore new territory
 	if (random.oneIn(4))
 	{
-		//std::cout<<"1\n";
 		for (auto xy : *vXY)
 		{
-			if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+			if (world->aWorldTile.isSafe(xy) && world->isLand(xy) )
 			{
 				if ( world->getHighestInfluence(xy) == 0 )
 				{
@@ -165,7 +164,7 @@ void Tribe::wander()
 			int weakestInfluence = -1;
 			HasXY * weakestTile = 0;
 			
-			if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+			if (world->aWorldTile.isSafe(xy) && world->isLand(xy) )
 			{
 				if ( world->getDominantInfluence(xy) == this)
 				{
@@ -189,14 +188,13 @@ void Tribe::wander()
 		/* Sometimes move to a weak territory to reinforce/capture it */
 	if ( random.oneIn(3) )
 	{
-		//std::cout<<"2\n";
 			/* Move to weakest territory */
 		int weakestInfluence = -1;
 		HasXY * weakestTile = 0;
 			
 		for (auto xy : *vXY)
 		{
-			if (world->aTerrain.isSafe(xy) && world->isLand(xy) )
+			if (world->aWorldTile.isSafe(xy) && world->isLand(xy) )
 			{
 				if ( world->getHighestInfluence(xy)>0 && world->getHighestInfluence(xy) < weakestInfluence)
 				{
@@ -213,13 +211,7 @@ void Tribe::wander()
 			return;
 		}
 	}
-	
-	
 
-		
-
-
-	//std::cout<<"4\n";
 		/* If all else fails, move randomly. */
 	if (world->isSafe(destinationX,destinationY) && world->isLand(destinationX,destinationY))
 	{

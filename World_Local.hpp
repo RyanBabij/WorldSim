@@ -96,14 +96,11 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    bool hasCave; // should be ncaves
    bool hasRuin; // should be nruins
 
-
    bool initialized; /* True if the world has been loaded at least once. */
    //bool loaded; /* True if the world is currently loaded into RAM */
    bool active; /* Whether or not the world should be simulated. */
    //bool generated; /* False until a world has been generated. Prevents trying to simulate a non-existent world. */
-
-
-
+   
    //WORLD DATA
    short int globalX, globalY; /* The local world's position in the world. */
 
@@ -128,13 +125,11 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    short int hasRiver; /* In future will be expanded to have more detailed info about river direction etc */
    char riverConnections; // NW N NE E SE S SW W. There should be at least 2.
 
-
    // WILDLIFE ABSTRACTION
    // These vars determine maximum herbivore population, and by extension, maximum carnivore population.
    unsigned int nFloraGrass; // Grass, low quality food
    unsigned int nFloraGood; // Shrubs and fruit, high energy food
    unsigned int nFloraDifficult; // Food in trees, only some creatures can eat it.
-
 
    //Return a string with the name of the terrain.
    std::string getTerrainName();
@@ -153,7 +148,6 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    // Return the value of the greatest influence on the tile.
    int getDominantInfluenceValue ();
 
-
    // LOCAL MAP DATA
 
    // Local RNG
@@ -161,10 +155,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
 
    /* The size of the world, measured in tiles. */
    short int nX, nY;
-
-
-
-
+   
    long long unsigned int ticksBacklog; /* World will simulate these ticks whenever it can, while still relinquishing for input etc. */
 
    //The base designated biome for this tile. Will influence generation.

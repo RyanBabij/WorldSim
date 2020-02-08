@@ -28,6 +28,8 @@ World_Local::World_Local()
    globalX=0;
    globalY=0;
 
+   landID=-1;
+
    initialized = false;
    active = false;
 

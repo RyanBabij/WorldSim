@@ -74,7 +74,7 @@ bool active; /* Whether or not the world should be simulated. */
    Timer relinquishTimer;
 
    // This array stores the base terrain data.
-   ArrayS2 <enumBiome> aTerrain;
+   //ArrayS2 <enumBiome> aTerrain;
 
    std::string name; /* The name of the world */
    std::string strSavePath; /* The path to the world's save data. Typically something like: "savedata/<world name>". */
@@ -181,7 +181,7 @@ bool active; /* Whether or not the world should be simulated. */
    // Load up the required local map, do any required logic, center map on character. Return false if error.
    bool prepareAdventureMode( Character * );
 
-   void buildArrays();
+   void buildArrays(WorldGenerator2& wg);
    // Find all unique areas and give them names.
    void nameRegions();
    void generateTribes( int/* nTribes */, int /* nTribesDwarven */, int /* nTribesElven */);
@@ -212,6 +212,7 @@ bool active; /* Whether or not the world should be simulated. */
    inline bool isLand(HasXY*);
 
    // RETURNS TRUE IF THE COORDINATES ARE WITHIN BOUNDS OF THE MAP.
+   // We need to integrate HasXY with template.
    bool isSafe (int _x, int _y);
    // SAME BUT FOR ABSOLUTE COORDINATES.
    bool isSafe (unsigned long int _x, unsigned long int _y);
