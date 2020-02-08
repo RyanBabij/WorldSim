@@ -2,94 +2,74 @@
 #ifndef WORLDSIM_WORLD_CPP
 #define WORLDSIM_WORLD_CPP
 
-/* World.cpp
+/* WorldSim: World.cpp
 	#include "World.cpp"
+   
 	Implementation of "World.hpp".
 */
 
+#include "World.hpp"
 
 #define SAVE_DATA // Enables file operations to save generated world.
 
+#include "Civ.hpp"
+  #include "Civ_Dwarven.hpp"
+#include "Tribe.hpp"
+  #include "Tribe_Human.hpp"
+  #include "Tribe_Dwarven.hpp"
+  #include "Tribe_Elf.hpp"
+#include "Character.hpp"
+#include "Settlement.hpp"
+  #include "Settlement_Dwarven.hpp"
+#include "WorldObjectGlobal.hpp"
+#include "WorldObject.hpp"
+  #include "WorldObject_Tree.hpp"
+  #include "WorldObject_Rock.hpp"
+  #include "WorldObject_Sign.hpp"
+#include "Item.hpp"
+#include "World_MapManager.cpp"
 
-//#include<set> /* For raytraceLOS */
-
+#include <Game/WorldGenerator/Biome.hpp>
 #include <Game/NameGen/NameGen.hpp>
 #include <Game/WorldGenerator/WorldGenerator2.hpp>
-
 #include <File/FileLog.hpp>
-
 #include <System/Time/Timer.hpp> // To manage work chunks and benchmark worldgen time.
 
 #include <thread>
 #include <mutex>
 #include <atomic> // Variables which work with threads
 
-#include "Civ.hpp"
-  #include "Civ_Dwarven.hpp"
-
-#include "Tribe.hpp"
-  #include "Tribe_Human.hpp"
-  #include "Tribe_Dwarven.hpp"
-  #include "Tribe_Elf.hpp"
-
-#include "Character.hpp"
-
-#include "Settlement.hpp"
-  #include "Settlement_Dwarven.hpp"
-
-#include "WorldObjectGlobal.hpp"
-#include <Game/WorldGenerator/Biome.hpp>
-
-#include "WorldObject.hpp"
-  #include "WorldObject_Tree.hpp"
-  #include "WorldObject_Rock.hpp"
-  #include "WorldObject_Sign.hpp"
-
-#include "Item.hpp"
-
-class Item;
-
-#include "World_MapManager.cpp"
-
 World::World(): SaveFileInterface(),/* mapManager(this),*/ seaLevel(0), mountainLevel(0)
 {
-	random.seed();
-	
-	nX=-1;
-	nY=-1;
-  
-  simX=0;
-  simY=0;
+   random.seed();
 
-  maximumX = 0;
-  maximumY = 0;
-  
-	active=false;
-	generated=false;
-	
-	ticksBacklog=0;
-	relinquishTimer.init();
-	
-	name="";
-  
-	dailyCounter=0;
-	monthlyCounter=0;
-  
-  //localX = -1;
-  //localY = -1;
-  
-  queryWorldX = -1;
-  queryWorldY = -1;
-  
-  worldFilePath = "";
-  
-  isRaining=false;
-  
-  calendar.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
-  calendar.secondsPerMinute = 2;
-  
-  mapManager.main();
+   nX=-1; nY=-1;
 
+   simX=0; simY=0;
+
+   maximumX = 0; maximumY = 0;
+
+   active=false;
+   generated=false;
+
+   ticksBacklog=0;
+   relinquishTimer.init();
+
+   name="";
+
+   dailyCounter=0;
+   monthlyCounter=0;
+
+   queryWorldX = -1; queryWorldY = -1;
+
+   worldFilePath = "";
+
+   isRaining=false;
+
+   calendar.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
+   calendar.secondsPerMinute = 2;
+
+   mapManager.main();
 }
 
 World::~World()
@@ -178,34 +158,32 @@ inline LocalTile* World::operator() (HasXY2 <unsigned long int>* _xy, const bool
     // This currently doesn't work if tileX or tileY are negative.
 bool World::absoluteToRelative (const unsigned long int _absoluteX, const unsigned long int _absoluteY, int * _globalX, int * _globalY, int * _localX, int * _localY)
 {
-  if ( _globalX == 0 || _globalY == 0 || _localX == 0 || _localY == 0 )
-  { return false; }
-  
-  // overflow check
-  
-  if (_absoluteX > maximumX || _absoluteY > maximumY )
-  {
-    *_globalX = 0;
-    *_globalY = 0;
-    *_localX = 0;
-    *_localY = 0;
-    return false;
-  }
-  
-  *_globalX = _absoluteX / LOCAL_MAP_SIZE;
-  *_globalY = _absoluteY / LOCAL_MAP_SIZE;
-  
-  if ( *_globalX == 0 )
-  { *_localX = _absoluteX; }
-  else
-  { *_localX = _absoluteX % LOCAL_MAP_SIZE; }
-  
-  if ( *_globalY == 0 )
-  { *_localY = _absoluteY; }
-  else
-  { *_localY = _absoluteY % LOCAL_MAP_SIZE; } 
-  return true;
+   if ( _globalX == 0 || _globalY == 0 || _localX == 0 || _localY == 0 )
+   { return false; }
 
+   // overflow check
+   if (_absoluteX > maximumX || _absoluteY > maximumY )
+   {
+      *_globalX = 0;
+      *_globalY = 0;
+      *_localX = 0;
+      *_localY = 0;
+      return false;
+   }
+
+   *_globalX = _absoluteX / LOCAL_MAP_SIZE;
+   *_globalY = _absoluteY / LOCAL_MAP_SIZE;
+
+   if ( *_globalX == 0 )
+   { *_localX = _absoluteX; }
+   else
+   { *_localX = _absoluteX % LOCAL_MAP_SIZE; }
+
+   if ( *_globalY == 0 )
+   { *_localY = _absoluteY; }
+   else
+   { *_localY = _absoluteY % LOCAL_MAP_SIZE; } 
+   return true;
 }
 
   // Return true if the map for this tile has been generated
@@ -265,7 +243,6 @@ bool World::removeObject(WorldObjectGlobal* _object)
 
 Vector <WorldObjectGlobal*>* World::getNeighboringObjects(WorldObjectGlobal* _obj)
 {
-
 	Vector <WorldObjectGlobal*>* vNearbyObjects = new Vector <WorldObjectGlobal*>;
 	
 	for (int i=0;i<vWorldObjectGlobal.size();++i)
@@ -276,7 +253,6 @@ Vector <WorldObjectGlobal*>* World::getNeighboringObjects(WorldObjectGlobal* _ob
 		{
 			if ( _obj->distanceTo(_o) <= 1 )
 			{
-				//std::cout<<"Nearby object detected.\n";
 				vNearbyObjects->push(_o);
 			}
 		}
@@ -285,16 +261,6 @@ Vector <WorldObjectGlobal*>* World::getNeighboringObjects(WorldObjectGlobal* _ob
 
 	return vNearbyObjects;
 }
-
-// void World::generateCitizens(const int nCitizens)
-// {
-	// for (int i=0;i<nCitizens;++i)
-	// {
-		// Citizen citizen;
-		// citizen.init();
-		// std::cout<<"Citizen: "<<citizen.getFullName()<<".\n";
-	// }
-// }
 
 bool World::isSafe(int _x, int _y)
 {
@@ -310,7 +276,6 @@ bool World::isSafe(unsigned long int _x, unsigned long int _y)
 Character* World::getRandomCharacter()
 {
   //Get total world population.
-  
   Character* chosenChar = 0;
   
   int totalPop = 0;
@@ -336,7 +301,7 @@ Character* World::getRandomCharacter()
   return 0;
 }
 
-    //Return a vector of coordinates visible from the given location.
+//Return a vector of coordinates visible from the given location.
 Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x, unsigned long int _y, const int RANGE, const bool isSneaking = false, bool subterranean)
 {
   if (RANGE <= 0) { return 0; }
@@ -382,9 +347,6 @@ Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x
     
   auto hXY = new HasXY2 <unsigned long int>;
   
-  //std::set <HasXY2 <unsigned long int> * > sInt;
-  //setOfNumbers.insert("first");
-    
   rayTraceCoordinates.push( new HasXY2 <unsigned long int> (tempX,tempY) );
   
   while (tempX <= rayMaxX)
@@ -404,8 +366,6 @@ Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x
   }
   
   // We now have a list of coordinates to raytrace.
-  // //std::cout<<"RayTrace Coordinats size: "<<rayTraceCoordinates.size()<<".\n";
-  
   auto vVisibleTiles = new Vector <HasXY2 <unsigned long int> *>;
   
   
@@ -414,13 +374,13 @@ Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x
     rayTrace (_x,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles, subterranean);
     
     // Very bad implementation of peeking. Should be optimised in future.
-    if (isSneaking)
-    {
+   if (isSneaking)
+   {
       rayTrace (_x+1,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
       rayTrace (_x-1,_y,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
       rayTrace (_x,_y+1,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
       rayTrace (_x,_y-1,rayTraceCoordinates(i)->x,rayTraceCoordinates(i)->y,vVisibleTiles);
-    }
+   }
 
     
   }
@@ -428,10 +388,9 @@ Vector <HasXY2 <unsigned long int> *> * World::rayTraceLOS (unsigned long int _x
   return vVisibleTiles;
 }
 
+// This should probably be an external game lib
 void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned long int _x2, unsigned long int _y2, Vector <HasXY2 <unsigned long int> *> * vVisibleTiles, bool subterranean)
 {
-  // Old code from ECHO
-  
   int xDiff = 0;
   if ( _x1 > _x2 )
   { xDiff = _x2 - _x1; }
@@ -443,7 +402,6 @@ void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned lon
   { yDiff = _y2 - _y1; }
   else if ( _y2 > _y1 )
   { yDiff = _y1 - _y2; }
-
 
   double slope = BasicMath::getSlopeULI(_x1,_y1,_x2,_y2);
 
@@ -470,11 +428,8 @@ void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned lon
       }
       else
       {
-        //std::cout<<"DUPE DETECTED\n";
         delete temp;
       }
-      
-      
     }
   }
 
@@ -494,7 +449,6 @@ void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned lon
         }
         else
         {
-          //std::cout<<"DUPE DETECTED\n";
           delete temp;
         }
         
@@ -526,7 +480,6 @@ void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned lon
     //while (_x1 != _x2 )
     do
     {
-
       unsigned long int roundedY = 0;
 
       if ( _y1 > _y2 )
@@ -711,83 +664,50 @@ void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int 
 	}
   std::cout<<"\n";
  
-	
 	std::cout<<"END Generate tribes\n";
-	
-	
 }
 
 
   // Remove tribe object and replace it with a Civ and Settlement (whereever the Tribe is standing.
 void World::evolveToCiv( Tribe * _tribe )
 {
-  if ( _tribe == 0 ) { return; }
-  
-  Console (Stream() << "Tribe: " << _tribe->name << " became a Civ.");
-  
-  if ( _tribe->race == DWARVEN)
-  {
-    //std::cout<<"AYYY DWARVEN\n";
-    Civ_Dwarven * civ = new Civ_Dwarven;
-    
-    
-    civ->name = _tribe->name;
-    civ->world = this;
-    
-    //std::cout<<"Civ name is: "<<civ->name<<".\n";
-    
-    civ->setColour(_tribe->colourRed,_tribe->colourGreen,_tribe->colourBlue);
-    
-    civ->vCharacter.copy(&_tribe->vCharacter);
-    
-    //std::cout<<"Copied: "<<civ->vCharacter.size() <<" characters.\n";
-    
-    Settlement_Dwarven * s = new Settlement_Dwarven;
-    s->world = this;
-    s->vCharacter.copy(&_tribe->vCharacter);
-    putObject(s, _tribe->worldX, _tribe->worldY);
-    removeObject(_tribe);
-    vTribe.remove(_tribe);  
+   if ( _tribe == 0 ) { return; }
+
+   Console (Stream() << "Tribe: " << _tribe->name << " became a Civ.");
+
+   if ( _tribe->race == DWARVEN)
+   {
+      Civ_Dwarven * civ = new Civ_Dwarven;
+
+      civ->name = _tribe->name;
+      civ->world = this;
+      civ->setColour(_tribe->colourRed,_tribe->colourGreen,_tribe->colourBlue);
+      civ->vCharacter.copy(&_tribe->vCharacter);
+
+      Settlement_Dwarven * s = new Settlement_Dwarven;
+      s->world = this;
+      s->vCharacter.copy(&_tribe->vCharacter);
+      putObject(s, _tribe->worldX, _tribe->worldY);
+      removeObject(_tribe);
+      vTribe.remove(_tribe);  
 
       // Give the Civ a Settlement
-    civ->addSettlement(s);
-    
-    vCiv.push(civ);
-    
-      // Move all characters into the first Settlement
-    s->vCharacter.copy(&_tribe->vCharacter);
-  }
-  
-  //Civ * civ = new Civ;
-}
+      civ->addSettlement(s);
+      vCiv.push(civ);
 
-	/* DEPRECATED */
-// void World::incrementDay()
-// {
-	// //date.advanceUnits(10000*30);
-	// //std::cout<<"*CIV1\n";
-// //	civ1.aiDay();
-	// //std::cout<<"*CIV2\n";
-	// //civ2.aiDay();
-	// //civ3.aiDay();
-	// //civ4.aiDay();
-	
-// }
-	/* DEPRECATED */
-// void World::incrementSecond()
-// {
-// //	civ1.aiSecond();
-// }
+      // Move all characters into the first Settlement
+      s->vCharacter.copy(&_tribe->vCharacter);
+   }
+}
 
 void World::incrementTicksBacklog(long long unsigned int nTicks)
 {
 	ticksBacklog+=nTicks;
 }
 
-	// Increments the world by nTicks ticks. Higher values may lead to abstraction.
+// Increments the world by nTicks ticks. Higher values may lead to abstraction.
 void World::incrementTicks(int nTicks)
 {
-  
   worldViewer.rainManager.updateRain();
 
 	//ticksBacklog+=nTicks;
@@ -795,7 +715,6 @@ void World::incrementTicks(int nTicks)
 	monthlyCounter+=nTicks;
   
 	calendar.advanceSecond(nTicks);
-  
   
 	for ( int i=0;i<vTribe.size();++i)
 	{
@@ -834,9 +753,8 @@ void World::incrementTicks(int nTicks)
   
 	while ( dailyCounter >= 86400 )
   {
-
-		dailyCounter-=86400;
-    nTicks-=86400;
+      dailyCounter-=86400;
+      nTicks-=86400;
 	}
   
   // FOR NOW INCREMENT INDIVIDUAL TICKS THROW AWAY SOME IF THERE'S TOO MANY
@@ -866,7 +784,6 @@ void World::incrementTicks(int nTicks)
       }
   }
   
-  
   // if (calendar.minute%5==0)
   // { isRaining=true; }
   // else
@@ -877,11 +794,7 @@ void World::incrementTicks(int nTicks)
 	//{
 		//vCiv(i)->incrementTicks(nTicks);
 	//}
-  
-
-	
 	//updateCivContacts();
-
 
 	// if (nTicks == 1)
 	// {
@@ -1024,34 +937,6 @@ void World::idleTick()
   }
 }
 
-
-// void World::loadHeightMap(std::string filePath)
-// {
-	// std::cout<<"Loading heightmap png.\n";
-	
-	// int fileSize;
-	// unsigned char* data = FileManager::getFile(filePath,&fileSize);
-	// Png png;
-	// png.load(data,fileSize);
-	// aHeightMap.init(png.nX,png.nY,0);
-	// //aWorldObject.init(png.nX,png.nY,0);
-	// //aTopoMap.init(png.nX,png.nY,3,0);
-
-	// for(int x=0;x<png.nX;++x)
-	// {
-		// for(int y=0;y<png.nY;++y)
-		// { /* for some reason, the map needs to loaded upside-down */
-			// aHeightMap(x,png.nY-y-1)=png.getPixel3D(x,y,0);
-			
-			// //aTopoMap(x,png.nY-y-1,0)=png.getPixel3D(x,y,0);
-			// //aTopoMap(x,png.nY-y-1,1)=png.getPixel3D(x,y,1);
-			// //aTopoMap(x,png.nY-y-1,2)=png.getPixel3D(x,y,2);
-		// }
-	// }
-	// delete [] data;
-	// delete [] png.data;
-// }
-
 bool World::isLand(int _x, int _y)
 {
 	if ( aTerrain.isSafe(_x,_y) == true )
@@ -1070,19 +955,7 @@ inline bool World::isLand(HasXY* _xy)
 	return isLand(_xy->x, _xy->y);
 }
 
-// bool World::loadWorldData(std::string filePath)
-// {
-	// std::cout<<"Getting world data.\n";
-	// int fileSize;
-	// unsigned char* data = FileManager::getFile(filePath,&fileSize);
-	// seaLevel = data[0];
-	// mountainLevel = data[1];
-	// std::cout<<"Data read: " << (int)seaLevel << ","<<(int)mountainLevel<<"\n";
-	// return true;
-// }
-
 int mX;
-
 
 	// This should be done externally.
 void World::buildArrays()
@@ -1544,15 +1417,6 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   tLandmass.join();
 	
 	// Trying another algorithm
-	
-	// std::cout<<"Building landmass info with second algorithm.\n";
-	
-	// int nLandmass2 = 0;
-	
-	// ArrayS2 <int>* aLandmassID2 = aIsLand.floodFillUniqueID(false, &nLandmass2);
-	
-	// std::cout<<"Filled "<<nLandmass2<<" landmasses.\n";
-	
 	std::cout<<"Building biome info.\n";
   
   Timer timerBiomeFill;
@@ -1560,9 +1424,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   timerBiomeFill.start();
 	
 	int currentID3=0;
-  
-  //Vector <int> vBiomesFilling;
-  
+
   #define THREADED_BIOME_FILL
   #if defined THREAD_ALL || defined THREADED_BIOME_FILL 
   
@@ -1781,36 +1643,10 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   tvAllTiles.join();
   tvAllTiles2.join();
 	
-
-	//Vector < Vector <HasXY* >* > vAllTiles;
-  
-  
-  // SAVE WORLD DATA HERE (LATER PUT INTO FUNCTION)
-    // std::string tileData = "";
-    // for (int _y=0;_y<nY;++_y)
-    // {
-      // for (int _x=0;_x<nX;++_x)
-      // {
-        // tileData+=",";
-        // tileData+=DataTools::toString(aWorldTile(_x,_y).biome);
-      // }
-    // }
-    // FileManager::writeTag("BIOME",tileData,worldFilePath);
-	
-	
 	worldGenTimer.update();
 	std::cout<<"world generated in: "<<worldGenTimer.fullSeconds<<" seconds.\n";
   
   std::cout<<"The world's uid is: "<<getUID()<<".\n";
-
-  
-  //std::cout<<"Doing test save.\n";
-  
-  // worldFilePath = strSavePath+"/main2.dat";
-  // saveFileManager.vSaveObjects.clear();
-  // saveFileManager.vSaveObjects.push(this);
-  // saveFileManager.saveFile(worldFilePath);
-    //FileManager::writeString(NYA,worldFilePath);
 }
 
 
@@ -1825,32 +1661,13 @@ void World::generateLocal(const int _localX, const int _localY)
   {
     if ( vWorldLocal(i)->globalX == _localX && vWorldLocal(i)->globalY == _localY )
     {
-      //std::cout<<"ALREADY GENERATED\n";
       return;
     }
   }
 
-  if ( aWorldTile(_localX,_localY).initialized )
-  {
-    //std::cout<<"Already initialised, load from file.\n";
-    //return;
-  }
-
-  
-  // don't generate ocean tiles
-  // if ( aWorldTile(_localX,_localY).biome == OCEAN )
-  // {
-    // return;
-  // }
-  
-  
-  //auto worldLocal = new World_Local;
-  //worldLocal->init(_localX,_localY);
   aWorldTile(_localX,_localY).generate();
   aWorldTile(_localX,_localY).active=true;
   aWorldTile(_localX,_localY).initialized=true;
-  
-  
   
   //There needs to be a minimum of 3 maps active at any time. (1 map the player is currently in,
     // and potentially three neighboring maps. Additional maps will likely need to be loaded in
@@ -1860,8 +1677,7 @@ void World::generateLocal(const int _localX, const int _localY)
   if ( vWorldLocal.size() > MAX_LOCAL_MAPS_IN_MEMORY )
   //if ( false )
   {
-    //std::cout<<"Too many maps\n";
-    
+
     // Pick a map to unload from memory.
     // Note: Don't delete World_Local. It must always be loaded. However some internal data must be cleaned up.
     // Don't unload tiles near player.
@@ -1935,8 +1751,6 @@ void World::unloadLocal(const int _localX, const int _localY)
   {
     if ( vWorldLocal(i)->globalX == _localX && vWorldLocal(i)->globalY == _localY )
     {
-      
-      
       //save to file
       SaveFileManager sfm;
       
@@ -1949,48 +1763,9 @@ void World::unloadLocal(const int _localX, const int _localY)
           saveData+=".";
         } saveData+="\n";
       }
-  
-  // WORLD INFO
-  
-  // sfm.addVariable("WORLDNAME",name);
-  // sfm.addVariable("LANDSEED",landmassSeed);
-  // sfm.addVariable("SIZEX",nX);
-  // sfm.addVariable("SIZEY",nY);
-  
-  // sfm.saveToFile(worldFilePath);
-  
-  // // SAVE BIOME INFO AS PNG.
-    // // BIOME INFO ALSO FUNCTIONS AS LANDMASS INFO.
-    
-  // ArrayS3 <unsigned char> aBiomeData (nX,nY,3,0);
-  
-	// for (int _y=0;_y<nY;++_y)
-	// {
-		// for (int _x=0;_x<nX;++_x)
-		// {
-      // enumBiome _biome = aTerrain(_x,_y);
-      
-      // aBiomeData(_x,_y,0) = biomeRed[_biome];
-      // aBiomeData(_x,_y,1) = biomeGreen[_biome];
-      // aBiomeData(_x,_y,2) = biomeBlue[_biome];
-    // }
-  // }
-    
-	// Png png;
-	// png.encodeS3(strSavePath+"/biome.png",&aBiomeData);
-  
-      
-      
       return;
     }
   }
-
-  // auto worldLocal = new World_Local;
-  // worldLocal->init(_localX,_localY);
-  // worldLocal->generate();
-  
-  // vWorldLocal.push(worldLocal);
-  
   return;
 
 }
@@ -2126,11 +1901,6 @@ int World::getPopulation()
 
 bool World::getRandomLandTile(int* x, int* y)
 {
-	//std::cout<<"Get random land tile\n";
-	//*x=0;
-	//*y=0;
-	//return true;
-	
 	int randomRow = random.randomInt(nY-1);
 	int nRowsSearched = 0;
 	
@@ -2155,19 +1925,7 @@ bool World::getRandomLandTile(int* x, int* y)
 		if (randomRow >= nY) { randomRow=0; }
 		++nRowsSearched;
 	}
-	
-	
-	// for ( int nAttempts=0;nAttempts<100;++nAttempts)
-	// {
-		// getRandomTile(x,y);
-	
-		// if ( aTerrain(*x,*y) != OCEAN && aTerrain(*x,*y) != NOTHING)
-		// {
-			// return true;
-		// }
-	
-	// }
-
+   
 	*x=0;
 	*y=0;
 	return false;
@@ -2184,69 +1942,28 @@ HasXY* World::getRandomTileOfType(enumBiome _type)
       return xy;
     }
   }
-  
-	// int randomRow = random.randomInt(nY-1);
-	// int nRowsSearched = 0;
-	
-	// while ( nRowsSearched < nY )
-	// {
-		// for (int _x=0;_x<nX;++_x)
-		// {
-			// int randomX = (*vAllTiles(randomRow))(_x);
-			
-			// if ( aTerrain(randomX,randomRow) == _type )
-			// {
-				// return new HasXY (randomX,randomRow);
-			// }
 
-		// }
-		
-		// vAllTiles(randomRow)->shuffle();
-		
-		// ++randomRow;
-		// if (randomRow >= nY) { randomRow=0; }
-		// ++nRowsSearched;
-	// }
-	
-	
 	return 0;
 }
 
 
 void World::queryTile( const int hoveredXTile, const int hoveredYTile)
 {
-	// if ( hoveredXTile < 0 || hoveredYTile < 0 || hoveredXTile >= nX || hoveredYTile >= nY )
-	// { return; }
-  if ( isSafe (hoveredXTile,hoveredXTile) == false )
-  {
-    return;
-  }
-  
-  queryWorldX = hoveredXTile;
-  queryWorldY = hoveredYTile;
+   if ( isSafe (hoveredXTile,hoveredXTile) == false )
+   {
+      return;
+   }
 
-
-  //bool hasObject = false;
-	// for (int i=0;i<vWorldObjectGlobal.size();++i)
-	// {
-		// if ( vWorldObjectGlobal(i)->worldX == hoveredXTile && vWorldObjectGlobal(i)->worldY == hoveredYTile)
-		// {
-			// //std::cout<<vWorldObjectGlobal(i)->nameType<<": "<<vWorldObjectGlobal(i)->name<<".\n";
-      // //Console (Stream() <<vWorldObjectGlobal(i)->nameType<<": "<<vWorldObjectGlobal(i)->name);
-      // //hasObject = true;
-		// }
-	// }
-  //if ( hasObject )
-  //{ Console (Stream() <<"Objects:"); }
-
+   queryWorldX = hoveredXTile;
+   queryWorldY = hoveredYTile;
 }
 
 void World::addInfluence(Tribe* tribe, int amount)
 {
-	if ( tribe==0 || isSafe (tribe->worldX,tribe->worldY) == false )
-	{ return; }
-	
-  aWorldTile(tribe->worldX,tribe->worldY).addInfluence(tribe,amount);
+   if ( tribe==0 || isSafe (tribe->worldX,tribe->worldY) == false )
+   { return; }
+
+   aWorldTile(tribe->worldX,tribe->worldY).addInfluence(tribe,amount);
 }
 
 // THIS IS A BIT DODGY. THERE SHOULD BE A SINGLE PASS FOR EVERYONE AT ONCE.
@@ -2274,26 +1991,6 @@ void World::destroyInfluence (Tribe* _tribe)
       aWorldTile(_x,_y).destroyInfluence(_tribe);
     }
 	}
-	
-	// for (std::map <Tribe*,int>* mInfluence : aInfluence )
-	// {
-		// if ( mInfluence != 0)
-		// {
-			// // Search for existing influence from this tribe.
-			// auto search = mInfluence->find(_tribe);
-			// if(search != mInfluence->end())
-			// {
-				// // Decrement influence if this tribe has been here.
-				// if(search->second > 0)
-				// { search->second=0;
-				// }
-        
-        // //When influence is 0, it should be deleted.
-
-
-			// }
-		// }
-	// }
 }
 
 	// Note that 0 influence doesn't count as influence. In this case it will return 0.
@@ -2302,25 +1999,6 @@ Tribe* World::getDominantInfluence (const int _x, const int _y)
   if ( isSafe(_x,_y) == false ) { return 0; }
   
   return aWorldTile(_x,_y).getDominantInfluence();
-  
-	// if ( aInfluence.isSafe(_x,_y) && aInfluence(_x,_y) != 0)
-	// {
-		// std::map<Tribe* , int>::iterator it;
-		
-		// int largestInfluence = 0;
-		// Tribe * dominantTribe = 0;
-		
-		// for ( it = aInfluence(_x,_y)->begin(); it != aInfluence(_x,_y)->end(); it++ )
-		// {
-			// if ( it->second > largestInfluence )
-			// {
-				// dominantTribe = it->first;
-				// largestInfluence = it->second;
-			// }
-		// }
-		// return dominantTribe;
-	// }
-	// return 0;
 }
 
 Tribe* World::getDominantInfluence (HasXY* _xy)
@@ -2334,27 +2012,6 @@ int World::getHighestInfluence(const int _x, const int _y)
   if ( isSafe(_x,_y) == false ) { return 0; }
   
   return aWorldTile(_x,_y).getDominantInfluenceValue();
-  
-  
-	// if ( aInfluence.isSafe(_x,_y) && aInfluence(_x,_y) != 0)
-	// {
-		
-		// std::map<Tribe* , int>::iterator it;
-		
-		// int largestInfluence = 0;
-		// Tribe * dominantTribe = 0;
-		
-		// for ( it = aInfluence(_x,_y)->begin(); it != aInfluence(_x,_y)->end(); it++ )
-		// {
-			// if ( dominantTribe == 0 || it->second > largestInfluence )
-			// {
-				// dominantTribe = it->first;
-				// largestInfluence = it->second;
-			// }
-		// }
-		// return largestInfluence;
-	// }
-	// return 0;
 }
 
 	int World::getHighestInfluence(HasXY* _xy)
@@ -2462,8 +2119,6 @@ int World::nFreeTerritory(int landmassID)
                if ( getHighestInfluence( (*vLandmassTiles)(i) ) == 0)
                {
                   ++nUnclaimed;
-                  //delete vLandmassTiles;
-                  //return true;
                }
             }
             delete vLandmassTiles;
@@ -2486,12 +2141,6 @@ void World::controlCharacter(Character* _character)
   /* Get character coordinates */
   int genX = playerCharacter->worldX;
   int genY = playerCharacter->worldY;
-  
-  //worldViewer.localX = genX;
-  //worldViewer.localY = genY;
-  
-  //worldViewer.centerTileX = genX;
-  //worldViewer.centerTileY = genY;
   
   /* Generate local map */
   generateLocal(genX,genY);
@@ -2532,8 +2181,6 @@ void World::controlCharacter(Character* _character)
   worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
   updateMaps();
   playerCharacter->updateKnowledge();
-  
-  
 }
   
   
@@ -2559,8 +2206,6 @@ Tribe * World::getNearestConnectedTribe (Tribe * _tribe, bool sameRace /* =true 
       }
     }
   }
-  
-  
   return closestTribe;
 }
   
@@ -2608,171 +2253,145 @@ bool World::prepareAdventureMode( Character * _character )
     std::cout<<"Error: Character doesn't have Tribe.\n";
     return false;
   }
-  
-  //std::cout<<"Generating local map: ("<<playerCharacter->tribe->worldX<<", "<<playerCharacter->tribe->worldY<<").\n";
-  //generateLocal(playerCharacter->tribe->worldX,playerCharacter->tribe->worldY);
-  
   controlCharacter(_character);
-  
   return true;
 }
 
-
 bool World::loadWorld(std::string _name)
 {
-  #ifdef SAVE_DATA
-  SaveFileManager sfm;
-  
-	strSavePath = SAVE_FOLDER_PATH+"/"+_name;
-	
-  std::cout<<"Attempting to load data from: "<<strSavePath<<".\n";
-	
-	if ( FileManager::directoryExists(strSavePath) == false )
-	{
-		std::cout<<"Error: This world doesn't appear to exist.\n";
-		return false;
-	}
-  
-  std::cout<<"Loading data from: "<<strSavePath<<".\n";
-  
-	// Load master file.
-  worldFilePath = strSavePath+"/main.dat";
-  
-  if ( FileManager::fileExists(worldFilePath) )
-  {
-    std::cout<<"Loading master.dat\n";
-    
-    std::cout<<FileManager::getFileAsString(worldFilePath)<<".\n";
-    
-    sfm.loadFile(worldFilePath);
-  }
-  else
-  {
-    std::cout<<"Master file doesn't appear to exist.\n";
-    return false;
-  }
+#ifdef SAVE_DATA
+   SaveFileManager sfm;
 
-  
-  std::string wname = sfm.loadVariableString("WORLDNAME");
-  std::string wseed = sfm.loadVariableString("LANDSEED");
-  std::string wX = sfm.loadVariableString("SIZEX");
-  std::string wY = sfm.loadVariableString("SIZEY");
-  
-  std::cout<<"Loaded worldname is: "<<wname<<".\n";
-  std::cout<<"Loaded seed is: "<<wseed<<".\n";
-  std::cout<<"Loaded x is: "<<wX<<".\n";
-  std::cout<<"Loaded y is: "<<wY<<".\n";
+   strSavePath = SAVE_FOLDER_PATH+"/"+_name;
 
-	int fileSize;
-	unsigned char* data = FileManager::getFile(strSavePath+"/biome.png" ,&fileSize);
-  
-  if (data == 0)
-  {
-    std::cout<<"ERROR: biome.png couldn't be loaded.\n";
-    return false;
-  }
-  
-	Png png;
-  
-  if (png.load(data,fileSize) == false )
-  {
-    std::cout<<"ERROR: PNG didn't load successfully.\n";
-    return false;
-  }
-  
-  if ( png.nX < 1 || png.nY < 1 )
-  {
-    std::cout<<"ERROR: PNG has bad dimensions.\n";
-    return false;
-  }
-  
-  nX = png.nX;
-  nY = png.nY;
-  
-  
-	aWorldObject.init(png.nX,png.nY,0);
-	//aTopoMap.init(png.nX,png.nY,3,0);
-  aTerrain.init(png.nX,png.nY,NOTHING);
-  //aSeed.init(png.nX,png.nY,1);
-  //aLandmassID.init(png.nX,png.nY,-1);
-  aBiomeID.init(png.nX,png.nY,-1);
-//aIsLand.init(png.nX,png.nY,true);
+   std::cout<<"Attempting to load data from: "<<strSavePath<<".\n";
 
-	for(int x=0;x<png.nX;++x)
-	{
-		for(int y=0;y<png.nY;++y)
-		{
-      // Note that PNGs use a different coordinate system, therefore must be loaded upside-down.
-      // Maybe change this in future.
-			
-			aTopoMap(x,png.nY-y-1,0)=png.getPixel3D(x,y,0);
-			aTopoMap(x,png.nY-y-1,1)=png.getPixel3D(x,y,1);
-			aTopoMap(x,png.nY-y-1,2)=png.getPixel3D(x,y,2);
-      
-      
-			// aTopoMap(x,y,0)=png.getPixel3D(x,y,0);
-			// aTopoMap(x,y,1)=png.getPixel3D(x,y,1);
-			// aTopoMap(x,y,2)=png.getPixel3D(x,y,2);
-      
-      
-      if (aTopoMap(x,png.nY-y-1,0) == biomeRed[OCEAN] && aTopoMap(x,png.nY-y-1,1) == biomeGreen[OCEAN] && aTopoMap(x,png.nY-y-1,2) == biomeBlue[OCEAN] )
-      //if (aTopoMap(x,y,0) == biomeRed[OCEAN] && aTopoMap(x,y,1) == biomeGreen[OCEAN] && aTopoMap(x,y,2) == biomeBlue[OCEAN] )
+   if ( FileManager::directoryExists(strSavePath) == false )
+   {
+      std::cout<<"Error: This world doesn't appear to exist.\n";
+      return false;
+   }
+
+   std::cout<<"Loading data from: "<<strSavePath<<".\n";
+
+   // Load master file.
+   worldFilePath = strSavePath+"/main.dat";
+
+   if ( FileManager::fileExists(worldFilePath) )
+   {
+      std::cout<<"Loading master.dat\n";
+      std::cout<<FileManager::getFileAsString(worldFilePath)<<".\n";
+      sfm.loadFile(worldFilePath);
+   }
+   else
+   {
+      std::cout<<"Master file doesn't appear to exist.\n";
+      return false;
+   }
+
+   std::string wname = sfm.loadVariableString("WORLDNAME");
+   std::string wseed = sfm.loadVariableString("LANDSEED");
+   std::string wX = sfm.loadVariableString("SIZEX");
+   std::string wY = sfm.loadVariableString("SIZEY");
+
+   std::cout<<"Loaded worldname is: "<<wname<<".\n";
+   std::cout<<"Loaded seed is: "<<wseed<<".\n";
+   std::cout<<"Loaded x is: "<<wX<<".\n";
+   std::cout<<"Loaded y is: "<<wY<<".\n";
+
+   int fileSize;
+   unsigned char* data = FileManager::getFile(strSavePath+"/biome.png" ,&fileSize);
+
+   if (data == 0)
+   {
+      std::cout<<"ERROR: biome.png couldn't be loaded.\n";
+      return false;
+   }
+
+   Png png;
+
+   if (png.load(data,fileSize) == false )
+   {
+      std::cout<<"ERROR: PNG didn't load successfully.\n";
+      return false;
+   }
+
+   if ( png.nX < 1 || png.nY < 1 )
+   {
+      std::cout<<"ERROR: PNG has bad dimensions.\n";
+      return false;
+   }
+
+   nX = png.nX;
+   nY = png.nY;
+
+   aWorldObject.init(png.nX,png.nY,0);
+   aTerrain.init(png.nX,png.nY,NOTHING);
+   aBiomeID.init(png.nX,png.nY,-1);
+
+   for(int x=0;x<png.nX;++x)
+   {
+      for(int y=0;y<png.nY;++y)
       {
-        aTerrain(x,png.nY-y-1)=OCEAN;
-      }
-      else
-      {
-        aTerrain(x,png.nY-y-1)=GRASSLAND;
-      }
-      
+         // Note that PNGs use a different coordinate system, therefore must be loaded upside-down.
+         // Maybe change this in future.
 
-		}
-	}
-  
-  generated = true;
-	return true;
-  #endif
-  return false;
+         aTopoMap(x,png.nY-y-1,0)=png.getPixel3D(x,y,0);
+         aTopoMap(x,png.nY-y-1,1)=png.getPixel3D(x,y,1);
+         aTopoMap(x,png.nY-y-1,2)=png.getPixel3D(x,y,2);
+
+         // aTopoMap(x,y,0)=png.getPixel3D(x,y,0);
+         // aTopoMap(x,y,1)=png.getPixel3D(x,y,1);
+         // aTopoMap(x,y,2)=png.getPixel3D(x,y,2);
+
+         if (aTopoMap(x,png.nY-y-1,0) == biomeRed[OCEAN] && aTopoMap(x,png.nY-y-1,1) == biomeGreen[OCEAN] && aTopoMap(x,png.nY-y-1,2) == biomeBlue[OCEAN] )
+         //if (aTopoMap(x,y,0) == biomeRed[OCEAN] && aTopoMap(x,y,1) == biomeGreen[OCEAN] && aTopoMap(x,y,2) == biomeBlue[OCEAN] )
+         {
+            aTerrain(x,png.nY-y-1)=OCEAN;
+         }
+         else
+         {
+            aTerrain(x,png.nY-y-1)=GRASSLAND;
+         }
+      }
+   }
+
+   generated = true;
+   return true;
+#endif
+   return false;
 }
 
 // SaveFileInterface
-
-
 void World::save()
 {
-  SaveFileManager sfm;
-  
-  // WORLD INFO
-  
-  sfm.addVariable("WORLDNAME",name);
-  sfm.addVariable("LANDSEED",landmassSeed);
-  sfm.addVariable("SIZEX",nX);
-  sfm.addVariable("SIZEY",nY);
-  
-  sfm.saveToFile(worldFilePath);
-  
-  // SAVE BIOME INFO AS PNG.
-    // BIOME INFO ALSO FUNCTIONS AS LANDMASS INFO.
-    
-  ArrayS3 <unsigned char> aBiomeData (nX,nY,3,0);
-  
-	for (int _y=0;_y<nY;++_y)
-	{
-		for (int _x=0;_x<nX;++_x)
-		{
-      enumBiome _biome = aTerrain(_x,_y);
-      
-      aBiomeData(_x,_y,0) = biomeRed[_biome];
-      aBiomeData(_x,_y,1) = biomeGreen[_biome];
-      aBiomeData(_x,_y,2) = biomeBlue[_biome];
-    }
-  }
-    
-	Png png;
-	png.encodeS3(strSavePath+"/biome.png",&aBiomeData);
-  
-  
-  // SAVE RESOURCE INFO AS PNG.
+   SaveFileManager sfm;
+
+   // WORLD INFO
+   sfm.addVariable("WORLDNAME",name);
+   sfm.addVariable("LANDSEED",landmassSeed);
+   sfm.addVariable("SIZEX",nX);
+   sfm.addVariable("SIZEY",nY);
+
+   sfm.saveToFile(worldFilePath);
+
+   // SAVE BIOME INFO AS PNG.
+   // BIOME INFO ALSO FUNCTIONS AS LANDMASS INFO.
+   ArrayS3 <unsigned char> aBiomeData (nX,nY,3,0);
+
+   for (int _y=0;_y<nY;++_y)
+   {
+      for (int _x=0;_x<nX;++_x)
+      {
+         enumBiome _biome = aTerrain(_x,_y);
+         aBiomeData(_x,_y,0) = biomeRed[_biome];
+         aBiomeData(_x,_y,1) = biomeGreen[_biome];
+         aBiomeData(_x,_y,2) = biomeBlue[_biome];
+      }
+   }
+   Png png;
+   png.encodeS3(strSavePath+"/biome.png",&aBiomeData);
+   // SAVE RESOURCE INFO AS PNG.
 }
 
 #endif

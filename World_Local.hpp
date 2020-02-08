@@ -2,9 +2,6 @@
 #ifndef WORLDSIM_WORLD_LOCAL_HPP
 #define WORLDSIM_WORLD_LOCAL_HPP
 
-#include <Interface/IdleTick/IdleTickInterface.hpp>
-#include <Interface/LogicTick/LogicTickInterface.hpp>
-
 /* WorldSim: World_Local.hpp
 	#include "World_Local.hpp"
 
@@ -37,13 +34,16 @@
 
 */
 
+#include <Interface/IdleTick/IdleTickInterface.hpp>
+#include <Interface/LogicTick/LogicTickInterface.hpp>
 #include <System/Time/Calendar.hpp>
+#include <Math/Random/RandomLehmer.hpp>
+
+#include <map>
 
 class Creature;
 class Item;
-
-//Wew this uses a lot of RAM
-#include <Math/Random/RandomLehmer.hpp>
+class Tribe;
 
 class World_Local: public LogicTickInterface, public IdleTickInterface, public HasTexture
 {

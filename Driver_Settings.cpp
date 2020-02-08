@@ -8,21 +8,11 @@
 	Gameplay settings and other global settings go here. Some of this stuff will probably end up in an .ini file.
 */
 
-//#include <mutex>
-
-//std::mutex render_mutex;
-
 #include <limits.h> // We need ULONG_MAX for absolute coords.
 #define ABSOLUTE_COORDINATE_NULL ULONG_MAX // Used as null-value for absolute coordinates, which can't use negative value.
-
-// This is a guaranteed valid value for int for all implementations of C++.
-// Generally I think the actual maximum is much higher, but we'll figure
-// that out later.
+// I think this is probably pointless because any normal Windows/Linux/Mac system is going to use 4 bytes for int.
 #define PORTABLE_INT_MAX 32767
-
 #define THREAD_ALL // activates all threading code
-
-
 #define SAVE_DATA // Program will save data to file. It saves a lot of data and it can end up taking up a lot of space
 
   // Player stuff.
