@@ -311,15 +311,15 @@ int main(int nArgs, char ** arg)
 	init();
    
 #if defined THREAD_ALL
-  std::thread testThread( []
-  {
-     Sleep(1000);
-     while(true)
-     {
-        std::cout<<"Hello, I'm a thread\n";
-        Sleep(1000);
-     }
-  });
+  // std::thread testThread( []
+  // {
+     // Sleep(1000);
+     // while(true)
+     // {
+        // std::cout<<"Hello, I'm a thread\n";
+        // Sleep(1000);
+     // }
+  // });
 #endif
   
 	/* Reshape is called here. */

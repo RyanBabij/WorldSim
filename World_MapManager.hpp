@@ -15,7 +15,12 @@
 
 class World;
 
-#include <atomic>
+#if defined THREAD_ALL
+   #include <thread>
+   #include <mutex>
+   #include <atomic>
+#endif
+
 
 class World_MapManager
 {
@@ -26,10 +31,13 @@ class World_MapManager
 
    ArrayS2 <World_Local> aWorldTile; // pointer to World->Local Map array.
    
+   std::mutex mutexArrayAccess;
+   
    public:
 //   World* world;
 
    void init(unsigned int _nX, unsigned int _nY);
+   void generate(unsigned int _nX, unsigned int _nY);
    
    World_MapManager();
    void main();

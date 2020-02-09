@@ -16,12 +16,9 @@
   #include "WorldObject_Rock.hpp"
   #include "WorldObject_Sign.hpp"
 
-
 #include "Creature.hpp"
   #include "Creature_Deer.hpp"
   #include "Creature_All.hpp"
-
-
 
 World_Local::World_Local()
 {
@@ -57,6 +54,8 @@ World_Local::World_Local()
    vObjectGeneric.reserve(0);
 
    data=0;
+   
+   threadAccess=false;
 }
 
 World_Local::~World_Local()
