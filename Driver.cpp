@@ -12,8 +12,14 @@
 //#define WILDCAT_USE_DIRECT3D
 
    // What OS we are compiling for. Currently only Windows and Linux are supported cos I don't got a Mac.
+   // 32-bit Windows defines _WIN32; 64-bit Windows defines _WIN32 and _WIN64
+#ifdef _WIN32
 #include <System/Windows.hpp> //#define WILDCAT_WINDOWS
-//#define WILDCAT_LINUX
+#elif defined(__linux__)
+#define WILDCAT_LINUX
+#else
+#error Unknown OS!
+#endif
 
 //#define WILDCAT_AUDIO
 
