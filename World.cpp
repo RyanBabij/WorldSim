@@ -35,9 +35,11 @@
 #include <File/FileLog.hpp>
 #include <System/Time/Timer.hpp> // To manage work chunks and benchmark worldgen time.
 
-#include <thread>
-#include <mutex>
-#include <atomic> // Variables which work with threads
+#if defined THREAD_ALL
+   #include <thread>
+   #include <mutex>
+   #include <atomic>
+#endif
 
 World::World(): SaveFileInterface(),/* mapManager(this),*/ seaLevel(0), mountainLevel(0)
 {

@@ -38,6 +38,9 @@ class World_MapManager
    public:
 //   World* world;
 
+   // Return a World_Local object for this local map. Will generate a local map if necessary. Returns null pointer for invalid request.
+   inline World_Local* operator() (const int _x, const int _y);
+
    void init(unsigned int _nX, unsigned int _nY);
    void generate(unsigned int _nX, unsigned int _nY);
    
