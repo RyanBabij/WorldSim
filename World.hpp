@@ -152,6 +152,8 @@ bool active; /* Whether or not the world should be simulated. */
    // Returns true if the tile is in a map that is loaded.
    bool isGenerated(unsigned long int _absoluteX, unsigned long int _absoluteY);
 
+   // Transition from generation to simulation.
+   void startSimulation();
 
    /* TICK LOGIC */
    /* I want this to be the new method of incrementing time in the world. It will dynamically abstract things based on the amount of turns to simulate. Each tick is one second. */

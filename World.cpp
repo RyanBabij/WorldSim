@@ -71,7 +71,7 @@ World::World(): SaveFileInterface(),/* mapManager(this),*/ seaLevel(0), mountain
    calendar.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
    calendar.secondsPerMinute = 2;
 
-   mapManager.main();
+   //mapManager.main();
 }
 
 World::~World()
@@ -203,6 +203,22 @@ bool World::isGenerated(unsigned long int _absoluteX, unsigned long int _absolut
     }
   }
   return false;
+}
+
+void World::startSimulation()
+{
+   active=true;
+   mapManager.init(nX,nY);
+   
+	for (int _y=0;_y<nY;++_y)
+	{
+		for (int _x=0;_x<nX;++_x)
+		{
+         mapManager.aWorldTile(_x,_y).baseBiome = aWorldTile(_x,_y).baseBiome;
+      }
+   }
+   
+   mapManager.main();
 }
 
 void World::nameRegions()
@@ -1188,7 +1204,6 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
    aBiomeID.init(x,y,-1);
    aIsLand.init(x,y,true);
    aWorldTile.initClass(x,y);
-   mapManager.init(x,y);
 
    // vTribe does not need to be deleted, because all Tribe objects are in vWorldObjectGlobal
    // However, the vector must be cleared.
@@ -1425,23 +1440,35 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
     // threaded - cb - 2049 - seed 12345: 6.61 7.15 6.98        Biome time: 2.48, 2.46, 2.44
     // unthreaded - cb - 2049 - seed 12345: 12.47 13.02 13.06   Biome time: 8.25, 8.17, 8.16
     
-  std::thread * aThread [N_BIOMES] = { 0 };
   
-  std::mutex m;
+  
+#ifdef THREAD_ALL
+   std::thread * aThread [N_BIOMES] = { 0 };
+   std::mutex m;
+   std::atomic<int> biomeID=0; /* Atomic is generally more efficient than using lock because of OS-level support. */
+#else
+   int biomeID = 0;
+#endif
   int currentBiomeID=0; /* Every unique biome gets a unique ID, which will make later processing much easier. */
-  std::atomic<int> biomeID=0; /* Atomic is generally more efficient than using lock because of OS-level support. */
+
             
 		// BUILD BIOME VECTOR
 	for ( int _y=0;_y<nY;++_y)
 	{
 		for ( int _x=0;_x<nX;++_x)
 		{
+#ifdef THREAD_ALL
 			if (aBiomeID(_x,_y) == -1 && aThread[aTerrain(_x,_y)] == 0)
+#else
+      if (aBiomeID(_x,_y) == -1)
+#endif
 			{
         const int biomeSearch = aTerrain(_x,_y);
           // Spawn a thread to process this biome type
+         #ifdef THREAD_ALL
         aThread [aTerrain(_x,_y)] = new std::thread ( [ this, _x, _y, biomeSearch, &m, &biomeID, &aTerrain ]
         {
+           #endif
           int thisBiomeID = biomeID++;
 
           for ( int _y2=_y;_y2<nY;++_y2)
@@ -1459,20 +1486,27 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
                 World_Biome* biome = new World_Biome;
                 biome->type = biomeSearch;
                 biome->size = vFill->size();
-
+#ifdef THREAD_ALL
                 m.lock();
+#endif
                   vBiome.push(biome);
+#ifdef THREAD_ALL
                 m.unlock();
+#endif
                 vFill->deleteAll();
                 delete vFill;
               }
             }
           }
+          #ifdef THREAD_ALL
         });
+        #endif
+        
       }
     }
   }
 
+#ifdef THREAD_ALL
   // Let all threads finish.
   for (int i=0; i<N_BIOMES; ++i)
   {
@@ -1483,6 +1517,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
       aThread[i]=0;
     }
   }
+#endif
   
   // Name the biomes
   for (int i=0;i<vBiome.size();++i)
@@ -1653,6 +1688,7 @@ void World::generateLocal(const int _localX, const int _localY)
   }
 
   aWorldTile(_localX,_localY).generate();
+  aWorldTile(_localX,_localY).generateSubterranean();
   aWorldTile(_localX,_localY).active=true;
   aWorldTile(_localX,_localY).initialized=true;
   

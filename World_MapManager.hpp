@@ -18,6 +18,7 @@ class World;
 #if defined THREAD_ALL
    #include <thread>
    #include <mutex>
+   #include <shared_mutex>
    #include <atomic>
 #endif
 
@@ -29,13 +30,16 @@ class World_MapManager
    // Vector <World_Local*> vGeneratedMaps; // vector of worlds generated
    // Vector <World_Local*> vMapsToUnload; // vector of worlds to cache to disk
 
-   ArrayS2 <World_Local> aWorldTile; // pointer to World->Local Map array.
+
    
 #ifdef THREAD_ALL
    std::mutex mutexArrayAccess;
+   std::mutex mutexArrayResize;
+   std::shared_mutex mutexArrayResize2;
 #endif
    
    public:
+   ArrayS2 <World_Local> aWorldTile; // pointer to World->Local Map array.
 //   World* world;
 
    // Return a World_Local object for this local map. Will generate a local map if necessary. Returns null pointer for invalid request.

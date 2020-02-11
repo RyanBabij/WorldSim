@@ -15,6 +15,8 @@
 #include "World_MapManager.hpp"
 
 
+
+
 World_MapManager::World_MapManager()
 {
    maxWorldsToGenerate=4;
@@ -34,7 +36,6 @@ void World_MapManager::init(unsigned int _nX, unsigned int _nY)
          aWorldTile(_x,_y).init(_x,_y,GRASSLAND /* BIOME ID */, 0 /* seed */, 0 /* hasriver */);
       }
    }
-   
    mutexArrayAccess.unlock();
 #endif
 }
@@ -42,15 +43,20 @@ void World_MapManager::init(unsigned int _nX, unsigned int _nY)
 World_Local* World_MapManager::operator() (const int _x, const int _y)
 {
 #ifdef THREAD_ALL
-   mutexArrayAccess.lock();
+   //mutexArrayAccess.lock();
    if ( aWorldTile.isSafe(_x,_y) )
    {
       World_Local* map = &aWorldTile(_x,_y);
-      map->generate();
-      mutexArrayAccess.unlock();
+//mutexArrayAccess.lock();
+      //map->generate();
+      //mutexArrayAccess.unlock();
       return map;
    }
-   mutexArrayAccess.unlock();
+   else
+   {
+      //mutexArrayAccess.unlock();
+   }
+   
 
 
   // for (int i=0;i<vWorldLocal.size();++i)
@@ -81,19 +87,19 @@ void World_MapManager::generate(unsigned int _x, unsigned int _y)
 {
 #ifdef THREAD_ALL
    mutexArrayAccess.lock();
-   if ( aWorldTile(_x,_y).threadAccess == false )
+   if ( aWorldTile(_x,_y).threadAccess == false && aWorldTile(_x,_y).initialized==false )
    {
-      std::cout<<"Generating world: "<<_x<<", "<<_y<<"\n";
       aWorldTile(_x,_y).threadAccess=true;
       
-      World_Local* local = &aWorldTile(_x,_y);
+      World_Local* const local = &aWorldTile(_x,_y);
       mutexArrayAccess.unlock();
 
-      local->generate();
-      //local->active=true;
-      //local->initialized=true;
-      //local=
-
+      //std::cout<<"Generating map: "<<_x<<", "<<_y<<"\n";
+      local->generate(false);
+      local->generateSubterranean();
+      local->save();
+      local->unload();
+      local->threadAccess=false;
    }
    else
    {
@@ -102,63 +108,63 @@ void World_MapManager::generate(unsigned int _x, unsigned int _y)
 #endif
 }
 
-bool canGenerate(unsigned int _x, unsigned int _y)
-{
-   return true;
-}
-
 void World_MapManager::main()
 {
 #ifdef THREAD_ALL
-  // if ( world==0 )
-  // {
-     // std::cout<<"Error: There is no world.\n";
-     // return;
-  // }
-  
-  for (int i=0;i<4;++i)
-  {
-   std::thread testThread( [this, i]
+
+   for (int i=0;i<4;++i)
    {
-      Sleep(100);
-
-      unsigned int x=0;
-      unsigned int y=0;
-
-      while(true)
+      std::thread testThread( [this]
       {
-         //std::cout<<"Cell loading manager tick: "<<i<<"\n";
-         
-         if ( aWorldTile.nX == 0 || aWorldTile.nY == 0 )
+         unsigned int x=0;
+         unsigned int y=0;
+
+         while(true)
          {
-            Sleep(600);
-            std::cout<<"Not init yet\n";
-            continue;
-         }
-         
-         if ( aWorldTile.isSafe(x,y) )
-         {
-            generate(x,y);
-            ++x;
-         }
-         
-         if ( aWorldTile.isSafe(x,y) == false )
-         {
-            x=0;
-            ++y;
+            //std::cout<<".";
+            //Sleep(10);
+            //mutexArrayAccess.lock();
+            // if ( aWorldTile.nX == 0 || aWorldTile.nY == 0 )
+            // {
+               // mutexArrayAccess.unlock();
+               // Sleep(500);
+               // std::cout<<"Not init yet\n";
+               // continue;
+            // }
             
-            if ( aWorldTile.isSafe(x,y) == false )
+            if (RELINQUISH_CPU)
+            {
+               		//MsgWaitForMultipleObjects( 0, NULL, FALSE, 10, QS_ALLINPUT ); /* parameter 4 is milliseconds ie 1000 = 1 second. */
+            }
+
+            if ( aWorldTile.isSafe(x,y) )
+            {
+               //mutexArrayAccess.unlock();
+               if ( aWorldTile(x,y).baseBiome != OCEAN )
+               { generate(x,y);
+               }
+               
+               ++x;
+            }
+
+            else if ( aWorldTile.isSafe(x,y) == false )
             {
                x=0;
-               y=0;
-            }
-         }
+               ++y;
 
-        Sleep(100);
-     }
-   });
-   testThread.detach();
-  }
+               if ( aWorldTile.isSafe(x,y) == false )
+               {
+                  x=0;
+                  y=0;
+               }
+               //mutexArrayAccess.unlock();
+            }
+            
+            //Sleep(10);
+         }
+      });
+      testThread.detach();
+   }
    std::cout<<"Note: World Thread Manager started.\n";
 #else
    std::cout<<"Note: World Thread Manager disabled.\n";

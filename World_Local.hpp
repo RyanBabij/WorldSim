@@ -208,7 +208,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
     bool isLand(); // returns true if this is a land tile.
   
     // Generate a world or load from cache.
-	bool generate();
+	bool generate(bool cache=true);
+   bool generateSubterranean(); // subterranean maps should be generated on demand.
     bool save();
     bool load();
 	

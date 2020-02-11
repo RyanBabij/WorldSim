@@ -559,10 +559,8 @@ class Menu_WorldGenerator: public GUI_Interface
       _keyboard->unpress(Keyboard::TWO);
       if (world.generated == true)
       {
-        std::cout<<"Simulate world.\n";
         activeMenu = MENU_WORLDSIMULATOR;
-        world.active=true;
-        //active=false;
+        world.startSimulation();
       }
       else
       {
@@ -648,7 +646,7 @@ class Menu_WorldGenerator: public GUI_Interface
         if (world.generated == true)
         {
           activeMenu = MENU_WORLDSIMULATOR;
-          world.active=true;
+          world.startSimulation();
         }
         else
         {

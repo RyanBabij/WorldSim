@@ -289,7 +289,7 @@ bool World_Local::isSafe(WorldObject* _object)
   return data->aLocalTile.isSafe(_object->x,_object->y);
 }
 
-bool World_Local::generate()
+bool World_Local::generate(bool cache /* =true */)
 {
   // World is already loaded and running
   if ( active ) { return true; }
@@ -318,7 +318,6 @@ bool World_Local::generate()
 
 
    data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-   data->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 
    // GENERATE HEIGHTMAP
    DiamondSquareAlgorithmCustomRange dsa2;
@@ -361,33 +360,7 @@ bool World_Local::generate()
   }
   
   // Take the seed for this world tile and expand it into a subseed for every local tile */
-  rng.seed(seed);
-  
-  int nGemSeams = rng.rand8(3);
-  while (nGemSeams-- > 0)
-  {
-    Vector <HasXY*> * vGemSeam = getRandomWalk(rng.rand8(40)+10);
-    
-    for (int i=0;i<vGemSeam->size();++i)
-    {
-      data->aSubterranean((*vGemSeam)(i)).nGems=rng.multiRoll8(3,3);
-    }
-    vGemSeam->deleteAll();
-    delete vGemSeam;
-  }
-  
-  int nMetalSeams = rng.rand8(6);
-  while (nMetalSeams-- > 0)
-  {
-    Vector <HasXY*> * vMetalSeam = getRandomWalk(rng.rand8(40)+10);
-    
-    for (int i=0;i<vMetalSeam->size();++i)
-    {
-      data->aSubterranean((*vMetalSeam)(i)).nMetal=rng.multiRoll8(3,3);
-    }
-    vMetalSeam->deleteAll();
-    delete vMetalSeam;
-  }
+   rng.seed(seed);
   
   int midX = LOCAL_MAP_SIZE/2;
 
@@ -399,18 +372,6 @@ bool World_Local::generate()
       //data->aLocalTile(_x,_y).clearObjects();
       data->aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
 
-      data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
-      data->aSubterranean(_x,_y).seed = rng.rand32(PORTABLE_INT_MAX-1);
-      //data->aSubterranean(_x,_y).clearObjects();
-      data->aSubterranean(_x,_y).height = 0;
-      
-        
-      //data->aSubterranean(_x,_y).hasGems=Random::oneIn(100);
-      if (rng.oneIn(1000))
-      {
-        //data->aSubterranean(_x,_y).hasGems=true;
-      }
-        
       // GENERATE RIVERS
       // FOR NOW THEY JUST RUN ALONG THE EDGE OF THE MAP
       if ( ((riverConnections & 0b01000010) == 0b01000010
@@ -559,6 +520,8 @@ bool World_Local::generate()
     }
   }
   
+  //generateSubterranean();
+  
   if ( baseBiome == GRASSLAND && rng.oneIn(100) )
   {
     for ( int x = 10; x<20; ++x)
@@ -572,52 +535,6 @@ bool World_Local::generate()
     auto sign = new WorldObject_Sign;
     data->aLocalTile(21,21).add(sign);
   }
-  
-  
-  //BUILD CAVE
-  //if (Random::oneIn(2))
-  if (true)
-  {
-    hasCave=true;
-    //Basically random walk with extras, and then occasionally breach the surface in the form of a cave tile.
-    
-    //int caveSize = Random::randomInt(LOCAL_MAP_SIZE*5)+3;
-    int caveSize = Random::multiRoll(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE)*2;
-    
-    Vector <HasXY*> * vCaveMap = getRandomWalk(caveSize);
-      
-    int nEntrances = Random::randomInt((vCaveMap->size()/500));
-    if (nEntrances > 10) { nEntrances=10; }
-    nEntrances = 15;
-    
-    for (int i2=0;i2<vCaveMap->size();++i2)
-    {
-      data->aSubterranean((*vCaveMap)(i2)).baseTerrain = GRASSLAND;
-      data->aSubterranean((*vCaveMap)(i2)).nGems=0;
-      data->aSubterranean((*vCaveMap)(i2)).nMetal=0;
-      
-      if (Random::oneIn(100))
-      {
-        auto creature = new Creature_Bat;
-        creature->init();
-        put(creature,(*vCaveMap)(i2),true);
-      }
-      
-      if (Random::oneIn(25))
-      {
-        put(new Flora_Blackweed(),(*vCaveMap)(i2),true);
-      }
-      
-      if (i2<nEntrances)
-      {
-        data->aLocalTile((*vCaveMap)(i2)).isCave=true;
-        data->aSubterranean((*vCaveMap)(i2)).isCave=true;
-      }
-    }
-    vCaveMap->deleteAll();
-    delete vCaveMap;
-  }
-
   //Generate global objects
   Vector <Tribe * > * vTribesHere = world.getTribesOn(globalX,globalY);
   
@@ -645,28 +562,131 @@ bool World_Local::generate()
       //aLocalTile(Random::randInt(nX-1),Random::randInt(nY-1)).addObject(c);
     
     }
-    
-
   }
   delete vTribesHere;
   
-  //generate texture
-  for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
-  {
-    for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
-    {
-      const Texture * t =data->aLocalTile(_x,_y).currentTexture();
-       texFar.setPixel(_x,_y,0,t->averageRed);
-       texFar.setPixel(_x,_y,1,t->averageGreen);
-       texFar.setPixel(_x,_y,2,t->averageBlue);
-       texFar.setPixel(_x,_y,3,255);
-    }
-  }
-  bindNearestNeighbour(&texFar,COMPRESS_TEXTURES);
+   //generate texture
+   for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+   {
+      for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+      {
+         const Texture * t =data->aLocalTile(_x,_y).currentTexture();
+         texFar.setPixel(_x,_y,0,t->averageRed);
+         texFar.setPixel(_x,_y,1,t->averageGreen);
+         texFar.setPixel(_x,_y,2,t->averageBlue);
+         texFar.setPixel(_x,_y,3,255);
+      }
+   }
+   bindNearestNeighbour(&texFar,COMPRESS_TEXTURES);
   
-  save();
+   if ( cache )
+   {
+      save();
+   }
+
 
 	return false;
+}
+
+// I want to have subterranean separate from normal map generation.
+// It should only be loaded on demand. It could potentially be in its own file
+bool World_Local::generateSubterranean()
+{
+   if (data==0) { return false; }
+   
+   data->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+   
+   //int nGemSeams = rng.rand8(3);
+   // int nGemSeams=0;
+   // while (nGemSeams-- > 0)
+   // {
+      // Vector <HasXY*> * vGemSeam = getRandomWalk(rng.rand8(40)+10);
+
+      // for (int i=0;i<vGemSeam->size();++i)
+      // {
+         // data->aSubterranean((*vGemSeam)(i)).nGems=rng.multiRoll8(3,3);
+      // }
+      // vGemSeam->deleteAll();
+      // delete vGemSeam;
+   // }
+
+   // //int nMetalSeams = rng.rand8(6);
+   // int nMetalSeams=0;
+   // while (nMetalSeams-- > 0)
+   // {
+      // Vector <HasXY*> * vMetalSeam = getRandomWalk(rng.rand8(40)+10);
+
+      // for (int i=0;i<vMetalSeam->size();++i)
+      // {
+         // data->aSubterranean((*vMetalSeam)(i)).nMetal=rng.multiRoll8(3,3);
+      // }
+      // vMetalSeam->deleteAll();
+      // delete vMetalSeam;
+   // }
+   
+   int midX = LOCAL_MAP_SIZE/2;
+
+   for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+   {
+      for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+      {
+         data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+         data->aSubterranean(_x,_y).seed = rng.rand32(PORTABLE_INT_MAX-1);
+         //data->aSubterranean(_x,_y).clearObjects();
+         data->aSubterranean(_x,_y).height = 0;
+
+
+         // //data->aSubterranean(_x,_y).hasGems=Random::oneIn(100);
+         // if (rng.oneIn(1000))
+         // {
+            // //data->aSubterranean(_x,_y).hasGems=true;
+         // }
+      }
+   }
+   
+   //BUILD CAVE
+   //if (Random::oneIn(2))
+   //if (true)
+   // if (false)
+   // {
+      // hasCave=true;
+      // //Basically random walk with extras, and then occasionally breach the surface in the form of a cave tile.
+      // int caveSize = rng.multiRoll32(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE)*2;
+
+      // Vector <HasXY*> * vCaveMap = getRandomWalk(caveSize);
+
+      // int nEntrances = Random::randomInt((vCaveMap->size()/500));
+      // if (nEntrances > 10) { nEntrances=10; }
+
+      // for (int i2=0;i2<vCaveMap->size();++i2)
+      // {
+         // data->aSubterranean((*vCaveMap)(i2)).baseTerrain = GRASSLAND;
+         // data->aSubterranean((*vCaveMap)(i2)).nGems=0;
+         // data->aSubterranean((*vCaveMap)(i2)).nMetal=0;
+
+         // if (rng.oneIn(100))
+         // {
+            // auto creature = new Creature_Bat;
+            // creature->init();
+            // put(creature,(*vCaveMap)(i2),true);
+         // }
+
+         // if (rng.oneIn(25))
+         // {
+            // put(new Flora_Blackweed(),(*vCaveMap)(i2),true);
+         // }
+
+         // if (i2<nEntrances)
+         // {
+            // data->aLocalTile((*vCaveMap)(i2)).isCave=true;
+            // data->aSubterranean((*vCaveMap)(i2)).isCave=true;
+         // }
+      // }
+      // vCaveMap->deleteAll();
+      // delete vCaveMap;
+   // }
+   
+   return false;
 }
 
 bool World_Local::save()
