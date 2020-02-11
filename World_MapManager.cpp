@@ -28,6 +28,7 @@ void World_MapManager::init(unsigned int _nX, unsigned int _nY)
 
 void World_MapManager::generate(unsigned int _x, unsigned int _y)
 {
+#ifdef THREAD_ALL
    mutexArrayAccess.lock();
    if ( aWorldTile(_x,_y).threadAccess == false )
    {
@@ -41,6 +42,7 @@ void World_MapManager::generate(unsigned int _x, unsigned int _y)
    {
       mutexArrayAccess.unlock();
    }
+#endif
 }
 
 bool canGenerate(unsigned int _x, unsigned int _y)
@@ -50,7 +52,7 @@ bool canGenerate(unsigned int _x, unsigned int _y)
 
 void World_MapManager::main()
 {
-#if defined THREAD_ALL
+#ifdef THREAD_ALL
   // if ( world==0 )
   // {
      // std::cout<<"Error: There is no world.\n";

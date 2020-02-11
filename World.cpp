@@ -1527,11 +1527,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 			{
 				int biomeType = aTerrain(_x,_y);
         
-        
 				Vector <HasXY*>* vFill = aTerrain.floodFillVector(_x,_y,true);
-
-
-				
+            
 				for (int i=0;i<vFill->size();++i)
 				{
 					HasXY* v = (*vFill)(i);

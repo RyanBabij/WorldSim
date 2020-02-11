@@ -31,7 +31,9 @@ class World_MapManager
 
    ArrayS2 <World_Local> aWorldTile; // pointer to World->Local Map array.
    
+#ifdef THREAD_ALL
    std::mutex mutexArrayAccess;
+#endif
    
    public:
 //   World* world;
