@@ -76,6 +76,7 @@ World::World(): SaveFileInterface(),/* mapManager(this),*/ seaLevel(0), mountain
 
 World::~World()
 {
+   QUIT_FLAG=true;
 }
 
 World_Local* World::operator() (const int _x, const int _y)

@@ -36,6 +36,10 @@ class World_MapManager
    std::mutex mutexArrayAccess;
    std::mutex mutexArrayResize;
    std::shared_mutex mutexArrayResize2;
+   
+   // keep track of number of threads running
+   // to perform safe shutdown
+   std::atomic <int> nThreads;
 #endif
    
    public:
@@ -49,6 +53,7 @@ class World_MapManager
    void generate(unsigned int _nX, unsigned int _nY);
    
    World_MapManager();
+   ~World_MapManager();
    void main();
 };
 

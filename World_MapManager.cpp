@@ -14,14 +14,26 @@
 
 #include "World_MapManager.hpp"
 
-
-
-
 World_MapManager::World_MapManager()
 {
    maxWorldsToGenerate=4;
+   nThreads=0;
 }
 
+World_MapManager::~World_MapManager()
+{
+   std::cout<<"Map manager shutting down.\n";
+   std::unique_lock lock(MUTEX_SHUTDOWN);
+   mutexArrayAccess.lock();
+
+   // kinda messy but a wait loop seems to be the
+   // best way to cleanly wait for threads to stop
+   while (nThreads > 0 )
+   {
+      Sleep(50);
+   }
+   std::cout<<"Map manager shutdown.\n";
+}
 
 void World_MapManager::init(unsigned int _nX, unsigned int _nY)
 {
@@ -94,11 +106,16 @@ void World_MapManager::generate(unsigned int _x, unsigned int _y)
       World_Local* const local = &aWorldTile(_x,_y);
       mutexArrayAccess.unlock();
 
-      //std::cout<<"Generating map: "<<_x<<", "<<_y<<"\n";
+      if (QUIT_FLAG) { return; }
       local->generate(false);
+      if (QUIT_FLAG) { return; }
       local->generateSubterranean();
+      if (QUIT_FLAG) { return; }
       local->save();
+      if (QUIT_FLAG) { return; }
       local->unload();
+      if (QUIT_FLAG) { return; }
+      
       local->threadAccess=false;
    }
    else
@@ -112,14 +129,16 @@ void World_MapManager::main()
 {
 #ifdef THREAD_ALL
 
-   for (int i=0;i<4;++i)
+   const int N_THREAD = 2;
+
+   for (int i=0;i<N_THREAD;++i)
    {
       std::thread testThread( [this]
       {
          unsigned int x=0;
          unsigned int y=0;
 
-         while(true)
+         while(QUIT_FLAG==false)
          {
             //std::cout<<".";
             //Sleep(10);
@@ -162,7 +181,9 @@ void World_MapManager::main()
             
             //Sleep(10);
          }
+         --nThreads;
       });
+      ++nThreads;
       testThread.detach();
    }
    std::cout<<"Note: World Thread Manager started.\n";

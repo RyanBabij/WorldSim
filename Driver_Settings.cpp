@@ -25,7 +25,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.171 Win32 dev";
+const std::string VERSION = "0.0.172 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -166,7 +166,21 @@ const bool COMPRESS_TEXTURES = false; /* Probably saves graphics memory, however
 
 // GLOBAL FLAGS
 
-bool QUIT_FLAG = false;
+
+
+#ifdef THREAD_ALL
+   #include <atomic>
+   #include <mutex>
+   #include <shared_mutex>
+   std::atomic <bool> QUIT_FLAG=false;
+   
+// game will delay shutting down until the shutdown
+// manager can lock this mutex
+   std::shared_mutex MUTEX_SHUTDOWN;
+#else
+   bool QUIT_FLAG = false;
+#endif
+
 bool DONT_RENDER = false; /* In debugging, rendering can be disabled by pressing R. */
 bool LIMIT_LOGIC = true; /* Press S. */
 bool FORCE_LOGIC_FRAME = false; /* True will trigger next logic frame immediately. */
