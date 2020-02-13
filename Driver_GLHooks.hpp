@@ -79,9 +79,9 @@ void GL_init(int nArgs, char ** arg)
     
   #endif
   
-
-
-  
+  #ifdef THREAD_ALL
+   N_CORES = std::thread::hardware_concurrency();
+  #endif
   
 	/* Set perspective? */
 	/* Set window and call reshape. */

@@ -117,7 +117,11 @@ void pauseGame()
 	PAUSE_LOGIC=true;
 }
 
-/* This object exploits the c++ guarantee that the destructor is always called, in order to deal with unanticipated shutdowns, such as the player clicking the X. However, it seems the destructor guarantee does not apply in some cases, such as ending the process using the task manager, or using ctrl+c from the console. */
+/* This object exploits the c++ guarantee that the destructor is always called, in order to deal with unanticipated shutdowns, such as the player clicking the X. However, it seems the destructor guarantee does not apply in some cases, such as ending the process using the task manager, or using ctrl+c from the console.
+
+It seems that threads are killed if the user uses CTRL+C on the cmd line however, which messes things up a bit.
+
+*/
 class QuitChecker
 {
    private:
@@ -159,6 +163,7 @@ class QuitChecker
    }
 };
 QuitChecker quitChecker;
+
 
 #include <stdio.h>
 #include <Math/Random/GlobalRandom.hpp>
@@ -288,16 +293,19 @@ Menu_AdventureMode menuAdventureMode;
 #include "Driver_Init.hpp"
 
 /* Tidies up the game and shuts down. */
-void shutDown()
+void shutDown(int signal=0)
 {
 	std::cout<<"Driver::shutDown().\n";
-	exit(0);
+   QUIT_FLAG=true;
+	exit(1);
 }
 
 /* OpenGL function hooks go here. */
 #include "Driver_GLHooks.hpp"
 
 #include <Data/ArgReader.hpp>
+
+#include <signal.h> // for catching CTRL+C
 
 int main(int nArgs, char ** arg)
 {
@@ -317,6 +325,16 @@ int main(int nArgs, char ** arg)
 	
 	/* Initialise game. Load textures, fonts etc. */
 	init();
+   
+   // Catch CTRL+C signals
+   // CTRL+C from the CMD seems to terminate threads before they
+   // can shutdown properly, leaving the shutdown process hanging
+   // fortunately this shouldn't happen in normal builds
+   // This function works by intercepting the normal
+   // CTRL+C shutdown and replaces it with a safer shutdown.
+   // If CTRL+C is signalled a second time it will hard exit,
+   // and therefore I also have a time on thread shutdown checks.
+   signal (SIGINT,shutDown);
    
 #if defined THREAD_ALL
   // std::thread testThread( []

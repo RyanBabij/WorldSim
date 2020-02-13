@@ -25,9 +25,11 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.172 Win32 dev";
+const std::string VERSION = "0.0.173 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
+
+int N_CORES = 1; // can be changed in init if threads are enabled
 
 // WINDOW STUFF
 unsigned int RESOLUTIONX=1024, RESOLUTIONY=900;
@@ -177,6 +179,7 @@ const bool COMPRESS_TEXTURES = false; /* Probably saves graphics memory, however
 // game will delay shutting down until the shutdown
 // manager can lock this mutex
    std::shared_mutex MUTEX_SHUTDOWN;
+   std::shared_mutex MUTEX_TEST;
 #else
    bool QUIT_FLAG = false;
 #endif

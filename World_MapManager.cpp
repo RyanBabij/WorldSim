@@ -23,16 +23,26 @@ World_MapManager::World_MapManager()
 World_MapManager::~World_MapManager()
 {
    std::cout<<"Map manager shutting down.\n";
-   std::unique_lock lock(MUTEX_SHUTDOWN);
+   MUTEX_SHUTDOWN.lock();
    mutexArrayAccess.lock();
 
    // kinda messy but a wait loop seems to be the
    // best way to cleanly wait for threads to stop
-   while (nThreads > 0 )
+   
+   int MAX_WAIT = 10;
+   int i=0;
+   while (nThreads > 0 && i<MAX_WAIT  )
    {
       Sleep(50);
+      ++i;
+      
+      if ( i==MAX_WAIT )
+      {
+         std::cout<<"Hanging detected.\n";
+      }
    }
    std::cout<<"Map manager shutdown.\n";
+   MUTEX_SHUTDOWN.unlock();
 }
 
 void World_MapManager::init(unsigned int _nX, unsigned int _nY)
@@ -128,10 +138,7 @@ void World_MapManager::generate(unsigned int _x, unsigned int _y)
 void World_MapManager::main()
 {
 #ifdef THREAD_ALL
-
-   const int N_THREAD = 2;
-
-   for (int i=0;i<N_THREAD;++i)
+   for (int i=0;i<N_CORES;++i)
    {
       std::thread testThread( [this]
       {
@@ -140,20 +147,14 @@ void World_MapManager::main()
 
          while(QUIT_FLAG==false)
          {
-            //std::cout<<".";
-            //Sleep(10);
-            //mutexArrayAccess.lock();
-            // if ( aWorldTile.nX == 0 || aWorldTile.nY == 0 )
-            // {
-               // mutexArrayAccess.unlock();
-               // Sleep(500);
-               // std::cout<<"Not init yet\n";
-               // continue;
-            // }
+            if ( QUIT_FLAG )
+            {
+               break;
+            }
             
             if (RELINQUISH_CPU)
             {
-               		//MsgWaitForMultipleObjects( 0, NULL, FALSE, 10, QS_ALLINPUT ); /* parameter 4 is milliseconds ie 1000 = 1 second. */
+               //MsgWaitForMultipleObjects( 0, NULL, FALSE, 10, QS_ALLINPUT ); /* parameter 4 is milliseconds ie 1000 = 1 second. */
             }
 
             if ( aWorldTile.isSafe(x,y) )
@@ -176,10 +177,7 @@ void World_MapManager::main()
                   x=0;
                   y=0;
                }
-               //mutexArrayAccess.unlock();
             }
-            
-            //Sleep(10);
          }
          --nThreads;
       });
