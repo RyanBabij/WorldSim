@@ -54,6 +54,7 @@ World_Local::World_Local()
    vObjectGeneric.reserve(0);
 
    data=0;
+   dataSubterranean=0;
    
    threadAccess=false;
 }
@@ -71,6 +72,10 @@ World_Local::~World_Local()
   if (data!=0)
   { delete data; }
   data=0;
+  
+  if (dataSubterranean!=0)
+  { delete dataSubterranean; }
+  dataSubterranean=0;
 }
 
 void World_Local::unload()
@@ -84,6 +89,10 @@ void World_Local::unload()
   if (data!=0)
   { delete data; }
   data=0;
+  
+  if (dataSubterranean!=0)
+  { delete dataSubterranean; }
+  dataSubterranean=0;
 } 
 
 
@@ -303,7 +312,6 @@ bool World_Local::generate(bool cache /* =true */)
   
   if (initialized)
   {
-    //std::cout<<"World was already previously generated. We should load it from cache.\n";
     load();
     active = true;
     return true;
@@ -590,12 +598,16 @@ bool World_Local::generate(bool cache /* =true */)
 
 // I want to have subterranean separate from normal map generation.
 // It should only be loaded on demand. It could potentially be in its own file
+// Subterranean can only be generated if map has been generated
 bool World_Local::generateSubterranean()
 {
-   if (data==0) { return false; }
+   if (data==0 ) { return false; }
    
-   data->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-   
+   if ( dataSubterranean == 0 )
+   { dataSubterranean = new Data_Subterranean;
+   }
+   dataSubterranean->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+
    //int nGemSeams = rng.rand8(3);
    // int nGemSeams=0;
    // while (nGemSeams-- > 0)
@@ -604,7 +616,7 @@ bool World_Local::generateSubterranean()
 
       // for (int i=0;i<vGemSeam->size();++i)
       // {
-         // data->aSubterranean((*vGemSeam)(i)).nGems=rng.multiRoll8(3,3);
+         // dataSubterranean->aSubterranean((*vGemSeam)(i)).nGems=rng.multiRoll8(3,3);
       // }
       // vGemSeam->deleteAll();
       // delete vGemSeam;
@@ -618,7 +630,7 @@ bool World_Local::generateSubterranean()
 
       // for (int i=0;i<vMetalSeam->size();++i)
       // {
-         // data->aSubterranean((*vMetalSeam)(i)).nMetal=rng.multiRoll8(3,3);
+         // dataSubterranean->aSubterranean((*vMetalSeam)(i)).nMetal=rng.multiRoll8(3,3);
       // }
       // vMetalSeam->deleteAll();
       // delete vMetalSeam;
@@ -630,16 +642,16 @@ bool World_Local::generateSubterranean()
    {
       for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
       {
-         data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
-         data->aSubterranean(_x,_y).seed = rng.rand32(PORTABLE_INT_MAX-1);
-         //data->aSubterranean(_x,_y).clearObjects();
-         data->aSubterranean(_x,_y).height = 0;
+         dataSubterranean->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+         dataSubterranean->aSubterranean(_x,_y).seed = rng.rand32(PORTABLE_INT_MAX-1);
+         //dataSubterranean->aSubterranean(_x,_y).clearObjects();
+         dataSubterranean->aSubterranean(_x,_y).height = 0;
 
 
-         // //data->aSubterranean(_x,_y).hasGems=Random::oneIn(100);
+         // //dataSubterranean->aSubterranean(_x,_y).hasGems=Random::oneIn(100);
          // if (rng.oneIn(1000))
          // {
-            // //data->aSubterranean(_x,_y).hasGems=true;
+            // //dataSubterranean->aSubterranean(_x,_y).hasGems=true;
          // }
       }
    }
@@ -660,9 +672,9 @@ bool World_Local::generateSubterranean()
 
       // for (int i2=0;i2<vCaveMap->size();++i2)
       // {
-         // data->aSubterranean((*vCaveMap)(i2)).baseTerrain = GRASSLAND;
-         // data->aSubterranean((*vCaveMap)(i2)).nGems=0;
-         // data->aSubterranean((*vCaveMap)(i2)).nMetal=0;
+         // dataSubterranean->aSubterranean((*vCaveMap)(i2)).baseTerrain = GRASSLAND;
+         // dataSubterranean->aSubterranean((*vCaveMap)(i2)).nGems=0;
+         // dataSubterranean->aSubterranean((*vCaveMap)(i2)).nMetal=0;
 
          // if (rng.oneIn(100))
          // {
@@ -679,13 +691,12 @@ bool World_Local::generateSubterranean()
          // if (i2<nEntrances)
          // {
             // data->aLocalTile((*vCaveMap)(i2)).isCave=true;
-            // data->aSubterranean((*vCaveMap)(i2)).isCave=true;
+            // dataSubterranean->aSubterranean((*vCaveMap)(i2)).isCave=true;
          // }
       // }
       // vCaveMap->deleteAll();
       // delete vCaveMap;
    // }
-   
    return false;
 }
 
@@ -696,70 +707,69 @@ bool World_Local::save()
   
   std::string localMapPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + ".dat";
   std::string abstractPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + "-abstract.dat";
-	
-  //std::cout<<"Savefile for this map is: "<<localMapPath<<"\n";
-	// FileManager::createDirectory(strSavePath);
-	
-	if (FileManager::directoryExists(world.strSavePath) == false)
-  {
-    std::cout<<"Error: Unable to access directory.\n";
-    return false;
-	}
-  
-  // Make the file or clear it.
-  FileManager::makeNewFile(localMapPath);
-  FileManager::makeNewFile(abstractPath);
-  SaveFileManager sfm;
-  SaveFileManager sfmAbstract;
-  
-  std::string saveData="";
-  
-  SaveChunk chonk ("TILE ARRAY");
-  SaveChunk abstractChonk("ABSTRACT");
-  
-  // Only unload the local map if it is loaded.
-  for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
-  {
-    for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
-    {
-      chonk.add(data->aLocalTile(_x,_y).getSaveData());
-      abstractChonk.add(data->aLocalTile(_x,_y).getAbstractData());
-    }
-  }
+
+   if (FileManager::directoryExists(world.strSavePath) == false)
+   {
+      std::cout<<"Error: Unable to access directory.\n";
+      return false;
+   }
+
+   // Make the file or clear it.
+   FileManager::makeNewFile(localMapPath);
+   FileManager::makeNewFile(abstractPath);
+   SaveFileManager sfm;
+   SaveFileManager sfmAbstract;
+
+   std::string saveData="";
+
+   SaveChunk chonk ("TILE ARRAY");
+   SaveChunk abstractChonk("ABSTRACT");
+
+   // Only unload the local map if it is loaded.
+   for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+   {
+      for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+      {
+         chonk.add(data->aLocalTile(_x,_y).getSaveData());
+         abstractChonk.add(data->aLocalTile(_x,_y).getAbstractData());
+      }
+   }
   
   sfmAbstract.addChunk(abstractChonk);
   sfm.addChunk(chonk);
   
-  SaveChunk chonkSub ("SUBTERRANEAN ARRAY");
-  SaveChunk chonkGem ("GEM ARRAY");
-  SaveChunk chonkMetal ("METAL ARRAY");
+   if (dataSubterranean)
+   {
+      SaveChunk chonkSub ("SUBTERRANEAN ARRAY");
+      SaveChunk chonkGem ("GEM ARRAY");
+      SaveChunk chonkMetal ("METAL ARRAY");
+      for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+      {
+         for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+         {
+            chonkSub.add(dataSubterranean->aSubterranean(_x,_y).getSaveData());
+            chonkGem.add(DataTools::toString(dataSubterranean->aSubterranean(_x,_y).nGems));
+            chonkMetal.add(DataTools::toString(dataSubterranean->aSubterranean(_x,_y).nMetal));
+         }
+      }
+      sfm.addChunk(chonkSub);
+      sfm.addChunk(chonkGem);
+      sfm.addChunk(chonkMetal);
+   }
   
-  for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
-  {
-    for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
-    {
-      chonkSub.add(data->aSubterranean(_x,_y).getSaveData());
-      chonkGem.add(DataTools::toString(data->aSubterranean(_x,_y).nGems));
-      chonkMetal.add(DataTools::toString(data->aSubterranean(_x,_y).nMetal));
-    }
-  }
-  sfm.addChunk(chonkSub);
-  sfm.addChunk(chonkGem);
-  sfm.addChunk(chonkMetal);
+   SaveChunk chonkObjects ("OBJECT VECTOR");
+
+   for (int i=0;i<vObjectGeneric.size();++i)
+   {
+      chonkObjects.add(vObjectGeneric(i)->getBaseData());
+   }
   
-  SaveChunk chonkObjects ("OBJECT VECTOR");
-  
-  for (int i=0;i<vObjectGeneric.size();++i)
-  {
-    chonkObjects.add(vObjectGeneric(i)->getBaseData());
-  }
-  
-  SaveChunk chonkItems ("ITEM VECTOR");
-  for (int i=0;i<vItem.size();++i)
-  {
-    chonkItems.add(vItem(i)->getBaseData());
-  }
-  
+   SaveChunk chonkItems ("ITEM VECTOR");
+   for (int i=0;i<vItem.size();++i)
+   {
+      chonkItems.add(vItem(i)->getBaseData());
+   }
+
   sfm.addChunk(chonkObjects);
   sfm.addChunk(chonkItems);
   
@@ -780,8 +790,6 @@ bool World_Local::save()
   // // Vector of all non-categorised objects on this map.
   // Vector <WorldObject*> vObjectGeneric;
   
-  
-  
   sfm.saveToFile(localMapPath);
   sfmAbstract.saveToFile(abstractPath);
 
@@ -790,150 +798,122 @@ bool World_Local::save()
 
 bool World_Local::load()
 {
-  std::string localMapPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + ".dat";
+   std::string localMapPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + ".dat";
   
-  //std::cout<<"Attempting to load cached map: "<<localMapPath<<".\n";
+   if ( FileManager::directoryExists(world.strSavePath)  == false )
+   {
+      std::cout<<"Error: Unable to access directory.\n";
+      return false;
+   }
+  
+   initialized = true;
+   active = true;
 
-	if ( FileManager::directoryExists(world.strSavePath)  == false )
-  {
-    std::cout<<"Error: Unable to access directory.\n";
-    return false;
-	}
-  
-  initialized = true;
-  active = true;
-  
-  if ( data == 0 )
-  { data=new Data;
-  }
-  data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-  data->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-  
-  
-  // Open the cache file for loading into memory.
-  SaveFileManager sfm;
-  
-  std::string saveData="";
-  sfm.loadFile(localMapPath);
-  
-  //SaveChunk chonk ("TILEARRAY");
-  SaveChunk* chonk = sfm.getChunk("TILE ARRAY");
-  
-  if ( chonk != 0 )
-  {
-    std::cout<<"Chonks: "<<chonk->vData.size()<<".\n";
+   if ( data == 0 )
+   { data=new Data;
+   }
+   data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+   //dataSubterranean->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 
-    int i=0;
-    // Only unload the local map if it is loaded.
-    for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
-    {
-      for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
-      {
-        //data->aLocalTile(_x,_y).clearObjects();
-        data->aLocalTile(_x,_y).loadData((*chonk)(i));
-        
-        data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
-        data->aSubterranean(_x,_y).seed = rng.rand32(PORTABLE_INT_MAX-1);
-        //data->aSubterranean(_x,_y).clearObjects();
-        data->aSubterranean(_x,_y).height = 0;
 
-        //data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
-        //data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
-        //data->aSubterranean(_x,_y).clearObjects();
-        //data->aSubterranean(_x,_y).height = 0;
-        //chonk.add(data->aLocalTile(_x,_y).getSaveData());
-        ++i;
-      }
-    }
-    delete chonk;
-    
-    SaveChunk* chonkSub = sfm.getChunk("SUBTERRANEAN ARRAY");
-    SaveChunk* chonkGem = sfm.getChunk("GEM ARRAY");
-    SaveChunk* chonkMetal = sfm.getChunk("METAL ARRAY");
-    
-    if ( chonkSub != 0 )
-    {
-      //std::cout<<"Chonks: "<<chonk->vData.size()<<".\n";
+   // Open the cache file for loading into memory.
+   SaveFileManager sfm;
 
-      i=0;
+   std::string saveData="";
+   sfm.loadFile(localMapPath);
+
+   SaveChunk* chonk = sfm.getChunk("TILE ARRAY");
+
+   if ( chonk != 0 )
+   {
+      int i=0;
       // Only unload the local map if it is loaded.
       for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
       {
-        for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
-        {
-          data->aSubterranean(_x,_y).loadData((*chonkSub)(i));
-          data->aSubterranean(_x,_y).nGems=DataTools::toUnsignedShort((*chonkGem)(i));
-          data->aSubterranean(_x,_y).nMetal=DataTools::toUnsignedShort((*chonkMetal)(i));
-          
-          //data->aLocalTile(_x,_y).clearObjects();
-          //data->aLocalTile(_x,_y).loadData((*chonk)(i));
-          
-          // data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
-          // data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
-          // //data->aSubterranean(_x,_y).clearObjects();
-          // data->aSubterranean(_x,_y).height = 0;
+         for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+         {
+            //data->aLocalTile(_x,_y).clearObjects();
+            data->aLocalTile(_x,_y).loadData((*chonk)(i));
 
-          //data->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
-          //data->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
-          //data->aSubterranean(_x,_y).clearObjects();
-          //data->aSubterranean(_x,_y).height = 0;
-          //chonk.add(data->aLocalTile(_x,_y).getSaveData());
-          ++i;
-        }
+            dataSubterranean->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+            dataSubterranean->aSubterranean(_x,_y).seed = rng.rand32(PORTABLE_INT_MAX-1);
+            //dataSubterranean->aSubterranean(_x,_y).clearObjects();
+            dataSubterranean->aSubterranean(_x,_y).height = 0;
+
+            //dataSubterranean->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+            //dataSubterranean->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+            //dataSubterranean->aSubterranean(_x,_y).clearObjects();
+            //dataSubterranean->aSubterranean(_x,_y).height = 0;
+            //chonk.add(data->aLocalTile(_x,_y).getSaveData());
+            ++i;
+         }
       }
-      delete chonkSub;
-    }
-    
-  
+      delete chonk;
 
-    chonk = sfm.getChunk("OBJECT VECTOR");
+      SaveChunk* chonkSub = sfm.getChunk("SUBTERRANEAN ARRAY");
     
-    //std::cout<<"Chonks2: "<<chonk->vData.size()<<".\n";
-    
-    for (i=0;i<chonk->vData.size();++i)
-    {
-      //std::cout<<"Current object chonk: "<<chonk->vData(i)<<".\n";
-      
-      //std::cout<<"Tokenising...\n";
-      
-      Vector <std::string> * vToke = DataTools::tokenize(chonk->vData(i), " \t\n\r");
-      
-      if ( vToke && vToke->size() >= 3)
+      if ( chonkSub != 0 )
       {
-        //std::cout<<"Object type: "<<(*vToke)(0)<<".\n";
-        //std::cout<<"X: "<<(*vToke)(1)<<".\n";
-        //std::cout<<"Y: "<<(*vToke)(2)<<".\n";
-        
-        std::string objectType = (*vToke)(0);
-        short int objectX = DataTools::toShort((*vToke)(1));
-        short int objectY = DataTools::toShort((*vToke)(2));
-        
-        //std::cout<<"Tree coords: "<<objectX<<", "<<objectY<<".\n";
-        
-        
-        if (objectType == "Tree" )
-        {
-         //std::cout<<"Loading a tree.\n";
-          
-          if (isSafe( objectX, objectY ) )
-          {
-            put (new WorldObject_Tree(1), objectX, objectY);
-          }
-          
-        }
-        
-        delete vToke;
+         SaveChunk* chonkGem = sfm.getChunk("GEM ARRAY");
+         SaveChunk* chonkMetal = sfm.getChunk("METAL ARRAY");
+         i=0;
+         // Only unload the local map if it is loaded.
+         for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+         {
+            for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+            {
+               dataSubterranean->aSubterranean(_x,_y).loadData((*chonkSub)(i));
+               dataSubterranean->aSubterranean(_x,_y).nGems=DataTools::toUnsignedShort((*chonkGem)(i));
+               dataSubterranean->aSubterranean(_x,_y).nMetal=DataTools::toUnsignedShort((*chonkMetal)(i));
+
+               //data->aLocalTile(_x,_y).clearObjects();
+               //data->aLocalTile(_x,_y).loadData((*chonk)(i));
+
+               // dataSubterranean->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+               // dataSubterranean->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+               // //dataSubterranean->aSubterranean(_x,_y).clearObjects();
+               // dataSubterranean->aSubterranean(_x,_y).height = 0;
+
+               //dataSubterranean->aSubterranean(_x,_y).baseTerrain = UNDERGROUND;
+               //dataSubterranean->aSubterranean(_x,_y).seed = random.randInt(PORTABLE_INT_MAX-1);
+               //dataSubterranean->aSubterranean(_x,_y).clearObjects();
+               //dataSubterranean->aSubterranean(_x,_y).height = 0;
+               //chonk.add(data->aLocalTile(_x,_y).getSaveData());
+               ++i;
+            }
+         }
+         delete chonkSub;
       }
 
-    }
-  }
-  else
-  {
-    std::cout<<"Chonk fail\n";
-    return false;
-  }
+      chonk = sfm.getChunk("OBJECT VECTOR");
 
-  return true;
+      for (i=0;i<chonk->vData.size();++i)
+      {
+         Vector <std::string> * vToke = DataTools::tokenize(chonk->vData(i), " \t\n\r");
+
+         if ( vToke && vToke->size() >= 3)
+         {
+            std::string objectType = (*vToke)(0);
+            short int objectX = DataTools::toShort((*vToke)(1));
+            short int objectY = DataTools::toShort((*vToke)(2));
+            if (objectType == "Tree" )
+            {
+               if (isSafe( objectX, objectY ) )
+               {
+                  put (new WorldObject_Tree(1), objectX, objectY);
+               }
+            }
+            delete vToke;
+         }
+      }
+   }
+   else
+   {
+      std::cout<<"Chonk fail\n";
+      return false;
+   }
+
+   return true;
 }
 
 
@@ -955,7 +935,7 @@ bool World_Local::put (WorldObject* _object, int _x, int _y, bool subterranean)
   
   if ( subterranean )
   {
-    data->aSubterranean(_x,_y).add(_object);
+    dataSubterranean->aSubterranean(_x,_y).add(_object);
   }
   else
   {
@@ -989,7 +969,7 @@ bool World_Local::put (Item* _item, int _x, int _y, bool subterranean)
   
   if ( subterranean )
   {
-    data->aSubterranean(_x,_y).add(_item);
+    dataSubterranean->aSubterranean(_x,_y).add(_item);
   }
   else
   {
@@ -1022,7 +1002,7 @@ bool World_Local::put (Character* _character, int _x, int _y, bool subterranean)
 
   if ( subterranean )
   {
-    data->aSubterranean(_x,_y).add(_character);
+    dataSubterranean->aSubterranean(_x,_y).add(_character);
   }
   else
   {
@@ -1055,7 +1035,7 @@ bool World_Local::put (Creature* _creature, int _x, int _y, bool subterranean)
 
   if ( subterranean )
   {
-    data->aSubterranean(_x,_y).add(_creature);
+    dataSubterranean->aSubterranean(_x,_y).add(_creature);
   }
   else
   {
@@ -1133,10 +1113,10 @@ bool World_Local::moveObject (WorldObject* _object, int newX, int newY )
   
   if (_object->isUnderground)
   {
-    if ( data->aSubterranean(newX,newY).hasMovementBlocker() )
+    if ( dataSubterranean->aSubterranean(newX,newY).hasMovementBlocker() )
     { return false; }
   
-    data->aSubterranean(_object->x,_object->y).remove(_object);
+    dataSubterranean->aSubterranean(_object->x,_object->y).remove(_object);
     
     _object->x=newX;
     _object->y=newY;
@@ -1224,10 +1204,10 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
   
   if (_object->isUnderground)
   {
-    if ( destination->data->aSubterranean(newX,newY).hasMovementBlocker() )
+    if ( destination->dataSubterranean->aSubterranean(newX,newY).hasMovementBlocker() )
     { return false; }
   
-    data->aSubterranean(_object->x,_object->y).remove(_object);
+    dataSubterranean->aSubterranean(_object->x,_object->y).remove(_object);
     
     _object->x=newX;
     _object->y=newY;
@@ -1269,8 +1249,8 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
   // LocalTile* source;
   // if ( _object->isUnderground )
   // {
-    // destination = &data->aSubterranean(newX,newY);
-    // source = &data->aSubterranean(_object->x,_object->y);
+    // destination = &dataSubterranean->aSubterranean(newX,newY);
+    // source = &dataSubterranean->aSubterranean(_object->x,_object->y);
   // }
   // else
   // {
@@ -1337,11 +1317,11 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
   
   // if (_object->isUnderground)
   // {
-    // if ( data->aSubterranean(newX,newY).hasMovementBlocker() )
+    // if ( dataSubterranean->aSubterranean(newX,newY).hasMovementBlocker() )
     // {
       // return false;
     // }
-    // data->aSubterranean(_object->x,_object->y).remove(_object);
+    // dataSubterranean->aSubterranean(_object->x,_object->y).remove(_object);
     
   
     // _object->x=newX;
@@ -1349,7 +1329,7 @@ bool World_Local::moveObject (Character* _object, int newX, int newY )
     // _object->worldX = globalX;
     // _object->worldY = globalY;
     
-    // data->aSubterranean(newX,newY).add(_object);
+    // dataSubterranean->aSubterranean(newX,newY).add(_object);
   // }
   // else
   // {
@@ -1402,7 +1382,7 @@ bool World_Local::moveDown(WorldObject* _object)
     {
       data->aLocalTile(_object->x,_object->y).remove(_object);
       _object->isUnderground=true;
-      data->aSubterranean(_object->x,_object->y).add(_object);
+      dataSubterranean->aSubterranean(_object->x,_object->y).add(_object);
       return true;
     }
   }
@@ -1419,7 +1399,7 @@ bool World_Local::moveDown(Character* _object)
     {
       data->aLocalTile(_object->x,_object->y).remove(_object);
       _object->isUnderground=true;
-      data->aSubterranean(_object->x,_object->y).add(_object);
+      dataSubterranean->aSubterranean(_object->x,_object->y).add(_object);
       return true;
     }
   }
@@ -1435,7 +1415,7 @@ bool World_Local::moveUp(WorldObject* _object)
   {
     if ( data->aLocalTile(_object->x,_object->y).isCave )
     {
-      data->aSubterranean(_object->x,_object->y).remove(_object);
+      dataSubterranean->aSubterranean(_object->x,_object->y).remove(_object);
       _object->isUnderground=false;
       data->aLocalTile(_object->x,_object->y).add(_object);
       return true;
@@ -1452,7 +1432,7 @@ bool World_Local::moveUp(Character* _object)
   {
     if ( data->aLocalTile(_object->x,_object->y).isCave )
     {
-      data->aSubterranean(_object->x,_object->y).remove(_object);
+      dataSubterranean->aSubterranean(_object->x,_object->y).remove(_object);
       _object->isUnderground=false;
       data->aLocalTile(_object->x,_object->y).add(_object);
       return true;
@@ -1565,9 +1545,9 @@ bool World_Local::remove (WorldObject* _object )
   
   if (_object->isUnderground)
   {
-    if (data->aSubterranean.isSafe(_object->x,_object->y))
+    if (dataSubterranean->aSubterranean.isSafe(_object->x,_object->y))
     {
-      data->aSubterranean(_object->x,_object->y).remove(_object);
+      dataSubterranean->aSubterranean(_object->x,_object->y).remove(_object);
     }
   }
   else if (data->aLocalTile.isSafe(_object->x,_object->y))
@@ -1586,9 +1566,9 @@ bool World_Local::remove (Item* _item )
   
   if (_item->isUnderground)
   {
-    if (data->aSubterranean.isSafe(_item->x,_item->y))
+    if (dataSubterranean->aSubterranean.isSafe(_item->x,_item->y))
     {
-      data->aSubterranean(_item->x,_item->y).remove(_item);
+      dataSubterranean->aSubterranean(_item->x,_item->y).remove(_item);
     }
   }
   else if (data->aLocalTile.isSafe(_item->x,_item->y))
@@ -1606,9 +1586,9 @@ bool World_Local::remove (Character* _character )
   
   if (_character->isUnderground)
   {
-    if (data->aSubterranean.isSafe(_character->x,_character->y))
+    if (dataSubterranean->aSubterranean.isSafe(_character->x,_character->y))
     {
-      data->aSubterranean(_character->x,_character->y).remove(_character);
+      dataSubterranean->aSubterranean(_character->x,_character->y).remove(_character);
     }
   }
   else if (data->aLocalTile.isSafe(_character->x,_character->y))
@@ -1626,9 +1606,9 @@ bool World_Local::remove (Creature* _creature )
   
   if (_creature->isUnderground)
   {
-    if (data->aSubterranean.isSafe(_creature->x,_creature->y))
+    if (dataSubterranean->aSubterranean.isSafe(_creature->x,_creature->y))
     {
-      data->aSubterranean(_creature->x,_creature->y).remove(_creature);
+      dataSubterranean->aSubterranean(_creature->x,_creature->y).remove(_creature);
     }
   }
   else if (data->aLocalTile.isSafe(_creature->x,_creature->y))

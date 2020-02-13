@@ -65,18 +65,16 @@ void World_MapManager::init(unsigned int _nX, unsigned int _nY)
 World_Local* World_MapManager::operator() (const int _x, const int _y)
 {
 #ifdef THREAD_ALL
-   //mutexArrayAccess.lock();
+   mutexArrayAccess.lock();
    if ( aWorldTile.isSafe(_x,_y) )
    {
       World_Local* map = &aWorldTile(_x,_y);
-//mutexArrayAccess.lock();
-      //map->generate();
-      //mutexArrayAccess.unlock();
+      mutexArrayAccess.unlock();
       return map;
    }
    else
    {
-      //mutexArrayAccess.unlock();
+      mutexArrayAccess.unlock();
    }
    
 
@@ -118,8 +116,8 @@ void World_MapManager::generate(unsigned int _x, unsigned int _y)
 
       if (QUIT_FLAG) { return; }
       local->generate(false);
-      if (QUIT_FLAG) { return; }
-      local->generateSubterranean();
+      //if (QUIT_FLAG) { return; }
+      //local->generateSubterranean();
       if (QUIT_FLAG) { return; }
       local->save();
       if (QUIT_FLAG) { return; }

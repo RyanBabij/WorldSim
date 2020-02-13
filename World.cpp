@@ -106,31 +106,29 @@ World_Local* World::operator() (const int _x, const int _y)
 
 inline LocalTile* World::operator() (unsigned long int _x, unsigned long int _y, const bool subterranean)
 {
-  //std::cout<<"WORLD ABSOLUTE QUERY\n";
-  
-  // CONVERT COORDINATES TO RELATIVE.
-  int gX = 0;
-  int gY = 0;
-  int lX = 0;
-  int lY = 0;
-  
-  if ( absoluteToRelative(_x,_y,&gX,&gY,&lX,&lY) == false )
-  {
-    return 0;
-  }
-  
-  // Check if local map is already loaded.
-  for (int i=0;i<vWorldLocal.size();++i)
-  {
-    if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY && vWorldLocal(i)->data )
-    {
-      if ( subterranean )
+   // CONVERT COORDINATES TO RELATIVE.
+   int gX = 0;
+   int gY = 0;
+   int lX = 0;
+   int lY = 0;
+
+   if ( absoluteToRelative(_x,_y,&gX,&gY,&lX,&lY) == false )
+   {
+      return 0;
+   }
+
+   // Check if local map is already loaded.
+   for (int i=0;i<vWorldLocal.size();++i)
+   {
+      if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY && vWorldLocal(i)->data )
       {
-        return &vWorldLocal(i)->data->aSubterranean(lX,lY);
+         if ( subterranean && vWorldLocal(i)->dataSubterranean != 0 )
+         {
+            return &vWorldLocal(i)->dataSubterranean->aSubterranean(lX,lY);
+         }
+         return &vWorldLocal(i)->data->aLocalTile(lX,lY);
       }
-      return &vWorldLocal(i)->data->aLocalTile(lX,lY);
-    }
-  }
+   }
   // The local map isn't in memory, therefore we need to load it up.
   // For now we just generate it from scratch.
   generateLocal(gX,gY);
@@ -141,9 +139,9 @@ inline LocalTile* World::operator() (unsigned long int _x, unsigned long int _y,
     {
       if ( subterranean )
       {
-        return &vWorldLocal(i)->data->aSubterranean(lX,lY);
+        return &(vWorldLocal(i)->dataSubterranean->aSubterranean(lX,lY));
       }
-      return &vWorldLocal(i)->data->aLocalTile(lX,lY);
+      return &(vWorldLocal(i)->data->aLocalTile(lX,lY));
     }
   }
   

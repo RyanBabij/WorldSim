@@ -1035,7 +1035,7 @@ void switchTarget(World_Local* _worldLocal)
 								{
 									if ( nextPixel>=mainViewX1 && currentPixel <= mainViewX2 && floor(currentPixel) != floor(nextPixel) )
 									{
-                    if ( subterraneanMode )
+                    if ( subterraneanMode && localMap->dataSubterranean)
                     {
                       glColor4ub(255,255,255,255);
                       //Very basic player line of sight check here (only if we're in Adventure mode)
@@ -1047,7 +1047,7 @@ void switchTarget(World_Local* _worldLocal)
                       else if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile,true) == 1 )
                       {
                         //Draw tile very dark to symbolise fog of war
-                        LocalTile* localTile = &localMap->data->aSubterranean(localXTile,localYTile);
+                        LocalTile* localTile = &localMap->dataSubterranean->aSubterranean(localXTile,localYTile);
                         
                         //unsigned char lightValue = 80;
                         //glColor3ub(lightValue,lightValue,lightValue);
@@ -1065,7 +1065,7 @@ void switchTarget(World_Local* _worldLocal)
                       }
                       else /* DRAW VISIBLE TILES */
                       {
-                        LocalTile* localTile = &localMap->data->aSubterranean(localXTile,localYTile);
+                        LocalTile* localTile = &localMap->dataSubterranean->aSubterranean(localXTile,localYTile);
                         Vector <Texture*> * vText = localTile->currentTextures();
                         if ( vText != 0)
                         {
@@ -1074,9 +1074,9 @@ void switchTarget(World_Local* _worldLocal)
                             Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), (*vText)(i), false);
                           }
                         }
-                        for(int i=0;i<localMap->data->aSubterranean(localXTile,localYTile).vObject.size();++i)
+                        for(int i=0;i<localMap->dataSubterranean->aSubterranean(localXTile,localYTile).vObject.size();++i)
                         {
-                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->data->aSubterranean(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->dataSubterranean->aSubterranean(localXTile,localYTile).vObject(i)->currentTexture(), false);
                         }
                         delete vText;
                       }

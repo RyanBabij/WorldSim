@@ -49,7 +49,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    RandomLehmer rng;
    // The generation seed for this local map.
    unsigned int seed;
-
+   
    // Data stores all data which is only present in generated maps.
    // This is done to keep memory footprint low, because million of maps are generated on large worlds.
    // This basically combines all pointers to these arrays into a single pointer.
@@ -57,7 +57,6 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    {
       // /* LOCAL MAP ARRAYS */
       ArrayS2 <LocalTile> aLocalTile; // Array of all tiles on map.
-      ArrayS2 <LocalTile> aSubterranean;  // Array of underground layer. Used for caves, tunnels, mines.
 
       // Vector of all tile coordinates.
       // This is used to do things like loop through every coordinate once in random order
@@ -77,12 +76,19 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
       // Vector <WorldObject*> vObjectGeneric;
 
    };
+   
+   // Subterannean data is generated separately from above-ground data
+   struct Data_Subterranean
+   {
+      ArrayS2 <LocalTile> aSubterranean;  // Array of underground layer. Used for caves, tunnels, mines.
+   };
 
    // Keeps track of influence values for each tribe.
    std::map<Tribe*,int> mInfluence;
 
    public:
    Data * data;
+   Data_Subterranean * dataSubterranean;
 
    // Texture of map from far away. This texture is used to rende the tile when zoomed out far.
    Texture texFar;
