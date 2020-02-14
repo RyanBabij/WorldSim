@@ -207,16 +207,8 @@ bool World::isGenerated(unsigned long int _absoluteX, unsigned long int _absolut
 void World::startSimulation()
 {
    active=true;
-   mapManager.init(nX,nY);
-   
-	for (int _y=0;_y<nY;++_y)
-	{
-		for (int _x=0;_x<nX;++_x)
-		{
-         mapManager.aWorldTile(_x,_y).baseBiome = aWorldTile(_x,_y).baseBiome;
-      }
-   }
-   
+   mapManager.init(nX,nY,&aWorldTile);
+
    mapManager.main();
 }
 
@@ -1192,7 +1184,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
     //std::thread t2( [this,x,y] { aTerrain.init(x,y,NOTHING); aSeed.init(x,y,0); });
     //std::thread t2( [this,x,y] { aTerrain.init(x,y,NOTHING); });
    // std::thread t3( [this,x,y] { /*aLandmassID.init(x,y,-1);*/ aIsLand.init(x,y,true); });
-    std::thread t4( [this,x,y] { aBiomeID.init(x,y,-1); aWorldTile.initClass(x,y); mapManager.init(x,y); });
+    std::thread t4( [this,x,y] { aBiomeID.init(x,y,-1); aWorldTile.initClass(x,y); /* mapManager.init(x,y); */ });
     std::thread t5( [this] { vWorldObjectGlobal.deleteAll(); vLandmass.deleteAll(); vBiome.deleteAll(); vTribe.clear(); });
 
   #else

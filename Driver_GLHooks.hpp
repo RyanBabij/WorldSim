@@ -47,41 +47,47 @@ void GL_init(int nArgs, char ** arg)
   
     // Load an icon
     // Stolen from: https://stackoverflow.com/questions/12748103/how-to-change-freeglut-main-window-icon-in-c
-  #ifdef WILDCAT_WINDOWS
-    HWND hwnd = FindWindow(NULL, windowTitle.c_str()); //probably you can get the window handler in different way..
-    HANDLE icon = LoadImage(NULL, "Textures/icon.ico", IMAGE_ICON, 32, 32, LR_LOADFROMFILE | LR_COLOR);
-    SendMessage(hwnd, (UINT)WM_SETICON, ICON_BIG, (LPARAM)icon);
-      // MAXIMUS THE WINDOW
-    if (MAXIMISE_WINDOW)
-    {
+#ifdef WILDCAT_WINDOWS
+   HWND hwnd = FindWindow(NULL, windowTitle.c_str()); //probably you can get the window handler in different way..
+   HANDLE icon = LoadImage(NULL, "Textures/icon.ico", IMAGE_ICON, 32, 32, LR_LOADFROMFILE | LR_COLOR);
+   SendMessage(hwnd, (UINT)WM_SETICON, ICON_BIG, (LPARAM)icon);
+   // MAXIMUS THE WINDOW
+   if (MAXIMISE_WINDOW)
+   {
       ShowWindow(hwnd, SW_SHOWMAXIMIZED);
-    }
+   }
 
-    
+   // CHECK FREE RAM
+   // The game uses a lot of RAM, so it's useful to know how much we have to work with.
+   // Stolen from https://msdn.microsoft.com/en-us/library/windows/desktop/aa366589%28v=vs.85%29.aspx
 
-  // CHECK FREE RAM
-  // The game uses a lot of RAM, so it's useful to know how much we have to work with.
-  // Stolen from https://msdn.microsoft.com/en-us/library/windows/desktop/aa366589%28v=vs.85%29.aspx
+   MEMORYSTATUSEX statex;
+   statex.dwLength = sizeof (statex);
+
+   GlobalMemoryStatusEx (&statex);
+   std::cout<<"There is "<<statex.ullTotalPhys/1024/1024<<" MB of RAM.\n";
+   std::cout<<"There is "<<statex.ullAvailPhys/1024/1024<<" MB of free RAM.\n";
+
+   std::cout<<"There is "<<statex.ullTotalPageFile/1024/1024<<" MB of paging file.\n";
+   std::cout<<"There is "<<statex.ullAvailPageFile/1024/1024<<" MB of free paging file.\n";
+
+   std::cout<<"There is "<<statex.ullTotalVirtual/1024/1024<<" MB of virtual memory.\n";
+   std::cout<<"There is "<<statex.ullAvailVirtual/1024/1024<<" MB of free virtual memory.\n";
+
+   // Local maps currently need about 2MB of RAM each but this is likely to significantly increase
+   // in some cases we might want to make use of virtual memory as well as RAM
+   MAP_CACHE_SIZE = statex.ullAvailPhys/1024/1024/3;
+   if ( MAP_CACHE_SIZE < 12 )
+   {
+      MAP_CACHE_SIZE = 12;
+      std::cout<<"Warning, free RAM may be too low.\n";
+   }
+   std::cout<<"Setting map cache to "<<MAP_CACHE_SIZE<<" maps.\n";
+#endif
   
-    MEMORYSTATUSEX statex;
-
-    statex.dwLength = sizeof (statex);
-
-    GlobalMemoryStatusEx (&statex);
-    std::cout<<"There is "<<statex.ullTotalPhys/1024/1024<<" MB of RAM.\n";
-    std::cout<<"There is "<<statex.ullAvailPhys/1024/1024<<" MB of free RAM.\n";
-    
-    std::cout<<"There is "<<statex.ullTotalPageFile/1024/1024<<" MB of paging file.\n";
-    std::cout<<"There is "<<statex.ullAvailPageFile/1024/1024<<" MB of free paging file.\n";
-    
-    std::cout<<"There is "<<statex.ullTotalVirtual/1024/1024<<" MB of virtual memory.\n";
-    std::cout<<"There is "<<statex.ullAvailVirtual/1024/1024<<" MB of free virtual memory.\n";
-    
-  #endif
-  
-  #ifdef THREAD_ALL
+#ifdef THREAD_ALL
    N_CORES = std::thread::hardware_concurrency();
-  #endif
+#endif
   
 	/* Set perspective? */
 	/* Set window and call reshape. */

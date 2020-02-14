@@ -41,23 +41,44 @@ World_MapManager::~World_MapManager()
          std::cout<<"Hanging detected.\n";
       }
    }
+   
+   std::cout<<"Saving maps\n";
+   for (int i2=0;i2<vMapCache.size();++i2)
+   {
+      //vMapCache(i2)->save();
+      vMapCache(i2)->unload();
+   }
+   
    std::cout<<"Map manager shutdown.\n";
    MUTEX_SHUTDOWN.unlock();
 }
 
-void World_MapManager::init(unsigned int _nX, unsigned int _nY)
+void World_MapManager::init(unsigned int _nX, unsigned int _nY, ArrayS2 <World_Local>* aWorldTile2)
 {
+   // Passing the old array is a temporary measure. I will probably pass the World Generator instead.
 #ifdef THREAD_ALL
    mutexArrayAccess.lock();
    aWorldTile.initClass(_nX,_nY);
+   
+   mutexJob.lock();
+   vJobs.clear();
    
    for (unsigned int _y=0;_y<_nY;++_y)
    {
       for (unsigned int _x=0;_x<_nX;++_x)
       {
-         aWorldTile(_x,_y).init(_x,_y,GRASSLAND /* BIOME ID */, 0 /* seed */, 0 /* hasriver */);
+         aWorldTile(_x,_y).init(_x,_y,(*aWorldTile2)(_x,_y).baseBiome /* BIOME ID */, 0 /* seed */, 0 /* hasriver */);
+         
+         if ( (*aWorldTile2)(_x,_y).baseBiome != OCEAN && (*aWorldTile2)(_x,_y).baseBiome != ICE )
+         {
+            vJobs.push(&(aWorldTile(_x,_y)));
+         }
+         
       }
    }
+   std::cout<<"Jobs initialised\n";
+   
+   mutexJob.unlock();
    mutexArrayAccess.unlock();
 #endif
 }
@@ -76,61 +97,8 @@ World_Local* World_MapManager::operator() (const int _x, const int _y)
    {
       mutexArrayAccess.unlock();
    }
-   
-
-
-  // for (int i=0;i<vWorldLocal.size();++i)
-  // {
-    // if (vWorldLocal(i)->globalX == _x && vWorldLocal(i)->globalY == _y )
-    // {
-      // return vWorldLocal(i);
-    // }
-  // }
-  
-  // // The local map isn't in memory, therefore we need to load it up.
-  // // For now we just generate it from scratch.
-  // generateLocal(_x,_y);
-
-  // for (int i=0;i<vWorldLocal.size();++i)
-  // {
-    // if (vWorldLocal(i)->globalX == _x && vWorldLocal(i)->globalY == _y )
-    // {
-      // return vWorldLocal(i);
-    // }
-  // }
 #endif
   return 0;
-}
-
-
-void World_MapManager::generate(unsigned int _x, unsigned int _y)
-{
-#ifdef THREAD_ALL
-   mutexArrayAccess.lock();
-   if ( aWorldTile(_x,_y).threadAccess == false && aWorldTile(_x,_y).initialized==false )
-   {
-      aWorldTile(_x,_y).threadAccess=true;
-      
-      World_Local* const local = &aWorldTile(_x,_y);
-      mutexArrayAccess.unlock();
-
-      if (QUIT_FLAG) { return; }
-      local->generate(false);
-      //if (QUIT_FLAG) { return; }
-      //local->generateSubterranean();
-      if (QUIT_FLAG) { return; }
-      local->save();
-      if (QUIT_FLAG) { return; }
-      local->unload();
-      if (QUIT_FLAG) { return; }
-      
-      local->threadAccess=false;
-   }
-   else
-   {
-      mutexArrayAccess.unlock();
-   }
-#endif
 }
 
 void World_MapManager::main()
@@ -140,41 +108,101 @@ void World_MapManager::main()
    {
       std::thread testThread( [this]
       {
-         unsigned int x=0;
-         unsigned int y=0;
+         // Wait for the Job vector to be built.
+         while(true)
+         {
+            Sleep(500);
+            mutexJob.lock();
+            if ( vJobs.size()>0)
+            {
+               mutexJob.unlock();
+               break;
+            }
+            mutexJob.unlock();
+         }
+         World_Local* local = 0;
 
          while(QUIT_FLAG==false)
          {
-            if ( QUIT_FLAG )
+            local=0;
+            // get a job and handle it or wait for one
+            while ( local==0 && QUIT_FLAG == false)
             {
-               break;
-            }
-            
-            if (RELINQUISH_CPU)
-            {
-               //MsgWaitForMultipleObjects( 0, NULL, FALSE, 10, QS_ALLINPUT ); /* parameter 4 is milliseconds ie 1000 = 1 second. */
-            }
-
-            if ( aWorldTile.isSafe(x,y) )
-            {
-               //mutexArrayAccess.unlock();
-               if ( aWorldTile(x,y).baseBiome != OCEAN )
-               { generate(x,y);
-               }
                
-               ++x;
-            }
-
-            else if ( aWorldTile.isSafe(x,y) == false )
-            {
-               x=0;
-               ++y;
-
-               if ( aWorldTile.isSafe(x,y) == false )
+               mutexJob.lock();
+               if (vJobs.size()>0)
                {
-                  x=0;
-                  y=0;
+                  local = vJobs(0);
+                  vJobs.eraseSlot(0);
+                  mutexJob.unlock();
+                  
+                  if (QUIT_FLAG) { return; }
+                  mutexArrayAccess.lock();
+                  
+                  if ( local->threadAccess == false && local->initialized==false )
+                  {
+                     local->threadAccess=true;
+                     mutexArrayAccess.unlock();
+
+                     //  generate the map
+                     if (QUIT_FLAG) { return; }
+                     local->generate(false);
+                     // if (QUIT_FLAG) { return; }
+                     // local->save();
+                     // if (QUIT_FLAG) { return; }
+                     // local->unload();
+                     local->threadAccess=false;
+                     
+                     mutexVector.lock();
+                     vMapCache.push(local);
+                     
+                     // If there are too many maps in cache, find an unused map and free it
+                     if ( vMapCache.size() > 0 && vMapCache.size() > MAP_CACHE_SIZE )
+                     {
+                        World_Local* mapToCache = 0;
+                        mutexArrayAccess.lock();
+                        for (int i2=0;i2<vMapCache.size();++i2)
+                        {
+                           if ( vMapCache(i2)->threadAccess==false )
+                           {
+                              mapToCache = vMapCache(i2);
+                              vMapCache.eraseSlot(i2);
+                              break;
+                           }
+                        }
+                        mutexArrayAccess.unlock();
+                        mutexVector.unlock();
+                        
+                        // save and unload the map
+                        if (mapToCache!=0)
+                        {
+                           if (QUIT_FLAG) { return; }
+                           mapToCache->save();
+                           if (QUIT_FLAG) { return; }
+                           mapToCache->unload();
+                        }
+                     }
+                     else
+                     {
+                        mutexVector.unlock();
+                     }
+                  }
+                  else
+                  {
+                     local=0;
+                     mutexArrayAccess.unlock();
+                  }
+                  
                }
+               // there are no jobs available, so wait
+               else
+               {
+                  mutexJob.unlock();
+                  Sleep(200);
+               }
+                  
+               if ( QUIT_FLAG )
+               { return; }
             }
          }
          --nThreads;

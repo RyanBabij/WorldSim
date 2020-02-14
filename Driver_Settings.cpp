@@ -25,7 +25,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.174 Win32 dev";
+const std::string VERSION = "0.0.175 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -180,8 +180,18 @@ const bool COMPRESS_TEXTURES = false; /* Probably saves graphics memory, however
 // manager can lock this mutex
    std::shared_mutex MUTEX_SHUTDOWN;
    std::shared_mutex MUTEX_TEST;
+   
+   // The maximum number of maps that may be cached in memory. This is set based on the amount
+   // of free RAM, but has a minimum value of 12.
+   // Currently it seems a local map requires about 2MB of RAM, but that will likely increase
+   // in the future.
+   // If the user has a fast swap file then it might be better to just cache everything
+   // in virtual RAM and let the OS handle it. In this case it might be best to let
+   // the user set the cache size.
+   std::atomic <int> MAP_CACHE_SIZE = 12;
 #else
    bool QUIT_FLAG = false;
+   unsigned int MAP_CACHE_SIZE = 12;
 #endif
 
 bool DONT_RENDER = false; /* In debugging, rendering can be disabled by pressing R. */
@@ -189,7 +199,7 @@ bool LIMIT_LOGIC = true; /* Press S. */
 bool FORCE_LOGIC_FRAME = false; /* True will trigger next logic frame immediately. */
 bool PAUSE_LOGIC = false; /* True will suspend logic. */
   // MAKES COUT MUCH FASTER BUT DOES NOT GUARANTEE ORDER OR COMPLETION BEFORE EXIT/CRASH.
-const bool FAST_COUT = false;
+const bool FAST_COUT = true;
 
 bool EMULATE_2_BUTTON_MIDDLE_CLICK = true; // Allows middle click with mice without middle click by pressing left and right click.
 

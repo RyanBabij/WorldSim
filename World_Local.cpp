@@ -22,8 +22,15 @@
 
 World_Local::World_Local()
 {
+   testValue=6;
+   
    globalX=0;
    globalY=0;
+   
+#ifdef THREAD_ALL
+   globalX_TS=0;
+   globalY_TS=0;
+#endif
 
    landID=-1;
 
@@ -105,6 +112,11 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
   
   globalX = _globalX;
   globalY = _globalY;
+  
+#ifdef THREAD_ALL
+   globalX_TS=globalX;
+   globalY_TS=globalY;
+#endif
   
   // This needs to be changed to initialise only when generated.
   //aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);

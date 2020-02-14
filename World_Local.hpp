@@ -99,15 +99,26 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    bool hasCave; // should be ncaves
    bool hasRuin; // should be nruins
 
+#ifdef THREAD_ALL
+   //WORLD DATA
+   std::atomic <short int> globalX_TS;
+   std::atomic <short int> globalY_TS;
+   short int globalX, globalY; /* The local world's position in the world. */
    std::atomic <bool> threadAccess;
-
-   bool initialized; /* True if the world has been loaded at least once. */
-   //bool loaded; /* True if the world is currently loaded into RAM */
-   bool active; /* Whether or not the world should be simulated. */
-   //bool generated; /* False until a world has been generated. Prevents trying to simulate a non-existent world. */
+   std::atomic <bool> initialized;
+   std::atomic <bool> active;
+   
+   int testValue;
    
    //WORLD DATA
+   //short int globalY; /* The local world's position in the world. */
+
+#else
+   //WORLD DATA
    short int globalX, globalY; /* The local world's position in the world. */
+   bool initialized; /* True if the world has been loaded at least once. */
+   bool active; /* Whether or not the world should be simulated. */
+#endif
 
    // How many metals may be mined from this tile.
    short int baseMetal;
