@@ -530,9 +530,9 @@ void switchTarget(World_Local* _worldLocal)
 			//std::cout<<"Adding tile: "<<hoveredXTile<<", "<<hoveredYTile<<" to render.\n";
 			//localX=hoveredXTile;
 			//localY=hoveredYTile;
-      world->generateLocal(hoveredXTile,hoveredYTile);
-      DEBUG_X=hoveredXTile;
-      DEBUG_Y=hoveredYTile;
+         world->generateLocal(hoveredXTile,hoveredYTile);
+         DEBUG_X=hoveredXTile;
+         DEBUG_Y=hoveredYTile;
 		}
 		
 		return false;

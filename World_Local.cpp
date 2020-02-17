@@ -88,6 +88,7 @@ World_Local::~World_Local()
 void World_Local::unload()
 {
 	active = false;
+   return;
   
   vCreature.deleteAll();
   vItem.deleteAll();
@@ -743,8 +744,8 @@ bool World_Local::save()
    //SaveChunk abstractChonk("ABSTRACT");
    SaveChunk abstractChonk2("ABSCOL");
    
-   Bitfield bf;
-   bf.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+   //Bitfield bf;
+   //bf.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 
    // Only unload the local map if it is loaded.
    for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
@@ -756,12 +757,12 @@ bool World_Local::save()
          
          if ( data->aLocalTile(_x,_y).hasMovementBlocker() )
          {
-            bf.set(_x,_y,true);
+            abstractData->bfCollision.set(_x,_y,true);
          }
       }
    }
    // copying the array as a string is inefficient but safer for now
-   abstractChonk2.add(bf.toString());
+   abstractChonk2.add(abstractData->bfCollision.toString());
    sfmAbstract.addChunk(abstractChonk2);
   
   //sfmAbstract.addChunk(abstractChonk);

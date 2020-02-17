@@ -101,6 +101,45 @@ World_Local* World_MapManager::operator() (const int _x, const int _y)
   return 0;
 }
 
+bool World_MapManager::generateNow(int _mapX, int _mapY)
+{
+   std::cout<<"Generating now: "<<_mapX<<", "<<_mapY<<"\n";
+   
+   // remove from job queue if it's there
+   mutexJob.lock();
+   for (int i=0;i<vJobs.size();++i)
+   {
+      if ( vJobs(i)->globalX == _mapX && vJobs(i)->globalY  == _mapY )
+      {
+         vJobs.removeSlot(i);
+         break;
+      }
+   }
+   mutexJob.unlock();
+   
+   mutexArrayAccess.lock();
+   World_Local* local = &aWorldTile(_mapX,_mapY);
+   if ( local->threadAccess == false )
+   {
+      local->threadAccess=true;
+   }
+   else
+   {
+      mutexArrayAccess.unlock();
+      return false;
+   }
+   mutexArrayAccess.unlock();
+   
+   if (QUIT_FLAG) { return false; }
+   local->generate(false);
+   local->threadAccess=false;
+   
+   mutexVector.lock();
+   vMapCache.push(local);
+   mutexVector.unlock();
+   return true;
+}
+
 void World_MapManager::main()
 {
 #ifdef THREAD_ALL

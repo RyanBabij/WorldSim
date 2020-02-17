@@ -1687,12 +1687,14 @@ void World::generateLocal(const int _localX, const int _localY)
       return;
     }
   }
-
-  aWorldTile(_localX,_localY).generate();
-  aWorldTile(_localX,_localY).generateSubterranean();
-  aWorldTile(_localX,_localY).active=true;
-  aWorldTile(_localX,_localY).initialized=true;
   
+  mapManager.generateNow(_localX,_localY);
+
+   // don't cache the generated map because the map manager does it
+   aWorldTile(_localX,_localY).generate(false);
+   //aWorldTile(_localX,_localY).generateSubterranean();
+   aWorldTile(_localX,_localY).active=true;
+   aWorldTile(_localX,_localY).initialized=true;
   //There needs to be a minimum of 3 maps active at any time. (1 map the player is currently in,
     // and potentially three neighboring maps. Additional maps will likely need to be loaded in
     // the background, therefore I'll set it to 5 for now.
@@ -1706,55 +1708,54 @@ void World::generateLocal(const int _localX, const int _localY)
     // Note: Don't delete World_Local. It must always be loaded. However some internal data must be cleaned up.
     // Don't unload tiles near player.
     
-    Vector <World_Local*> vImportantMaps;
-    if ( playerCharacter != 0)
-    {
-      if ( aWorldTile.isSafe(playerCharacter->worldX,playerCharacter->worldY) )
-      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX,playerCharacter->worldY) ); }
-    
-      if ( aWorldTile.isSafe(playerCharacter->worldX-1,playerCharacter->worldY) )
-      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX-1,playerCharacter->worldY) ); }
-      if ( aWorldTile.isSafe(playerCharacter->worldX+1,playerCharacter->worldY) )
-      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX+1,playerCharacter->worldY) ); }
-    
-      if ( aWorldTile.isSafe(playerCharacter->worldX,playerCharacter->worldY+1) )
-      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX,playerCharacter->worldY+1) ); }
-      if ( aWorldTile.isSafe(playerCharacter->worldX-1,playerCharacter->worldY+1) )
-      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX-1,playerCharacter->worldY+1) ); }
-      if ( aWorldTile.isSafe(playerCharacter->worldX+1,playerCharacter->worldY+1) )
-      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX+1,playerCharacter->worldY+1) ); }
-    
-      if ( aWorldTile.isSafe(playerCharacter->worldX,playerCharacter->worldY-1) )
-      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX,playerCharacter->worldY-1) ); }
-      if ( aWorldTile.isSafe(playerCharacter->worldX-1,playerCharacter->worldY-1) )
-      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX-1,playerCharacter->worldY-1) ); }
-      if ( aWorldTile.isSafe(playerCharacter->worldX+1,playerCharacter->worldY-1) )
-      { vImportantMaps.push( &aWorldTile(playerCharacter->worldX+1,playerCharacter->worldY-1) ); }
-    }
-    if (DEBUG_X != -1 && DEBUG_Y != -1 )
-    {
-      vImportantMaps.push( &aWorldTile(DEBUG_X,DEBUG_Y) );
-    }
-
-    for ( int i=0;i<vWorldLocal.size();++i)
-    {
-      //if (vImportantMaps.contains(vWorldLocal)
-      if (vImportantMaps.contains(vWorldLocal(i)) == false )
+      // build vector of maps we shouldn't unload (maps near player)
+      Vector <World_Local*> vImportantMaps;
+      if ( playerCharacter != 0)
       {
-        vWorldLocal(i)->active=false;
-        vWorldLocal(i)->unload();
-        vWorldLocal.eraseSlot(i);
-        break;
+         if ( aWorldTile.isSafe(playerCharacter->worldX,playerCharacter->worldY) )
+         { vImportantMaps.push( &aWorldTile(playerCharacter->worldX,playerCharacter->worldY) ); }
+
+         if ( aWorldTile.isSafe(playerCharacter->worldX-1,playerCharacter->worldY) )
+         { vImportantMaps.push( &aWorldTile(playerCharacter->worldX-1,playerCharacter->worldY) ); }
+         if ( aWorldTile.isSafe(playerCharacter->worldX+1,playerCharacter->worldY) )
+         { vImportantMaps.push( &aWorldTile(playerCharacter->worldX+1,playerCharacter->worldY) ); }
+
+         if ( aWorldTile.isSafe(playerCharacter->worldX,playerCharacter->worldY+1) )
+         { vImportantMaps.push( &aWorldTile(playerCharacter->worldX,playerCharacter->worldY+1) ); }
+         if ( aWorldTile.isSafe(playerCharacter->worldX-1,playerCharacter->worldY+1) )
+         { vImportantMaps.push( &aWorldTile(playerCharacter->worldX-1,playerCharacter->worldY+1) ); }
+         if ( aWorldTile.isSafe(playerCharacter->worldX+1,playerCharacter->worldY+1) )
+         { vImportantMaps.push( &aWorldTile(playerCharacter->worldX+1,playerCharacter->worldY+1) ); }
+
+         if ( aWorldTile.isSafe(playerCharacter->worldX,playerCharacter->worldY-1) )
+         { vImportantMaps.push( &aWorldTile(playerCharacter->worldX,playerCharacter->worldY-1) ); }
+         if ( aWorldTile.isSafe(playerCharacter->worldX-1,playerCharacter->worldY-1) )
+         { vImportantMaps.push( &aWorldTile(playerCharacter->worldX-1,playerCharacter->worldY-1) ); }
+         if ( aWorldTile.isSafe(playerCharacter->worldX+1,playerCharacter->worldY-1) )
+         { vImportantMaps.push( &aWorldTile(playerCharacter->worldX+1,playerCharacter->worldY-1) ); }
       }
-    }
-    
-    
-      // UNLOAD LOCAL MAP HERE
-    //delete vWorldLocal(0);
-    //vWorldLocal.eraseSlot(0);
-  }
-  vWorldLocal.push(&aWorldTile(_localX,_localY));
-  
+      if (DEBUG_X != -1 && DEBUG_Y != -1 )
+      {
+         vImportantMaps.push( &aWorldTile(DEBUG_X,DEBUG_Y) );
+      }
+
+
+      // find a map we can unload and unload it.
+      // This code section is unsurpisingly not playing nice with the map manager.
+      // I disable it for now.
+      for ( int i=0;i<vWorldLocal.size();++i)
+      {
+         if (vImportantMaps.contains(vWorldLocal(i)) == false )
+         {
+            //vWorldLocal(i)->active=false;
+            // vWorldLocal(i)->unload(); // let mapmanager handle this
+            //vWorldLocal.eraseSlot(i);
+            break;
+         }
+      }
+   }
+   vWorldLocal.push(&aWorldTile(_localX,_localY));
+
 }
 void World::generateLocal(HasXY* _xy) { generateLocal(_xy->x,_xy->y); }
 

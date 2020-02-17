@@ -28,6 +28,10 @@ class World_MapManager
 
    Vector <World_Local*> vMapCache; // Stores all generated maps
    Vector <World_Local*> vJobs; // Vector of maps to be loaded in
+   
+  //Vector <World_Local*> vUnloadJobs; // Vector of maps to be unloaded
+   
+  //Vector <World_Local*> vImportantMaps; // Maps to be kept loaded in.
 
 #ifdef THREAD_ALL
    std::mutex mutexArrayAccess;
@@ -53,6 +57,9 @@ class World_MapManager
 
    void init(unsigned int _nX, unsigned int _nY, ArrayS2 <World_Local>* aWorldTile2);
    void main(); // main thread loop
+   
+   // Generate map immediately, because we need it.
+   bool generateNow(int _mapX, int _mapY);
 };
 
 #endif
