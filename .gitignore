@@ -1,3 +1,4 @@
 *
 !*.hpp
 !*.cpp
+!CMakeLists.txt
