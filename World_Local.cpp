@@ -322,6 +322,9 @@ bool World_Local::generate(bool cache /* =true */)
   // Create data struct if necessary.
   if (data==0) { data = new Data; }
   
+  // Create abstract struct if necessary
+  if (abstractData==0) { abstractData = new AbstractData; }
+  
   if (initialized)
   {
     load();
@@ -338,6 +341,8 @@ bool World_Local::generate(bool cache /* =true */)
 
 
    data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+   
+   abstractData->bfCollision.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 
    // GENERATE HEIGHTMAP
    DiamondSquareAlgorithmCustomRange dsa2;
@@ -735,7 +740,11 @@ bool World_Local::save()
    std::string saveData="";
 
    SaveChunk chonk ("TILE ARRAY");
-   SaveChunk abstractChonk("ABSTRACT");
+   //SaveChunk abstractChonk("ABSTRACT");
+   SaveChunk abstractChonk2("ABSCOL");
+   
+   Bitfield bf;
+   bf.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 
    // Only unload the local map if it is loaded.
    for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
@@ -743,11 +752,19 @@ bool World_Local::save()
       for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
       {
          chonk.add(data->aLocalTile(_x,_y).getSaveData());
-         abstractChonk.add(data->aLocalTile(_x,_y).getAbstractData());
+         //abstractChonk.add(data->aLocalTile(_x,_y).getAbstractData());
+         
+         if ( data->aLocalTile(_x,_y).hasMovementBlocker() )
+         {
+            bf.set(_x,_y,true);
+         }
       }
    }
+   // copying the array as a string is inefficient but safer for now
+   abstractChonk2.add(bf.toString());
+   sfmAbstract.addChunk(abstractChonk2);
   
-  sfmAbstract.addChunk(abstractChonk);
+  //sfmAbstract.addChunk(abstractChonk);
   sfm.addChunk(chonk);
   
    if (dataSubterranean)

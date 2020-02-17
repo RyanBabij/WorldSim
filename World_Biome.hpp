@@ -5,7 +5,8 @@
 /* WorldSim: World_Biome.hpp
 	#include "World_Biome.hpp"
 
-  Not currently functional. Intended to store non-hardcoded biome data in future.
+  Stores data for the various biomes in the world.
+  Useful for biome-specific simulation.
 
 */
 
@@ -20,6 +21,8 @@ class World_Biome: public TableInterface
 	std::string name;
 	int size; /* size in tiles */
 	int type; /* Biome type */
+   
+   Vector <HasXY> vXY; // every tile coordinate of this biome.
 	
 	World_Biome()
 	{

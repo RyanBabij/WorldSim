@@ -717,6 +717,12 @@ void World::incrementTicksBacklog(long long unsigned int nTicks)
 void World::incrementTicks(int nTicks)
 {
   worldViewer.rainManager.updateRain();
+  
+   // std::cout<<"Testing biome vector\n";
+   // for (int i=0;i<vBiome.size();++i)
+   // {
+      // std::cout<<"biome "<<i<<"\n";
+   // }
 
 	//ticksBacklog+=nTicks;
 	dailyCounter+=nTicks;
@@ -862,6 +868,8 @@ void World::updateMaps()
 bool World::handleTickBacklog()
 {
 	if (ticksBacklog<=0) { return false; }
+   
+
 	
 	unsigned long long int MAXIMUM_TICKS_AT_ONCE = 2592000;
 	
@@ -1421,8 +1429,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	
 	int currentID3=0;
 
-  #define THREADED_BIOME_FILL
-  #if defined THREAD_ALL || defined THREADED_BIOME_FILL 
+#define THREADED_BIOME_FILL
+#ifdef THREADED_BIOME_FILL 
   
   // Here I am spawning 1 thread for every possible biome. Each thread then processes biomes that have that type.
   // Performance is significantly improved and I'm getting solid 100% CPU on my quad core. It's important to spawn
@@ -1456,10 +1464,10 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 			{
         const int biomeSearch = aTerrain(_x,_y);
           // Spawn a thread to process this biome type
-         #ifdef THREAD_ALL
+#ifdef THREAD_ALL
         aThread [aTerrain(_x,_y)] = new std::thread ( [ this, _x, _y, biomeSearch, &m, &biomeID, &aTerrain ]
         {
-           #endif
+#endif
           int thisBiomeID = biomeID++;
 
           for ( int _y2=_y;_y2<nY;++_y2)
@@ -1468,14 +1476,15 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
             {
               if (aTerrain(_x2,_y2) == biomeSearch && aBiomeID(_x2,_y2) == -1)
               {
+                World_Biome* biome = new World_Biome;
+                biome->type = biomeSearch;
                 Vector <HasXY*>* vFill = aTerrain.floodFillVector(_x2,_y2,true);
                 for (int i=0;i<vFill->size();++i)
                 {
                   HasXY* v = (*vFill)(i);
                   aBiomeID(v->x,v->y) = thisBiomeID;
+                  biome->vXY.push(HasXY((*vFill)(i)->x,(*vFill)(i)->y));
                 }
-                World_Biome* biome = new World_Biome;
-                biome->type = biomeSearch;
                 biome->size = vFill->size();
 #ifdef THREAD_ALL
                 m.lock();
@@ -1489,9 +1498,9 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
               }
             }
           }
-          #ifdef THREAD_ALL
+#ifdef THREAD_ALL
         });
-        #endif
+#endif
         
       }
     }
@@ -1543,28 +1552,30 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
     }
   }
   
-  #else
+#else
     
 		// BUILD BIOME VECTOR
 	for ( int _y=0;_y<nY;++_y)
 	{
-		//break;
 		for ( int _x=0;_x<nX;++_x)
 		{
 			if (aBiomeID(_x,_y) == -1 )
 			{
 				int biomeType = aTerrain(_x,_y);
+            
+				World_Biome* biome = new World_Biome;
+				biome->type = biomeType;
         
 				Vector <HasXY*>* vFill = aTerrain.floodFillVector(_x,_y,true);
             
 				for (int i=0;i<vFill->size();++i)
 				{
+               biome->vXY.push(HasXY((*vFill)(i)->x,(*vFill)(i)->y));
+               
 					HasXY* v = (*vFill)(i);
 					aBiomeID(v->x,v->y) = currentID;
 				}
 				
-				World_Biome* biome = new World_Biome;
-				biome->type = biomeType;
 				biome->size = vFill->size();
 				
 				//  NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13
@@ -1592,7 +1603,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 				
 				vBiome.push(biome);
 
-        vFill->deleteAll();
+            vFill->deleteAll();
 				delete vFill;
 				
 				++currentID;
@@ -1601,8 +1612,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 		}
 	}
   
-  
-  #endif
+#endif
 
   timerBiomeFill.update();
 	std::cout<<"Filled "<<currentID<<" biomes in "<<timerBiomeFill.fullSeconds<<" seconds.\n";

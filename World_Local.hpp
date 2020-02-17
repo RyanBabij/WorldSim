@@ -34,6 +34,7 @@
 #include <Interface/LogicTick/LogicTickInterface.hpp>
 #include <System/Time/Calendar.hpp>
 #include <Math/Random/RandomLehmer.hpp>
+#include <Container/Bitfield/Bitfield.hpp> // for abstract collision data
 
 #include <map>
 #include <atomic> // thread-safe vars
@@ -49,6 +50,14 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    RandomLehmer rng;
    // The generation seed for this local map.
    unsigned int seed;
+   
+   // Simplified world data for use in fast abstract simulations.
+   // Should generally always be loaded in, but I'd like to add caching support regardless.
+   struct AbstractData
+   {
+      // simplified collision map for pathing. Tile is either accessible or not.
+      Bitfield bfCollision;
+   };
    
    // Data stores all data which is only present in generated maps.
    // This is done to keep memory footprint low, because million of maps are generated on large worlds.
@@ -89,6 +98,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    public:
    Data * data;
    Data_Subterranean * dataSubterranean;
+   AbstractData * abstractData;
 
    // Texture of map from far away. This texture is used to rende the tile when zoomed out far.
    Texture texFar;

@@ -25,7 +25,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.175 Win32 dev";
+const std::string VERSION = "0.0.176 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
@@ -199,7 +199,7 @@ bool LIMIT_LOGIC = true; /* Press S. */
 bool FORCE_LOGIC_FRAME = false; /* True will trigger next logic frame immediately. */
 bool PAUSE_LOGIC = false; /* True will suspend logic. */
   // MAKES COUT MUCH FASTER BUT DOES NOT GUARANTEE ORDER OR COMPLETION BEFORE EXIT/CRASH.
-const bool FAST_COUT = true;
+const bool FAST_COUT = false;
 
 bool EMULATE_2_BUTTON_MIDDLE_CLICK = true; // Allows middle click with mice without middle click by pressing left and right click.
 
