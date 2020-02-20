@@ -5,9 +5,13 @@
 /* WorldSim: Creature
   #include "Creature.hpp"
   
-  Creatures are non-civilised actors. They are no members of Tribes of Civilisations, and don't have a race.
+  Creatures are non-civilised actors. They are no members of Tribes or Civilisations, and don't have a race.
   For now they are randomly spawned in. In the future I'd like them to have realistic behaviour,
   for example travelling in groups and looking for food.
+  
+  Creatures may be herbivores or carnivores. Each creature type may have its own AI package.
+  
+  Creatures are usually simulated using the abstract data layer.
   
 */
 
