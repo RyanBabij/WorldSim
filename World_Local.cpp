@@ -342,6 +342,7 @@ bool World_Local::generate(bool cache /* =true */)
 
 
    data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+   data->aStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
    
    abstractData->bfCollision.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 
@@ -501,6 +502,10 @@ bool World_Local::generate(bool cache /* =true */)
         }
         else if (rng.oneIn(baseTreeChance))
         {
+           // put Tree Static
+           
+           //Static* staticTree = new Static;
+           
           if (rng.oneIn(10))
           {
             put(new WorldObject_Tree(0), _x, _y);
@@ -1083,17 +1088,42 @@ bool World_Local::put (Creature* _object, HasXY* _xy, bool subterranean)
 bool World_Local::put (Creature* _object, HasXY _xy, bool subterranean)
 { return put(_object, _xy.x, _xy.y, subterranean); }
 
-// bool World_Local::put (Creature_Deer* _creature, int _x, int _y)
+// bool World_Local::put (WorldObject_Tree* _tree, int _x, int _y, bool subterranean)
 // {
-  // if ( aLocalTile.isSafe(_x,_y) == false )
+  // if ( !data ) { return false; }
+  // if ( data->aLocalTile.isSafe(_x,_y) == false )
   // { return false; }
 
-  // std::cout<<"ADDING DEER\n";
+   // //std::cout<<"Puttree\n";
 
+  // // _creature->worldX = globalX;
+  // // _creature->worldY = globalY;
+  // // _creature->x = _x;
+  // // _creature->y = _y;
+  // // _creature->fullX = _creature->worldX * LOCAL_MAP_SIZE + _creature->x;
+  // // _creature->fullY = _creature->worldY * LOCAL_MAP_SIZE + _creature->y;
+  
+  // // _creature->isUnderground = subterranean;
+
+  // // if ( subterranean )
+  // // {
+    // // dataSubterranean->aSubterranean(_x,_y).add(_creature);
+  // // }
+  // // else
+  // // {
+    // // data->aLocalTile(_x,_y).add(_creature);
+  // // }
+  
+  
+  // // vCreature.push(_creature);
+  // // _creature->map=this;
   
   // return true;
 // }
-
+// bool World_Local::put (WorldObject_Tree* _object, HasXY* _xy, bool subterranean)
+// { return put(_object, _xy->x, _xy->y, subterranean); }
+// bool World_Local::put (WorldObject_Tree* _object, HasXY _xy, bool subterranean)
+// { return put(_object, _xy.x, _xy.y, subterranean); }
 
   // We need to implement optional map-only restriction
 bool World_Local::moveObject (WorldObject* _object, int newX, int newY )

@@ -25,19 +25,20 @@ class WorldObject;
 
 class LocalTile: public HasTexture
 {
-	public:
-	
-	LocalTile();
-	~LocalTile();
-  
-  /* Every local tile must have a seed to help determine random things,
-    for example which variant of texture to draw. */
-  unsigned short int seed;
-  enumBiome baseTerrain;
-    //Base terrain can be overlaid with a floor.
-    // For now just a bool.
-  unsigned char hasFloor;
-  
+   public:
+
+   LocalTile();
+   ~LocalTile();
+
+   /* Every local tile must have a seed to help determine random things,
+   for example which variant of texture to draw. */
+   // Actually this is probably not necessary.
+   unsigned short int seed;
+   enumBiome baseTerrain;
+   //Base terrain can be overlaid with a floor.
+   // For now just a bool.
+   unsigned char hasFloor;
+
     // Walls block movement across them
     // Bitfield is used to determine the wall orientation.
     // The first 4 bits control travel OUT from the tile. NESW.
@@ -64,11 +65,11 @@ class LocalTile: public HasTexture
   /* RENDER STUFF */
   bool shotOverlay; /* Show the line of fire highlight for this tile */
   
-  
-    // Vector of objects on this tile.
-    // This list includes all subclasses.
-    // The reason there are so many duplicates is performance.
-  Vector <WorldObject*> vObject;
+
+   // Vector of objects on this tile.
+   // This list includes all subclasses.
+   // The reason there are so many duplicates is performance.
+   Vector <WorldObject*> vObject;
       // Vector of non-specialised WorldObjects.
       Vector <WorldObject*> vObjectGeneric;
       // Vector of Items on this tile
@@ -77,7 +78,7 @@ class LocalTile: public HasTexture
       Vector <Character*> vCharacter;
       // Vector of Creatures on this tile.
       Vector <Creature*> vCreature;
-      
+
   Creature_Footprint* footprint;
   
   // Generic add/remove automatically sorts into appropriate lists.

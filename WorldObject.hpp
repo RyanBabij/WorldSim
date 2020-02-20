@@ -63,15 +63,14 @@ class WorldObject: public HasTexture
 	int distanceTo(WorldObject*); /* Chebyshev (this one is distances where diagonal movement is allowed.) */
 		int distanceFrom(WorldObject*); /* Alias. */
     
-  int distanceTo(int /* _x */, int /* _y */); /* Same, using raw coordinates */
-    
+   int distanceTo(int /* _x */, int /* _y */); /* Same, using raw coordinates */
+   
+   virtual Texture* currentTexture();
 
-	virtual Texture* currentTexture();
-  
-  std::string getBaseData();
-  
-  std::string getSaveData();
-  void loadData(std::string);
+   std::string getBaseData();
+
+   std::string getSaveData();
+   void loadData(std::string);
 };
 
 

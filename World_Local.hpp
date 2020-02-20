@@ -30,6 +30,8 @@
 
 */
 
+#include "Static.hpp"
+
 #include <Interface/IdleTick/IdleTickInterface.hpp>
 #include <Interface/LogicTick/LogicTickInterface.hpp>
 #include <System/Time/Calendar.hpp>
@@ -43,6 +45,9 @@ class Creature;
 class Item;
 class Tribe;
 
+class WorldObject_Tree;
+
+
 class World_Local: public LogicTickInterface, public IdleTickInterface, public HasTexture
 {
    private:
@@ -50,6 +55,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    RandomLehmer rng;
    // The generation seed for this local map.
    unsigned int seed;
+   
+   Vector <WorldObject_Tree*> vTree;
    
    // Simplified world data for use in fast abstract simulations.
    // Should generally always be loaded in, but I'd like to add caching support regardless.
@@ -66,6 +73,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    {
       // /* LOCAL MAP ARRAYS */
       ArrayS2 <LocalTile> aLocalTile; // Array of all tiles on map.
+      ArrayS2 <Static*> aStatic; // Array of static objects
 
       // Vector of all tile coordinates.
       // This is used to do things like loop through every coordinate once in random order
@@ -234,32 +242,37 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
     
     bool isLand(); // returns true if this is a land tile.
   
-    // Generate a world or load from cache.
-	bool generate(bool cache=true);
+   // Generate a world or load from cache.
+   bool generate(bool cache=true);
    bool generateSubterranean(); // subterranean maps should be generated on demand.
-    bool save();
-    bool load();
-	
-	//bool saveToFile(std::string /* path */);
-  
-    // PUT FUNCTION
-    // Overloaded put function automatically sorts object into relevant lists.
-    // It's important to account for all categories otherwise it will implicitly
-    // overload to a generic. And you will never see it again.
-  bool put (WorldObject* , int /* _x */, int /* _y */, bool subterranean=false);
-    bool put (Item* , int /* _x */, int /* _y */, bool subterranean=false);
-    bool put (Character* , int /* _x */, int /* _y */, bool subterranean=false);
-    bool put (Creature* , int /* _x */, int /* _y */, bool subterranean=false);
-    
-  bool put (WorldObject* _object, HasXY* _xy, bool subterranean=false);
-    bool put (Item* _object, HasXY* _xy, bool subterranean=false);
-    bool put (Character* _object, HasXY* _xy, bool subterranean=false);
-    bool put (Creature* _object, HasXY* _xy, bool subterranean=false);
-    
-  bool put (WorldObject* _object, HasXY _xy, bool subterranean=false);
-    bool put (Item* _object, HasXY _xy, bool subterranean=false);
-    bool put (Character* _object, HasXY _xy, bool subterranean=false);
-    bool put (Creature* _object, HasXY _xy, bool subterranean=false);
+   bool save();
+   bool load();
+
+   //bool saveToFile(std::string /* path */);
+
+   // PUT FUNCTION
+   // Overloaded put function automatically sorts object into relevant lists.
+   // It's important to account for all categories otherwise it will implicitly
+   // overload to a generic. And you will never see it again.
+   bool put (WorldObject* , int /* _x */, int /* _y */, bool subterranean=false);
+      bool put (Item* , int /* _x */, int /* _y */, bool subterranean=false);
+      bool put (Character* , int /* _x */, int /* _y */, bool subterranean=false);
+      bool put (Creature* , int /* _x */, int /* _y */, bool subterranean=false);
+      //bool put (WorldObject_Tree* , int /* _x */, int /* _y */, bool subterranean=false);
+
+   bool put (WorldObject* _object, HasXY* _xy, bool subterranean=false);
+      bool put (Item* _object, HasXY* _xy, bool subterranean=false);
+      bool put (Character* _object, HasXY* _xy, bool subterranean=false);
+      bool put (Creature* _object, HasXY* _xy, bool subterranean=false);
+      //bool put (WorldObject_Tree* _object, HasXY* _xy, bool subterranean=false);
+
+   bool put (WorldObject* _object, HasXY _xy, bool subterranean=false);
+      bool put (Item* _object, HasXY _xy, bool subterranean=false);
+      bool put (Character* _object, HasXY _xy, bool subterranean=false);
+      bool put (Creature* _object, HasXY _xy, bool subterranean=false);
+      //bool put (WorldObject_Tree* _object, HasXY _xy, bool subterranean=false);
+      
+   bool put (Static* _static, int /* _x */, int /* _y */, bool subterranean = false);  
       
     // Remove object from world, but don't delete it.
     // For example if somebody picks it up.

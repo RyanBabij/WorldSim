@@ -6,18 +6,27 @@
 	#include"WorldObject_Tree.hpp"
 
   Trees can be harvested for wood. They are also an obstacle for movement and LOS.
+  
+  Tree can provide resource on destruction.
+  Tree can also be container for Items/Ingredients.
 */
 
+//Static
+// Doesn't need to track coordinates because it can't move on its own.
+// 1 static per tile
+// Statics only tick once per day
+// Example statics:
+   // Tree 
+   // Plant
+   // Construction (wall and/or floor)
+   // Furniture
+// Statics may block movement and/or LOS
+
+// Tree should be a type of static.
 class WorldObject_Tree: public WorldObject
 {
 	public:
-	// int x, y;
-	
-	// bool stackable; /* True if multiple objects of this class can be merged together into a single stack, sharing their data. */
-	
-	// double weight; /* in grams */
-	// double bulk; /* In cm^3 , and adjusted higher for cumbersome items.*/
-  
+
     // Determines the stage of growth the tree is at: Sapling, young tree, tree.
   int growth;
 	
@@ -26,11 +35,6 @@ class WorldObject_Tree: public WorldObject
   
   
 	virtual std::string getName();
-	// virtual std::string getExtendedInfo() { return "N/A"; }
-	
-	
-	// int distanceTo(WorldObject*); /* Chebyshev (this one is distances where diagonal movement is allowed.) */
-		// int distanceFrom(WorldObject*); /* Alias. */
 
 	virtual Texture* currentTexture();
 };

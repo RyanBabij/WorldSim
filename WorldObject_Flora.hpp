@@ -4,37 +4,29 @@
 
 /* WorldObject_Flora.hpp
 	#include"WorldObject_Flora.hpp"
+   
+   Flora is plants or trees. They generally don't do anything except grow
+   and provide resources for Creatures and NPCs. They can also be planted.
+   
+   Trees generally block movement and LOS, and plants generally don't.
+   
+   There can only be 1 flora per tile.
+   
+   Flora growth can easily be abstracted into X ticks per day.
 
-  All flora worldobjects. Basically trees and plants. Generally stuck where they spawn, mostly just good for either
-  harvesting or growing.
-  Flora is a special case of WorldObject, as there can be no more than 1 on any tile.
-  
 */
 
 class WorldObject_Flora: public WorldObject
 {
 	public:
-	// int x, y;
-	
-	// bool stackable; /* True if multiple objects of this class can be merged together into a single stack, sharing their data. */
-	
-	// double weight; /* in grams */
-	// double bulk; /* In cm^3 , and adjusted higher for cumbersome items.*/
-  
+
     // Determines the stage of growth the plant is at. Can determine harvest yield.
   int growth;
 	
 	WorldObject_Flora();
 	virtual ~WorldObject_Flora() {}
   
-  
 	virtual std::string getName() override;
-	// virtual std::string getExtendedInfo() { return "N/A"; }
-	
-	
-	// int distanceTo(WorldObject*); /* Chebyshev (this one is distances where diagonal movement is allowed.) */
-		// int distanceFrom(WorldObject*); /* Alias. */
-
 	virtual Texture* currentTexture() override;
 };
 
