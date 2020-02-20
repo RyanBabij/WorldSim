@@ -22,7 +22,9 @@
 */
 
 void SetColor(int value){
+#ifdef WILDCAT_WINDOWS
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),  value);
+#endif
 }
 
 

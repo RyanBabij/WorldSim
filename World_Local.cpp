@@ -22,14 +22,14 @@
 
 World_Local::World_Local()
 {
-   testValue=6;
-   
    globalX=0;
    globalY=0;
    
 #ifdef THREAD_ALL
    globalX_TS=0;
    globalY_TS=0;
+   
+   threadAccess=false;
 #endif
 
    landID=-1;
@@ -62,8 +62,6 @@ World_Local::World_Local()
 
    data=0;
    dataSubterranean=0;
-   
-   threadAccess=false;
 }
 
 World_Local::~World_Local()

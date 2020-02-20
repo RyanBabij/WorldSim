@@ -144,7 +144,9 @@ class QuitChecker
    {
       QUIT_FLAG=true;
       std::cout<<"Waiting to shutdown.\n";
+#ifdef THREAD_ALL
       std::unique_lock lock(MUTEX_SHUTDOWN); // wait until threads are not doing anything critical.
+#endif
       std::cout<<"Shutting down.\n";
       gameTime.update();
       if (gameTime.seconds > 10 )
@@ -334,7 +336,9 @@ int main(int nArgs, char ** arg)
    // CTRL+C shutdown and replaces it with a safer shutdown.
    // If CTRL+C is signalled a second time it will hard exit,
    // and therefore I also have a time on thread shutdown checks.
+#ifdef THREAD_ALL
    signal (SIGINT,shutDown);
+#endif
    
 #if defined THREAD_ALL
   // std::thread testThread( []

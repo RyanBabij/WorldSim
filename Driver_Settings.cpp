@@ -12,7 +12,13 @@
 #define ABSOLUTE_COORDINATE_NULL ULONG_MAX // Used as null-value for absolute coordinates, which can't use negative value.
 // I think this is probably pointless because any normal Windows/Linux/Mac system is going to use 4 bytes for int.
 #define PORTABLE_INT_MAX 32767
-#define THREAD_ALL // activates all threading code
+
+
+// Threading doesn't work in Linux ATM
+#ifdef WILDCAT_LINUX
+#undef THREAD_ALL
+#endif
+
 #define SAVE_DATA // Program will save data to file. It saves a lot of data and it can end up taking up a lot of space
 
   // Player stuff.
@@ -25,7 +31,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.179 Win32 dev";
+const std::string VERSION = "0.0.180 Win32 dev";
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 

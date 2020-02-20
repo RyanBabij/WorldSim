@@ -513,7 +513,9 @@ void GL_idle()
   playerKeypressTimer.update();
 	if(RELINQUISH_CPU==true && LIMIT_LOGIC==true && world.ticksBacklog<=0 && playerKeypressTimer.fullSeconds > 0.5 && NO_BACKLOG)
 	{
+#ifdef WILDCAT_WINDOWS
 		MsgWaitForMultipleObjects( 0, NULL, FALSE, RELINQUISH_CPU_TIMEOUT, QS_ALLINPUT ); /* parameter 4 is milliseconds ie 1000 = 1 second. */
+#endif
 	}
 	
 	

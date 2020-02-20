@@ -17,15 +17,17 @@
 World_MapManager::World_MapManager()
 {
    maxWorldsToGenerate=4;
+#ifdef THREAD_ALL
    nThreads=0;
+#endif
 }
 
 World_MapManager::~World_MapManager()
 {
    std::cout<<"Map manager shutting down.\n";
+#ifdef THREAD_ALL
    MUTEX_SHUTDOWN.lock();
    mutexArrayAccess.lock();
-
    // kinda messy but a wait loop seems to be the
    // best way to cleanly wait for threads to stop
    
@@ -41,6 +43,7 @@ World_MapManager::~World_MapManager()
          std::cout<<"Hanging detected.\n";
       }
    }
+#endif
    
    std::cout<<"Saving maps\n";
    for (int i2=0;i2<vMapCache.size();++i2)
@@ -50,7 +53,9 @@ World_MapManager::~World_MapManager()
    }
    
    std::cout<<"Map manager shutdown.\n";
+#ifdef THREAD_ALL
    MUTEX_SHUTDOWN.unlock();
+#endif
 }
 
 void World_MapManager::init(unsigned int _nX, unsigned int _nY, ArrayS2 <World_Local>* aWorldTile2)
@@ -105,6 +110,8 @@ bool World_MapManager::generateNow(int _mapX, int _mapY)
 {
    std::cout<<"Generating now: "<<_mapX<<", "<<_mapY<<"\n";
    
+#ifdef THREAD_ALL
+   
    // remove from job queue if it's there
    mutexJob.lock();
    for (int i=0;i<vJobs.size();++i)
@@ -116,7 +123,7 @@ bool World_MapManager::generateNow(int _mapX, int _mapY)
       }
    }
    mutexJob.unlock();
-   
+  
    mutexArrayAccess.lock();
    World_Local* local = &aWorldTile(_mapX,_mapY);
    if ( local->threadAccess == false )
@@ -137,6 +144,25 @@ bool World_MapManager::generateNow(int _mapX, int _mapY)
    mutexVector.lock();
    vMapCache.push(local);
    mutexVector.unlock();
+   
+#else
+   
+   for (int i=0;i<vJobs.size();++i)
+   {
+      if ( vJobs(i)->globalX == _mapX && vJobs(i)->globalY  == _mapY )
+      {
+         vJobs.removeSlot(i);
+         break;
+      }
+   }
+
+   World_Local* local = &aWorldTile(_mapX,_mapY);
+
+   local->generate(false);
+   vMapCache.push(local);
+
+#endif
+   
    return true;
 }
 
