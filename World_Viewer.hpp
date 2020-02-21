@@ -1,569 +1,404 @@
 #pragma once
-
 #ifndef WORLDSIM_WORLD_VIEWER_HPP
 #define WORLDSIM_WORLD_VIEWER_HPP
+
+/* WorldSim: WorldViewer
+   #include "World_Viewer.hpp"
+
+   Code for rendering the player's view of the world. It is able to render the global
+   (world map) view, and additionally any local maps which have been loaded in.
+
+   To do this it makes use of doubles. The main number tracks the global rendering
+   coordinates, and the mantissa tracks the local tile rendering coordinates.
+
+   The World Viewer also takes mouse and keyboard input to control panning and zooming.
+
+   It provides coordinates (both local and absolute) for the tile the mouse
+   is hovering over.
+
+   It is quite messy and uses only basic OpenGL techniques. In future it could probably
+   be optimised to render much faster, for example using texture atlases, mipmapping
+   vertex buffering and on-demand rendering.
+
+   New plan: The WorldViewer is currently calculating what to render and rendering in a single call. I think this might
+   be a bad approach. What should really be happening is the World Viewer should use idle time to build an array of
+   textures to draw, plus calculating the coordinates. Then the render should only focus on rendering the array.
+	
+*/
 
 #include <Device/Display/DisplayInterface.hpp>
 #include <Device/Mouse/MouseInterface.hpp>
 #include <Graphics/Render/Renderer.hpp>
-
-#include <Game/WorldGenerator/Biome.hpp> // For rendering biomes (Wow this is terrible).
-
-/* #include "World_Viewer.hpp"
-
-  Code for rendering the player's view of the world. It is able to render the global
-  (world map) view, and additionally any local maps which have been loaded in.
-  
-  To do this it makes use of doubles. The main number tracks the global rendering
-  coordinates, and the mantissa tracks the local tile rendering coordinates.
-  
-  The World Viewer also takes mouse and keyboard input to control panning and zooming.
-  
-  It provides coordinates (both local and absolute) for the tile the mouse
-  is hovering over.
-  
-  It is quite messy and uses only basic OpenGL techniques. In future it could probably
-  be optimised to render much faster, for example using texture atlases, mipmapping
-  vertex buffering and on-demand rendering.
-  
-  New plan: The WorldViewer is currently calculating what to render and rendering in a single call. I think this might
-  be a bad approach. What should really be happening is the World Viewer should use idle time to build an array of
-  textures to draw, plus calculating the coordinates. Then the render should only focus on rendering the array.
-	
-*/
-
-  /* Raindrops that are rendered over screen to indicate rain.
-  Should start at top of screen and travel down. Should not render on sheltered tiles */
-
+#include <Game/WorldGenerator/Biome.hpp> // For rendering biomes. Needs to be fixed
 #include "WorldObjectGlobal.hpp"
 #include "Creature.hpp"
 #include "Tribe.hpp"
+
+// Raindrops that are rendered over screen to indicate rain.
+// Should start at top of screen and travel down. Should not render on sheltered tiles
   
 class RainDrop
 {
-  public:
-  int x, y;
-  
-  RainDrop()
-  {
-    x=0;
-    y=0;
-  }
-  void drop(int amount)
-  {
-    y-=amount;
-  }
-  void render()
-  {
+   public:
+   int x, y;
 
-		Renderer::placeColour4a(60,60,255,255,x,y,x+3,y+4);
-
-  }
+   RainDrop()
+   {
+      x=0;
+      y=0;
+   }
+   void drop(int amount)
+   {
+      y-=amount;
+   }
+   void render()
+   {
+      Renderer::placeColour4a(60,60,255,255,x,y,x+3,y+4);
+   }
 };
 
 class RainManager
 {
-  private:
+   private:
+   RandomNonStatic rand;
+   
+   Vector <RainDrop*> vRainDrop;
+
+   World* world;
+
+   int x1, x2;
+   int y1, y2;
+   int MAX_RAIN;
+   int RAIN_PER_FRAME;
+
+   public:
+
+   RainManager() { }
   
-  RandomNonStatic rand;
-  
-  Vector <RainDrop*> vRainDrop;
-  
-  World* world;
-  
-  int x1, x2;
-  int y1, y2;
-  int MAX_RAIN;
-  int RAIN_PER_FRAME;
-  
-  public:
-  
-  RainManager() { }
-  
-  void init (int _x1, int _y1, int _x2, int _y2, World* _world, int _maxRain=10000, double _rainPercentOfX=0.005)
-  {
-    x1=_x1;
-    y1=_y1;
-    x2=_x2;
-    y2=_y2;
-    MAX_RAIN = _maxRain;
-    RAIN_PER_FRAME = _rainPercentOfX*(x2-x1);
-    
-    world = _world;
-    
-    rand.seed();
-  }
-  
-  void updateRain()
-  {
-    // This should be moved out of the render call and threaded.
-    if ( world->isRaining &&  vRainDrop.size() < MAX_RAIN )
-    {
-      for (int i=0;i<RAIN_PER_FRAME;++i)
+   void init (int _x1, int _y1, int _x2, int _y2, World* _world, int _maxRain=10000, double _rainPercentOfX=0.005)
+   {
+      x1=_x1;
+      y1=_y1;
+      x2=_x2;
+      y2=_y2;
+      MAX_RAIN = _maxRain;
+      RAIN_PER_FRAME = _rainPercentOfX*(x2-x1);
+
+      world = _world;
+
+      rand.seed();
+   }
+
+   void updateRain()
+   {
+      // This should be moved out of the render call and threaded.
+      if ( world->isRaining &&  vRainDrop.size() < MAX_RAIN )
       {
-        RainDrop* rain = new RainDrop;
-        rain->y = y2-rand.randomInt(20);
-        
+         for (int i=0;i<RAIN_PER_FRAME;++i)
+         {
+            RainDrop* rain = new RainDrop;
+            rain->y = y2-rand.randomInt(20);
 
-        rain->x = rand.randomInt(x2-x1);
-        rain->x+=x1;
-        vRainDrop.push(rain);
+
+            rain->x = rand.randomInt(x2-x1);
+            rain->x+=x1;
+            vRainDrop.push(rain);
+         }
       }
-    }
-    for (int i=0;i<vRainDrop.size();++i)
-    {
-      vRainDrop(i)->drop(rand.randomInt(3)+18);
-      
-      if (vRainDrop(i)->y < y1)
+      for (int i=0;i<vRainDrop.size();++i)
       {
-        delete vRainDrop(i);
-        vRainDrop.removeSlot(i);
+         vRainDrop(i)->drop(rand.randomInt(3)+18);
+         if (vRainDrop(i)->y < y1)
+         {
+            delete vRainDrop(i);
+            vRainDrop.removeSlot(i);
+         }
       }
-    }
-
-  }
-  
-
+   }
   void render();
 
 };
 
 class WorldViewer: public DisplayInterface, public MouseInterface
 {
-  private:
-  
-	/* Rendering coordinates. */
-	int mainViewX1, mainViewX2, mainViewY1, mainViewY2;
-	int mainViewNX, mainViewNY;
-  
-  double localTileMantissa;
-  
-  // Here is what we should really be drawing, rather than deciding during the render call.
-  // Ideally this should also be running in a thread, locking when render is called.
-  ArrayS2 <Vector <Texture* > > aScene;
-  
-	public:
-  //RAIN
-  RainManager rainManager;
-	
-	bool active;
-	
-	int tileSize; /* How big to render the tiles, in pixels. */
-	
-    /* The tile at the center of the screen.
-      Note that the mantissa is used to center on local tiles.
-      This must be a double due to the required level of precision.
-    */
-  double centerTileX, centerTileY;
-  
-  /* The first tile rendered, and the pixel coordinates where it is rendered */
-  /* We store this for other functions to use. */
-  int firstTileX, firstTileY;
-  unsigned long int firstTileAbsX, firstTileAbsY; /* (0,0) absolute of the above */
-  int firstPixelX, firstPixelY;
-  
-		// Temp: Local tile to render.
-	int centerLocalX, centerLocalY;
-  double pixelsPerLocalTile;
+   private:
 
-	
-		/* Store the last position of the mouse, so we can figure out which tile the mouse is on. */
-	short int lastMouseX, lastMouseY;
-	
-	World* world;
-	World_Local* worldLocal;
-	
+   /* Rendering coordinates. */
+   int mainViewX1, mainViewX2, mainViewY1, mainViewY2;
+   int mainViewNX, mainViewNY;
 
-	
-	bool panning;
-	float panX, panY; /* Stores the last mouse position when panning. Needs to be a double. */
+   double localTileMantissa;
 
-	bool alternateTile;
-	
-		/* The current tile that the mouse is hovering over. Set to -1 if the mouse is not hovering over a tile. */
-	int hoveredXTile, hoveredYTile;
-    int hoveredXTileLocal, hoveredYTileLocal;
-    unsigned long int hoveredAbsoluteX, hoveredAbsoluteY;
-    bool showHoveredTile;
-	
-	int tilesToSkip;
-	
-	bool territoryView;
-  bool tilesetMode;
-  bool subterraneanMode;
+   // Here is what we should really be drawing, rather than deciding during the render call.
+   // Ideally this should also be running in a thread, locking when render is called.
+   ArrayS2 <Vector <Texture* > > aScene;
 
-	
-    // If true, game will randomly scroll around.
-    // In the future, the title screen will probably be scrolling around a map.
-  bool demoMode;
-  double demoScroll;
-  
-  
+   public:
+   //RAIN
+   RainManager rainManager;
 
-  
-WorldViewer()
-{
-  tileSize=8;
-  centerTileX=0; centerTileY=0;
-  world=0;
-  mainViewX1=0; mainViewX2=0;
-  mainViewY1=0; mainViewY2=0;
-  mainViewNX=0; mainViewNY=0;
-  active=false;
-  
-  panX=0; panY=0;
-  
-  panning=false;
-  alternateTile=0;
-  
-  lastMouseX=0;
-  lastMouseY=0;
-  
-  hoveredXTile=0;
-  hoveredYTile=0;
-  hoveredXTileLocal=0;
-  hoveredYTileLocal=0;
-  hoveredAbsoluteX=ABSOLUTE_COORDINATE_NULL;
-  hoveredAbsoluteY=ABSOLUTE_COORDINATE_NULL;
-  
-  showHoveredTile=false;
-  
-  tilesToSkip=0;
-  
+   bool active;
 
-  
-  centerLocalX=LOCAL_MAP_SIZE/2;
-  centerLocalY=LOCAL_MAP_SIZE/2;
-  
-  firstTileX=0;
-  firstTileY=0;
-  firstPixelX=0;
-  firstPixelY=0;
-  firstTileAbsX=0;
-  firstTileAbsY=0;
-  
-  territoryView = false;
-  tilesetMode = true;
-  subterraneanMode = false;
-  
-  pixelsPerLocalTile = tileSize/LOCAL_MAP_SIZE;
-  
-  localTileMantissa = (double)1/(double)LOCAL_MAP_SIZE;
-  
-  demoMode = false;
-  demoScroll = 0.1;
-  
-  rainManager.init(0,0,0,0,0);
-}
-	
-  // Center the view on the middle of the world. Good for initializing.
-void centerView()
-{
-  if (world==0)
-  {
-    return;
-  }
-  centerTileX = world->nX/2;
-  centerTileY = world->nY/2;
-  
-  centerTileX+=0.5;
-  centerTileY+=0.5;
-}
-	
-bool keyboardEvent( Keyboard* _keyboard )
-{
-	//std::cout<<"Keypress: "<<(int)_keyboard->lastKey<<".\n";
-  
-  //std::cout<<"pixelsPerLocalTile: "<<pixelsPerLocalTile<<".\n";
+   int tileSize; /* How big to render the tiles, in pixels. */
 
-	/* Pass keyboard event, instead of handling individual keypressed here. */
-	
-	/* Keyboard handling for main view. */
-	
-	//if(keyboard->keyWasPressed&&playerControl)
-	// if(keyboard->keyWasPressed)
-	// {
-    
-      // If the player is controlling someone, arrows should indicate local tile movement.
-    // if ( world->playerCharacter )
-    // {
-      // if(_keyboard->isPressed(Keyboard::RIGHT))
-      // {
-        // centerTileX += localTileMantissa;
-      // }
-      // else if(_keyboard->isPressed(Keyboard::LEFT))
-      // {
-        // centerTileX -= localTileMantissa;
-      // }
-      // else if(_keyboard->isPressed(Keyboard::UP))
-      // {
-        // centerTileY += localTileMantissa;
-      // }
-      // else if(_keyboard->isPressed(Keyboard::DOWN))
-      // {
-        // centerTileY -= localTileMantissa;
-      // }
-    // }
-      // // If the player is not controlling someone, arrows should indicate global tile movement.
-    // else
-    // {
-      // if(_keyboard->isPressed(Keyboard::RIGHT))
-      // {
-        // ++centerTileX;
-      // }
-      // else if(_keyboard->isPressed(Keyboard::LEFT))
-      // {
-        // --centerTileX;
-      // }
-      // else if(_keyboard->isPressed(Keyboard::UP))
-      // {
-        // ++centerTileY;
-      // }
-      // else if(_keyboard->isPressed(Keyboard::DOWN))
-      // {
-        // --centerTileY;
-      // }
-    // }
-		/* Zoom the main map in by one step.  (Can use either top row or numpad)*/
-		if(_keyboard->isPressed(Keyboard::EQUALS) || _keyboard->isPressed(Keyboard::PLUS))
-		{
-			if (_keyboard->keyWasPressed)
-			{
-				zoomIn();
-			}
-		}
-		/* Zoom the main map out by one step. */
-		if(_keyboard->isPressed(Keyboard::MINUS))
-		{
-			if (_keyboard->keyWasPressed)
-			{
-				zoomOut();
-			}
-		}
-    
-      //TAB should be for switching between Adventure mode and God mode
-		if(_keyboard->isPressed(Keyboard::TAB))
-		{
-			if (_keyboard->keyWasPressed)
-			{
-				//subterraneanMode = !subterraneanMode;
-			}
-		}
-		// if(keyboard->isPressed(Keyboard::SPACEBAR))
-		// {
-		// }
-		// if (keyboard->isPressed(Keyboard::Q)||keyboard->isPressed(Keyboard::q))
-		// {
-			// std::cout<<"I'm afraid I can't let you do that.\n";
-		// }
-		// if(keyboard->isPressed(Keyboard::ESCAPE))
-		// {
-			// queryMode=false;
-			// buildSubMenu=false;
-			// buildSubMenuChoice=0;
-		// }
-		if(_keyboard->isPressed(Keyboard::D)||_keyboard->isPressed(Keyboard::d)) /* Debug info. */
-		{
-			// std::cout<<"Debug Info:\n";
-			
-			// if (world==0)
-			// {
-				// std::cout<<"ERROR: World doesn't exist.\n";
-			// }
-			// else
-			// {
-			
-				// std::cout<<"Num tribes: "<<world->vTribe.size()<<"\n";
-				
-				// for (int i=0;i<world->vTribe.size();++i)
-				// {
-					// Tribe* t = world->vTribe(i);
-					// std::cout<<"All living members of tribe "<<t->name<<".\n";
-					
-					// for(int j=0;j<t->vCharacter.size();++j)
-					// {
-						// Character* c = t->vCharacter(j);
-						// if(c->isAlive)
-						// {
-						// std::cout<<c->id<<": "<<c->getFullName()<<", age: "<<c->age<<". ";
-						// if(c->isMale==true)
-						// { std::cout<<"Male.\n"; }
-						// else
-						// { std::cout<<"Female.\n";
-						// }
-						// }
-					// }
-					
-				// }
-				// std::cout<<"World population: "<<world->getPopulation()<<".\n";
-			// }
-			
-			// std::cout.flush();
-			
-			// _keyboard->keyUp(Keyboard::D);
-			// _keyboard->keyUp(Keyboard::d);
-		}
-		
-		
-		if(_keyboard->isPressed(Keyboard::F)||_keyboard->isPressed(Keyboard::f)) /* Flush console. */
-		{
+   /* The tile at the center of the screen.
+   Note that the mantissa is used to center on local tiles.
+   This must be a double due to the required level of precision.
+   */
+   double centerTileX, centerTileY;
 
-			std::cout.flush();
-			
-			_keyboard->keyUp(Keyboard::F);
-			_keyboard->keyUp(Keyboard::f);
-		}
+   /* The first tile rendered, and the pixel coordinates where it is rendered */
+   /* We store this for other functions to use. */
+   int firstTileX, firstTileY;
+   unsigned long int firstTileAbsX, firstTileAbsY; /* (0,0) absolute of the above */
+   int firstPixelX, firstPixelY;
 
-	return false;
-}
-
-void zoomIn()
-{
-	if ( tilesToSkip > 0 ) { --tilesToSkip; }
-	else
-	{
-  tileSize*=2;
-	if(tileSize>4000000)
-	{ tileSize=4000000; }
-	}
-	//std::cout<<"Tilesize: "<<tileSize<<".\n";
-	// if (tileSize < 32 && world->isSafe(hoveredXTile, hoveredYTile))
-	// {
-		// centerTileX=hoveredXTile;
-		// centerTileY=hoveredYTile;
-		// glutWarpPointer(mainViewX1+(mainViewNX/2),mainViewY1+(mainViewNY/2));
-	// }
-}
-void zoomOut()
-{
-	tileSize/=2;
-  
-	if(tileSize<1)
-	{ tileSize=1; ++tilesToSkip; }
+   // Temp: Local tile to render.
+   int centerLocalX, centerLocalY;
+   double pixelsPerLocalTile;
 
 
-}
+   /* Store the last position of the mouse, so we can figure out which tile the mouse is on. */
+   short int lastMouseX, lastMouseY;
 
-void switchTarget(World_Local* _worldLocal)
-{
-	worldLocal=_worldLocal;
-}
+   World* world;
+   World_Local* worldLocal;
 
-	
-		/* Keep the map visible on the screen so the player can't accidentally move it off screen and lose it. */
-	void normaliseCoordinates()
-	{
-		if ( centerTileX < 0 )
-		{
-			centerTileX=0;
-		}
-		if ( centerTileY < 0 )
-		{
-			centerTileY=0;
-		}
-		if ( centerTileX > world->nX )
-		{
-			centerTileX = world->nX;
-		}
-		if ( centerTileY > world->nY )
-		{
-			centerTileY = world->nY;
-		}
-	}
-	
-	bool mouseEvent ( Mouse* mouse )
-	{
-		if ( world==0 ) { return false; }
-	
-		lastMouseX=mouse->x;
-		lastMouseY=mouse->y;
-		
-		if(panning==true)
-		{
-			/* The view can be panned by holding down the middle mouse button
-				and moving the mouse to drag the map. */
-			centerTileX+=(panX-mouse->x)/((float)tileSize/(tilesToSkip+1));
-			centerTileY+=(panY-mouse->y)/((float)tileSize/(tilesToSkip+1));
-			panX=mouse->x;
-			panY=mouse->y;
-		}
-		
-		if(mouse->isMiddleClick==false)
-		{
-			panning=false;
-		}
-		if ( mouse->isMiddleClick)
-		{
-			//std::cout<<"Middle click.\n";
-			panning=true;
-			//panning=!panning;
-			
-			/* Set initial pan coordinates. */
-			panX=mouse->x;
-			panY=mouse->y;
-			
-			//mouse->isMiddleClick=false;
-		}
-		
-		if(mouse->isWheelDown)
-		{
-			zoomOut();
+   bool panning;
+   float panX, panY; /* Stores the last mouse position when panning. Needs to be a double. */
 
-			mouse->isWheelDown=false;
-		}
-		if(mouse->isWheelUp)
-		{
-			zoomIn();
-			
-			mouse->isWheelUp=false;
-		}
-		
-		normaliseCoordinates();
-		
-		if ( mouse->isLeftClick == true )
-		{
-			world->queryTile(hoveredXTile,hoveredYTile);
-		}
-		
-		if (mouse->isRightClick)
-		{
-			//std::cout<<"Adding tile: "<<hoveredXTile<<", "<<hoveredYTile<<" to render.\n";
-			//localX=hoveredXTile;
-			//localY=hoveredYTile;
+   bool alternateTile;
+
+   /* The current tile that the mouse is hovering over. Set to -1 if the mouse is not hovering over a tile. */
+   int hoveredXTile, hoveredYTile;
+   int hoveredXTileLocal, hoveredYTileLocal;
+   unsigned long int hoveredAbsoluteX, hoveredAbsoluteY;
+   bool showHoveredTile;
+
+   int tilesToSkip;
+
+   bool territoryView;
+   bool tilesetMode;
+   bool subterraneanMode;
+
+   // If true, game will randomly scroll around.
+   // In the future, the title screen will probably be scrolling around a map.
+   bool demoMode;
+   double demoScroll;
+
+   WorldViewer()
+   {
+      tileSize=8;
+      centerTileX=0; centerTileY=0;
+      world=0;
+      mainViewX1=0; mainViewX2=0;
+      mainViewY1=0; mainViewY2=0;
+      mainViewNX=0; mainViewNY=0;
+      active=false;
+
+      panX=0; panY=0;
+
+      panning=false;
+      alternateTile=0;
+
+      lastMouseX=0;
+      lastMouseY=0;
+
+      hoveredXTile=0;
+      hoveredYTile=0;
+      hoveredXTileLocal=0;
+      hoveredYTileLocal=0;
+      hoveredAbsoluteX=ABSOLUTE_COORDINATE_NULL;
+      hoveredAbsoluteY=ABSOLUTE_COORDINATE_NULL;
+
+      showHoveredTile=false;
+
+      tilesToSkip=0;
+
+      centerLocalX=LOCAL_MAP_SIZE/2;
+      centerLocalY=LOCAL_MAP_SIZE/2;
+
+      firstTileX=0;
+      firstTileY=0;
+      firstPixelX=0;
+      firstPixelY=0;
+      firstTileAbsX=0;
+      firstTileAbsY=0;
+
+      territoryView = false;
+      tilesetMode = true;
+      subterraneanMode = false;
+
+      pixelsPerLocalTile = tileSize/LOCAL_MAP_SIZE;
+
+      localTileMantissa = (double)1/(double)LOCAL_MAP_SIZE;
+
+      demoMode = false;
+      demoScroll = 0.1;
+
+      rainManager.init(0,0,0,0,0);
+   }
+	
+   // Center the view on the middle of the world. Good for initializing.
+   void centerView()
+   {
+      if (world==0)
+      { return; }
+   
+      centerTileX = world->nX/2;
+      centerTileY = world->nY/2;
+
+      centerTileX+=0.5;
+      centerTileY+=0.5;
+   }
+	
+   bool keyboardEvent( Keyboard* _keyboard )
+   {
+      // Zoom the main map in by one step.  (Can use either top row or numpad)
+      if(_keyboard->isPressed(Keyboard::EQUALS) || _keyboard->isPressed(Keyboard::PLUS))
+      {
+         if (_keyboard->keyWasPressed)
+         {
+            zoomIn();
+         }
+      }
+      /* Zoom the main map out by one step. */
+      if(_keyboard->isPressed(Keyboard::MINUS))
+      {
+         if (_keyboard->keyWasPressed)
+         {
+            zoomOut();
+         }
+      }
+
+      return false;
+   }
+
+   void zoomIn()
+   {
+      if ( tilesToSkip > 0 )
+      { --tilesToSkip; }
+      else
+      {
+         tileSize*=2;
+         if(tileSize>4000000)
+         { tileSize=4000000; }
+      }
+   }
+
+   void zoomOut()
+   {
+      tileSize/=2;
+
+      if(tileSize<1)
+      { tileSize=1; ++tilesToSkip; }
+   }
+
+   void switchTarget(World_Local* _worldLocal)
+   {
+      worldLocal=_worldLocal;
+   }
+
+
+   /* Keep the map visible on the screen so the player can't accidentally move it off screen and lose it. */
+   void normaliseCoordinates()
+   {
+      if ( centerTileX < 0 )
+      {
+         centerTileX=0;
+      }
+      if ( centerTileY < 0 )
+      {
+         centerTileY=0;
+      }
+      if ( centerTileX > world->nX )
+      {
+         centerTileX = world->nX;
+      }
+      if ( centerTileY > world->nY )
+      {
+         centerTileY = world->nY;
+      }
+   }
+	
+   bool mouseEvent ( Mouse* mouse )
+   {
+      if ( world==0 ) { return false; }
+
+      lastMouseX=mouse->x;
+      lastMouseY=mouse->y;
+
+      if(panning==true)
+      {
+         /* The view can be panned by holding down the middle mouse button
+         and moving the mouse to drag the map. */
+         centerTileX+=(panX-mouse->x)/((float)tileSize/(tilesToSkip+1));
+         centerTileY+=(panY-mouse->y)/((float)tileSize/(tilesToSkip+1));
+         panX=mouse->x;
+         panY=mouse->y;
+      }
+
+      if(mouse->isMiddleClick==false)
+      {
+         panning=false;
+      }
+      if ( mouse->isMiddleClick)
+      {
+         panning=true;
+         /* Set initial pan coordinates. */
+         panX=mouse->x;
+         panY=mouse->y;
+      }
+
+      if(mouse->isWheelDown)
+      {
+         zoomOut();
+         mouse->isWheelDown=false;
+      }
+      if(mouse->isWheelUp)
+      {
+         zoomIn();
+         mouse->isWheelUp=false;
+      }
+
+      normaliseCoordinates();
+
+      if ( mouse->isLeftClick == true )
+      {
+         world->queryTile(hoveredXTile,hoveredYTile);
+      }
+
+      if (mouse->isRightClick)
+      {
          world->generateLocal(hoveredXTile,hoveredYTile);
          DEBUG_X=hoveredXTile;
          DEBUG_Y=hoveredYTile;
-		}
-		
-		return false;
-	}
+      }
+
+      return false;
+   }
+
+   void setPanel( const int _x1, const int _y1, const int _x2, const int _y2)
+   {
+      mainViewX1 = _x1;
+      mainViewY1 = _y1;
+      mainViewX2 = _x2;
+      mainViewY2 = _y2;
+
+      mainViewNX = mainViewX2-mainViewX1;
+      mainViewNY = mainViewY2-mainViewY1;
+
+      rainManager.init(_x1,_y1,_x2,_y2,world);
+   }
 	
-	void setPanel( const int _x1, const int _y1, const int _x2, const int _y2)
-	{
-		//std::cout<<"Worldviewer has been resized.\n";
-		//std::cout<<"Coords: "<<mainViewX1<<","<<mainViewY1<<","<<mainViewX2<<","<<mainViewY2<<".\n";
-	//	std::cout<<"MVSP\n";
-		mainViewX1 = _x1;
-		mainViewY1 = _y1;
-		mainViewX2 = _x2;
-		mainViewY2 = _y2;
-		
-		mainViewNX = mainViewX2-mainViewX1;
-		mainViewNY = mainViewY2-mainViewY1;
-    
-    
-    rainManager.init(_x1,_y1,_x2,_y2,world);
-		
-	}
-	
-	inline void setCenterTile (const double _centerTileX, const double _centerTileY, const int _subTileX=LOCAL_MAP_SIZE/2, const int _subTileY=LOCAL_MAP_SIZE/2)
-	{
-		centerTileX = _centerTileX;
-		centerTileY = _centerTileY;
-    
-    centerTileX += (_subTileX * localTileMantissa)+localTileMantissa/2;
-    centerTileY += (_subTileY * localTileMantissa)+localTileMantissa/2;
-	}
+   inline void setCenterTile (const double _centerTileX, const double _centerTileY, const int _subTileX=LOCAL_MAP_SIZE/2, const int _subTileY=LOCAL_MAP_SIZE/2)
+   {
+      centerTileX = _centerTileX;
+      centerTileY = _centerTileY;
+
+      centerTileX += (_subTileX * localTileMantissa)+localTileMantissa/2;
+      centerTileY += (_subTileY * localTileMantissa)+localTileMantissa/2;
+   }
 	
 		/* Convert tile coordinates to screen (pixel) coordinates. */
 	void toScreenCoords(const int _tileX, const int _tileY, int * _pixelX, int * _pixelY)
@@ -1164,8 +999,17 @@ void switchTarget(World_Local* _worldLocal)
                           //glColor3ub(80+(lightValue/2),80+(lightValue/2),80+(lightValue/2));
                           //if (currentSecond > 50 ) { glColor3ub(80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*10)+(lightValue/2)); }
                         }
-                         
-
+                        
+                        // draw base terrain, then static, then objects
+                        //draw base terrain
+                        Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                        
+                        //draw static
+                        if (localTile->objStatic)
+                        {
+                        }
+                        
+                        // draw objects
                         Vector <Texture*> * vText = localTile->currentTextures();
                         if ( vText != 0)
                         {
@@ -1499,42 +1343,40 @@ WorldViewer worldViewer;
 
 void RainManager::render()
 {
-  if (world==0) {return;}
-  
-  //updateRain();
-  
-  if (worldViewer.pixelsPerLocalTile < 1)
-  { return;
-  }
-  
-  unsigned long int bX,bY;
-  worldViewer.toTileCoords(0,0,&bX,&bY);
+   if (world==0) {return;}
+   
+   if (worldViewer.pixelsPerLocalTile < 1)
+   {
+      return;
+   }
 
-  Renderer::setColourMode();
-  glColor3ub(0,0,220);
-  for (int i=0;i<vRainDrop.size();++i)
-  {
-    
-    int rX = vRainDrop(i)->x;
-    int rY = vRainDrop(i)->y;
-    unsigned long int aX,aY;
-    
-    worldViewer.toTileCoords(rX,rY,&aX,&aY);
+   unsigned long int bX,bY;
+   worldViewer.toTileCoords(0,0,&bX,&bY);
 
-    if ( world->isGenerated(aX,aY) )
-    {
-      if ( (*world)(aX,aY)->hasFloor == 0 )
+   Renderer::setColourMode();
+   glColor3ub(0,0,220);
+   for (int i=0;i<vRainDrop.size();++i)
+   {
+      int rX = vRainDrop(i)->x;
+      int rY = vRainDrop(i)->y;
+      unsigned long int aX,aY;
+
+      worldViewer.toTileCoords(rX,rY,&aX,&aY);
+
+      if ( world->isGenerated(aX,aY) )
       {
-        vRainDrop(i)->render();
+         if ( (*world)(aX,aY)->hasFloor == 0 )
+         {
+            vRainDrop(i)->render();
+         }
       }
-    }
-    else
-    {
-      vRainDrop(i)->render();
-    }
-  }
-  glColor3ub(255,255,255);
-  Renderer::setTextureMode();
+      else
+      {
+         vRainDrop(i)->render();
+      }
+   }
+   glColor3ub(255,255,255);
+   Renderer::setTextureMode();
 }
 
 #endif

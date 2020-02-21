@@ -273,6 +273,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
       //bool put (WorldObject_Tree* _object, HasXY _xy, bool subterranean=false);
       
    bool put (Static* _static, int /* _x */, int /* _y */, bool subterranean = false);  
+   bool put (Static* _static, HasXY _xy, bool subterranean = false);  
+   bool put (Static* _static, HasXY* _xy, bool subterranean = false);  
       
     // Remove object from world, but don't delete it.
     // For example if somebody picks it up.

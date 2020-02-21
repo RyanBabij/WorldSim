@@ -27,6 +27,8 @@ LocalTile::LocalTile()
   nMetal=0;
   
   shotOverlay=false;
+  
+  objStatic=0;
 }
 
 LocalTile::~LocalTile()

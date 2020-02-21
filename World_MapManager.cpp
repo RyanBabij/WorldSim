@@ -49,7 +49,7 @@ World_MapManager::~World_MapManager()
    for (int i2=0;i2<vMapCache.size();++i2)
    {
       //vMapCache(i2)->save();
-      vMapCache(i2)->unload();
+      //vMapCache(i2)->unload();
    }
    
    std::cout<<"Map manager shutdown.\n";

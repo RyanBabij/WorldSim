@@ -331,55 +331,55 @@ static void GL_keyboardEvent(const unsigned char key, const int x, const int y)
 	else if ( HOTKEYS_ENABLED == true && globalGuiManager.stealKeyboard() == false  )
 	{
 		//std::cout<<"Key:"<<key<<".\n";
-		if(key==Keyboard::EQUALS)
-		{
-			std::cout<<"LOGIC up.\n";
-			U_LOGIC_PER_SECOND/=2;
-		}
-		if(key==Keyboard::MINUS)
-		{
-			std::cout<<"LOGIC down.\n";
-			U_LOGIC_PER_SECOND*=2;
-		}
-		if(key==Keyboard::COMMA)
-		{
-			std::cout<<"Logic step.\n";
-			FORCE_LOGIC_FRAME=true;
-		}
-		if(key==Keyboard::PERIOD)
-		{
-			std::cout<<"Logic paused.\n";
-			PAUSE_LOGIC=!PAUSE_LOGIC;
-		}
+		// if(key==Keyboard::EQUALS)
+		// {
+			// std::cout<<"LOGIC up.\n";
+			// U_LOGIC_PER_SECOND/=2;
+		// }
+		// if(key==Keyboard::MINUS)
+		// {
+			// std::cout<<"LOGIC down.\n";
+			// U_LOGIC_PER_SECOND*=2;
+		//}
+		// if(key==Keyboard::COMMA)
+		// {
+			// std::cout<<"Logic step.\n";
+			// FORCE_LOGIC_FRAME=true;
+		// }
+		// if(key==Keyboard::PERIOD)
+		// {
+			// std::cout<<"Logic paused.\n";
+			// PAUSE_LOGIC=!PAUSE_LOGIC;
+		// }
 		
 		if(key==Keyboard::CTRL_C) /* CTRL_C is value 3 and works like normal keypress. */
 		{
       // If we exit with CTRL+C, don't erase save data.
       CLEAN_SAVES_ON_EXIT=false;
-			exit(0);
+			QUIT_FLAG=true;
 		}
     
-		/* Change framerate to once per second. */
-		if(key==Keyboard::R || key==Keyboard::r)
-		{
+		// /* Change framerate to once per second. */
+		// if(key==Keyboard::R || key==Keyboard::r)
+		// {
 			
-			SLOW_FRAMERATE_ACTIVE = !SLOW_FRAMERATE_ACTIVE;
-			//UFRAMERATE = 1000000/2;
+			// SLOW_FRAMERATE_ACTIVE = !SLOW_FRAMERATE_ACTIVE;
+			// //UFRAMERATE = 1000000/2;
 		
-			/* Previous setting was to disable rendering completely,
-				but I decided to change it to render once per second. */
+			// /* Previous setting was to disable rendering completely,
+				// but I decided to change it to render once per second. */
 		
-			//DONT_RENDER = !DONT_RENDER;
-			//glClear(GL_COLOR_BUFFER_BIT);
-		}
-		if(key==Keyboard::S || key==Keyboard::s)
-		{
-			LIMIT_LOGIC = !LIMIT_LOGIC;
-			if(LIMIT_LOGIC==true)
-			{ std::cout<<"Logic limited.\n"; }
-			else
-			{ std::cout<<"Logic unlimited.\n"; }
-		}
+			// //DONT_RENDER = !DONT_RENDER;
+			// //glClear(GL_COLOR_BUFFER_BIT);
+		// }
+		// if(key==Keyboard::S || key==Keyboard::s)
+		// {
+			// LIMIT_LOGIC = !LIMIT_LOGIC;
+			// if(LIMIT_LOGIC==true)
+			// { std::cout<<"Logic limited.\n"; }
+			// else
+			// { std::cout<<"Logic unlimited.\n"; }
+		// }
 		
 	}
   RENDER_NEXT_FRAME=true;

@@ -21,7 +21,7 @@ class WorldObject;
   class Creature;
   class Creature_Footprint;
   class Character;
-
+class Static;
 
 class LocalTile: public HasTexture
 {
@@ -65,7 +65,6 @@ class LocalTile: public HasTexture
   /* RENDER STUFF */
   bool shotOverlay; /* Show the line of fire highlight for this tile */
   
-
    // Vector of objects on this tile.
    // This list includes all subclasses.
    // The reason there are so many duplicates is performance.
@@ -78,6 +77,8 @@ class LocalTile: public HasTexture
       Vector <Character*> vCharacter;
       // Vector of Creatures on this tile.
       Vector <Creature*> vCreature;
+      
+   Static* objStatic; // Static object (max 1)
 
   Creature_Footprint* footprint;
   
@@ -97,7 +98,7 @@ class LocalTile: public HasTexture
   void clearObjects();
   
 
-    // This returns the base texture.
+    // This returns the base terrain texture.
 	virtual Texture* currentTexture();
   
     // Return vector of all textures to be drawn, to be drawn from index 0 to n-1.

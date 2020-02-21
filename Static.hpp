@@ -55,22 +55,27 @@ class Static_Tree: public Static
 {
    public:
    
-   Static_Tree()
+   int chopAmount;
+   int growth;
+   
+   Static_Tree(int _growth=100)
    {
+      chopAmount=100;
+      growth=_growth;
    }
    
-   // Texture* currentTexture()
-   // {
-      // // //if (chopAmount==0)
-      // // { return &TEX_OBJECT_STUMP;
-      // // }
+   Texture* currentTexture()
+   {
+      if (chopAmount==0)
+      { return &TEX_OBJECT_STUMP;
+      }
 
-      // // //if ( growth==0 )
-      // // {
-         // // return &TEX_WORLD_TERRAIN_FOREST_SAPLING;
-      // // }
-      // return &TEX_WORLD_TERRAIN_FOREST_TREE;
-   // }
+      if ( growth==0 )
+      {
+         return &TEX_WORLD_TERRAIN_FOREST_SAPLING;
+      }
+      return &TEX_WORLD_TERRAIN_FOREST_TREE;
+   }
 };
 
 #endif

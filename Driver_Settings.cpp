@@ -13,7 +13,7 @@
 // I think this is probably pointless because any normal Windows/Linux/Mac system is going to use 4 bytes for int.
 #define PORTABLE_INT_MAX 32767
 
-
+#define THREAD_ALL
 // Threading doesn't work in Linux ATM
 #ifdef WILDCAT_LINUX
 #undef THREAD_ALL
@@ -125,7 +125,7 @@ int DEBUG_Y=-1;
 
 bool RESET=false;
 
-bool HOTKEYS_ENABLED = false;
+bool HOTKEYS_ENABLED = true;
 
 bool CLEAN_SAVES_ON_EXIT = true;
 
