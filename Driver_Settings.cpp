@@ -11,6 +11,7 @@
 #include <limits.h> // We need ULONG_MAX for absolute coords.
 #define ABSOLUTE_COORDINATE_NULL ULONG_MAX // Used as null-value for absolute coordinates, which can't use negative value.
 // I think this is probably pointless because any normal Windows/Linux/Mac system is going to use 4 bytes for int.
+// Also such a thing may be specified explicitly with somthing like uint32_t. I need to move over to this system.
 #define PORTABLE_INT_MAX 32767
 
 #define THREAD_ALL
@@ -25,13 +26,27 @@
   // The player is a character object, however he has a few special attributes which are handled differently.
   // For efficiency these are handled globally to prevent making a class which is only inherited by a single
   // character.
+  // This probably should be somewhere else
 class Character;
 Character * playerCharacter = 0; /* Global link to the player character (null if player hasn't selected a character) */
 class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION = "0.0.182 Win32 dev";
+const std::string VERSION_NUMBER = "0.0.183indev";
+
+#ifdef THREAD_ALL
+const std::string THREAD_STATUS = "threaded";
+#else
+const std::string THREAD_STATUS = "unthreaded";
+#endif
+
+#ifdef WILDCAT_WINDOWS
+const std::string VERSION = VERSION_NUMBER+" Win32 "+THREAD_STATUS;
+#else
+const std::string VERSION = VERSION_NUMBER+" Lin32 "+THREAD_STATUS;
+#endif
+
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
 
