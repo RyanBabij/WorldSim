@@ -1078,7 +1078,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                   else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true)
                   {
                      //glColor3ub(TEX_WORLD_TERRAIN_GRASS_00.averageRed,TEX_WORLD_TERRAIN_GRASS_00.averageGreen,TEX_WORLD_TERRAIN_GRASS_00.averageBlue);
-                     Texture * tex = (*world)(tileX,tileY)->currentTexture();
+                     Texture * tex = world->aWorldTile(tileX,tileY).currentTexture();
                      if ( tex )
                      {
                         glColor3ub(tex->averageRed,tex->averageGreen,tex->averageBlue);
@@ -1086,7 +1086,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                   }
                   else
                   {
-                     glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
+                     //glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
                   }
                }
             }

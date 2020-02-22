@@ -17,27 +17,27 @@
 World_MapManager::World_MapManager()
 {
    maxWorldsToGenerate=4;
-#ifdef THREAD_ALL
+   #ifdef THREAD_ALL
    nThreads=0;
-#endif
+   #endif
 }
 
 World_MapManager::~World_MapManager()
 {
-   std::cout<<"Map manager shutting down.\n";
+   std::cout<<"Map manager shutting down.\n";   
 #ifdef THREAD_ALL
    MUTEX_SHUTDOWN.lock();
    mutexArrayAccess.lock();
    // kinda messy but a wait loop seems to be the
    // best way to cleanly wait for threads to stop
-   
+
    int MAX_WAIT = 10;
    int i=0;
    while (nThreads > 0 && i<MAX_WAIT  )
    {
-      Sleep(50);
+      Sleep(25);
       ++i;
-      
+
       if ( i==MAX_WAIT )
       {
          std::cout<<"Hanging detected.\n";
@@ -169,10 +169,13 @@ bool World_MapManager::generateNow(int _mapX, int _mapY)
 void World_MapManager::main()
 {
 #ifdef THREAD_ALL
+   // due to file IO there may be reason to maintain more threads than cores.
    for (int i=0;i<N_CORES;++i)
+   //for (int i=0;i<8;++i)
    {
-      std::thread testThread( [this]
+      std::thread testThread( [this,i]
       {
+         const int threadID = i;
          // Wait for the Job vector to be built.
          while(true)
          {
@@ -193,7 +196,6 @@ void World_MapManager::main()
             // get a job and handle it or wait for one
             while ( local==0 && QUIT_FLAG == false)
             {
-               
                mutexJob.lock();
                if (vJobs.size()>0)
                {
@@ -212,10 +214,12 @@ void World_MapManager::main()
                      //  generate the map
                      if (QUIT_FLAG) { return; }
                      local->generate(false);
+                     
                      // if (QUIT_FLAG) { return; }
                      // local->save();
                      // if (QUIT_FLAG) { return; }
                      // local->unload();
+                     
                      local->threadAccess=false;
                      
                      mutexVector.lock();
@@ -230,6 +234,7 @@ void World_MapManager::main()
                         {
                            if ( vMapCache(i2)->threadAccess==false )
                            {
+                              vMapCache(i2)->threadAccess=true;
                               mapToCache = vMapCache(i2);
                               vMapCache.eraseSlot(i2);
                               break;
@@ -241,10 +246,14 @@ void World_MapManager::main()
                         // save and unload the map
                         if (mapToCache!=0)
                         {
+                           mutexCout.lock();
+                           std::cout<<"Caching map: "<<mapToCache->globalX_TS<<", "<<mapToCache->globalY_TS<<"\n";
+                           mutexCout.unlock();
                            if (QUIT_FLAG) { return; }
                            mapToCache->save();
                            if (QUIT_FLAG) { return; }
                            mapToCache->unload();
+                           mapToCache->threadAccess=false;
                         }
                      }
                      else

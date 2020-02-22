@@ -20,6 +20,10 @@
 #undef THREAD_ALL
 #endif
 
+// program will not do any garbage collection during shutdown
+// makes testing easier but should be disabled for builds
+#define FAST_EXIT
+
 #define SAVE_DATA // Program will save data to file. It saves a lot of data and it can end up taking up a lot of space
 
   // Player stuff.
@@ -33,7 +37,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION_NUMBER = "0.0.183indev";
+const std::string VERSION_NUMBER = "0.0.184indev";
 
 #ifdef THREAD_ALL
 const std::string THREAD_STATUS = "threaded";
@@ -201,6 +205,7 @@ const bool COMPRESS_TEXTURES = false; /* Probably saves graphics memory, however
 // manager can lock this mutex
    std::shared_mutex MUTEX_SHUTDOWN;
    std::shared_mutex MUTEX_TEST;
+   std::mutex mutexCout;
    
    // The maximum number of maps that may be cached in memory. This is set based on the amount
    // of free RAM, but has a minimum value of 12.

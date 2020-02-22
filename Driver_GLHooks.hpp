@@ -76,7 +76,7 @@ void GL_init(int nArgs, char ** arg)
 
    // Local maps currently need about 2MB of RAM each but this is likely to significantly increase
    // in some cases we might want to make use of virtual memory as well as RAM
-   MAP_CACHE_SIZE = statex.ullAvailPhys/1024/1024/3;
+   MAP_CACHE_SIZE = statex.ullAvailPhys/1024/1024/5;
    if ( MAP_CACHE_SIZE < 12 )
    {
       MAP_CACHE_SIZE = 12;

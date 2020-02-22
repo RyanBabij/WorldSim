@@ -66,27 +66,38 @@ World_Local::World_Local()
 
 World_Local::~World_Local()
 {
+#ifdef FAST_EXIT
+   if (QUIT_FLAG) { return; }
+#endif
+
+   initialized = false;
+   active = false;
+
+   vCreature.deleteAll();
+   vItem.deleteAll();
+   vObjectGeneric.deleteAll();
+
+   if (data)
+   { delete data; }
+   data=0;
   
-  initialized = false;
-	active = false;
+  // Note that abstractData isn't deleted
+  // For now it is left in memory for faster simulation
+   // if (abstractData)
+   // { delete abstractData; }
+   // abstractData=0;
   
-  vCreature.deleteAll();
-  vItem.deleteAll();
-  vObjectGeneric.deleteAll();
-  
-  if (data!=0)
-  { delete data; }
-  data=0;
-  
-  if (dataSubterranean!=0)
-  { delete dataSubterranean; }
-  dataSubterranean=0;
+   if (dataSubterranean)
+   { delete dataSubterranean; }
+   dataSubterranean=0;
 }
 
 void World_Local::unload()
 {
+#ifdef FAST_EXIT
+   if (QUIT_FLAG) { return; }
+#endif
 	active = false;
-   return;
   
   vCreature.deleteAll();
   vItem.deleteAll();
@@ -331,6 +342,10 @@ bool World_Local::generate(bool cache /* =true */)
     return true;
   }
   
+#ifdef FAST_EXIT
+   if (QUIT_FLAG) { return false; }
+#endif
+  
    localDate.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
 
    initialized = true;
@@ -340,7 +355,7 @@ bool World_Local::generate(bool cache /* =true */)
 
 
    data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-   data->aStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
+   //data->aStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
    
    abstractData->bfCollision.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 
@@ -383,6 +398,10 @@ bool World_Local::generate(bool cache /* =true */)
     //HEIGHTMAP TABLE FREESTEPS SMOOTHING
     dsa2.generate(&aLocalHeight,0,0,0.75,100);
   }
+  
+#ifdef FAST_EXIT
+   if (QUIT_FLAG) { return false; }
+#endif
   
   // Take the seed for this world tile and expand it into a subseed for every local tile */
    rng.seed(seed);
@@ -507,12 +526,12 @@ bool World_Local::generate(bool cache /* =true */)
           if (rng.oneIn(10))
           {
             //put(new WorldObject_Tree(0), _x, _y);
-            put(new Static_Tree(0), _x, _y);
+            //put(new Static_Tree(0), _x, _y);
           }
           else
           {
             //put(new WorldObject_Tree(1), _x, _y);
-            put(new Static_Tree(1), _x, _y);
+            //put(new Static_Tree(1), _x, _y);
           }
 
         }
@@ -609,14 +628,16 @@ bool World_Local::generate(bool cache /* =true */)
       }
    }
    bindNearestNeighbour(&texFar,COMPRESS_TEXTURES);
-  
+   
+#ifdef FAST_EXIT
+   if (QUIT_FLAG) { return false; }
+#endif
+
    if ( cache )
    {
       save();
    }
-
-
-	return false;
+	return true;
 }
 
 // I want to have subterranean separate from normal map generation.
