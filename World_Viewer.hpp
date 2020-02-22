@@ -16,13 +16,11 @@
    It provides coordinates (both local and absolute) for the tile the mouse
    is hovering over.
 
-   It is quite messy and uses only basic OpenGL techniques. In future it could probably
-   be optimised to render much faster, for example using texture atlases, mipmapping
-   vertex buffering and on-demand rendering.
-
-   New plan: The WorldViewer is currently calculating what to render and rendering in a single call. I think this might
-   be a bad approach. What should really be happening is the World Viewer should use idle time to build an array of
-   textures to draw, plus calculating the coordinates. Then the render should only focus on rendering the array.
+   It needs some cleanup and optimization. Various techniques could improve performance
+   significantly. Also a lot of calculations should be moved out of the render function.
+   
+   This class could technically be moved into Wildcat but it's not likely
+   to be used for much else so it's not a big deal for now.
 	
 */
 
@@ -36,7 +34,6 @@
 
 // Raindrops that are rendered over screen to indicate rain.
 // Should start at top of screen and travel down. Should not render on sheltered tiles
-  
 class RainDrop
 {
    public:
@@ -452,382 +449,350 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 		else
 		{
 			*_pixelX = -1000;
-			*_pixelY = -1000;
+         *_pixelY = -1000;
 		}
 	}
   
-  // Take the given pixels and calculate what tile they are. This is in absolute coordinates.
-  // I need to add a version which can do relative coords.
-  void toTileCoords(int pixelX, int pixelY, unsigned long int * absX, unsigned long int * absY)
-  {
-    if (absX==0 || absY==0) {return;}
-    if (pixelX<0 || pixelY<0 || pixelsPerLocalTile == 0)
-    {
-      *absX=ABSOLUTE_COORDINATE_NULL;
-      *absY=ABSOLUTE_COORDINATE_NULL;
-    }
-    
-    int pixelDistanceX = pixelX - firstPixelX;
-    int pixelDistanceY = pixelY - firstPixelY;
-
-    if ( pixelDistanceX < 0 || pixelDistanceY < 0 )
-    {
-      *absX=0;
-      *absY=0;
-      return;
-    }
-    
-    *absX = firstTileAbsX + ((double)pixelDistanceX/pixelsPerLocalTile);
-    *absY = firstTileAbsY + ((double)pixelDistanceY/pixelsPerLocalTile);
-  }
-	
-	
-		/* HERE I RENDER THE GRAPHICAL ICONS WHICH ARE PRESENT ON THE WORLD MAP, FOR EXAMPLE: CITIES AND ARMIES. */
-		/* ONLY A SMALL NUMBER OF WORLD TILES WILL HAVE AN ICON ON THEM, SO I WILL USE A DIFFERENT TECHNIQUE. */
-	void renderWorldIcons()
-	{
-		//return;
-		//std::cout<<"Rendering world icons.\n";
-	
-		if (active == false)
-		{ return; }
-		if(world==0)
-		{
-			std::cout<<"ABORT: No world to render.\n";
-			return;
-		}
-		
-			/* 0223554692 - SO I GUESS THIS PART MODIFIES THE SCREEN SO I CAN SIMPLY DRAW FROM (0,0). */
-		Renderer::saveViewPort();
-		Renderer::resizeViewPort(mainViewX1,mainViewY1,mainViewX2,mainViewY2);
-		
-			/* CONFUSING SHIT WHICH IS HARD TO EXPLAIN. */
-		
-		float centerTileXDecimal = centerTileX - (int)centerTileX;
-		float centerTileYDecimal = centerTileY - (int)centerTileY;
-		
-		float pixelOffsetX = tileSize*centerTileXDecimal;
-		float pixelOffsetY = tileSize*centerTileYDecimal;
-
-		const int iCenterTileX = centerTileX;
-		
-		const int tilesToDrawX = (mainViewNX/tileSize) + 1;
-		const int tilesToDrawY = (mainViewNY/tileSize) + 1;
-		
-		int tileX=centerTileX;
-		int pixelTile = mainViewNX/2;
-		while(pixelTile>=0)
-		{
-			--tileX;
-			pixelTile-=tileSize;
-		}
-		const int revertTileX = tileX;
-		
-		int tileY=centerTileY;
-		pixelTile = mainViewNY/2;
-		while(pixelTile>=0)
-		{
-			--tileY;
-			pixelTile-=tileSize;
-		}
-		
-			/* ALLOWS DRAWING OF TEXTURES. */
-		Renderer::setTextureMode();
-		
-			// USING THE NEW 'WORLDOBJECTGLOBAL' INTERFACE.
-		for (int i=0;i<world->vWorldObjectGlobal.size();++i)
-		{
-			WorldObjectGlobal* wog = world->vWorldObjectGlobal(i);
+   // Take the given pixels and calculate what tile they are. This is in absolute coordinates.
+   // I need to add a version which can do relative coords.
+   void toTileCoords(int pixelX, int pixelY, unsigned long int * absX, unsigned long int * absY)
+   {
+      if (absX==0 || absY==0) {return;}
       
-      
-        // Check if we're supposed to render a local map on this tile.
-        // If so, don't draw world icons over it.
-      if ( tileSize > 4 && world->isSafe(tileX,tileY) )
+      if (pixelX<0 || pixelY<0 || pixelsPerLocalTile == 0)
       {
-        
-        for ( int i2=0;i2<world->vWorldLocal.size();++i2)
-        {
-          if ( world->vWorldLocal(i2)->globalX == wog->worldX && world->vWorldLocal(i2)->globalY == wog->worldY )
-          {
-            wog = 0;
-            break;
-          }
-        }
-        
+         *absX=ABSOLUTE_COORDINATE_NULL;
+         *absY=ABSOLUTE_COORDINATE_NULL;
       }
-      if ( wog == 0 ) { continue; }
-      
-			int wogPixelX=-1;
-			int wogPixelY=-1;
 
-			toScreenCoords(wog->worldX,wog->worldY,&wogPixelX,&wogPixelY);
-      
+      int pixelDistanceX = pixelX - firstPixelX;
+      int pixelDistanceY = pixelY - firstPixelY;
 
-			
-				// I NEED TO DO A CHECK TO SEE IF THE OBJECT IS VISIBLE WITHIN THE CURRENT VIEW.
-			
-			if ( wogPixelX != -1000 && wogPixelY != -1000 )
-			{
-				Renderer::placeTexture4(wogPixelX,wogPixelY,wogPixelX+tileSize,wogPixelY+tileSize,wog->currentTexture(),false);
-			}
-		}
-			/* RESTORE THE VIEWPORT TO THE PREVIOUS SETTING (PROBABLY THE WHOLE PANEL). */
-		Renderer::restoreViewPort();
-		
-	}
-  
-    // This function should run in the background and basically constantly build and update the array of textures to render.
-    // We need code to build the world view, and code to build the local map view.
-    // We can start with just the global view because it's less complicated.
-    // The scene should not update more than once per frame. Otherwise we're going to be constantly loading and unloading
-    // arrays for nothing.
-  void updateScene()
-  {
-  }
+      if ( pixelDistanceX < 0 || pixelDistanceY < 0 )
+      {
+         *absX=0;
+         *absY=0;
+         return;
+      }
+
+      *absX = firstTileAbsX + ((double)pixelDistanceX/pixelsPerLocalTile);
+      *absY = firstTileAbsY + ((double)pixelDistanceY/pixelsPerLocalTile);
+   }
 	
+   /* HERE I RENDER THE GRAPHICAL ICONS WHICH ARE PRESENT ON THE WORLD MAP, FOR EXAMPLE: CITIES AND ARMIES. */
+   /* ONLY A SMALL NUMBER OF WORLD TILES WILL HAVE AN ICON ON THEM, SO I WILL USE A DIFFERENT TECHNIQUE. */
+   void renderWorldIcons()
+   {
+      if (active == false)
+      { return; }
+      if(world==0)
+      {
+         std::cout<<"ABORT: No world to render.\n";
+         return;
+      }
+		
+      /* 0223554692 - SO I GUESS THIS PART MODIFIES THE SCREEN SO I CAN SIMPLY DRAW FROM (0,0). */
+      Renderer::saveViewPort();
+      Renderer::resizeViewPort(mainViewX1,mainViewY1,mainViewX2,mainViewY2);
+
+      /* CONFUSING SHIT WHICH IS HARD TO EXPLAIN. */
+
+      float centerTileXDecimal = centerTileX - (int)centerTileX;
+      float centerTileYDecimal = centerTileY - (int)centerTileY;
+
+      float pixelOffsetX = tileSize*centerTileXDecimal;
+      float pixelOffsetY = tileSize*centerTileYDecimal;
+
+      const int iCenterTileX = centerTileX;
+
+      const int tilesToDrawX = (mainViewNX/tileSize) + 1;
+      const int tilesToDrawY = (mainViewNY/tileSize) + 1;
+
+      int tileX=centerTileX;
+      int pixelTile = mainViewNX/2;
+      
+      
+      while(pixelTile>=0)
+      {
+         --tileX;
+         pixelTile-=tileSize;
+      }
+      const int revertTileX = tileX;
+
+      int tileY=centerTileY;
+      pixelTile = mainViewNY/2;
+      while(pixelTile>=0)
+      {
+         --tileY;
+         pixelTile-=tileSize;
+      }
+
+      /* ALLOWS DRAWING OF TEXTURES. */
+      Renderer::setTextureMode();
+
+      // USING THE NEW 'WORLDOBJECTGLOBAL' INTERFACE.
+      for (int i=0;i<world->vWorldObjectGlobal.size();++i)
+      {
+         WorldObjectGlobal* wog = world->vWorldObjectGlobal(i);
+
+         // Check if we're supposed to render a local map on this tile.
+         // If so, don't draw world icons over it.
+         if ( tileSize > 4 && world->isSafe(tileX,tileY) )
+         {
+            for ( int i2=0;i2<world->vWorldLocal.size();++i2)
+            {
+               if ( world->vWorldLocal(i2)->globalX == wog->worldX && world->vWorldLocal(i2)->globalY == wog->worldY )
+               {
+                  wog = 0;
+                  break;
+               }
+            }
+         }
+      
+         if ( wog == 0 ) { continue; }
+
+         int wogPixelX=-1;
+         int wogPixelY=-1;
+
+         toScreenCoords(wog->worldX,wog->worldY,&wogPixelX,&wogPixelY);
+
+         // I NEED TO DO A CHECK TO SEE IF THE OBJECT IS VISIBLE WITHIN THE CURRENT VIEW.
+         if ( wogPixelX != -1000 && wogPixelY != -1000 )
+         {
+            Renderer::placeTexture4(wogPixelX,wogPixelY,wogPixelX+tileSize,wogPixelY+tileSize,wog->currentTexture(),false);
+         }
+		}
+      /* RESTORE THE VIEWPORT TO THE PREVIOUS SETTING (PROBABLY THE WHOLE PANEL). */
+      Renderer::restoreViewPort();
+   }
+
+   // This function should run in the background and basically constantly build and update the array of textures to render.
+   // We need code to build the world view, and code to build the local map view.
+   // We can start with just the global view because it's less complicated.
+   // The scene should not update more than once per frame. Otherwise we're going to be constantly loading and unloading
+   // arrays for nothing.
+   void updateScene()
+   {
+   }
+
 	void render()
 	{
-		if (active == false)
-		{ return; }
-		if(world==0)
-		{
-			std::cout<<"ABORT: No world to render.\n";
-			return;
-		}
-    
-    if ( demoMode )
-    {
-      if ( centerTileX < 10 && demoScroll < 0 )
+      if (active == false)
+      { return; }
+      if(world==0)
       {
-        demoScroll = demoScroll * -1;
-      }
-      else if ( centerTileX > world->nX - 10 && demoScroll > 0 )
-      {
-        demoScroll = demoScroll * -1;
+         std::cout<<"ABORT: No world to render.\n";
+         return;
       }
       
-      centerTileX += demoScroll;
-    }
-    
-    // Reset hovered tile coords, so we can tell if the mouse is over the worldviewer.
-    
-    hoveredXTileLocal = -1;
-    hoveredAbsoluteX = ABSOLUTE_COORDINATE_NULL;
-    hoveredYTileLocal = -1;
-    hoveredAbsoluteY = ABSOLUTE_COORDINATE_NULL;
+      if ( demoMode )
+      {
+         if ( centerTileX < 10 && demoScroll < 0 )
+         {
+            demoScroll = demoScroll * -1;
+         }
+         else if ( centerTileX > world->nX - 10 && demoScroll > 0 )
+         {
+            demoScroll = demoScroll * -1;
+         }
+         centerTileX += demoScroll;
+      }
+      
+      // Reset hovered tile coords, so we can tell if the mouse is over the worldviewer.
+      hoveredXTileLocal = -1;
+      hoveredAbsoluteX = ABSOLUTE_COORDINATE_NULL;
+      hoveredYTileLocal = -1;
+      hoveredAbsoluteY = ABSOLUTE_COORDINATE_NULL;
 
-		Renderer::saveViewPort();
-
-		Renderer::resizeViewPort(mainViewX1,mainViewY1,mainViewX2,mainViewY2);
-    
-    /* The World Viewer is passed centre coordinates because typically the camera needs to be centered on something.
-    However from this we must calculate what coordinates to start rendering from in the top-left.
-    Therefore we take the centre coordinates and work back to the top-left. This is done for both the tile (array)
-    coordinates, and the rendering (pixel) coordinates. */
-		
-		float centerTileXDecimal = centerTileX - (int)centerTileX;
-		float centerTileYDecimal = centerTileY - (int)centerTileY;
-		
-		float centerTileXPixels = centerTileXDecimal*tileSize;
-		float centerTileYPixels = centerTileYDecimal*tileSize;
-    
-    pixelsPerLocalTile = ((double)tileSize/LOCAL_MAP_SIZE);
-
-		const int iCenterTileX = centerTileX;
-		
-
-		const int tilesToDrawX = (mainViewNX/tileSize) + 1;
-		const int tilesToDrawY = (mainViewNY/tileSize) + 1;
-		
-		int tileX=centerTileX;
-		int pixelTileX = mainViewX1+(mainViewNX/2) - centerTileXPixels;
-		while(pixelTileX>=mainViewX1)
-		{
-			--tileX;
-			tileX-=tilesToSkip;
-			pixelTileX-=tileSize;
-			
-		}
-		const int revertTileX = tileX;
-		
-		int tileY=centerTileY;
-		int pixelTileY = mainViewY1 + (mainViewNY/2) - centerTileYPixels;
-		while(pixelTileY>=0)
-		{
-			--tileY;
-			tileY-=tilesToSkip;
-			pixelTileY-=tileSize;
-		}
-    
-    //We need to store the top-left coordinates for other functions to use.
-    firstTileX=tileX;
-    firstTileY=tileY;
-    
-    if (world->isSafe(tileX,tileY))
-    {
-      firstTileAbsX=tileX*LOCAL_MAP_SIZE;
-      firstTileAbsY=tileY*LOCAL_MAP_SIZE;
-    }
-    else
-    {
-      firstTileAbsX=ABSOLUTE_COORDINATE_NULL;
-      firstTileAbsY=ABSOLUTE_COORDINATE_NULL;
-    }
+      Renderer::saveViewPort();
+      Renderer::resizeViewPort(mainViewX1,mainViewY1,mainViewX2,mainViewY2);
     
 
-    firstPixelX=pixelTileX;
-    firstPixelY=pixelTileY;
+      /* The World Viewer is passed centre coordinates because typically the camera needs to be centered on something.
+      However from this we must calculate what coordinates to start rendering from in the top-left.
+      Therefore we take the centre coordinates and work back to the top-left. This is done for both the tile (array)
+      coordinates, and the rendering (pixel) coordinates. */
 
-			/* UPDATE HOVERED TILE COORDS. */
-			/* MAKE SURE MOUSE IS WITHIN THE RENDERING VIEW */
-		if (lastMouseX >= mainViewX1 && lastMouseX <= mainViewX2 && lastMouseY >= mainViewY1 && lastMouseY <= mainViewY2 )
-		{
-			const int startingPX = pixelTileX;
-			const int startingPY = pixelTileY;
-			
-			int diffX = (lastMouseX - startingPX)/tileSize;
-			int diffY = (lastMouseY - startingPY)/tileSize;
-			
-				/* UPDATE THE COORDS OF THE HOVERED TILE. */
-			hoveredXTile = tileX + diffX;
-			hoveredYTile = tileY + diffY;
-		}
-		else
-		{
-			hoveredXTile=-1;
-			hoveredYTile=-1;
-		}
-		
-		if ( tilesetMode == false )
-		{
+      float centerTileXDecimal = centerTileX - (int)centerTileX;
+      float centerTileYDecimal = centerTileY - (int)centerTileY;
 
-			/* Pixel coords for leftmost tile. */
-			Renderer::setColourMode();
+      float centerTileXPixels = centerTileXDecimal*tileSize;
+      float centerTileYPixels = centerTileYDecimal*tileSize;
 
-			for (int currentY = pixelTileY; currentY<mainViewNY; currentY+=tileSize)
-			{
-				//break;
-				glBegin(GL_QUAD_STRIP);
+      pixelsPerLocalTile = ((double)tileSize/LOCAL_MAP_SIZE);
 
-				
-				/* NOTE: 022-171 added this initial case. The left side of the map wasn't drawing, so I put this here, and moved the other glColor3ub from above the vertexes to below them. This seems to have fixed the rendering. The tiles were always there, they just weren't rendering... */
-				glColor3ub(0,0,0);
-				unsigned char lastRed=0;
-				unsigned char lastGreen=0;
-				unsigned char lastBlue=0;
-				
-				//for (int currentX = -pixelOffsetX; currentX<mainViewNX+tileSize; currentX+=tileSize)
-				for (int currentX = pixelTileX; currentX<mainViewNX+tileSize; currentX+=tileSize)
-				{
-				
-					if(world->isSafe(tileX,tileY)==true)
-					{
-						
-						glVertex2s(currentX,currentY);
-						glVertex2s(currentX,currentY+tileSize);
-						
-							// Territory view
-						if (territoryView)
-						{
-              const Tribe* dominantTribe = world->aWorldTile(tileX,tileY).getDominantInfluence();
-              if (dominantTribe!=0)
-              {
-                glColor3ub(dominantTribe->colourRed,dominantTribe->colourGreen,dominantTribe->colourBlue);
-              }
-              else
-              {
-                glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
-              }
+      const int iCenterTileX = centerTileX;
+
+
+      const int tilesToDrawX = (mainViewNX/tileSize) + 1;
+      const int tilesToDrawY = (mainViewNY/tileSize) + 1;
+
+      int tileX=centerTileX;
+      int pixelTileX = mainViewX1+(mainViewNX/2) - centerTileXPixels;
+      while(pixelTileX>=mainViewX1)
+      {
+         --tileX;
+         tileX-=tilesToSkip;
+         pixelTileX-=tileSize;
+      }
+      const int revertTileX = tileX;
+
+      int tileY=centerTileY;
+      int pixelTileY = mainViewY1 + (mainViewNY/2) - centerTileYPixels;
+      while(pixelTileY>=0)
+      {
+         --tileY;
+         tileY-=tilesToSkip;
+         pixelTileY-=tileSize;
+      }
+
+      //We need to store the top-left coordinates for other functions to use.
+      firstTileX=tileX;
+      firstTileY=tileY;
+      if (world->isSafe(tileX,tileY))
+      {
+         firstTileAbsX=tileX*LOCAL_MAP_SIZE;
+         firstTileAbsY=tileY*LOCAL_MAP_SIZE;
+      }
+      else
+      {
+         firstTileAbsX=ABSOLUTE_COORDINATE_NULL;
+         firstTileAbsY=ABSOLUTE_COORDINATE_NULL;
+      }
+
+      firstPixelX=pixelTileX;
+      firstPixelY=pixelTileY;
+
+      /* UPDATE HOVERED TILE COORDS. */
+      /* MAKE SURE MOUSE IS WITHIN THE RENDERING VIEW */
+      if (lastMouseX >= mainViewX1 && lastMouseX <= mainViewX2 && lastMouseY >= mainViewY1 && lastMouseY <= mainViewY2 )
+      {
+         const int startingPX = pixelTileX;
+         const int startingPY = pixelTileY;
+
+         int diffX = (lastMouseX - startingPX)/tileSize;
+         int diffY = (lastMouseY - startingPY)/tileSize;
+
+         /* UPDATE THE COORDS OF THE HOVERED TILE. */
+         hoveredXTile = tileX + diffX;
+         hoveredYTile = tileY + diffY;
+      }
+      else
+      {
+         hoveredXTile=-1;
+         hoveredYTile=-1;
+      }
+      
+      if ( tilesetMode == false )
+      {
+         // Pixel coords for leftmost tile.
+         Renderer::setColourMode();
+
+         for (int currentY = pixelTileY; currentY<mainViewNY; currentY+=tileSize)
+         {
+            glBegin(GL_QUAD_STRIP);
+
+            // initial case
+            glColor3ub(0,0,0);
+            unsigned char lastRed=0;
+            unsigned char lastGreen=0;
+            unsigned char lastBlue=0;
+
+            for (int currentX = pixelTileX; currentX<mainViewNX+tileSize; currentX+=tileSize)
+            {
+               if(world->isSafe(tileX,tileY)==true)
+               {
+                  glVertex2s(currentX,currentY);
+                  glVertex2s(currentX,currentY+tileSize);
+
+                  // Territory view
+                  if (territoryView)
+                  {
+                     const Tribe* dominantTribe = world->aWorldTile(tileX,tileY).getDominantInfluence();
+                     if (dominantTribe!=0)
+                     {
+                        glColor3ub(dominantTribe->colourRed,dominantTribe->colourGreen,dominantTribe->colourBlue);
+                     }
+                     else
+                     {
+                        glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
+                     }
+                  }
+                  else
+                  {
+                     // Cool feature where we keep track of the average colour of a texture and just draw that colour
+                     // in colour mode. Could also be adapted for distant rendering.
+                     if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==false)
+                     {
+                        //enderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
+                        glColor3ub(TEX_WORLD_TERRAIN_OCEAN_00.averageRed,TEX_WORLD_TERRAIN_OCEAN_00.averageGreen,TEX_WORLD_TERRAIN_OCEAN_00.averageBlue);
+                     }
+                     //else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true)
+                     //{
+                     //	glColor3ub(TEX_WORLD_TERRAIN_GRASS_00.averageRed,TEX_WORLD_TERRAIN_GRASS_00.averageGreen,TEX_WORLD_TERRAIN_GRASS_00.averageBlue);
+                     //}
+                     else
+                     {
+                        glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
+                     }
+                  }
+
+                  // ONLY DRAW STUFF THE THE PLAYER HAS REVEALED.
+                  // FOG OF WAR GOES HERE.
+
+                  // Basic landmass view
+                  //if ( world->aIsLand(tileX,tileY) )
+                  if ( world->aWorldTile(tileX,tileY).isLand())
+                  {
+                     //glColor3ub(50,200,50);
+                  }
+                  else
+                  {
+                     //glColor3ub(50,50,200);
+                  }
+                  //landmass ID view
+                  // if ( world->aIsLand(tileX,tileY) && world->aLandmassID(tileX,tileY) != -1 )
+                  // {
+                  // glColor3ub(50,200,50);
+                  // }
+                  // else if ( world->aIsLand(tileX,tileY) )
+                  // {
+                  // glColor3ub(200,50,50);
+                  // }
+                  // else
+                  // {
+                  // glColor3ub(50,50,200);
+                  // }
+               }
+
+               /* NOTE: 022-171. Final case here, otherwise last x doesn't render. */
+               else if(world->isSafe(tileX-1,tileY)==true)
+               {
+                  glVertex2s(currentX,currentY);
+                  glVertex2s(currentX,currentY+tileSize);
+               }
+
+               ++tileX;
+               tileX+=tilesToSkip;
             }
-						else
-						{
-              // Cool feature where we keep track of the average colour of a texture and just draw that colour
-              // in colour mode. Could also be adapted for distant rendering.
-							if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==false)
-							{
-								//enderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
-								glColor3ub(TEX_WORLD_TERRAIN_OCEAN_00.averageRed,TEX_WORLD_TERRAIN_OCEAN_00.averageGreen,TEX_WORLD_TERRAIN_OCEAN_00.averageBlue);
-							}
-							//else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true)
-							//{
-							//	glColor3ub(TEX_WORLD_TERRAIN_GRASS_00.averageRed,TEX_WORLD_TERRAIN_GRASS_00.averageGreen,TEX_WORLD_TERRAIN_GRASS_00.averageBlue);
-							//}
-							
-							
-							else
-							{
-								glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
-							}
-							
-						}
+            glEnd();
 
+            tileX=revertTileX;
+            ++tileY;
+            tileY+=tilesToSkip;
+         }
+      }
+      else // Render in texture mode
+      {
+         Renderer::setTextureMode();
 
-							// ONLY DRAW STUFF THE THE PLAYER HAS REVEALED.
-							// FOG OF WAR GOES HERE.
-
-						
-							// Basic landmass view
-						//if ( world->aIsLand(tileX,tileY) )
-						if ( world->aWorldTile(tileX,tileY).isLand())
-						{
-							//glColor3ub(50,200,50);
-						}
-						else
-						{
-							//glColor3ub(50,50,200);
-						}
-							//landmass ID view
-						// if ( world->aIsLand(tileX,tileY) && world->aLandmassID(tileX,tileY) != -1 )
-						// {
-							// glColor3ub(50,200,50);
-						// }
-						// else if ( world->aIsLand(tileX,tileY) )
-						// {
-							// glColor3ub(200,50,50);
-						// }
-						// else
-						// {
-							// glColor3ub(50,50,200);
-						// }
-						
-
-					}
-					
-					/* NOTE: 022-171. Final case here, otherwise last x doesn't render. */
-					else if(world->isSafe(tileX-1,tileY)==true)
-					{
-						glVertex2s(currentX,currentY);
-						glVertex2s(currentX,currentY+tileSize);
-					}
-
-					++tileX;
-					tileX+=tilesToSkip;
-				}
-				glEnd();
-
-				tileX=revertTileX;
-				++tileY;
-				tileY+=tilesToSkip;
-			}
-			
-		}
-		else // Render in texture mode
-		{
-			Renderer::setTextureMode();
-
-			for (int currentY = pixelTileY; currentY<mainViewNY; currentY+=tileSize)
-			{
-				//glBegin(GL_QUAD_STRIP);
-
-				
-				/* NOTE: 022-171 added this initial case. The left side of the map wasn't drawing, so I put this here, and moved the other glColor3ub from above the vertexes to below them. This seems to have fixed the rendering. The tiles were always there, they just weren't rendering... */
-				glColor3ub(255,255,255);
-				//unsigned char lastRed=0;
-				//unsigned char lastGreen=0;
-				//unsigned char lastBlue=0;
-				
-				for (int currentX = pixelTileX; currentX<mainViewNX+tileSize; currentX+=tileSize)
-				{
+         for (int currentY = pixelTileY; currentY<mainViewNY; currentY+=tileSize)
+         {
+            //initial case
+            glColor3ub(255,255,255);
+     
+            for (int currentX = pixelTileX; currentX<mainViewNX+tileSize; currentX+=tileSize)
+            {
                // Check if we're supposed to render a local map on this tile.
                World_Local * localMap = 0;
                if ( tileSize >= 12 && world->isSafe(tileX,tileY) )
@@ -841,501 +806,325 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                      }
                   }
                }
-          
-						// RENDER THE LOCAL TILE
-            // Should be it's own function
-					//if (tileSize > 4 && localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
+
+               // RENDER THE LOCAL TILE
+               // Should be it's own function
+               //if (tileSize > 4 && localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
                if ( localMap != 0 && localMap->data != 0 && tileSize > LOCAL_MAP_SIZE*4)
-					{
-						float currentSubY = currentY;
-						float nextSubY = currentY + pixelsPerLocalTile;
-						
-						int subTileSize = pixelsPerLocalTile;
-						if (subTileSize < 1) { subTileSize = 1; }
-						
-            // First we must seed the RNG with the seed for this local tile.
-						//RandomNonStatic r1;
-						//r1.seed (localMap->seed);
+               {
+                  float currentSubY = currentY;
+                  float nextSubY = currentY + pixelsPerLocalTile;
+
+                  int subTileSize = pixelsPerLocalTile;
+                  if (subTileSize < 1) { subTileSize = 1; }
+
+                  const enumBiome localBaseBiome = localMap->baseBiome;
+
+                  for (int localYTile = 0; localYTile<LOCAL_MAP_SIZE;++localYTile)
+                  {
+                     if ( nextSubY>=mainViewY1 && currentSubY <= mainViewY2 && floor(currentSubY) != floor(nextSubY) )
+                     {
+                        float currentPixel = currentX;
+                        float nextPixel = currentX+pixelsPerLocalTile;
+                        for (int localXTile = 0; localXTile<LOCAL_MAP_SIZE;++localXTile)
+                        {
+                           if ( nextPixel>=mainViewX1 && currentPixel <= mainViewX2 && floor(currentPixel) != floor(nextPixel) )
+                           {
+                              if ( subterraneanMode && localMap->dataSubterranean)
+                              {
+                                 glColor4ub(255,255,255,255);
+                                 //Very basic player line of sight check here (only if we're in Adventure mode)
+                                 // Unseen tiles
+                                 if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile,true) == 0 )
+                                 {
+                                 }
+                                 //Previously seen tiles
+                                 else if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile,true) == 1 )
+                                 {
+                                    //Draw tile very dark to symbolise fog of war
+                                    LocalTile* localTile = &localMap->dataSubterranean->aSubterranean(localXTile,localYTile);
+
+                                    Vector <Texture*> * vText = localTile->currentTextures();
+                                    if ( vText != 0)
+                                    {
+                                       for (int i=0;i<vText->size();++i)
+                                       {
+                                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), (*vText)(i), false);
+                                       }
+                                    }
+                                    delete vText;
+                                 }
+                                 else /* DRAW VISIBLE TILES */
+                                 {
+                                    LocalTile* localTile = &localMap->dataSubterranean->aSubterranean(localXTile,localYTile);
+                                    Vector <Texture*> * vText = localTile->currentTextures();
+                                    if ( vText != 0)
+                                    {
+                                       for (int i=0;i<vText->size();++i)
+                                       {
+                                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), (*vText)(i), false);
+                                       }
+                                    }
+                                    for(int i=0;i<localMap->dataSubterranean->aSubterranean(localXTile,localYTile).vObject.size();++i)
+                                    {
+                                       Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->dataSubterranean->aSubterranean(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                                    }
+                                    delete vText;
+                                 }
+                              }
+                              else
+                              {
+                                 //Very basic player line of sight check here (only if we're in Adventure mode)
+                                 // Unseen tiles
+                                 if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == 0 )
+                                 {
+                                    //Draw tile very dark to symbolise fog of war
+                                    //LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
+
+                                    //unsigned char lightValue = 10;
+                                    //glColor3ub(lightValue,lightValue,lightValue);
+                                    //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+                                    //glColor3ub(255,255,255);
+
+                                    for(int i=0;i<localMap->data->aLocalTile(localXTile,localYTile).vObject.size();++i)
+                                    {
+                                       //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                                    }
+                                 }
+                                 //Previously seen tiles
+                                 else if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == 1 )
+                                 {
+                                    //Draw tile very dark to symbolise fog of war
+                                    LocalTile* localTile = &localMap->data->aLocalTile(localXTile,localYTile);
+
+                                    unsigned char lightValue = 80;
+                                    glColor3ub(lightValue,lightValue,lightValue);
+                                    //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+
+                                    Vector <Texture*> * vText = localTile->currentTextures();
+                                    if ( vText != 0)
+                                    {
+                                       for (int i=0;i<vText->size();++i)
+                                       {
+                                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), (*vText)(i), false);
+                                       }
+                                    }
+                                    delete vText;
+
+                                    glColor3ub(255,255,255);
+
+                                    for(int i=0;i<localMap->data->aLocalTile(localXTile,localYTile).vObject.size();++i)
+                                    {
+                                       //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                                    }
+                                 }
+                                 else /* DRAW VISIBLE TILES */
+                                 {
+                                    LocalTile* localTile = &localMap->data->aLocalTile(localXTile,localYTile);
+
+                                    unsigned char lightValue = localTile->height*15;
+
+                                    int currentSecond = world->calendar.second;
+                                    int sunsetCounter = currentSecond-50;
+
+                                    int currentMinute = world->calendar.minute;
+                                    int currentHour = world->calendar.hour;
+
+                                    // NIGHT
+                                    if (currentHour < 6 || currentHour > 19)
+                                    {
+                                       glColor3ub(50+lightValue,50+lightValue,50+lightValue);
+                                    }
+                                    else if (currentHour == 6) // SUNRISE
+                                    {
+                                       glColor3ub(110+lightValue,100+lightValue,120+lightValue);
+                                    }
+                                    else if (currentHour == 19) // SUNSET
+                                    {
+                                       glColor3ub(130+lightValue,100+lightValue,100+lightValue);
+                                    }
+                                    else
+                                    {
+                                       glColor3ub(180+lightValue,180+lightValue,180+lightValue);
+                                       //glColor3ub(80+(lightValue/2),80+(lightValue/2),80+(lightValue/2));
+                                       //if (currentSecond > 50 ) { glColor3ub(80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*10)+(lightValue/2)); }
+                                    }
+
+                                    // draw base terrain, then static, then objects
+                                    //draw base terrain
+                                    Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
+
+                                    //draw static
+                                    if (localTile->objStatic)
+                                    {
+                                    }
+
+                                    // draw objects
+                                    Vector <Texture*> * vText = localTile->currentTextures();
+                                    if ( vText != 0)
+                                    {
+                                       for (int i=0;i<vText->size();++i)
+                                       {
+                                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), (*vText)(i), false);
+                                       }
+                                    }
+                                    delete vText;
+
+                                    // Draw footprint
+                                    if (localTile->footprint != 0)
+                                    {
+                                       Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->footprint->currentTexture(), false);
+                                    }
+                                    glColor3ub(255,255,255);
+
+                                    // Draw wall if necessary.
+                                    // Move this to static
+                                    if (localTile->bWall != 0 )
+                                    {
+                                       if ( localTile->bWall == 0b10001000) // NORTH
+                                       {
+                                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 180);
+                                       }
+                                       else if ( localTile->bWall == 0b00010001) // WEST
+                                       {
+                                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 90);
+                                          //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, false);
+                                       }
+                                       else if ( localTile->bWall == 0b01000100) // EAST
+                                       {
+                                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 270);
+                                       }
+                                       else if ( localTile->bWall == 0b00100010) // SOUTH
+                                       {
+                                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, false);
+                                       }
+                                       else if ( localTile->bWall == 0b01100110) // SE
+                                       {
+                                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, false);
+                                       }
+                                       else if ( localTile->bWall == 0b00110011) // SW
+                                       {
+                                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 90);
+                                       }
+                                       else if ( localTile->bWall == 0b10011001) // NW
+                                       {
+                                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 180);
+                                       }
+                                       else if ( localTile->bWall == 0b11001100) // NE
+                                       {
+                                          Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 270);
+                                       }
+                                    }
+                                    for(int i=0;i<localMap->data->aLocalTile(localXTile,localYTile).vObject.size();++i)
+                                    {
+                                       Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->data->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
+                                    }
+                                 }
+                              }
+
+
+                              // UPDATE LOCAL TILE HOVERED AND ABSOLUTE COORDS
+                              // ALSO OPTIONALLY RENDER A SELECTION TEXTURE
+                              if ( lastMouseX > currentPixel && lastMouseX < ceil(nextPixel) && lastMouseY > currentSubY && lastMouseY < ceil(nextSubY) )
+                              {
+                                 hoveredXTileLocal = localXTile;
+                                 hoveredAbsoluteX = hoveredXTile * LOCAL_MAP_SIZE + localXTile;
+                                 hoveredYTileLocal = localYTile;
+                                 hoveredAbsoluteY = hoveredYTile * LOCAL_MAP_SIZE + localYTile;
+
+                                 if ( showHoveredTile )
+                                 {
+                                    //The lines get overwritten if you don't -1. Do not add -1 anywhere else because it causes artifacts.
+                                    Renderer::placeBorder4(255,0,0,currentPixel, currentSubY, ceil(nextPixel)-1, ceil(nextSubY)-1);
+                                    Renderer::setTextureMode();
+                                 }
+                              }
+                           }
+                           else
+                           {
+                              //r1.oneIn(10);
+                           }
+
+                           currentPixel=nextPixel;
+                           nextPixel+=pixelsPerLocalTile;
+                        }
+                     }
+                     else
+                     {
+                        for (int localXTile = 0; localXTile<LOCAL_MAP_SIZE;++localXTile)
+                        {
+                           //r1.oneIn(10);
+                        }
+                     }
+                     currentSubY=nextSubY;
+                     nextSubY+=pixelsPerLocalTile;
+                  }
+               }
+               else if ( world->isSafe(tileX,tileY) )
+               { // Render tile on world view
             
-            //const enumBiome localBaseBiome = world->aTerrain(world->localX,world->localY);
-            const enumBiome localBaseBiome = localMap->baseBiome;
             
-						for (int localYTile = 0; localYTile<LOCAL_MAP_SIZE;++localYTile)
-						{
-							if ( nextSubY>=mainViewY1 && currentSubY <= mainViewY2 && floor(currentSubY) != floor(nextSubY) )
-							{
-								float currentPixel = currentX;
-								float nextPixel = currentX+pixelsPerLocalTile;
-								for (int localXTile = 0; localXTile<LOCAL_MAP_SIZE;++localXTile)
-								{
-									if ( nextPixel>=mainViewX1 && currentPixel <= mainViewX2 && floor(currentPixel) != floor(nextPixel) )
-									{
-                    if ( subterraneanMode && localMap->dataSubterranean)
-                    {
-                      glColor4ub(255,255,255,255);
-                      //Very basic player line of sight check here (only if we're in Adventure mode)
-                      // Unseen tiles
-                      if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile,true) == 0 )
-                      {
-                      }
-                      //Previously seen tiles
-                      else if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile,true) == 1 )
-                      {
-                        //Draw tile very dark to symbolise fog of war
-                        LocalTile* localTile = &localMap->dataSubterranean->aSubterranean(localXTile,localYTile);
-                        
-                        //unsigned char lightValue = 80;
-                        //glColor3ub(lightValue,lightValue,lightValue);
-                        //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
-                        
-                        Vector <Texture*> * vText = localTile->currentTextures();
-                        if ( vText != 0)
-                        {
-                          for (int i=0;i<vText->size();++i)
-                          {
-                            Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), (*vText)(i), false);
-                          }
-                        }
-                        delete vText;
-                      }
-                      else /* DRAW VISIBLE TILES */
-                      {
-                        LocalTile* localTile = &localMap->dataSubterranean->aSubterranean(localXTile,localYTile);
-                        Vector <Texture*> * vText = localTile->currentTextures();
-                        if ( vText != 0)
-                        {
-                          for (int i=0;i<vText->size();++i)
-                          {
-                            Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), (*vText)(i), false);
-                          }
-                        }
-                        for(int i=0;i<localMap->dataSubterranean->aSubterranean(localXTile,localYTile).vObject.size();++i)
-                        {
-                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->dataSubterranean->aSubterranean(localXTile,localYTile).vObject(i)->currentTexture(), false);
-                        }
-                        delete vText;
-                      }
-                    }
-                    else
-                    {
-                      //Very basic player line of sight check here (only if we're in Adventure mode)
-                      // Unseen tiles
-                      if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == 0 )
-                      {
-                        //Draw tile very dark to symbolise fog of war
-                        //LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
-                        
-                        //unsigned char lightValue = 10;
-                        //glColor3ub(lightValue,lightValue,lightValue);
-                        //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
-                        //glColor3ub(255,255,255);
-                        
-                        
-                        for(int i=0;i<localMap->data->aLocalTile(localXTile,localYTile).vObject.size();++i)
-                        {
-                          //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
-                        }
-                       
-                      }
-                      //Previously seen tiles
-                      else if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == 1 )
-                      {
-                        //Draw tile very dark to symbolise fog of war
-                        LocalTile* localTile = &localMap->data->aLocalTile(localXTile,localYTile);
-                        
-                        unsigned char lightValue = 80;
-                        glColor3ub(lightValue,lightValue,lightValue);
-                        //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
-                        
-                        Vector <Texture*> * vText = localTile->currentTextures();
-                        if ( vText != 0)
-                        {
-                          for (int i=0;i<vText->size();++i)
-                          {
-                            Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), (*vText)(i), false);
-                          }
-                        }
-                        delete vText;
-                        
-                        
-                        
-                        glColor3ub(255,255,255);
-                        
-                        
-                        for(int i=0;i<localMap->data->aLocalTile(localXTile,localYTile).vObject.size();++i)
-                        {
-                          //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
-                        }
-                       
-                      }
-                      else /* DRAW VISIBLE TILES */
-                      {
-                        LocalTile* localTile = &localMap->data->aLocalTile(localXTile,localYTile);
-                        
-                        unsigned char lightValue = localTile->height*15;
-                        
-                        int currentSecond = world->calendar.second;
-                        int sunsetCounter = currentSecond-50;
-                        
-                        int currentMinute = world->calendar.minute;
-                        int currentHour = world->calendar.hour;
-                        
-                          // NIGHT
-                        if (currentHour < 6 || currentHour > 19)
-                        {
-                          glColor3ub(50+lightValue,50+lightValue,50+lightValue);
-                        }
-                        else if (currentHour == 6) // SUNRISE
-                        {
-                          glColor3ub(110+lightValue,100+lightValue,120+lightValue);
-                        }
-                        else if (currentHour == 19) // SUNSET
-                        {
-                          glColor3ub(130+lightValue,100+lightValue,100+lightValue);
-                        }
-                        else
-                        {
-                          glColor3ub(180+lightValue,180+lightValue,180+lightValue);
-                          //glColor3ub(80+(lightValue/2),80+(lightValue/2),80+(lightValue/2));
-                          //if (currentSecond > 50 ) { glColor3ub(80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*10)+(lightValue/2)); }
-                        }
-                        
-                        // draw base terrain, then static, then objects
-                        //draw base terrain
-                        Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
-                        
-                        //draw static
-                        if (localTile->objStatic)
-                        {
-                        }
-                        
-                        // draw objects
-                        Vector <Texture*> * vText = localTile->currentTextures();
-                        if ( vText != 0)
-                        {
-                          for (int i=0;i<vText->size();++i)
-                          {
-                            Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), (*vText)(i), false);
-                          }
-                        }
-                        delete vText;
-                        //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
-                        
-                        // Draw footprint
-                        if (localTile->footprint != 0)
-                        {
-                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->footprint->currentTexture(), false);
-                        }
-                        glColor3ub(255,255,255);
-                        
-                        // Draw wall if necessary.
-                        if (localTile->bWall != 0 )
-                        {
-                          if ( localTile->bWall == 0b10001000) // NORTH
-                          {
-                            Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 180);
-                          }
-                          else if ( localTile->bWall == 0b00010001) // WEST
-                          {
-                            Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 90);
-                            //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, false);
-                          }
-                          else if ( localTile->bWall == 0b01000100) // EAST
-                          {
-                            Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 270);
-                          }
-                          else if ( localTile->bWall == 0b00100010) // SOUTH
-                          {
-                            Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, false);
-                          }
-                          else if ( localTile->bWall == 0b01100110) // SE
-                          {
-                            Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, false);
-                          }
-                          else if ( localTile->bWall == 0b00110011) // SW
-                          {
-                            Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 90);
-                          }
-                          else if ( localTile->bWall == 0b10011001) // NW
-                          {
-                            Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 180);
-                          }
-                          else if ( localTile->bWall == 0b11001100) // NE
-                          {
-                            Renderer::placeTexture4RotatedDegrees(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 270);
-                          }
-                        }
-                          
-                        for(int i=0;i<localMap->data->aLocalTile(localXTile,localYTile).vObject.size();++i)
-                        {
-                          Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->data->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
-                        }
-                      }
-                    }
-                    
-                    
-                    // UPDATE LOCAL TILE HOVERED AND ABSOLUTE COORDS
-                    // ALSO OPTIONALLY RENDER A SELECTION TEXTURE
-                    if ( lastMouseX > currentPixel && lastMouseX < ceil(nextPixel) && lastMouseY > currentSubY && lastMouseY < ceil(nextSubY) )
-                    {
-                      hoveredXTileLocal = localXTile;
-                      hoveredAbsoluteX = hoveredXTile * LOCAL_MAP_SIZE + localXTile;
-                      hoveredYTileLocal = localYTile;
-                      hoveredAbsoluteY = hoveredYTile * LOCAL_MAP_SIZE + localYTile;
-                      
-                      if ( showHoveredTile )
-                      {
-                        //The lines get overwritten if you don't -1. Do not add -1 anywhere else because it causes artifacts.
-                        Renderer::placeBorder4(255,0,0,currentPixel, currentSubY, ceil(nextPixel)-1, ceil(nextSubY)-1);
-                        Renderer::setTextureMode();
-                      }
-                    }
-									}
-									else
-									{
-										//r1.oneIn(10);
-									}
-									
-									currentPixel=nextPixel;
-									nextPixel+=pixelsPerLocalTile;
-								}
-							}
-							else
-							{
-								for (int localXTile = 0; localXTile<LOCAL_MAP_SIZE;++localXTile)
-								{
-                  //r1.oneIn(10);
-								}
-							}
-							currentSubY=nextSubY;
-							nextSubY+=pixelsPerLocalTile;
-						}
-					}
-					else if ( world->isSafe(tileX,tileY) )
-					{ // Render tile on world view
-						/* Textures are chosen here rather than from tile objects because it is highly dependent on neighboring tiles. It would be possible to delegate texture handling to tile objects, but would take too much memory maintaining pointers to neighbours. In future maybe worldtile can return hardcoded textures chosen by world object. */
-                  
+                  /* Textures are chosen here rather than from tile objects because it is highly dependent on neighboring tiles. It would be possible to delegate texture handling to tile objects, but would take too much memory maintaining pointers to neighbours. In future maybe worldtile can return hardcoded textures chosen by world object. */
+
                   //UPDATE: Textures should be assigned to World_Local at generation/modification, to save cycles on render time.
-						World_Local * tile = &(world->aWorldTile(tileX,tileY));
+                  World_Local * tile = &(world->aWorldTile(tileX,tileY));
 
                   Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, tile->currentTexture(), false);
-            
 
-            
-
-            // DRAW BASE TERRAIN (BIOME)
-            // if(world->isLand(tileX,tileY)==false)
-            // {
-               // Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
-            // }
-            // else if (world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == DESERT)
-            // {
-               // Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_00, false);
-            // }
-            // else if (world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == ICE)
-            // {
-              // Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_ICE, false);
-            // }
-            // else if (world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == SNOW)
-            // {
-              // Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_SNOW, false);
-            // }
-            // else if (world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == STEPPES)
-            // {
-              // Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_STEPPE, false);
-            // }
-            // else if (world->isLand(tileX,tileY)==true && world->aWorldTile(tileX,tileY).baseBiome == WETLAND)
-            // {
-              // Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_SWAMP, false);
-            // }
-						if(world->isLand(tileX,tileY))
-						{
+                  if(world->isLand(tileX,tileY))
+                  {
                      //Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, tile->currentTexture(), false);
-                     
-                     
-                     
-							// if (tile->seed==0 || tile->seed % 4 == 0)
-							// {
-                // glColor4f(2.0f, 2.0f, 2.0f, 1.0f);
-								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
-                // glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-							// }
-							// else if (tile->seed % 4 == 1)
-							// {
-								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_01, false);
-							// }
-							// else if (tile->seed % 4 == 2)
-							// {
-								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_02, false);
-							// }
-							// else if (tile->seed % 4 == 3)
-							// {
-								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_03, false);
-							// }
+                  }
 
-                // THIS CODE DRAWS COASTLINES. IT IS IMCOMPLETE AND UGLY.
-							
-							// if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false )
-							// {
-								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_00, false);
-							// }
-							// if ( world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false )
-							// {
-								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_02, false);
-							// }
-							// if ( world->isSafe(tileX,tileY+1) && world->isLand(tileX,tileY+1) ==false )
-							// {
-								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_03, false);
-							// }
-							// if ( world->isSafe(tileX,tileY-1) && world->isLand(tileX,tileY-1) ==false )
-							// {
-								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_01, false);
-							// }
-							
-							// if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false
-							// && world->isSafe(tileX,tileY+1) && world->isLand(tileX,tileY+1) ==false)
-							// {
-								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_CORNER_00, false);
-							// }
-							// if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false
-							// && world->isSafe(tileX,tileY-1) && world->isLand(tileX,tileY-1) ==false)
-							// {
-								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_CORNER_01, false);
-							// }
-							// if ( world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false
-							// && world->isSafe(tileX,tileY+1) && world->isLand(tileX,tileY+1) ==false)
-							// {
-								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_CORNER_03, false);
-							// }
-							// if ( world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false
-							// && world->isSafe(tileX,tileY-1) && world->isLand(tileX,tileY-1) ==false)
-							// {
-								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_CORNER_02, false);
-							// }
-							
-							// if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false
-							// && world->isSafe(tileX,tileY+1) && world->isLand(tileX,tileY+1) ==false
-							// && world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false )
-							// {
-								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_PENINSULA_00, false);
-							// }
-							
-							// if ( world->isSafe(tileX+1,tileY) && world->isLand(tileX+1,tileY) ==false
-							// && world->isSafe(tileX,tileY-1) && world->isLand(tileX,tileY-1) ==false
-							// && world->isSafe(tileX-1,tileY) && world->isLand(tileX-1,tileY) ==false )
-							// {
-								// Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_COAST_PENINSULA_02, false);
-							// }
-
-
-							
-							// if ( world->aSeed(tileX,tileY) % 20 == 0 )
-							// {
-								// //Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_ALCHEMY, false);
-							// }
-							// glVertex2s(currentX,currentY);
-							// glVertex2s(currentX,currentY+tileSize);
-							
-								// //ONLY DRAW STUFF THE THE PLAYER HAS REVEALED.
-								// //FOG OF WAR GOES HERE.
-							// glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
-							
-							// if ( world->aInfluence(tileX,tileY) != 0 )
-							// {
-								// Tribe* dominantTribe = world->getDominantInfluence(tileX,tileY);
-								// if (dominantTribe!=0)
-								// {
-									// glColor3ub(dominantTribe->colourRed,dominantTribe->colourGreen,dominantTribe->colourBlue);
-								// }
-								// else
-								// {
-									// glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
-								// }
-							// }
-							// else
-							// {
-								// glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
-							// }
-						}
-
-              // DRAW IMPROVEMENTS (FOREST, RIVER)
-              // Improvements can layer over base terrain, and each other. For example a tile may have a river and forest.
-            
-						if(world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == FOREST)
-						{
-							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_FOREST_TREES, false);
-						}
-						else if(world->isLand(tileX,tileY) &&world->aWorldTile(tileX,tileY).baseBiome == JUNGLE)
-						{
-							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_JUNGLE, false);
-						}
-            
-            
-						if(world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == MOUNTAIN)
-						{
-							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
-              //glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_MOUNTAIN_00, false);
-              //glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-						}
-						if(world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == HILLY)
-						{
-							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
-              //glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_HILL, false);
-              //glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-						}
-            
-            
-            
-            
-            
-            if(world->isLand(tileX,tileY) && world->aRiverID(tileX,tileY) != -1)
-						{
-							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_DESERT_01, false);
-							//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_RIVER_EAST, false);
-							Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_RIVER_FULL, false);
-						}
-						
-						
-						
-					
-					
-					}
-					//TEX_WORLD_TERRAIN_FOREST_TREE
-					
-					/* NOTE: 022-171. Final case here, otherwise last x doesn't render. */
-					// else if(world->aHeightMap.isSafe(tileX-1,tileY)==true)
-					// {
-						// glVertex2s(currentX,currentY);
-						// glVertex2s(currentX,currentY+tileSize);
-					// }
-
-					++tileX;
-					tileX+=tilesToSkip;
-				}
-				//glEnd();
-
-				tileX=revertTileX;
-				++tileY;
-				tileY+=tilesToSkip;
-			}
-			
-		// Texture mode
-		//Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_01, false);
-	}
+                  // DRAW IMPROVEMENTS (FOREST, RIVER)
+                  // Improvements can layer over base terrain, and each other. For example a tile may have a river and forest.
+                  if(world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == FOREST)
+                  {
+                     Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_FOREST_TREES, false);
+                  }
+                  else if(world->isLand(tileX,tileY) &&world->aWorldTile(tileX,tileY).baseBiome == JUNGLE)
+                  {
+                     Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_JUNGLE, false);
+                  }
+                  if(world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == MOUNTAIN)
+                  {
+                     //Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
+                     //glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+                     Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_MOUNTAIN_00, false);
+                     //glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                  }
+                  if(world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == HILLY)
+                  {
+                     //Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
+                     //glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+                     Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_HILL, false);
+                     //glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                  }
+                  if(world->isLand(tileX,tileY) && world->aRiverID(tileX,tileY) != -1)
+                  {
+                     Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_RIVER_FULL, false);
+                  }
+               }
+               ++tileX;
+               tileX+=tilesToSkip;
+            }
+            tileX=revertTileX;
+            ++tileY;
+            tileY+=tilesToSkip;
+         }
+      }
       if(subterraneanMode==false)
       {
-       rainManager.render();
+         rainManager.render();
       }
-       
+
       Renderer::restoreViewPort();
 
       /* Now render the icons on the world map. */
       renderWorldIcons();
 
       normaliseCoordinates();
-	}
+   }
 
 };
 WorldViewer worldViewer;
