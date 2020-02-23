@@ -1688,7 +1688,7 @@ void World::generateLocal(const int _localX, const int _localY)
     }
   }
   
-  mapManager.generateNow(_localX,_localY);
+  //mapManager.generateNow(_localX,_localY);
 
    // don't cache the generated map because the map manager does it
    aWorldTile(_localX,_localY).generate(false);

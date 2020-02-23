@@ -525,12 +525,12 @@ bool World_Local::generate(bool cache /* =true */)
            
           if (rng.oneIn(10))
           {
-            //put(new WorldObject_Tree(0), _x, _y);
+            put(new WorldObject_Tree(0), _x, _y);
             //put(new Static_Tree(0), _x, _y);
           }
           else
           {
-            //put(new WorldObject_Tree(1), _x, _y);
+            put(new WorldObject_Tree(1), _x, _y);
             //put(new Static_Tree(1), _x, _y);
           }
 

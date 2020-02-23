@@ -186,6 +186,10 @@ class WorldViewer: public DisplayInterface, public MouseInterface
    WorldViewer()
    {
       tileSize=8;
+      tilesToSkip=0;
+      pixelsPerLocalTile = ((double)tileSize/LOCAL_MAP_SIZE);
+      localTileMantissa = (double)1/(double)LOCAL_MAP_SIZE;
+      
       centerTileX=0; centerTileY=0;
       world=0;
       mainViewX1=0; mainViewX2=0;
@@ -210,8 +214,6 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 
       showHoveredTile=false;
 
-      tilesToSkip=0;
-
       centerLocalX=LOCAL_MAP_SIZE/2;
       centerLocalY=LOCAL_MAP_SIZE/2;
 
@@ -225,10 +227,6 @@ class WorldViewer: public DisplayInterface, public MouseInterface
       territoryView = false;
       tilesetMode = true;
       subterraneanMode = false;
-
-      pixelsPerLocalTile = tileSize/LOCAL_MAP_SIZE;
-
-      localTileMantissa = (double)1/(double)LOCAL_MAP_SIZE;
 
       demoMode = false;
       demoScroll = 0.1;
@@ -251,6 +249,8 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 	
    bool keyboardEvent( Keyboard* _keyboard )
    {
+      //zoomIn();
+      //return false;
       // Zoom the main map in by one step.  (Can use either top row or numpad)
       if(_keyboard->isPressed(Keyboard::EQUALS) || _keyboard->isPressed(Keyboard::PLUS))
       {
@@ -278,8 +278,8 @@ class WorldViewer: public DisplayInterface, public MouseInterface
       else
       {
          tileSize*=2;
-         if(tileSize>4000000)
-         { tileSize=4000000; }
+         if(tileSize>2000000)
+         { tileSize=2000000; }
       }
       pixelsPerLocalTile = ((double)tileSize/LOCAL_MAP_SIZE);
    }
@@ -290,6 +290,13 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 
       if(tileSize<1)
       { tileSize=1; ++tilesToSkip; }
+      pixelsPerLocalTile = ((double)tileSize/LOCAL_MAP_SIZE);
+   }
+   
+   void setTileSize(const int _tileSize)
+   {
+      tileSize=_tileSize;
+      tilesToSkip=0;
       pixelsPerLocalTile = ((double)tileSize/LOCAL_MAP_SIZE);
    }
 
@@ -373,6 +380,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
          DEBUG_X=hoveredXTile;
          DEBUG_Y=hoveredYTile;
       }
+      
 
       return false;
    }
@@ -386,6 +394,8 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 
       mainViewNX = mainViewX2-mainViewX1;
       mainViewNY = mainViewY2-mainViewY1;
+      
+      pixelsPerLocalTile = ((double)tileSize/LOCAL_MAP_SIZE);
 
       rainManager.init(_x1,_y1,_x2,_y2,world);
    }
@@ -595,6 +605,9 @@ class WorldViewer: public DisplayInterface, public MouseInterface
          }
          centerTileX += demoScroll;
       }
+      
+      // I don't know why this has to be here but it do
+      pixelsPerLocalTile = ((double)tileSize/LOCAL_MAP_SIZE);
       
       hoveredAbsoluteX = ABSOLUTE_COORDINATE_NULL;
       hoveredAbsoluteY = ABSOLUTE_COORDINATE_NULL;
