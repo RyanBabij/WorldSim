@@ -103,6 +103,10 @@ bool LocalTile::hasViewBlocker()
    {
       return true;
    }
+   if ( objStatic != 0 && objStatic->blockLOS != 0 )
+   {
+      return true;
+   }
 
 
    if (bWall != 0)
@@ -237,60 +241,16 @@ Texture* LocalTile::currentTexture()
 }
 
 
-   // Push in reverse rendering order
+   // Push in rendering order, aka terrain, static, objects, overlays
 Vector <Texture*> * LocalTile::currentTextures()
 {
-   auto vTexture = new Vector <Texture*>;
+   // reserve how much space we think we'll need on this vector
+   auto vTexture = new Vector <Texture*> (2+vObject.size());
+   
+   // push base terrain
+   vTexture->push(currentTexture());
 
-   //enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13};
-   if ( baseTerrain == NOTHING )
-   {
-      vTexture->push(&TEX_WORLD_TEST_00);
-   }
-   else if ( baseTerrain == OCEAN )
-   {
-      vTexture->push(&TEX_WORLD_TERRAIN_OCEAN_00);
-   }
-   else if (baseTerrain == FOREST)
-   {
-      vTexture->push(&TEX_WORLD_TERRAIN_FOREST_TREE);
-   }
-   else if (baseTerrain == DESERT)
-   {
-      vTexture->push(&TEX_WORLD_TERRAIN_DESERT_00);
-   }
-   else if (baseTerrain == UNDERGROUND)
-   {
-      vTexture->push(&TEX_WORLD_TERRAIN_UNDERGROUND_00);
-   }
-   else if (baseTerrain == SNOW)
-   {
-      vTexture->push(&TEX_WORLD_TERRAIN_SNOW);
-   }
-   else if (baseTerrain == ICE)
-   {
-      vTexture->push(&TEX_WORLD_TERRAIN_SNOW);
-   }
-   else if (baseTerrain == STEPPES)
-   {
-      vTexture->push(&TEX_WORLD_TERRAIN_STEPPE);
-   }
-   else
-   {
-      if ( seed==0 || seed %4 == 0 )
-      {
-         vTexture->push(&TEX_WORLD_TERRAIN_GRASS_00);
-      }
-      else if ( seed %4 == 1 )
-      {
-         vTexture->push(&TEX_WORLD_TERRAIN_GRASS_01);
-      }
-      else if ( seed %4 == 2 )
-      {
-         vTexture->push(&TEX_WORLD_TERRAIN_GRASS_02);
-      }
-      vTexture->push(&TEX_WORLD_TERRAIN_GRASS_03);
-   }
+   // push improvements
    if (nGems>0)
    {
       vTexture->push(&TEX_WORLD_ARTIFACT_GEMS);
@@ -314,6 +274,23 @@ Vector <Texture*> * LocalTile::currentTextures()
    if ( shotOverlay )
    {
       vTexture->push(&TEX_GUI_TILE_SELECTION_FULL);
+   }
+   
+   // push static
+   if (objStatic)
+   {
+      vTexture->push(objStatic->currentTexture());
+   }
+   
+   // push footprint
+   if (footprint)
+   {
+      vTexture->push(footprint->currentTexture());
+   }
+   
+   for(unsigned short int i=0;i<vObject.size();++i)
+   {
+      vTexture->push(vObject(i)->currentTexture());
    }
 
    return vTexture;

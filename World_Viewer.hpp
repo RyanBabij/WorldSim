@@ -21,6 +21,10 @@
    
    This class could technically be moved into Wildcat but it's not likely
    to be used for much else so it's not a big deal for now.
+   
+   We should be able to significantly improve render efficiency by building an array or vector of textures to draw.
+   Then we draw each texture, only binding them once. Texture binding seems to be expensive so I think this will save
+   a lot of render time.
 	
 */
 
@@ -726,7 +730,15 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                if ( nextPixel>=mainViewX1 && currentPixel <= mainViewX2 && floor(currentPixel) != floor(nextPixel) )
                {
                   if ( subterraneanMode && localMap->dataSubterranean)
-                  {
+                  { // SUBTERRANEAN MODE
+               
+                     // render order:
+                     // terrain
+                     // static
+                     // objects
+                     // fog
+                     // overlay
+                     
                      glColor4ub(255,255,255,255);
                      //Very basic player line of sight check here (only if we're in Adventure mode)
                      // Unseen tiles
@@ -768,27 +780,19 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                      }
                   }
                   else
-                  {
+                  { // NON-SUBTERRANEAN MODE
+                     
+                     
                      //Very basic player line of sight check here (only if we're in Adventure mode)
                      // Unseen tiles
                      if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == 0 )
-                     {
-                        //Draw tile very dark to symbolise fog of war
-                        //LocalTile* localTile = &localMap->aLocalTile(localXTile,localYTile);
+                     { // If we've never seen this tile
+                  
+                        // Draw nothing (defaults to black)
 
-                        //unsigned char lightValue = 10;
-                        //glColor3ub(lightValue,lightValue,lightValue);
-                        //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
-                        //glColor3ub(255,255,255);
-
-                        for(int i=0;i<localMap->data->aLocalTile(localXTile,localYTile).vObject.size();++i)
-                        {
-                           //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
-                        }
                      }
-                     //Previously seen tiles
                      else if (FOG_OF_WAR && playerCharacter !=0 && activeMenu == MENU_ADVENTUREMODE && playerCharacter->hasSeen(localMap, localXTile,localYTile) == 1 )
-                     {
+                     { //Previously seen tiles
                         //Draw tile very dark to symbolise fog of war
                         LocalTile* localTile = &localMap->data->aLocalTile(localXTile,localYTile);
 
@@ -807,14 +811,9 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                         delete vText;
 
                         glColor3ub(255,255,255);
-
-                        for(int i=0;i<localMap->data->aLocalTile(localXTile,localYTile).vObject.size();++i)
-                        {
-                           //Renderer::placeTexture4(currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localMap->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture(), false);
-                        }
                      }
-                     else /* DRAW VISIBLE TILES */
-                     {
+                     else
+                     { // Currently visible tiles
                         LocalTile* localTile = &localMap->data->aLocalTile(localXTile,localYTile);
 
                         // this belongs in World.
@@ -846,17 +845,8 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                            //if (currentSecond > 50 ) { glColor3ub(80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*10)+(lightValue/2)); }
                         }
 
-                        // draw base terrain, then static, then objects
-                        //draw base terrain
-                        Renderer::placeTexture4
-                        (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->currentTexture(), false);
-
-                        //draw static
-                        if (localTile->objStatic)
-                        {
-                        }
-
-                        // draw objects
+                        // draw all textures for this tile
+                        // in future this should be copied to an array for later smart rendering, preferably outside of render function.
                         Vector <Texture*> * vText = localTile->currentTextures();
                         if ( vText != 0)
                         {
@@ -868,12 +858,6 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                         }
                         delete vText;
 
-                        // Draw footprint
-                        if (localTile->footprint != 0)
-                        {
-                           Renderer::placeTexture4
-                           (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), localTile->footprint->currentTexture(), false);
-                        }
                         glColor3ub(255,255,255);
 
                         // Draw wall if necessary.
@@ -920,12 +904,6 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                               Renderer::placeTexture4RotatedDegrees
                               (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 270);
                            }
-                        }
-                        for(int i=0;i<localMap->data->aLocalTile(localXTile,localYTile).vObject.size();++i)
-                        {
-                           Texture * tex = localMap->data->aLocalTile(localXTile,localYTile).vObject(i)->currentTexture();
-                           Renderer::placeTexture4
-                           (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), tex, false);
                         }
                      }
                   }

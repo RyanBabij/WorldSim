@@ -525,13 +525,13 @@ bool World_Local::generate(bool cache /* =true */)
            
           if (rng.oneIn(10))
           {
-            put(new WorldObject_Tree(0), _x, _y);
-            //put(new Static_Tree(0), _x, _y);
+            //put(new WorldObject_Tree(0), _x, _y);
+            put(new Static_Tree(0), _x, _y);
           }
           else
           {
-            put(new WorldObject_Tree(1), _x, _y);
-            //put(new Static_Tree(1), _x, _y);
+            //put(new WorldObject_Tree(1), _x, _y);
+            put(new Static_Tree(1), _x, _y);
           }
 
         }
@@ -770,9 +770,6 @@ bool World_Local::save()
    //SaveChunk abstractChonk("ABSTRACT");
    SaveChunk abstractChonk2("ABSCOL");
    
-   //Bitfield bf;
-   //bf.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-
    // Only unload the local map if it is loaded.
    for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
    {
@@ -1112,12 +1109,20 @@ bool World_Local::put (Creature* _object, HasXY _xy, bool subterranean)
 bool World_Local::put (Static* _static, int _x, int _y, bool subterranean)
 {
   if ( !data ) { return false; }
-  if ( data->aStatic.isSafe(_x,_y) == false )
+  if ( data->aLocalTile.isSafe(_x,_y) == false)
   { return false; }
+  // if ( data->aStatic.isSafe(_x,_y) == false )
+  // { return false; }
 
-   if ( data->aStatic(_x,_y) == 0 )
+
+   // if ( data->aStatic(_x,_y) == 0 )
+   // {
+      // data->aStatic(_x,_y) = _static;
+   // }
+   
+   if ( data->aLocalTile(_x,_y).objStatic == 0 )
    {
-      data->aStatic(_x,_y) = _static;
+      data->aLocalTile(_x,_y).objStatic=_static;
    }
 
   return true;
@@ -2091,8 +2096,15 @@ Vector <HasXY*> * World_Local::getRandomWalk(int _nSteps)
 
 bool World_Local::isBlockingView(int _x, int _y)
 {
-  if ( !data ) { return true; }
-  return data->aLocalTile(_x,_y).hasViewBlocker();
+   return false;
+  // if ( !data ) { return true; }
+   // return data->aLocalTile(_x,_y).hasViewBlocker();
+  
+  // // statics
+  // if ( data->aLocalTile(_x,_y).objStatic != 0 )
+  // { return false; }
+   // return true;
+  
 
 }
 
