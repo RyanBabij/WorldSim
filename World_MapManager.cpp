@@ -247,7 +247,7 @@ void World_MapManager::main()
                         if (mapToCache!=0)
                         {
                            mutexCout.lock();
-                           std::cout<<"Caching map: "<<mapToCache->globalX_TS<<", "<<mapToCache->globalY_TS<<"\n";
+                           //std::cout<<"Caching map: "<<mapToCache->globalX_TS<<", "<<mapToCache->globalY_TS<<"\n";
                            mutexCout.unlock();
                            if (QUIT_FLAG) { return; }
                            mapToCache->save();

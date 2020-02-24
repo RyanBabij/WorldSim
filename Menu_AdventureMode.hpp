@@ -168,6 +168,33 @@ class InteractManager: public GUI_Interface
     font = &font8x8;
   }
   
+  void clear()
+  {
+    x=ABSOLUTE_COORDINATE_NULL;
+    y=ABSOLUTE_COORDINATE_NULL;
+    localSelected=0;
+    sourceItem=0;
+    selectedInteraction = 0;
+  }
+  
+   bool /* GUI_Interface */ keyboardEvent (Keyboard* _keyboard)
+   {
+      if ( _keyboard->isPressed(Keyboard::UP) )
+      {
+         --selectedInteraction;
+         if (selectedInteraction<0) { selectedInteraction=vInteraction.size()-1; }
+         return true;
+      }
+      else if ( _keyboard->isPressed(Keyboard::DOWN) )
+      {
+         ++selectedInteraction;
+         if (selectedInteraction>=vInteraction.size()) {selectedInteraction=0;}
+         return true;
+      }
+
+      return false;
+   }
+  
     // GUI INTERFACE
 	bool /* GUI_Interface */ mouseEvent (Mouse* _mouse)
 	{
@@ -480,6 +507,37 @@ class Menu_AdventureMode: public GUI_Interface
     font = &font8x8;
     vLineOfFire=0;
 	}
+   
+   void clearMenus()
+   {
+      if ( conversationActive )
+      { world.incrementTicksBacklog(5); }
+      
+      manualActive=false;
+      conversationActive=false;
+      characterSheetActive=false;
+      inventoryActive=false;
+      itemSelectionActive=false;
+      
+      // Reset the interact menu.
+      subItemSelectionActive=false;
+      itemSelectionActive=false;
+      worldViewer.showHoveredTile = false;
+      localTileSelected=0;
+      selectedItemSlot=0;
+         
+      // Clear previous overlay tiles.
+      for ( int i=0;i<vLineOfFire->size();++i)
+      {
+         world((*vLineOfFire)(i))->shotOverlay=false;
+      }
+      vLineOfFire->deleteAll();
+      delete vLineOfFire;
+      vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
+      
+      craftingMenuActive=false;
+      worldViewer.showHoveredTile = false;
+   }
   
   void init()
   {
@@ -865,28 +923,14 @@ class Menu_AdventureMode: public GUI_Interface
 			// If all submenus are already closed, bring up main menu.
 		if(_keyboard->isPressed(Keyboard::ESCAPE)) /* Flush console. */
 		{
-      if ( conversationActive )
-      { world.incrementTicksBacklog(5); }
-      
-      manualActive=false;
-      conversationActive=false;
-      characterSheetActive=false;
-      inventoryActive=false;
-      itemSelectionActive=false;
-      
-      // Clear previous overlay tiles.
-      for ( int i=0;i<vLineOfFire->size();++i)
-      {
-        world((*vLineOfFire)(i))->shotOverlay=false;
-      }
-      vLineOfFire->deleteAll();
-      delete vLineOfFire;
-      vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
-      
-      craftingMenuActive=false;
-      worldViewer.showHoveredTile = false;
-			_keyboard->keyUp(Keyboard::ESCAPE);	
+         clearMenus();
+         _keyboard->keyUp(Keyboard::ESCAPE);	
 		}
+      // Interactionmanager
+      else if (itemSelectionActive && localTileSelected != 0 && interactManager.keyboardEvent(_keyboard))
+      {
+         return true;
+      }
     
       // SPACE = TALK, INTERACT
     if(_keyboard->isPressed(Keyboard::SPACE) && conversationActive==false)
@@ -1314,57 +1358,34 @@ class Menu_AdventureMode: public GUI_Interface
       // Right click to cancel out of item selection.
       if (subItemSelectionActive==false && _mouse->isRightClick)
       {
-        itemSelectionActive=false;
-        
-        // Clear previous overlay tiles.
-        for ( int i=0;i<vLineOfFire->size();++i)
-        {
-          world((*vLineOfFire)(i))->shotOverlay=false;
-        }
-        vLineOfFire->deleteAll();
-        delete vLineOfFire;
-        vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
-        
-        
-        localTileSelected=0;
-        worldViewer.showHoveredTile = false;
+         clearMenus();
       }
       // Right click to cancel out of interaction selection.
       else if (subItemSelectionActive && (_mouse->isRightClick || localTileSelected == 0) )
       {
-        subItemSelectionActive=false;
         _mouse->isRightClick=false;
         _mouse->isLeftClick=false;
-        localTileSelected=0;
-				
-        // Clear previous overlay tiles.
-				for ( int i=0;i<vLineOfFire->size();++i)
-				{
-					world((*vLineOfFire)(i))->shotOverlay=false;
-				}
-				vLineOfFire->deleteAll();
-				delete vLineOfFire;
-				vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
+        clearMenus();
       }
       else if (subItemSelectionActive)
       {
         if(interactManager.mouseEvent(_mouse))
         {
-          // Reset the interact menu.
-          subItemSelectionActive=false;
-          itemSelectionActive=false;
-          worldViewer.showHoveredTile = false;
-          localTileSelected=0;
-          selectedItemSlot=0;
+            // Reset the interact menu.
+            subItemSelectionActive=false;
+            itemSelectionActive=false;
+            worldViewer.showHoveredTile = false;
+            localTileSelected=0;
+            selectedItemSlot=0;
 					
-					// Clear previous overlay tiles.
-					for ( int i=0;i<vLineOfFire->size();++i)
-					{
-						world((*vLineOfFire)(i))->shotOverlay=false;
-					}
-					vLineOfFire->deleteAll();
-					delete vLineOfFire;
-					vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
+            // Clear previous overlay tiles.
+            for ( int i=0;i<vLineOfFire->size();++i)
+            {
+               world((*vLineOfFire)(i))->shotOverlay=false;
+            }
+            vLineOfFire->deleteAll();
+            delete vLineOfFire;
+            vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
         }
       }
       else if (subItemSelectionActive==false && _mouse->isLeftClick)
@@ -1378,7 +1399,7 @@ class Menu_AdventureMode: public GUI_Interface
           {
             localTileSelected=world(tileSelectAbsoluteX,tileSelectAbsoluteY);
             subItemSelectionActive=true;
-            //interactManager.clear();
+            interactManager.clear();
 
             selectedItemSlot=0;
           }
@@ -1415,32 +1436,32 @@ class Menu_AdventureMode: public GUI_Interface
     // Exit from interaction menu because otherwise I don't feel like doing it the proper way right now.
 		if(_mouse->isWheelDown && _mouse->ctrlPressed)
 		{
-      ++selectedHotbar;
-      if (selectedHotbar>9) {selectedHotbar=0;}
-			_mouse->isWheelDown=false;
-			_mouse->isWheelUp=false;
-      
-      // Reset the interact menu.
-      subItemSelectionActive=false;
-      itemSelectionActive=false;
-      worldViewer.showHoveredTile = false;
-      localTileSelected=0;
-      selectedItemSlot=0;
+         ++selectedHotbar;
+         if (selectedHotbar>9) {selectedHotbar=0;}
+         _mouse->isWheelDown=false;
+         _mouse->isWheelUp=false;
+
+         // Reset the interact menu.
+         subItemSelectionActive=false;
+         itemSelectionActive=false;
+         worldViewer.showHoveredTile = false;
+         localTileSelected=0;
+         selectedItemSlot=0;
       
 		}
 		if(_mouse->isWheelUp && _mouse->ctrlPressed)
 		{
-      --selectedHotbar;
-      if (selectedHotbar<0) {selectedHotbar=9;}
-			_mouse->isWheelDown=false;
-			_mouse->isWheelUp=false;
-      
-      // Reset the interact menu.
-      subItemSelectionActive=false;
-      itemSelectionActive=false;
-      worldViewer.showHoveredTile = false;
-      localTileSelected=0;
-      selectedItemSlot=0;
+         --selectedHotbar;
+         if (selectedHotbar<0) {selectedHotbar=9;}
+         _mouse->isWheelDown=false;
+         _mouse->isWheelUp=false;
+
+         // Reset the interact menu.
+         subItemSelectionActive=false;
+         itemSelectionActive=false;
+         worldViewer.showHoveredTile = false;
+         localTileSelected=0;
+         selectedItemSlot=0;
 		}
     
 

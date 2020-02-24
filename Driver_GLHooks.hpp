@@ -251,17 +251,17 @@ bool waitingForKeyPress=true;
 
 static void GL_keyboardUpEvent(const unsigned char key, const int x, const int y)
 {
-  playerKeypressTimer.start();
-  
-  // if ( key==Keyboard::LEFT_CTRL || key==Keyboard::RIGHT_CTRL)
-  // {
-    // globalMouse.ctrlPressed=false;
-  // }
-  
-	globalKeyboard.keyUp(key);
-	waitingForKeyPress=true;
-  RENDER_NEXT_FRAME=true;
-//mainRender.keyUp(key,x,y); waitingForKeyPress=true;
+   playerKeypressTimer.start();
+
+   if ( key==Keyboard::LEFT_CTRL || key==Keyboard::RIGHT_CTRL)
+   {
+      globalMouse.ctrlPressed=false;
+   }
+
+   globalKeyboard.keyUp(key);
+   waitingForKeyPress=true;
+   RENDER_NEXT_FRAME=true;
+   //mainRender.keyUp(key,x,y); waitingForKeyPress=true;
 }
 
 static void GL_keyboardEvent(const unsigned char key, const int x, const int y)
@@ -287,35 +287,35 @@ static void GL_keyboardEvent(const unsigned char key, const int x, const int y)
 
 	
   
-  if ( activeMenu == MENU_TITLE )
-  {
-    menuTitle.keyboardEvent(&globalKeyboard);
-  }
-  else if (activeMenu == MENU_OPTIONS )
-  {
-    menuOptions.keyboardEvent(&globalKeyboard);
-  }
-  else if (activeMenu == MENU_LOADGAME )
-  {
-    menuLoadGame.keyboardEvent(&globalKeyboard);
-  }
-  else if (activeMenu == MENU_WORLDGENERATOR )
-  {
-    menuWorldGenerator.keyboardEvent(&globalKeyboard);
-  }
-  else if (activeMenu == MENU_WORLDSIMULATOR )
-  {
-    menuWorldSimulator.keyboardEvent(&globalKeyboard);
-  }
-  else if (activeMenu == MENU_ADVENTUREMODE )
-  {
-    menuAdventureMode.keyboardEvent(&globalKeyboard);
-  }
-  
-  if ( key==Keyboard::LEFT_CTRL || key==Keyboard::RIGHT_CTRL)
-  {
-    globalMouse.ctrlPressed=true;
-  }
+   if ( activeMenu == MENU_TITLE )
+   {
+      menuTitle.keyboardEvent(&globalKeyboard);
+   }
+   else if (activeMenu == MENU_OPTIONS )
+   {
+      menuOptions.keyboardEvent(&globalKeyboard);
+   }
+   else if (activeMenu == MENU_LOADGAME )
+   {
+      menuLoadGame.keyboardEvent(&globalKeyboard);
+   }
+   else if (activeMenu == MENU_WORLDGENERATOR )
+   {
+      menuWorldGenerator.keyboardEvent(&globalKeyboard);
+   }
+   else if (activeMenu == MENU_WORLDSIMULATOR )
+   {
+      menuWorldSimulator.keyboardEvent(&globalKeyboard);
+   }
+   else if (activeMenu == MENU_ADVENTUREMODE )
+   {
+      menuAdventureMode.keyboardEvent(&globalKeyboard);
+   }
+
+   if ( key==Keyboard::LEFT_CTRL || key==Keyboard::RIGHT_CTRL)
+   {
+      globalMouse.ctrlPressed=true;
+   }
   
   // NOTE:
   // It seems globalGUIManager is not active for anything except preventing accidental

@@ -542,10 +542,17 @@ class Menu_WorldGenerator: public GUI_Interface
 	
 	bool keyboardEvent(Keyboard* _keyboard)
 	{
-    if ( guiManager.keyboardEvent(_keyboard) )
-    {
-      return true;
-    }
+      if ( guiManager.keyboardEvent(_keyboard) )
+      {
+         return true;
+      }
+
+      // TAB will switch between adventure mode and god mode.
+      else if(_keyboard->isPressed(Keyboard::TAB))
+      {
+         std::cout<<"Enter World Simulator to enable Adventure mode\n";
+         _keyboard->unpress(Keyboard::TAB);
+      }
     
     else if(_keyboard->isPressed(Keyboard::ONE)) /* Flush console. */
     {
