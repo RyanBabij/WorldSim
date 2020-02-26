@@ -1520,8 +1520,11 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 #endif
   
   // Name the biomes
+  // and generate flora
   for (int i=0;i<vBiome.size();++i)
   {
+      vBiome(i)->generateFlora();
+     
     int biomeType = vBiome(i)->type;
     if ( biomeType == OCEAN)
     {
