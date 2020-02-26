@@ -80,6 +80,9 @@ SaveFileManager saveFileManager;
 #include <Graphics/Texture/Texture.hpp>
 #include <Graphics/Texture/TextureLoader.hpp>
 
+#include <Math/Random/RandomLehmer.hpp>
+RandomLehmer globalRandom; // used for seeding rngs without needing to use system time.
+
 #include "TextureInterface.cpp"
 
 #include "Driver_LoadTextures.hpp"
@@ -170,6 +173,7 @@ QuitChecker quitChecker;
 #include <stdio.h>
 #include <Math/Random/GlobalRandom.hpp>
 /* No need for a globalRandom object. Just use Random:: */
+
 
 #include <Graphics/Font/Font.hpp>
 
