@@ -21,6 +21,7 @@
 class Static: public HasTexture
 {
    public:
+   std::string name;
    unsigned char blockMove; // bitfield blocks movement in direction starting NW and going clockwise
    unsigned char blockLOS; // bitfield blocks LOS in direction starting NW and going clockwise
    
@@ -74,8 +75,13 @@ class Flora: public Static
    Vector <unsigned char> vAllowedBiomeTypes;
    
    public:
-   Flora()
+   
+   unsigned short int spawnWeight; // probability of being selected to spawn. higher = more common
+   
+   Flora(const std::string _name = "Flora", const unsigned short int _spawnWeight=1)
    {
+      name=_name;
+      spawnWeight=_spawnWeight;
    }
    void increment(unsigned short int nDays)
    {
@@ -96,6 +102,22 @@ class Flora: public Static
          else { hardFood = newHard; }
          if ( hardFood > maxHardFood ) { hardFood = maxHardFood; }
       }
+   }
+   void setFoodValues(unsigned char _easyIncrement, unsigned char _maxEasy,
+      unsigned char _mediumIncrement, unsigned char _maxMedium,
+      unsigned char _hardIncrement, unsigned char _maxHard)
+   {
+      easyFood = _maxEasy;
+      maxEasyFood = _maxEasy;
+      easyFoodIncrement = _easyIncrement;
+      
+      mediumFood = _maxMedium;
+      maxMediumFood = _maxMedium;
+      mediumFoodIncrement = _mediumIncrement;
+      
+      hardFood = _maxHard;
+      maxHardFood = _maxHard;
+      hardFoodIncrement = _hardIncrement;
    }
    void allowBiome(unsigned char biomeType)
    {
@@ -131,7 +153,9 @@ class FloraGenerator
 };
 FloraGenerator floraGenerator;
 
-class Static_Tree: public Static
+
+// Trees will be special-case flora because they can block LOS and movement.
+class Static_Tree: public Flora
 {
    public:
    

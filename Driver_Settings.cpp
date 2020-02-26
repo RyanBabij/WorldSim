@@ -37,7 +37,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION_NUMBER = "0.0.188indev";
+const std::string VERSION_NUMBER = "0.0.189indev";
 
 #ifdef THREAD_ALL
 const std::string THREAD_STATUS = "threaded";

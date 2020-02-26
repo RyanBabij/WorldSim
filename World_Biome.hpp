@@ -16,6 +16,8 @@
 
 class World_Biome: public TableInterface
 {
+   RandomLehmer rng;
+   
 	public:
 	
 	std::string name;
@@ -25,7 +27,7 @@ class World_Biome: public TableInterface
    Vector <HasXY> vXY; // every tile coordinate of this biome.
    
    // placeholders for objects
-   Vector <std::string> vFlora;
+   Vector <Flora*> vFlora;
    Vector <std::string> vHerbivore;
    Vector <std::string> vCarnivore;
 	
@@ -33,6 +35,7 @@ class World_Biome: public TableInterface
 	{
 		name="";
 		size=0;
+      rng.seed(globalRandom.rand32());
 	}
 	
 	virtual ~World_Biome()
@@ -92,9 +95,6 @@ class World_Biome: public TableInterface
       
       if (type==OCEAN || type == ICE) { return; }
       
-      RandomLehmer rng;
-      rng.seed(globalRandom.rand8());
-      
       unsigned int minFlora = sqrt(size)/1.5;
       if ( minFlora < 3 ) { minFlora=3; }
       
@@ -111,34 +111,63 @@ class World_Biome: public TableInterface
       // and ID 2 is always some kind of rare plant.
       // The rest should be random.
       
-      std::cout<<"Flora names:\n";
-      
+      // assign base flora for each biome
       if (type == DESERT)
       {
-         std::cout<<"   Cactus\n";
-         std::cout<<"   shrub\n";
-         std::cout<<"   plant\n";
+         Flora* flora = new Flora("Cactus",100);
+         flora->setFoodValues(0,0,0,0,0,0);
+         vFlora.push(flora);
+         
+         Flora* flora2 = new Flora("Shrub",25);
+         flora2->setFoodValues(0,0,0,0,5,1);
+         vFlora.push(flora2);
+         
+         Flora* flora3 = new Flora("Desert plant",10);
+         flora3->setFoodValues(0,0,5,1,4,1);
+         vFlora.push(flora3);
       }
       else if (type == SNOW)
       {
-         std::cout<<"   Fir tree\n";
-         std::cout<<"   bush\n";
-         std::cout<<"   plant\n";
+         Flora* flora = new Flora("Fir tree",100);
+         flora->setFoodValues(0,0,0,0,5,1);
+         vFlora.push(flora);
+         
+         Flora* flora2 = new Flora("Bush",25);
+         flora2->setFoodValues(0,0,5,1,5,1);
+         vFlora.push(flora2);
+         
+         Flora* flora3 = new Flora("Hardy plant",10);
+         flora3->setFoodValues(0,0,5,1,4,1);
+         vFlora.push(flora3);
       }
       else if (type == WETLAND)
       {
-         std::cout<<"   Willow\n";
-         std::cout<<"   plant\n";
-         std::cout<<"   plant\n";
+         Flora* flora = new Flora("Willow tree",100);
+         flora->setFoodValues(0,0,0,0,5,1);
+         vFlora.push(flora);
+         
+         Flora* flora2 = new Flora("Swamp plant",25);
+         flora2->setFoodValues(0,0,5,1,5,1);
+         vFlora.push(flora2);
+         
+         Flora* flora3 = new Flora("Swamp plant",10);
+         flora3->setFoodValues(0,0,5,1,4,1);
+         vFlora.push(flora3);
       }
       else
       {
-         std::cout<<"   Tree\n";
-         std::cout<<"   common plant\n";
-         std::cout<<"   uncommon plant\n";
+         Flora* flora = new Flora("Tree",100);
+         flora->setFoodValues(0,0,0,0,5,1);
+         vFlora.push(flora);
+         
+         Flora* flora2 = new Flora("Common plant",25);
+         flora2->setFoodValues(0,0,5,1,5,1);
+         vFlora.push(flora2);
+         
+         Flora* flora3 = new Flora("Uncommon plant",10);
+         flora3->setFoodValues(0,0,5,1,4,1);
+         vFlora.push(flora3);
       }
-      
-
       
       for (unsigned int i=3;i<floraAmount;++i)
       {
@@ -148,18 +177,69 @@ class World_Biome: public TableInterface
          
          if (common==0)
          {
-            std::cout<<"   common flora\n";
+         Flora* flora2 = new Flora("Common flora",20);
+         flora2->setFoodValues(0,0,5,1,5,1);
+         vFlora.push(flora2);
          }
          else if (common==1)
          {
-            std::cout<<"   uncommon flora\n";
+         Flora* flora2 = new Flora("Uncommon flora",10);
+         flora2->setFoodValues(0,0,5,1,5,1);
+         vFlora.push(flora2);
          }
          else
          {
-            std::cout<<"   rare flora\n";
+         Flora* flora2 = new Flora("Rare flora",5);
+         flora2->setFoodValues(0,0,5,1,5,1);
+         vFlora.push(flora2);
          }
       }
       
+      std::cout<<"Spawning 10 flora:\n";
+      for (int i=0;i<10;++i)
+      {
+         Flora * flora = getFlora();
+         if ( flora )
+         {
+            std::cout<<"   "<<flora->name<<"\n";
+         }
+         else
+         {
+            std::cout<<"Error: No flora\n";
+         }
+         
+         
+      }
+   }
+   
+   // pick a flora type from the weighted list to spawn
+   Flora* getFlora()
+   {
+      unsigned long int cumulativeProb = 0;
+      
+      for (int i=0;i<vFlora.size();++i)
+      {
+         cumulativeProb += vFlora(i)->spawnWeight;
+      }
+      
+      if ( cumulativeProb == 0 )
+      {
+         return 0;
+      }
+      
+      unsigned long int spawnChoice = rng.rand32(cumulativeProb-1);
+      
+      cumulativeProb=0;
+      for (int i=0;i<vFlora.size();++i)
+      {
+         cumulativeProb += vFlora(i)->spawnWeight;
+         if (spawnChoice <= cumulativeProb)
+         {
+            return vFlora(i);
+         }
+      }
+      
+      return 0;
    }
 };
 
