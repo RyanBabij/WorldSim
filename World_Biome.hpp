@@ -124,6 +124,12 @@ class World_Biome: public TableInterface
       std::string biomePath = currentSavePath + "/" + DataTools::toString(id) + ".dat";
       std::cout<<"saving to: "<<biomePath<<"\n";
       sfm.saveToFile(biomePath);
+      
+      //unload
+      for (int i=0;i<vMap.size();++i)
+      {
+         vMap(i)->unload();
+      }
 
    }
    

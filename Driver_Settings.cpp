@@ -65,7 +65,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION_NUMBER = "0.0.191indev";
+const std::string VERSION_NUMBER = "0.0.192indev";
 
 #ifdef WILDCAT_THREADING
 const std::string THREAD_STATUS = "threaded";
