@@ -51,7 +51,7 @@ class WorldObject_Tree;
 class World_Local: public LogicTickInterface, public IdleTickInterface, public HasTexture
 {
    private:
-
+   
    RandomLehmer rng;
    // The generation seed for this local map.
    unsigned int seed;

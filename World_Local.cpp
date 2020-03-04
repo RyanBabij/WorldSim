@@ -94,22 +94,23 @@ World_Local::~World_Local()
 
 void World_Local::unload()
 {
+	active = false;
+
 #ifdef FAST_EXIT
    if (QUIT_FLAG) { return; }
 #endif
-	active = false;
-  
-  vCreature.deleteAll();
-  vItem.deleteAll();
-  vObjectGeneric.deleteAll();
-  
-  if (data!=0)
-  { delete data; }
-  data=0;
-  
-  if (dataSubterranean!=0)
-  { delete dataSubterranean; }
-  dataSubterranean=0;
+
+   vCreature.deleteAll();
+   vItem.deleteAll();
+   vObjectGeneric.deleteAll();
+
+   if (data!=0)
+   { delete data; }
+   data=0;
+
+   if (dataSubterranean!=0)
+   { delete dataSubterranean; }
+   dataSubterranean=0;
 }
 
 
@@ -322,6 +323,8 @@ bool World_Local::isSafe(WorldObject* _object)
 
 bool World_Local::generate(bool cache /* =true */)
 {
+   //std::cout<<"Generate called for map: "<<globalX<<", "<<globalY<<".\n";
+   
   // World is already loaded and running
   if ( active ) { return true; }
   
@@ -329,18 +332,27 @@ bool World_Local::generate(bool cache /* =true */)
   if ( world.isSafe(globalX,globalY) == false )
   { return false; }
 
+
+  
+  if (initialized)
+  {
+     
+    if (load())
+    {
+       active = true;
+       return true;
+    }
+    //std::cout<<"Warning load of: "<<globalX<<", "<<globalY<<" failed.\n";
+    active=false;
+    return false;
+
+  }
+  
   // Create data struct if necessary.
   if (data==0) { data = new Data; }
   
   // Create abstract struct if necessary
   if (abstractData==0) { abstractData = new AbstractData; }
-  
-  if (initialized)
-  {
-    load();
-    active = true;
-    return true;
-  }
   
 #ifdef FAST_EXIT
    if (QUIT_FLAG) { return false; }
@@ -959,10 +971,9 @@ bool World_Local::save()
 bool World_Local::load()
 {
    std::string localMapPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + ".dat";
-  
-   if ( FileManager::directoryExists(world.strSavePath)  == false )
+   if ( FileManager::directoryExists(localMapPath)  == false )
    {
-      std::cout<<"Error: Unable to access directory.\n";
+     // std::cout<<"Error: Unable to access directory to load map.\n";
       return false;
    }
   

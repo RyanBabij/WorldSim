@@ -302,8 +302,12 @@ void World_MapManager::mainBiome()
 {
 #ifdef WILDCAT_THREADING
    // due to file IO there may be reason to maintain more threads than cores.
+   // however per-biome simulation is memory intensive so we should be careful
+   // biomes should be processed in an order which prevents loading multiple huge
+   // biomes.
    
-   for (int i=0;i<N_CORES+1;++i)
+   for (int i=0;i<N_CORES;++i)
+   //for (int i=0;i<1;++i)
    {
       std::thread biomeThread( [this,i]
       {
@@ -340,6 +344,7 @@ void World_MapManager::mainBiome()
                
                mutexBiome.lock();
                biome->threadAccess = false;
+               biome->isGenerated=true;
                mutexBiome.unlock();
             }
             else

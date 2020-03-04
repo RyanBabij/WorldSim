@@ -101,36 +101,28 @@ class World_Biome: public TableInterface
    {
       if ( id == -1 )
       { return; }
-      
-      for (int i=0;i<vMap.size();++i)
-      {
-         vMap(i)->generate(false);
-         vMap(i)->active=true;
-         vMap(i)->initialized=true;
-      }
-      // save to file.
-      
+   
       SaveFileManager sfm;
       
       for (int i=0;i<vMap.size();++i)
       {
+         vMap(i)->generate(false);
+        vMap(i)->active=true;
+         vMap(i)->initialized=true;
+         
          std::string mapName = DataTools::toString(vMap(i)->globalX) + "-" + DataTools::toString(vMap(i)->globalY);
          SaveChunk chonk (mapName);
          chonk.add(vMap(i)->getSaveData());
          sfm.addChunk(chonk);
+         
+        vMap(i)->unload();
+         
       }
       
       // savefile can be the biomeID
       std::string biomePath = currentSavePath + "/" + DataTools::toString(id) + ".dat";
       std::cout<<"saving to: "<<biomePath<<"\n";
       sfm.saveToFile(biomePath);
-      
-      //unload
-      for (int i=0;i<vMap.size();++i)
-      {
-         vMap(i)->unload();
-      }
-
    }
    
    void generateFlora()

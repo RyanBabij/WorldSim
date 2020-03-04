@@ -65,7 +65,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION_NUMBER = "0.0.192indev";
+const std::string VERSION_NUMBER = "0.0.193indev";
 
 #ifdef WILDCAT_THREADING
 const std::string THREAD_STATUS = "threaded";
@@ -215,8 +215,8 @@ const bool RELINQUISH_CPU = true;
 const unsigned int RELINQUISH_CPU_TIMEOUT = 100; /* Anywhere from 10-100 seems to be okay. Maximum amount of time to relinquish */
   bool NO_BACKLOG=false;
 
-bool RENDER_NEXT_FRAME=true; /* If there has been no input or state change, there's no need to render */
-const bool LAZY_RENDERING=true; /* Only render if something happened */
+const bool LAZY_RENDERING=false; /* Only render if something happened */
+   bool RENDER_NEXT_FRAME=true; /* If there has been no input or state change, there's no need to render */
 
 const bool COMPRESS_TEXTURES = false; /* Probably saves graphics memory, however seems to significantly slow rendering */
 

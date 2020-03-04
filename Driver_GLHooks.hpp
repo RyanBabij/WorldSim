@@ -610,59 +610,51 @@ void GL_display()
     //debugTimer.start();
     
   }
-  
-  if ( LAZY_RENDERING && RENDER_NEXT_FRAME )
-  {
-    RENDER_NEXT_FRAME=false;
-    
 
+   if ( LAZY_RENDERING==false || RENDER_NEXT_FRAME )
+   {
+      RENDER_NEXT_FRAME=false;
 
-    glClear(GL_COLOR_BUFFER_BIT);
+      glClear(GL_COLOR_BUFFER_BIT);
 
       // NEW SYSTEM FOR MENU MANAGEMENT.
       // No more complicated hierarchies or menu managers. Just one global variable.
       // Submenus are still contained within their parent menu.
-    
-    if ( activeMenu == MENU_TITLE )
-    {
-      menuTitle.render();
-      //RENDER_NEXT_FRAME=true;
-    }
-    else if (activeMenu == MENU_OPTIONS )
-    {
-      menuOptions.render();
-      //RENDER_NEXT_FRAME=true;
-    }
-    else if (activeMenu == MENU_LOADGAME )
-    {
-      menuLoadGame.render();
-      //RENDER_NEXT_FRAME=true;
-    }
-    else if (activeMenu == MENU_WORLDGENERATOR )
-    {
-      menuWorldGenerator.render();
-      //RENDER_NEXT_FRAME=true;
-    }
-    else if (activeMenu == MENU_WORLDSIMULATOR )
-    {
-      menuWorldSimulator.render();
-      //RENDER_NEXT_FRAME=true;
-    }
-    else if (activeMenu == MENU_ADVENTUREMODE )
-    {
-      menuAdventureMode.render();
-      //RENDER_NEXT_FRAME=true;
-    }
-    
-      /* Render everything that wants to render. */
-    displayInterfaceManager.renderAll();
-    
-    if(DOUBLE_BUFFERING==true)
-    { glutSwapBuffers(); }
-    else
-    { glFlush(); }
-  }
-}
+
+      if ( activeMenu == MENU_TITLE )
+      {
+         menuTitle.render();
+      }
+      else if (activeMenu == MENU_OPTIONS )
+      {
+         menuOptions.render();
+      }
+      else if (activeMenu == MENU_LOADGAME )
+      {
+         menuLoadGame.render();
+      }
+      else if (activeMenu == MENU_WORLDGENERATOR )
+      {
+         menuWorldGenerator.render();
+      }
+      else if (activeMenu == MENU_WORLDSIMULATOR )
+      {
+         menuWorldSimulator.render();
+      }
+      else if (activeMenu == MENU_ADVENTUREMODE )
+      {
+         menuAdventureMode.render();
+      }
+
+      // Render everything that wants to render.
+      displayInterfaceManager.renderAll();
+
+      if(DOUBLE_BUFFERING==true)
+      { glutSwapBuffers(); }
+      else
+      { glFlush(); }
+      }
+   }
 
 
 static void GL_mouseWheel (const int wheel, const int direction, const int _x, const int _y)
