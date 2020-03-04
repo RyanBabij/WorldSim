@@ -17,15 +17,15 @@
 World_MapManager::World_MapManager()
 {
    maxWorldsToGenerate=4;
-   #ifdef THREAD_ALL
+#ifdef WILDCAT_THREADING
    nThreads=0;
-   #endif
+#endif
 }
 
 World_MapManager::~World_MapManager()
 {
    std::cout<<"Map manager shutting down.\n";   
-#ifdef THREAD_ALL
+#ifdef WILDCAT_THREADING
    MUTEX_SHUTDOWN.lock();
    mutexArrayAccess.lock();
    // kinda messy but a wait loop seems to be the
@@ -53,7 +53,7 @@ World_MapManager::~World_MapManager()
    }
    
    std::cout<<"Map manager shutdown.\n";
-#ifdef THREAD_ALL
+#ifdef WILDCAT_THREADING
    MUTEX_SHUTDOWN.unlock();
 #endif
 }
@@ -61,7 +61,7 @@ World_MapManager::~World_MapManager()
 void World_MapManager::init(unsigned int _nX, unsigned int _nY, ArrayS2 <World_Local>* aWorldTile2)
 {
    // Passing the old array is a temporary measure. I will probably pass the World Generator instead.
-#ifdef THREAD_ALL
+#ifdef WILDCAT_THREADING
    mutexArrayAccess.lock();
    aWorldTile.initClass(_nX,_nY);
    
@@ -90,7 +90,7 @@ void World_MapManager::init(unsigned int _nX, unsigned int _nY, ArrayS2 <World_L
 
 World_Local* World_MapManager::operator() (const int _x, const int _y)
 {
-#ifdef THREAD_ALL
+#ifdef WILDCAT_THREADING
    mutexArrayAccess.lock();
    if ( aWorldTile.isSafe(_x,_y) )
    {
@@ -110,7 +110,7 @@ bool World_MapManager::generateNow(int _mapX, int _mapY)
 {
    std::cout<<"Generating now: "<<_mapX<<", "<<_mapY<<"\n";
    
-#ifdef THREAD_ALL
+#ifdef WILDCAT_THREADING
    
    // remove from job queue if it's there
    mutexJob.lock();
@@ -166,9 +166,15 @@ bool World_MapManager::generateNow(int _mapX, int _mapY)
    return true;
 }
 
+void World_MapManager::addBiome(World_Biome* _biome)
+{
+   vBiome.push(_biome);
+}
+
 void World_MapManager::main()
 {
-#ifdef THREAD_ALL
+   return;
+#ifdef WILDCAT_THREADING
    // due to file IO there may be reason to maintain more threads than cores.
    for (int i=0;i<N_CORES;++i)
    //for (int i=0;i<8;++i)
@@ -287,6 +293,38 @@ void World_MapManager::main()
    std::cout<<"Note: World Thread Manager started.\n";
 #else
    std::cout<<"Note: World Thread Manager disabled.\n";
+#endif
+}
+
+
+// updates biome ticks in background
+void World_MapManager::mainBiome()
+{
+#ifdef WILDCAT_THREADING
+   // due to file IO there may be reason to maintain more threads than cores.
+   for (int i=0;i<N_CORES;++i)
+   {
+      std::thread biomeThread( [this,i]
+      {
+         mutexBiome.lock();
+         std::cout<<"Launching biome thread "<<i<<"\n";
+         mutexBiome.unlock();
+         while (true)
+         {
+            Sleep(500);
+         
+            // select a biome that needs work
+            mutexBiome.lock();
+            for(int i2=0;i2<vBiome.size();++i2)
+            {
+               std::cout<<"generate biome: "<<i2<<"\n";
+               //vBiome(i2)
+            }
+            mutexBiome.unlock();
+         }
+      });
+      biomeThread.detach();
+   }
 #endif
 }
 

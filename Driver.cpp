@@ -6,27 +6,14 @@
   Wildcat code is public domain.
 */
 
+#include "Driver_Settings.cpp"
+
 #include <string>
 
-#define WILDCAT_USE_OPENGL
-//#define WILDCAT_USE_DIRECT3D
-
-   // What OS we are compiling for. Currently only Windows and Linux are supported cos I don't got a Mac.
-   // 32-bit Windows defines _WIN32; 64-bit Windows defines _WIN32 and _WIN64
-#ifdef _WIN32
-#include <System/Windows.hpp> //#define WILDCAT_WINDOWS
-#elif defined(__linux__)
-#define WILDCAT_LINUX
-#else
-#error Unknown OS!
-#endif
-
-//#define WILDCAT_AUDIO
-
-#define GLEW_STATIC
+#define GLEW_STATIC // static link GLEW 
 // Need to figure out which of this is better. I think GLEW is more supported.
 #include <Graphics/OpenGL/glew.h> // THIS CURRENTLY FIXES LINKER CRAP. Also allows RGBA_COMPRESSED, it would seem.
-#define FREEGLUT_STATIC 
+#define FREEGLUT_STATIC // static link freeGLUT
 #include <Graphics/OpenGL/freeglut.h> //
 
 	// DYNAMICALLY GENERATED HEADER FILE WITH STRING WHICH COUNTS COMPILATIONS.
@@ -34,7 +21,7 @@
 
 #include <iostream>
 
-#include "Driver_Settings.cpp"
+
 
 #include <Container/Vector/Vector.hpp>
 
@@ -147,7 +134,7 @@ class QuitChecker
    {
       QUIT_FLAG=true;
       std::cout<<"Waiting to shutdown.\n";
-#ifdef THREAD_ALL
+#ifdef WILDCAT_THREADING
       std::unique_lock lock(MUTEX_SHUTDOWN); // wait until threads are not doing anything critical.
 #endif
       std::cout<<"Shutting down.\n";
@@ -340,11 +327,11 @@ int main(int nArgs, char ** arg)
    // CTRL+C shutdown and replaces it with a safer shutdown.
    // If CTRL+C is signalled a second time it will hard exit,
    // and therefore I also have a time on thread shutdown checks.
-#ifdef THREAD_ALL
+#ifdef WILDCAT_THREADING
    signal (SIGINT,shutDown);
 #endif
    
-#if defined THREAD_ALL
+#if defined WILDCAT_THREADING
   // std::thread testThread( []
   // {
      // Sleep(1000);

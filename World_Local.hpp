@@ -60,10 +60,36 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    
    // Simplified world data for use in fast abstract simulations.
    // Should generally always be loaded in, but I'd like to add caching support regardless.
+   
+   // It looks like storing all collision, flora and creatures on arrays will not be possible.
+   // However per-biome simulation should be possible, we could even group biomes together into
+   // chunks which we know can fit into memory.
+   
+   // The only other easy alternative is each tile having a map lookup with coordinates and object ID.
+   // However in cluttered maps this will not work well and probably won't be sustainable long term.
+   
+   // Grouping data by biome is probably the most sensible option.
    struct AbstractData
    {
+      // arrays we need:
+      // collision (0-1)
+      // statics/improvements (0-255)
+      // mobs (NPCs and creatures) (0-255)
+      
+      
       // simplified collision map for pathing. Tile is either accessible or not.
       Bitfield bfCollision;
+      
+      // we can just use food value bitfield and update it every 24 hours
+      //Bitfield bfFood;
+      
+      // location of flora. Must be looked up in flora vector.
+      Bitfield bfStatic;
+      // location of creatures. Must be looked up in creature vector
+      Bitfield bfMob;
+      
+      
+      //std::map can be used as a sparse array. Push a 2D point with the ID value.
    };
    
    // Data stores all data which is only present in generated maps.
@@ -107,6 +133,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    Data * data;
    Data_Subterranean * dataSubterranean;
    AbstractData * abstractData;
+   
+   unsigned long int accessNumber; // Increments each time the map is accessed.
 
    // Texture of map from far away. This texture is used to rende the tile when zoomed out far.
    Texture texFar;
@@ -117,7 +145,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    bool hasCave; // should be ncaves
    bool hasRuin; // should be nruins
 
-#ifdef THREAD_ALL
+#ifdef WILDCAT_THREADING
    //WORLD DATA
    std::atomic <short int> globalX_TS;
    std::atomic <short int> globalY_TS;

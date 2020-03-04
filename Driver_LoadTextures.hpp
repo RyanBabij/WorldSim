@@ -5,7 +5,7 @@
 #include <string>
 
 #define THREADED_TEXTURE_LOADING
-#if defined THREAD_ALL || defined THREADED_TEXTURE_LOADING
+#if defined WILDCAT_THREADING || defined THREADED_TEXTURE_LOADING
   #include <thread>
 #endif
 
@@ -354,7 +354,7 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
 {
   
 //#undef THREADED_TEXTURE_LOADING
-#if defined THREAD_ALL || defined THREADED_TEXTURE_LOADING
+#if defined WILDCAT_THREADING || defined THREADED_TEXTURE_LOADING
   std::thread t1( []
   {
 #endif
@@ -367,7 +367,7 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
     
     preloadTextureVerbose(PATH_TEX_WORLD_SETTLEMENT_DWARFFORT_01,&TEX_WORLD_SETTLEMENT_DWARFFORT_01);
     preloadTextureVerbose(PATH_TEX_WORLD_SETTLEMENT_TOWN_URBAN01,&TEX_WORLD_SETTLEMENT_TOWN_URBAN01);
-#if defined THREAD_ALL || defined THREADED_TEXTURE_LOADING
+#if defined WILDCAT_THREADING || defined THREADED_TEXTURE_LOADING
   });
   
   std::thread t2( []
@@ -388,12 +388,12 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
     preloadTextureVerbose(PATH_TEX_WORLD_UNIT_NOMAD_01,&TEX_WORLD_UNIT_NOMAD_01);
     preloadTextureVerbose(PATH_TEX_WORLD_UNIT_DWARF_01,&TEX_WORLD_UNIT_DWARF_01);
     preloadTextureVerbose(PATH_TEX_WORLD_UNIT_ELF_01,&TEX_WORLD_UNIT_ELF_01);
-#if defined THREAD_ALL || defined THREADED_TEXTURE_LOADING
+#if defined WILDCAT_THREADING || defined THREADED_TEXTURE_LOADING
   });
 #endif
     
     
-#if defined THREAD_ALL || defined THREADED_TEXTURE_LOADING
+#if defined WILDCAT_THREADING || defined THREADED_TEXTURE_LOADING
   t1.join();
   t2.join();
 #endif

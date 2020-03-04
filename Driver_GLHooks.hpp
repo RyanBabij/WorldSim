@@ -85,7 +85,7 @@ void GL_init(int nArgs, char ** arg)
    std::cout<<"Setting map cache to "<<MAP_CACHE_SIZE<<" maps.\n";
 #endif
   
-#ifdef THREAD_ALL
+#ifdef WILDCAT_THREADING
    N_CORES = std::thread::hardware_concurrency();
 #endif
   

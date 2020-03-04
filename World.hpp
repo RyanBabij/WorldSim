@@ -49,12 +49,14 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 private:
    RandomNonStatic random;
    World_MapManager mapManager;
+   // We could remove this later by using a pointer.
+   ArrayS2 <enumBiome> aTerrain;
 
 public:
 
 bool active; /* Whether or not the world should be simulated. */
 
-#if defined THREAD_ALL
+#if defined WILDCAT_THREADING
    std::atomic <bool> generated;
 #else
    bool generated; /* False until a world has been generated. Prevents trying to simulate a non-existent world. */

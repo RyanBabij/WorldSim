@@ -7,6 +7,9 @@
 
   Stores data for the various biomes in the world.
   Useful for biome-specific simulation.
+  
+  Map generation should really be done by biome,
+  as should Wildlife and Creature simulation.
 
 */
 
@@ -19,15 +22,20 @@ class World_Biome: public TableInterface
    RandomLehmer rng;
    
 	public:
+   
+   Mutex mutexAccess; // lock for threaded access
+   bool isGenerated; // true if all tiles have been generated.
 	
 	std::string name;
 	unsigned int size; /* size in tiles */
 	unsigned char type; /* Biome type */
    
    Vector <HasXY> vXY; // every tile coordinate of this biome.
+   Vector <World_Local*> vMap; // pointer to every map on this biome
    
+   unsigned long int floraID; // flora list ID for this biome.
    // placeholders for objects
-   Vector <Flora*> vFlora;
+   Vector <Flora*> vFlora; // Vector of Flora types, max 16
    Vector <std::string> vHerbivore;
    Vector <std::string> vCarnivore;
 	
@@ -36,6 +44,8 @@ class World_Biome: public TableInterface
 		name="";
 		size=0;
       rng.seed(globalRandom.rand32());
+      
+      isGenerated=false;
 	}
 	
 	virtual ~World_Biome()
@@ -70,8 +80,23 @@ class World_Biome: public TableInterface
 		return "string";
 	}
    
-   void generate(unsigned int _size, unsigned char _type)
+   // generate entire biome including terrain, flora, etc.
+   void generate()
    {
+      
+   }
+   
+   
+   // generate all local maps for this biome
+   // map generation will be done per-biome rather than per tile
+   void generateLocals()
+   {
+      for (int i=0;i<vMap.size();++i)
+      {
+         vMap(i)->generate(false);
+         vMap(i)->active=true;
+         vMap(i)->initialized=true;
+      }
    }
    
    void generateFlora()

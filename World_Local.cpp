@@ -25,7 +25,7 @@ World_Local::World_Local()
    globalX=0;
    globalY=0;
    
-#ifdef THREAD_ALL
+#ifdef WILDCAT_THREADING
    globalX_TS=0;
    globalY_TS=0;
    
@@ -110,7 +110,7 @@ void World_Local::unload()
   if (dataSubterranean!=0)
   { delete dataSubterranean; }
   dataSubterranean=0;
-} 
+}
 
 
 void World_Local::init(const int _globalX, const int _globalY, const enumBiome _biomeID, const int _seed = 0, const int _hasRiver=-1)
@@ -123,7 +123,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
   globalX = _globalX;
   globalY = _globalY;
   
-#ifdef THREAD_ALL
+#ifdef WILDCAT_THREADING
    globalX_TS=globalX;
    globalY_TS=globalY;
 #endif
@@ -270,7 +270,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
     }
     default:
     {
-      ///baseMoveCost = 0;
+      //baseMoveCost = 0;
       //canHaveSettlement = false;
       baseFertility = 0;
       canMove = 0;
@@ -358,6 +358,8 @@ bool World_Local::generate(bool cache /* =true */)
    //data->aStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
    
    abstractData->bfCollision.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+   abstractData->bfStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+   abstractData->bfMob.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 
    // GENERATE HEIGHTMAP
    DiamondSquareAlgorithmCustomRange dsa2;

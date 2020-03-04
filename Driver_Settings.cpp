@@ -8,17 +8,45 @@
 	Gameplay settings and other global settings go here. Some of this stuff will probably end up in an .ini file.
 */
 
+#include <string>
+
+//      OS       /////////////////////////////////////////////////////////////////
+
+
+#define WILDCAT_USE_OPENGL
+//#define WILDCAT_USE_DIRECT3D
+
+   // What OS we are compiling for. Currently only Windows and Linux are supported cos I don't got a Mac.
+   // 32-bit Windows defines _WIN32; 64-bit Windows defines _WIN32 and _WIN64
+   // Note that threading is disabled on Linux until I can figure out how to get it compiling
+#ifdef _WIN32
+   #include <System/Windows.hpp> //#define WILDCAT_WINDOWS
+   #define WILDCAT_THREADING
+#elif defined(__linux__)
+   #define WILDCAT_LINUX
+   #undef WILDCAT_THREADING // disable threading
+#else
+   #error Unknown OS!
+#endif
+
+//#define WILDCAT_AUDIO
+
+//      THREADING       ////////////////////////////////////////////////////////
+
+#ifdef WILDCAT_THREADING
+   // Threading libraries
+   #include <atomic>
+   #include <mutex>
+   #include <shared_mutex>
+#endif
+
+#include <System/Thread/Mutex.hpp>
+
 #include <limits.h> // We need ULONG_MAX for absolute coords.
 #define ABSOLUTE_COORDINATE_NULL ULONG_MAX // Used as null-value for absolute coordinates, which can't use negative value.
 // I think this is probably pointless because any normal Windows/Linux/Mac system is going to use 4 bytes for int.
 // Also such a thing may be specified explicitly with somthing like uint32_t. I need to move over to this system.
 #define PORTABLE_INT_MAX 32767
-
-#define THREAD_ALL
-// Threading doesn't work in Linux ATM
-#ifdef WILDCAT_LINUX
-#undef THREAD_ALL
-#endif
 
 // program will not do any garbage collection during shutdown
 // makes testing easier but should be disabled for builds
@@ -37,9 +65,9 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION_NUMBER = "0.0.189indev";
+const std::string VERSION_NUMBER = "0.0.190indev";
 
-#ifdef THREAD_ALL
+#ifdef WILDCAT_THREADING
 const std::string THREAD_STATUS = "threaded";
 #else
 const std::string THREAD_STATUS = "unthreaded";
@@ -193,19 +221,27 @@ const bool COMPRESS_TEXTURES = false; /* Probably saves graphics memory, however
 
 // GLOBAL FLAGS
 
+// increments each time a local map is accessed
+// this allows us to cache the oldest maps
+// only update when touching a new map.
+// when this reaches overflow the IDs must be rebuilt
+unsigned long int CACHE_ID=0;
 
 
-#ifdef THREAD_ALL
-   #include <atomic>
-   #include <mutex>
-   #include <shared_mutex>
+
+Mutex mutexCout;
+Mutex mutexCacheID; // lock to increment cache ID.
+
+
+#ifdef WILDCAT_THREADING
+
    std::atomic <bool> QUIT_FLAG=false;
    
 // game will delay shutting down until the shutdown
 // manager can lock this mutex
    std::shared_mutex MUTEX_SHUTDOWN;
    std::shared_mutex MUTEX_TEST;
-   std::mutex mutexCout;
+   //std::mutex mutexCout;
    
    // The maximum number of maps that may be cached in memory. This is set based on the amount
    // of free RAM, but has a minimum value of 12.
