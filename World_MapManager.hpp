@@ -55,6 +55,7 @@ class World_MapManager
    // keep track of number of threads running
    // to perform safe shutdown
    std::atomic <int> nThreads;
+   std::atomic <int> nBiomeThreads;
    
    //std::atomic <int> nBiomeTiles; // The current number of biome tiles in memory.
 #endif

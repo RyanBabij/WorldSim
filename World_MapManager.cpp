@@ -19,6 +19,7 @@ World_MapManager::World_MapManager()
    maxWorldsToGenerate=4;
 #ifdef WILDCAT_THREADING
    nThreads=0;
+   nBiomeThreads=0;
 #endif
 }
 
@@ -33,7 +34,7 @@ World_MapManager::~World_MapManager()
 
    int MAX_WAIT = 10;
    int i=0;
-   while (nThreads > 0 && i<MAX_WAIT  )
+   while (nThreads > 0 && nBiomeThreads > 0 && i<MAX_WAIT  )
    {
       Sleep(25);
       ++i;
@@ -314,9 +315,9 @@ void World_MapManager::mainBiome()
          mutexCout.lock();
          std::cout<<"Launching biome thread "<<i<<"\n";
          mutexCout.unlock();
-         while (true)
+         while ( true && QUIT_FLAG == false)
          {
-            Sleep(50);
+            //Sleep(50);
             
             World_Biome* biome=0;
          
@@ -357,11 +358,13 @@ void World_MapManager::mainBiome()
             }
             
          }
-         while (true)
+         while (true && QUIT_FLAG == false)
          {
             Sleep(1000);
          }
+         --nBiomeThreads;
       });
+      ++nBiomeThreads;
       biomeThread.detach();
    }
 #endif

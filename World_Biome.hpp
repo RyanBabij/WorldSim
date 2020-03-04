@@ -106,6 +106,9 @@ class World_Biome: public TableInterface
       
       for (int i=0;i<vMap.size();++i)
       {
+         if ( QUIT_FLAG )
+         { return; }
+         
          vMap(i)->generate(false);
         vMap(i)->active=true;
          vMap(i)->initialized=true;
