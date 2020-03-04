@@ -302,25 +302,59 @@ void World_MapManager::mainBiome()
 {
 #ifdef WILDCAT_THREADING
    // due to file IO there may be reason to maintain more threads than cores.
-   for (int i=0;i<N_CORES;++i)
+   
+   for (int i=0;i<N_CORES+1;++i)
    {
       std::thread biomeThread( [this,i]
       {
-         mutexBiome.lock();
+         mutexCout.lock();
          std::cout<<"Launching biome thread "<<i<<"\n";
-         mutexBiome.unlock();
+         mutexCout.unlock();
          while (true)
          {
-            Sleep(500);
+            Sleep(50);
+            
+            World_Biome* biome=0;
          
             // select a biome that needs work
             mutexBiome.lock();
             for(int i2=0;i2<vBiome.size();++i2)
             {
-               std::cout<<"generate biome: "<<i2<<"\n";
-               //vBiome(i2)
+               if ( vBiome(i2)->type!=OCEAN && vBiome(i2)->type!= ICE
+               && vBiome(i2)->isGenerated == false && vBiome(i2)->threadAccess == false )
+               {
+                  vBiome(i2)->threadAccess = true;
+                  mutexCout.lock();
+                  std::cout<<"Generating biome id: "<<vBiome(i2)->id<<".\n";
+                  mutexCout.unlock();
+                  
+                  biome=vBiome(i2);
+                  break;
+               }
             }
             mutexBiome.unlock();
+            
+            if (biome)
+            {
+               biome->generate();
+               
+               mutexBiome.lock();
+               biome->threadAccess = false;
+               mutexBiome.unlock();
+            }
+            else
+            {
+               mutexCout.lock();
+               std::cout<<"All biomes generated. Entering simulation mode.\n";
+               mutexCout.unlock();
+               
+               break;
+            }
+            
+         }
+         while (true)
+         {
+            Sleep(1000);
          }
       });
       biomeThread.detach();

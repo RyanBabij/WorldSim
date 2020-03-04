@@ -65,7 +65,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION_NUMBER = "0.0.190indev";
+const std::string VERSION_NUMBER = "0.0.191indev";
 
 #ifdef WILDCAT_THREADING
 const std::string THREAD_STATUS = "threaded";
@@ -81,6 +81,7 @@ const std::string VERSION = VERSION_NUMBER+" Lin32 "+THREAD_STATUS;
 
 const std::string G_WINDOW_TITLE = "WorldSim";
 const std::string SAVE_FOLDER_PATH = "savedata";
+std::string currentSavePath = "";
 
 int N_CORES = 1; // can be changed in init if threads are enabled
 

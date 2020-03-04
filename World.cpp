@@ -289,6 +289,7 @@ void World::startSimulation()
    std::thread * aThread [N_BIOMES] = { 0 };
    std::mutex m;
    std::atomic<int> biomeID=0; /* Atomic is generally more efficient than using lock because of OS-level support. */
+   Mutex biomeIncrement;
 #else
    int biomeID = 0;
 #endif
@@ -309,10 +310,15 @@ void World::startSimulation()
             const int biomeSearch = aTerrain(_x,_y);
             // Spawn a thread to process this biome type
             #ifdef WILDCAT_THREADING
-            aThread [aTerrain(_x,_y)] = new std::thread ( [ this, _x, _y, biomeSearch, &m, &biomeID ]
+            aThread [aTerrain(_x,_y)] = new std::thread ( [ this, _x, _y, biomeSearch, &m, &biomeID, &biomeIncrement ]
             {
 #endif
-               int thisBiomeID = biomeID++;
+               // This technically works because same biomes can never touch. However it's asking for trouble so we should change it.
+               // biomeIncrement.lock();
+               // std::cout<<"Biome increment: "<<biomeID<<" to "<<biomeID+1<<"\n";
+               int thisBiomeID;
+               // ++biomeID;
+               // biomeIncrement.unlock();
 
                for ( int _y2=_y;_y2<nY;++_y2)
                {
@@ -322,6 +328,19 @@ void World::startSimulation()
                      {
                         World_Biome* biome = new World_Biome;
                         biome->type = biomeSearch;
+                        
+                        biomeIncrement.lock();
+                        //std::cout<<"Biome increment: "<<biomeID<<" to "<<biomeID+1<<"\n";
+                        thisBiomeID = biomeID;
+                        biome->id = thisBiomeID;
+                        ++biomeID;
+                        biomeIncrement.unlock();
+                        
+                        
+                        mutexCout.lock();
+                        std::cout<<"assigning biome id: "<<thisBiomeID<<"\n";
+                        mutexCout.unlock();
+                        
                         Vector <HasXY*>* vFill = aTerrain.floodFillVector(_x2,_y2,true);
                         for (int i=0;i<vFill->size();++i)
                         {
@@ -414,6 +433,7 @@ void World::startSimulation()
             
 				World_Biome* biome = new World_Biome;
 				biome->type = biomeType;
+            biome->id = currentID;
         
 				Vector <HasXY*>* vFill = aTerrain.floodFillVector(_x,_y,true);
             
@@ -531,7 +551,7 @@ void World::startSimulation()
    }
    
    // launch tile caching manager
-   mapManager.main();
+   //mapManager.main();
    // launch biome caching manager
    mapManager.mainBiome();
 }
@@ -1489,6 +1509,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   landmassSeed = seed;
 	
 	strSavePath = SAVE_FOLDER_PATH+"/"+name;
+   currentSavePath = SAVE_FOLDER_PATH+"/"+name;
   
 #ifdef SAVE_DATA
   

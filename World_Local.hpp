@@ -274,6 +274,7 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    bool generate(bool cache=true);
    bool generateSubterranean(); // subterranean maps should be generated on demand.
    bool save();
+   std::string getSaveData();
    bool load();
 
    //bool saveToFile(std::string /* path */);

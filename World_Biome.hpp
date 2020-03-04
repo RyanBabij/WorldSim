@@ -23,8 +23,10 @@ class World_Biome: public TableInterface
    
 	public:
    
-   Mutex mutexAccess; // lock for threaded access
    bool isGenerated; // true if all tiles have been generated.
+   bool threadAccess; // true if a thread is using this biome
+   
+   int id;
 	
 	std::string name;
 	unsigned int size; /* size in tiles */
@@ -46,6 +48,9 @@ class World_Biome: public TableInterface
       rng.seed(globalRandom.rand32());
       
       isGenerated=false;
+      threadAccess=false;
+      
+      id=-1;
 	}
 	
 	virtual ~World_Biome()
@@ -83,7 +88,10 @@ class World_Biome: public TableInterface
    // generate entire biome including terrain, flora, etc.
    void generate()
    {
-      
+      if ( id == -1 )
+      { return; }
+      generateLocals();
+      isGenerated=true;
    }
    
    
@@ -91,12 +99,32 @@ class World_Biome: public TableInterface
    // map generation will be done per-biome rather than per tile
    void generateLocals()
    {
+      if ( id == -1 )
+      { return; }
+      
       for (int i=0;i<vMap.size();++i)
       {
          vMap(i)->generate(false);
          vMap(i)->active=true;
          vMap(i)->initialized=true;
       }
+      // save to file.
+      
+      SaveFileManager sfm;
+      
+      for (int i=0;i<vMap.size();++i)
+      {
+         std::string mapName = DataTools::toString(vMap(i)->globalX) + "-" + DataTools::toString(vMap(i)->globalY);
+         SaveChunk chonk (mapName);
+         chonk.add(vMap(i)->getSaveData());
+         sfm.addChunk(chonk);
+      }
+      
+      // savefile can be the biomeID
+      std::string biomePath = currentSavePath + "/" + DataTools::toString(id) + ".dat";
+      std::cout<<"saving to: "<<biomePath<<"\n";
+      sfm.saveToFile(biomePath);
+
    }
    
    void generateFlora()
@@ -128,7 +156,7 @@ class World_Biome: public TableInterface
       if (floraAmount < 3) { floraAmount=3; }
       if (floraAmount > 255) { floraAmount = 255; }
       
-      std::cout<<"Biome size: "<<size<<" generating "<<floraAmount<<" flora.\n";
+      //std::cout<<"Biome size: "<<size<<" generating "<<floraAmount<<" flora.\n";
       
       // generate rarities. A 3-way split would probably be fine.
       // ID 0 is always the primary flora for the biome, typically a tree
@@ -220,17 +248,17 @@ class World_Biome: public TableInterface
          }
       }
       
-      std::cout<<"Spawning 10 flora:\n";
+      //std::cout<<"Spawning 10 flora:\n";
       for (int i=0;i<10;++i)
       {
          Flora * flora = getFlora();
          if ( flora )
          {
-            std::cout<<"   "<<flora->name<<"\n";
+            //std::cout<<"   "<<flora->name<<"\n";
          }
          else
          {
-            std::cout<<"Error: No flora\n";
+            //std::cout<<"Error: No flora\n";
          }
          
          

@@ -746,6 +746,111 @@ bool World_Local::generateSubterranean()
    return false;
 }
 
+std::string World_Local::getSaveData()
+{
+     // Can't save world if it's not fully generated.
+  if ( data==0 ) { return ""; }
+  
+  std::string localMapPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + ".dat";
+  std::string abstractPath = world.strSavePath + "/" + DataTools::toString(globalX) + "-" + DataTools::toString(globalY) + "-abstract.dat";
+
+   if (FileManager::directoryExists(world.strSavePath) == false)
+   {
+      std::cout<<"Error: Unable to access directory.\n";
+      return "";
+   }
+
+   // Make the file or clear it.
+   //FileManager::makeNewFile(localMapPath);
+   //FileManager::makeNewFile(abstractPath);
+   SaveFileManager sfm;
+   SaveFileManager sfmAbstract;
+
+   std::string saveData="";
+
+   SaveChunk chonk ("TILE ARRAY");
+   //SaveChunk abstractChonk("ABSTRACT");
+   SaveChunk abstractChonk2("ABSCOL");
+   
+   // Only unload the local map if it is loaded.
+   for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+   {
+      for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+      {
+         chonk.add(data->aLocalTile(_x,_y).getSaveData());
+         //abstractChonk.add(data->aLocalTile(_x,_y).getAbstractData());
+         
+         if ( data->aLocalTile(_x,_y).hasMovementBlocker() )
+         {
+            abstractData->bfCollision.set(_x,_y,true);
+         }
+      }
+   }
+   // copying the array as a string is inefficient but safer for now
+   abstractChonk2.add(abstractData->bfCollision.toString());
+   sfmAbstract.addChunk(abstractChonk2);
+  
+  //sfmAbstract.addChunk(abstractChonk);
+  sfm.addChunk(chonk);
+  
+   if (dataSubterranean)
+   {
+      SaveChunk chonkSub ("SUBTERRANEAN ARRAY");
+      SaveChunk chonkGem ("GEM ARRAY");
+      SaveChunk chonkMetal ("METAL ARRAY");
+      for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+      {
+         for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+         {
+            chonkSub.add(dataSubterranean->aSubterranean(_x,_y).getSaveData());
+            chonkGem.add(DataTools::toString(dataSubterranean->aSubterranean(_x,_y).nGems));
+            chonkMetal.add(DataTools::toString(dataSubterranean->aSubterranean(_x,_y).nMetal));
+         }
+      }
+      sfm.addChunk(chonkSub);
+      sfm.addChunk(chonkGem);
+      sfm.addChunk(chonkMetal);
+   }
+  
+   SaveChunk chonkObjects ("OBJECT VECTOR");
+
+   for (int i=0;i<vObjectGeneric.size();++i)
+   {
+      chonkObjects.add(vObjectGeneric(i)->getBaseData());
+   }
+  
+   SaveChunk chonkItems ("ITEM VECTOR");
+   for (int i=0;i<vItem.size();++i)
+   {
+      chonkItems.add(vItem(i)->getBaseData());
+   }
+
+  sfm.addChunk(chonkObjects);
+  sfm.addChunk(chonkItems);
+  
+  // Only unload the local map if it is loaded.
+  // for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
+  // {
+    // for (int _x=0;_x<LOCAL_MAP_SIZE;++_x)
+    // {
+      // ++i;
+      // chonk.add(data->aLocalTile(_x,_y).getSaveData());
+    // }
+  // }
+  // Vector <Creature*> vCreature;
+  // //Vector of all Characters on this map
+  // Vector <Character*> vCharacter;
+  // //Vector of all Items on this map
+  // Vector <Item*> vItem;
+  // // Vector of all non-categorised objects on this map.
+  // Vector <WorldObject*> vObjectGeneric;
+  
+  std::string sData = sfmAbstract.data;
+  sData+="\n\n";
+  sData+=sfm.data;
+  return sData;
+}
+
 bool World_Local::save()
 {
   // Can't save world if it's not fully generated.
