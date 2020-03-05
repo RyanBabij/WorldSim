@@ -764,6 +764,9 @@ std::string World_Local::getSaveData()
    SaveChunk chonk ("TILE ARRAY");
    //SaveChunk abstractChonk("ABSTRACT");
    SaveChunk abstractChonk2("ABSCOL");
+   SaveChunk abstractStaticChonk("ABSSTAT");
+   
+   std::string strStaticID = "";
    
    // Only unload the local map if it is loaded.
    for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
@@ -777,14 +780,26 @@ std::string World_Local::getSaveData()
          {
             abstractData->bfCollision.set(_x,_y,true);
          }
+         // if (data->aStatic(_x,_y)) // if there's a static here, save it's ID (0-255)
+         // {
+            // abstractData->aStaticID(_x,_y)='A';
+         // }
+         if (data->aLocalTile(_x,_y).objStatic) // if there's a static here, save it's ID (0-255)
+         {
+            abstractData->aStaticID(_x,_y)=data->aLocalTile(_x,_y).objStatic->id;
+            strStaticID+=data->aLocalTile(_x,_y).objStatic->id;
+         }
+         else
+         {
+            strStaticID+=(unsigned char)0;
+         }
       }
    }
    // copying the array as a string is inefficient but safer for now
    abstractChonk2.add(abstractData->bfCollision.toString());
    sfmAbstract.addChunk(abstractChonk2);
-  
-  //sfmAbstract.addChunk(abstractChonk);
-  sfm.addChunk(chonk);
+   abstractStaticChonk.add(strStaticID);
+   sfmAbstract.addChunk(abstractStaticChonk);
   
    if (dataSubterranean)
    {
@@ -869,6 +884,9 @@ bool World_Local::save()
    SaveChunk chonk ("TILE ARRAY");
    //SaveChunk abstractChonk("ABSTRACT");
    SaveChunk abstractChonk2("ABSCOL");
+   SaveChunk abstractStaticChonk("ABSSTAT");
+   
+   std::string strStaticID = "";
    
    // Only unload the local map if it is loaded.
    for (int _y=0;_y<LOCAL_MAP_SIZE;++_y)
@@ -882,15 +900,26 @@ bool World_Local::save()
          {
             abstractData->bfCollision.set(_x,_y,true);
          }
-         if (data->aStatic(_x,_y)) // if there's a static here, save it's ID (0-255)
+         // if (data->aStatic(_x,_y)) // if there's a static here, save it's ID (0-255)
+         // {
+            // abstractData->aStaticID(_x,_y)='A';
+         // }
+         if (data->aLocalTile(_x,_y).objStatic) // if there's a static here, save it's ID (0-255)
          {
-            abstractData->aStaticID(_x,_y)='A';
+            abstractData->aStaticID(_x,_y)=data->aLocalTile(_x,_y).objStatic->id;
+            strStaticID+=data->aLocalTile(_x,_y).objStatic->id;
+         }
+         else
+         {
+            strStaticID+=(unsigned char)0;
          }
       }
    }
    // copying the array as a string is inefficient but safer for now
    abstractChonk2.add(abstractData->bfCollision.toString());
    sfmAbstract.addChunk(abstractChonk2);
+   abstractStaticChonk.add(strStaticID);
+   sfmAbstract.addChunk(abstractStaticChonk);
   
   //sfmAbstract.addChunk(abstractChonk);
   sfm.addChunk(chonk);

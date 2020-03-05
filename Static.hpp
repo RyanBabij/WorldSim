@@ -25,6 +25,8 @@ class Static: public HasTexture
    unsigned char blockMove; // bitfield blocks movement in direction starting NW and going clockwise
    unsigned char blockLOS; // bitfield blocks LOS in direction starting NW and going clockwise
    
+   unsigned char id; // local id from 1-255 for loading/saving/abstraction
+   
    // HP
    // DAMAGE RESIST
    
@@ -32,6 +34,7 @@ class Static: public HasTexture
    {
       blockMove=0;
       blockLOS=0;
+      id=0;
    }
    
    virtual Texture* currentTexture()
@@ -59,6 +62,8 @@ class Harvestable
 // flora generation:
 // each biome will randomly generate its own unique flora
 // in future flora could be given names based on various attributes
+
+// flora may be pickable and/or choppable
 
 class Flora: public Static
 {
@@ -135,23 +140,23 @@ class Flora: public Static
 // biome guarantees max 255 flora types, and therefore
 // we can guarantee 1 byte to ID flora on abstract
 
-class FloraGenerator
-{
-   public:
+// class FloraGenerator
+// {
+   // public:
    
-   Vector <Flora*> vFloraType;
+   // Vector <Flora*> vFloraType;
    
-   FloraGenerator()
-   {
-   }
+   // FloraGenerator()
+   // {
+   // }
    
-   Flora* generate(unsigned char biomeType, unsigned char floratype)
-   {
-      return 0;
-   }
+   // Flora* generate(unsigned char biomeType, unsigned char floratype)
+   // {
+      // return 0;
+   // }
    
-};
-FloraGenerator floraGenerator;
+// };
+// FloraGenerator floraGenerator;
 
 
 // Trees will be special-case flora because they can block LOS and movement.

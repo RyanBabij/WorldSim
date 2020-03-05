@@ -263,6 +263,14 @@ class World_Biome: public TableInterface
          
          
       // }
+      
+      
+      // assign local ids to the flora (1-255)
+      
+      for (int i=0;i<vFlora.size();++i)
+      {
+         vFlora(i)->id=i+1;
+      }
    }
    
    // pick a flora type from the weighted list to spawn
