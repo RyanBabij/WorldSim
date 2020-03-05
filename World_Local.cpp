@@ -370,8 +370,11 @@ bool World_Local::generate(bool cache /* =true */)
    //data->aStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
    
    abstractData->bfCollision.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-   abstractData->bfStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-   abstractData->bfMob.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+   abstractData->aStaticID.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
+   
+   //abstractData->bfFlora.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+   //abstractData->bfStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+   //abstractData->bfMob.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 
    // GENERATE HEIGHTMAP
    DiamondSquareAlgorithmCustomRange dsa2;
@@ -531,36 +534,14 @@ bool World_Local::generate(bool cache /* =true */)
           put(new Item_Knife, _x, _y);
           put(new Item_Pickaxe, _x, _y);
         }
+        // Spawn Statics
+        // Spawn Flora
         else if (rng.oneIn(baseTreeChance))
         {
-           // put Tree Static
-           
-           //Static_Tree* staticTree = new Static_Tree;
-           
-          if (rng.oneIn(10))
-          {
-            //put(new WorldObject_Tree(0), _x, _y);
-            put(new Static_Tree(0), _x, _y);
-          }
-          else
-          {
-            //put(new WorldObject_Tree(1), _x, _y);
-            put(new Static_Tree(1), _x, _y);
-          }
-
+           // spawn in a random Flora from Biome.
+           put(biome->getFlora(), _x, _y);
         }
-        else if (rng.oneIn(basePlantChance))
-        {
-          if (rng.oneIn(500))
-          {
-            put(new Flora_Blueweed(),_x,_y);
-          }
-          else
-          {
-            put(new WorldObject_Flora(),_x,_y);
-          }
-          
-        }
+        // Spawn Mobs
         else if (rng.oneIn(1500) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
         {
           auto deer = new Creature_Deer;
@@ -900,6 +881,10 @@ bool World_Local::save()
          if ( data->aLocalTile(_x,_y).hasMovementBlocker() )
          {
             abstractData->bfCollision.set(_x,_y,true);
+         }
+         if (data->aStatic(_x,_y)) // if there's a static here, save it's ID (0-255)
+         {
+            abstractData->aStaticID(_x,_y)='A';
          }
       }
    }

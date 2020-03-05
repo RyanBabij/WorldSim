@@ -41,6 +41,7 @@
 #endif
 
 #include <System/Thread/Mutex.hpp>
+#include <System/Thread/Atomic.hpp>
 
 #include <limits.h> // We need ULONG_MAX for absolute coords.
 #define ABSOLUTE_COORDINATE_NULL ULONG_MAX // Used as null-value for absolute coordinates, which can't use negative value.
@@ -65,7 +66,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION_NUMBER = "0.0.194indev";
+const std::string VERSION_NUMBER = "0.0.195indev";
 
 #ifdef WILDCAT_THREADING
 const std::string THREAD_STATUS = "threaded";

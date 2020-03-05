@@ -26,7 +26,7 @@ class World_Biome: public TableInterface
    bool isGenerated; // true if all tiles have been generated.
    bool threadAccess; // true if a thread is using this biome
    
-   int id;
+   int id; // the biome's id. Used to lookup biome tables.
 	
 	std::string name;
 	unsigned int size; /* size in tiles */
@@ -35,11 +35,11 @@ class World_Biome: public TableInterface
    Vector <HasXY> vXY; // every tile coordinate of this biome.
    Vector <World_Local*> vMap; // pointer to every map on this biome
    
-   unsigned long int floraID; // flora list ID for this biome.
    // placeholders for objects
-   Vector <Flora*> vFlora; // Vector of Flora types, max 16
-   Vector <std::string> vHerbivore;
-   Vector <std::string> vCarnivore;
+
+   Vector <Flora*> vFlora; // Vector of Flora types
+   //Vector <std::string> vHerbivore;
+   //Vector <std::string> vCarnivore;
 	
 	World_Biome()
 	{
@@ -94,32 +94,31 @@ class World_Biome: public TableInterface
       isGenerated=true;
    }
    
-   
    // generate all local maps for this biome
    // map generation will be done per-biome rather than per tile
    void generateLocals()
    {
       if ( id == -1 )
       { return; }
-   
+
       SaveFileManager sfm;
-      
+
       for (int i=0;i<vMap.size();++i)
       {
          if ( QUIT_FLAG )
          { return; }
-         
+
+         vMap(i)->biome=this;
          vMap(i)->generate(false);
-        vMap(i)->active=true;
+         vMap(i)->active=true;
          vMap(i)->initialized=true;
-         
+
          std::string mapName = DataTools::toString(vMap(i)->globalX) + "-" + DataTools::toString(vMap(i)->globalY);
          SaveChunk chonk (mapName);
          chonk.add(vMap(i)->getSaveData());
          sfm.addChunk(chonk);
-         
-        vMap(i)->unload();
-         
+
+         vMap(i)->unload();
       }
       
       // savefile can be the biomeID
@@ -249,21 +248,21 @@ class World_Biome: public TableInterface
          }
       }
       
-      //std::cout<<"Spawning 10 flora:\n";
-      for (int i=0;i<10;++i)
-      {
-         Flora * flora = getFlora();
-         if ( flora )
-         {
-            //std::cout<<"   "<<flora->name<<"\n";
-         }
-         else
-         {
-            //std::cout<<"Error: No flora\n";
-         }
+      // //std::cout<<"Spawning 10 flora:\n";
+      // for (int i=0;i<10;++i)
+      // {
+         // Flora * flora = getFlora();
+         // if ( flora )
+         // {
+            // //std::cout<<"   "<<flora->name<<"\n";
+         // }
+         // else
+         // {
+            // //std::cout<<"Error: No flora\n";
+         // }
          
          
-      }
+      // }
    }
    
    // pick a flora type from the weighted list to spawn

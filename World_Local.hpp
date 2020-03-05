@@ -46,6 +46,7 @@ class Item;
 class Tribe;
 
 class WorldObject_Tree;
+class World_Biome;
 
 
 class World_Local: public LogicTickInterface, public IdleTickInterface, public HasTexture
@@ -69,6 +70,10 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    // However in cluttered maps this will not work well and probably won't be sustainable long term.
    
    // Grouping data by biome is probably the most sensible option.
+   
+   // in future we could probably have a generate function which solely deals in abstract data, and lets
+   // the details get filled in later. For example just randomly put down movement blockers in the
+   // collision bitfield and later on we can actually generate their object data.
    struct AbstractData
    {
       // arrays we need:
@@ -80,13 +85,20 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
       // simplified collision map for pathing. Tile is either accessible or not.
       Bitfield bfCollision;
       
+      //Statics have an id from 1-255 so we can just use char array
+      // Statics can be constructions, trees or other flora.
+      ArrayS2 <unsigned char> aStaticID;
+      
       // we can just use food value bitfield and update it every 24 hours
       //Bitfield bfFood;
       
       // location of flora. Must be looked up in flora vector.
-      Bitfield bfStatic;
+      // this can obviously be optimised but I'll do it later.
+      //Bitfield bfFlora;
+      
+      //Bitfield bfStatic;
       // location of creatures. Must be looked up in creature vector
-      Bitfield bfMob;
+      //Bitfield bfMob;
       
       
       //std::map can be used as a sparse array. Push a 2D point with the ID value.
@@ -133,6 +145,8 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
    Data * data;
    Data_Subterranean * dataSubterranean;
    AbstractData * abstractData;
+   
+   World_Biome* biome;
    
    unsigned long int accessNumber; // Increments each time the map is accessed.
 
