@@ -26,93 +26,147 @@ class World_Local;
 #include "Creature_Attack.hpp"
 
 
+// species-specific stats and behaviour
+class CreatureSpecies
+{
+   public:
+   std::string name; //species name
+   World_Biome* homeBiome; // creatures are generally confined to their biome
+   
+   bool canHunt; // can eat other animals
+   bool canHerbivoreEasy; // can eat easy flora
+   bool canHerbivoreMedium; // can eat medium flora
+   bool canHerbivoreHard; // can eat difficult flora
+   unsigned char speed; // action points per tick
+   
+   CreatureSpecies()
+   {
+      name="";
+      canHunt=false;
+      canHerbivoreEasy=false;
+      canHerbivoreMedium=false;
+      canHerbivoreHard=false;
+      
+      speed=0;
+   }
+   
+   void aiTick()
+   {
+   }
+};
 
+// holds the minimal amount of data for simulation
+// on abstract layer
+// rename to creature
+class CreatureAbstract
+{
+   public:
+   bool isMale;
+   unsigned short int age;
+   unsigned short int hunger;
+   unsigned short int thirst;
+   unsigned short int health;
+
+   CreatureSpecies* speciesData;
+   //full data goes here
+
+   CreatureAbstract()
+   {
+      isMale=false;
+      age=0;
+      hunger=0;
+      thirst=0;
+      health=0;
+   }
+};
+
+//rename to CreatureData
 class Creature: public WorldObject, public TableInterface
 {
 	public:
 
-	bool isMale;
-	int age; /* In ticks */
-	int daysCounter; /* 0-360 */
-	int secondsCounter; /* 0 - 86,400 */
-  
-  bool isCarnivore; /* Creature can eat other animals. Otherwise the creature is a herbivore */
-  /* Herbivores are reliant on the grass and plants on their map */
-  // Home biome - Biome the creature is evolved for.
+   bool isMale;
+   int age; /* In ticks */
+   int daysCounter; /* 0-360 */
+   int secondsCounter; /* 0 - 86,400 */
 
-	
-	int actionPoints; /* Base: 100. Points are deducted for each action. */
+   bool isCarnivore; /* Creature can eat other animals. Otherwise the creature is a herbivore */
+   /* Herbivores are reliant on the grass and plants on their map */
+   // Home biome - Biome the creature is evolved for.
 
-	bool isAlive;
-	
-	int health;
-  
-    // Creatures also need to eat and drink.
-    // However herbivores can eat grass.
-	int hunger;
-  int thirst;
-  
-  short int fleeCounter; /* How many more turns the Creature should flee for. */
-	
-  // All loaded creatures can get a link to their world.
-  World_Local* map;
-  
-    //Creature's knowledge of the world (optional).
-  Creature_Knowledge* knowledge;
-	
-    // INTERACTION
-    int nPelt; /* How many pelts you can harvest from the creature. */
-    int nMeat; /* How many meats you can harvest from the creature. */
-    
-      // ATTACK
-      // Creatures might get a choice of attacks kinda like Pokemon.
-      // For example an elephant might gore you with its tusks, or stomp on you.
-      // A dragon might slash you with its claws or breathe fire.
-      // Creatures may pick these attacks randomly or intelligently, depending on the creature.
-    Vector <Creature_Attack*> vAttack;
-      
-    // short int baseAtkSlash;
-    // short int baseAtkStab;
-    // short int baseAtkBlunt;
-  
 
-		// INITIALIZATION
-	Creature();
-    // Initialise, including roll for stats. 0 - Roll gender. 1 - Male. 2 - Female.
-	void init( int _sex = 0);
-	
-		/* AI FUNCTIONS
-		
-		*/
-	virtual void incrementTicks(int = 1);
-	
-  virtual void wander();
-  
-	Texture* currentTexture () override;
-	
-	void die();
-  
-    // KNOWLEDGE
-    
-    //returns true if the Creature has seen this tile.
-  bool hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */ );
-  
-  
-	/* TABLE INTERFACE */
-	std::string getColumn(std::string _column) override;
-	std::string getColumnType(std::string _column) override;
-  
+   int actionPoints; /* Base: 100. Points are deducted for each action. */
 
-  /* COMBAT FUNCTIONS */
-  
-    //Attack a Creature once.
-  virtual void attack (Creature*, Creature_Attack*) {}
-  virtual void attack (Character*, Creature_Attack*) {}
-  
-    //Update knowledge with current instance.
-  void updateKnowledge();
-  // Extra processing available
-  void updateKnowledgeIdle();
+   bool isAlive;
+
+   int health;
+
+   // Creatures also need to eat and drink.
+   // However herbivores can eat grass.
+   int hunger;
+   int thirst;
+
+   short int fleeCounter; /* How many more turns the Creature should flee for. */
+
+   // All loaded creatures can get a link to their world.
+   World_Local* map;
+
+   //Creature's knowledge of the world (optional).
+   Creature_Knowledge* knowledge;
+
+   // INTERACTION
+   int nPelt; /* How many pelts you can harvest from the creature. */
+   int nMeat; /* How many meats you can harvest from the creature. */
+
+   // ATTACK
+   // Creatures might get a choice of attacks kinda like Pokemon.
+   // For example an elephant might gore you with its tusks, or stomp on you.
+   // A dragon might slash you with its claws or breathe fire.
+   // Creatures may pick these attacks randomly or intelligently, depending on the creature.
+   Vector <Creature_Attack*> vAttack;
+
+   // short int baseAtkSlash;
+   // short int baseAtkStab;
+   // short int baseAtkBlunt;
+
+
+   // INITIALIZATION
+   Creature();
+   // Initialise, including roll for stats. 0 - Roll gender. 1 - Male. 2 - Female.
+   void init( int _sex = 0);
+
+   /* AI FUNCTIONS
+
+   */
+   virtual void incrementTicks(int = 1);
+
+   virtual void wander();
+
+   Texture* currentTexture () override;
+
+   void die();
+
+   // KNOWLEDGE
+
+   //returns true if the Creature has seen this tile.
+   bool hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */ );
+
+
+   /* TABLE INTERFACE */
+   std::string getColumn(std::string _column) override;
+   std::string getColumnType(std::string _column) override;
+
+
+   /* COMBAT FUNCTIONS */
+
+   //Attack a Creature once.
+   virtual void attack (Creature*, Creature_Attack*) {}
+   virtual void attack (Character*, Creature_Attack*) {}
+
+   //Update knowledge with current instance.
+   void updateKnowledge();
+   // Extra processing available
+   void updateKnowledgeIdle();
 
 	
 };
