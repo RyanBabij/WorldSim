@@ -49,11 +49,11 @@ I do a lot of compilation so I use LLVM clang++ for quick test builds, and MingW
 
 I have tested these instructions on a fresh Windows 10 install, so hopefully they should work for everyone. Setting up the environment on Linux is probably much easier but I do most of my development on Windows.
 
-1. Download WorldSim source.
+1. Clone the WorldSim repo to your computer.
 
 2. Download latest WorldSim release and copy the textures into the source folder. (The game should start without textures but obviously you will want them).
 
-3. Download Wildcat library.
+3. Clone the Wildcat repo to your computer.
 
 4. Create an environment variable called WILDCAT which points to wherever you put the Wildcat code libraries.
 
@@ -67,7 +67,7 @@ NOTE: LLVM Clang doesn't come with the basic libstdc++ libraries. The best way t
 
 6. g++
 
-Standard MingW doesn't work well with threads. MingW-W64 is required. Despite the name, it's for both 32 and 64 bit Windows.
+Using standard MinGW will cause problems because it lacks threading support. mingw-w64 is required instead. mingw-w64 is an updated MinGW with support for new APIs which this program uses, mostly just threading. Despite the name, it's for both 32 and 64 bit Windows.
 
 https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download
 
@@ -85,6 +85,16 @@ Release build:
 
 g++ Driver.cpp -I %WILDCAT%\ -I %WILDCAT%\Lib\ -L %WILDCAT%\Lib\ -std=c++17 -lglew32 -lfreeglut_static -lopengl32 -lglu32 -m32 -lwinmm -lgdi32 -pthread -Wall -Wshadow -Wpointer-arith -Wcast-qual -Wextra -Wno-unused-variable -Wno-unused-parameter -Wno-unused-const-variable -Wno-unused-value -static-libgcc -static-libstdc++ -fno-strict-overflow -flto -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -pipe -fshort-enums -O3 -s -Wl,--gc-sections -Wl,--large-address-aware
 
+I don't use IDEs for my work, I currently just use [Notepad++](https://notepad-plus-plus.org/) for writing code, and [ConsoleZ](https://github.com/cbucher/console) as my command line.
+
 ### Releases
 
 I have some pre-alpha [releases](https://github.com/RyanBabij/WorldSim/releases) you can play around with. Hey it's better than most of the other stuff on github.
+
+### Contributions
+
+All contributions are welcome.
+
+### License
+
+It's currently open source and public domain. Once the project becomes viable, I will probably change to a more restrictive license, but all old releases keep their old license.
