@@ -98,3 +98,13 @@ All contributions are welcome.
 ### License
 
 It's currently open source and public domain. Once the project becomes viable, I will probably change to a more restrictive license, but all old releases keep their old license.
+
+### Style guide
+
+I prefer the Allman style. Column width is 120. Function names should be descriptive rather than short.
+
+Classes are UpperCamelCase, objects are camelCase, functions are camelCase. Iterators/indexes start with i, arrays start with a, vectors start with v, global variables/defines are UPPERCASE, local shadow variables start with an \_underscore.
+
+Indentation is tabbed, best viewed at 3 spaces per tab.
+
+Indentation is a mess. I'm in the process of moving from spaced indentation to tabbed indentation, because I discovered that you can set Github's tab width with .editorconfig.
