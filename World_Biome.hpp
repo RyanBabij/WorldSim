@@ -17,8 +17,6 @@
 #include <Game/WorldGenerator/WorldGenerator2.hpp>
 #include <Container/Table/TableInterface.hpp>
 
-class CreatureSpecies;
-
 class World_Biome: public TableInterface
 {
    RandomLehmer rng;
@@ -40,7 +38,6 @@ class World_Biome: public TableInterface
    // placeholders for objects
 
    Vector <Flora*> vFlora; // Vector of Flora types
-   Vector <CreatureSpecies*> vCreatureSpecies; // Vector of Creature types
    //Vector <std::string> vHerbivore;
    //Vector <std::string> vCarnivore;
 	
@@ -274,13 +271,6 @@ class World_Biome: public TableInterface
       {
          vFlora(i)->id=i+1;
       }
-   }
-   
-   void generateCreatures()
-   {
-      // each biome should have at least a few herbivores, and at least 1 carnivore if they can be supported.
-      
-      
    }
    
    // pick a flora type from the weighted list to spawn

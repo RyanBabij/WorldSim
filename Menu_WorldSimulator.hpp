@@ -405,7 +405,7 @@ class Menu_WorldSimulator: public GUI_Interface
         }
         else
         {
-          std::cout<<"Error: Something went wrong.\n";
+          std::cout<<"Error: world.prepareAdventureMode(~) failed.\n";
         }
         
         _keyboard->keyUp(Keyboard::TAB);
@@ -414,7 +414,7 @@ class Menu_WorldSimulator: public GUI_Interface
       }
       else
       {
-        std::cout<<"Error: Something went wrong.\n";
+        std::cout<<"Error: No player pointer.\n";
       }
 
       
