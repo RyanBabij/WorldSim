@@ -41,19 +41,49 @@ It doesn't look too pretty because it's basically just biome data. However each 
 
 This program, like all of my programs, depends on the [Wildcat](https://github.com/RyanBabij/Wildcat) code library. You must include that if you want to compile my program. I haven't done much deployment testing so it will probably not compile on your rig. I intend to fix that at some point.
 
-### Compilation
+### Build instructions (Windows 10)
 
-The project isn't easy to build because it's just my personal project. I don't use make. However if you know what you're doing you could probably figure it out. Currently I use MingW GCC for builds, and Clang for development. I have compiled for both Windows and Linux, however currently I only use Windows, so there is probably some Windows-only code in the current commits.
+I don't have a makefile or anything so you have to do it manually.
 
-Builds as of 0.0.121 use:
+I do a lot of compilation so I use LLVM clang++ for quick test builds, and MingW-W64 g++ for release builds. Ideally you will want to set up both of these, but you can install just MingW-W64 if you prefer.
 
--Wall -Wshadow -Wpointer-arith -Wcast-qual -Wextra -Wno-unused-variable -Wno-unused-parameter -Wno-unused-but-set-variable -std=c++17 -m32 -O3 -lopengl32 -lfreeglut -lglu32 -s -static-libgcc -static-libstdc++ -fno-strict-overflow -flto -fno-rtti -pipe -Wl,--large-address-aware -fno-exceptions -fshort-enums info.res
+I have tested these instructions on a fresh Windows 10 install, so hopefully they should work for everyone. Setting up the environment on Linux is probably much easier but I do most of my development on Windows.
 
-Just as a side-note, -mtune=native -march=native -ffast-math together seem to increase performance by about 3%. I guess it's not a major issue. I also tried the following crazy-ass flags: -fassociative-math -freciprocal-math -fno-signed-zeros -fno-trapping-math -frename-registers -fopenmp -D_GLIBCXX_PARALLEL -fgraphite-identity -floop-interchange -floop-block -floop-parallelize-all -ftree-loop-distribution -ftree-parallelize-loops=4 and got absolutely no gain in performance so whatevs.
+1. Download WorldSim source.
 
--Os is causing some kind of linker issues, but I don't really use -Os so it doesn't bother me.
+2. Download latest WorldSim release and copy the textures into the source folder. (The game should start without textures but obviously you will want them).
 
-I would like to use AddressSanitiser but apparently it's designed for Linux so I might take a while to get around to it.
+3. Download Wildcat library.
+
+4. Create an environment variable called WILDCAT which points to wherever you put the Wildcat code libraries.
+
+5. clang++:
+
+Install LLVM Clang Windows 64 bit binary from https://releases.llvm.org/download.html
+
+Make sure you set the PATH for the current user. You should be able to call clang++ from this point. The PATH should be something like C:\Program Files\LLVM\bin
+
+NOTE: LLVM Clang doesn't come with the basic libstdc++ libraries. The best way to deal with this is to also install MingW g++ and let it use those libraries.
+
+6. g++
+
+Standard MingW doesn't work well with threads. MingW-W64 is required. Despite the name, it's for both 32 and 64 bit Windows.
+
+https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download
+
+Install for i686 POSIX. Install to C:/mingw-w64. Add C:/mingw-w64/mingw32/bin to PATH. This should allow LLVM to access the libstdc++ libraries and compile correctly.
+
+7. Compilation
+
+With any luck, both clang++ and g++ should now correctly compile the project. Here are my compilation commands:
+
+Testing build:
+
+clang++ -target i686-pc-windows-gnu Driver.cpp -I %WILDCAT%\ -I %WILDCAT%\Lib\ -L %WILDCAT%\Lib\ -std=c++17 -lglew32 -lfreeglut_static -lopengl32 -lglu32 -m32 -lwinmm -lgdi32 -pthread -Wall -Wshadow -Wpointer-arith -Wcast-qual -Wextra -Wno-unused-variable -Wno-unused-parameter -Wno-unused-const-variable -Wno-unused-value -Wl,--large-address-aware
+
+Release build:
+
+g++ Driver.cpp -I %WILDCAT%\ -I %WILDCAT%\Lib\ -L %WILDCAT%\Lib\ -std=c++17 -lglew32 -lfreeglut_static -lopengl32 -lglu32 -m32 -lwinmm -lgdi32 -pthread -Wall -Wshadow -Wpointer-arith -Wcast-qual -Wextra -Wno-unused-variable -Wno-unused-parameter -Wno-unused-const-variable -Wno-unused-value -static-libgcc -static-libstdc++ -fno-strict-overflow -flto -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -pipe -fshort-enums -O3 -s -Wl,--gc-sections -Wl,--large-address-aware
 
 ### Releases
 
