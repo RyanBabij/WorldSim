@@ -22,64 +22,64 @@
 
 class Menu_WorldSimulator: public GUI_Interface
 {
-  private:
-    GUI_Manager guiManager;
-    Wildcat::Font* font;
-    /* Texture to draw in the background of this menu. */
-    Texture* backgroundTexture;
-    
-    /* Colours / theme. */
-    Colour cNormal;
-    Colour cSelected;
-    Colour cDropPanel;
-    Colour cHighlight;
+	private:
+		GUI_Manager guiManager;
+		Wildcat::Font* font;
+		/* Texture to draw in the background of this menu. */
+		Texture* backgroundTexture;
 
-    /* Button: Resume or commence simulation of the world map. */
-    GUI_Button buttonStartSimulation;
-    /* Button: Pause the simulation so the player can look around the world as it currently exists. */
-    GUI_Button buttonPauseSimulation;
-    /* Number entry: Simulation speed. */
-    GUI_CycleButton cycleSimulationSpeed;
-    /* Textbox: Caption for simulation speed. */
-    GUI_TextBox textSimulationSpeed;
-    /* Button: Step the simulation forward by a certain amount of time. (Day/Month/Year). */
-    GUI_Button buttonIncrementDay;
-    GUI_Button buttonIncrementMonth;
-    GUI_Button buttonIncrementYear;
-    GUI_Button buttonIncrementDecade;
-      /* Menu for investigating an individual tribe */
-    GUI_Button buttonTribeMenu;
-      /* Menu for seeing info about the world. */
-    GUI_Button buttonWorldMenu;
-      /* Menu for a list of all biomes. */
-    GUI_Button buttonBiomeMenu;
-      /* List of all characters in the game. */
-    GUI_Button buttonCharacterMenu;
-      /* Toggle tribal territory visibility */
-    GUI_Button buttonTerritoryView;
-      /* List of all Civs in the game */
-    GUI_Button buttonCivMenu;
-      /* Switch to tileset view */
-    GUI_Button buttonToggleTileset;
-      /* Switch to subterranean view on local map */
-    GUI_Button buttonSubterraneanView;
-    /* Button: Switch between 1/4 or fullscreen view of world map. */
-    GUI_Button buttonExpandMap;
-    
-    bool simulateWorld;
-    
-    bool fullScreenWorldView;
+		/* Colours / theme. */
+		Colour cNormal;
+		Colour cSelected;
+		Colour cDropPanel;
+		Colour cHighlight;
 
-    /* Submenus */
-    Menu_Tribes menuTribes;
-    Menu_Civs menuCivs;
-    Menu_World menuWorld;
-    Menu_Characters menuCharacter;
-    Menu_Biome menuBiome;
-  
+		/* Button: Resume or commence simulation of the world map. */
+		GUI_Button buttonStartSimulation;
+		/* Button: Pause the simulation so the player can look around the world as it currently exists. */
+		GUI_Button buttonPauseSimulation;
+		/* Number entry: Simulation speed. */
+		GUI_CycleButton cycleSimulationSpeed;
+		/* Textbox: Caption for simulation speed. */
+		GUI_TextBox textSimulationSpeed;
+		/* Button: Step the simulation forward by a certain amount of time. (Day/Month/Year). */
+		GUI_Button buttonIncrementDay;
+		GUI_Button buttonIncrementMonth;
+		GUI_Button buttonIncrementYear;
+		GUI_Button buttonIncrementDecade;
+		/* Menu for investigating an individual tribe */
+		GUI_Button buttonTribeMenu;
+		/* Menu for seeing info about the world. */
+		GUI_Button buttonWorldMenu;
+		/* Menu for a list of all biomes. */
+		GUI_Button buttonBiomeMenu;
+		/* List of all characters in the game. */
+		GUI_Button buttonCharacterMenu;
+		/* Toggle tribal territory visibility */
+		GUI_Button buttonTerritoryView;
+		/* List of all Civs in the game */
+		GUI_Button buttonCivMenu;
+		/* Switch to tileset view */
+		GUI_Button buttonToggleTileset;
+		/* Switch to subterranean view on local map */
+		GUI_Button buttonSubterraneanView;
+		/* Button: Switch between 1/4 or fullscreen view of world map. */
+		GUI_Button buttonExpandMap;
+
+		bool simulateWorld;
+
+		bool fullScreenWorldView;
+
+		/* Submenus */
+		Menu_Tribes menuTribes;
+		Menu_Civs menuCivs;
+		Menu_World menuWorld;
+		Menu_Characters menuCharacter;
+		Menu_Biome menuBiome;
+
 	public:
 	
-	
+
 	Menu_WorldSimulator()
 	{	
 		backgroundTexture=&TEX_NEW_GAME_BACKGROUND;
@@ -87,14 +87,14 @@ class Menu_WorldSimulator: public GUI_Interface
 		worldViewer.world = &world;
 		worldViewer.active = true;
 		simulateWorld=false;
-		
+
 		buttonExpandMap.text="Expand";
 		buttonExpandMap.setColours(&cNormal,&cHighlight,0);
 		//buttonExpandMap.setPanel(0,0,32,32);
 		buttonExpandMap.texture = &TEX_GUI_EXPAND;
-		
+
 		fullScreenWorldView=true;
-		
+
 		menuTribes.active=false;
 		menuWorld.active=false;
 		menuCharacter.active=false;
@@ -114,7 +114,7 @@ class Menu_WorldSimulator: public GUI_Interface
 		cSelected.set(180,180,180);
 		cDropPanel.set(170,170,170);
 		cHighlight.set(170,170,170);
-		
+
 		cycleSimulationSpeed.wrap=false;
 		cycleSimulationSpeed.currentOption=0;
 		cycleSimulationSpeed.addOption("PAUSED");
@@ -129,10 +129,10 @@ class Menu_WorldSimulator: public GUI_Interface
 		cycleSimulationSpeed.addOption("100,000,000x");
 		cycleSimulationSpeed.texCycleButton=&TEX_GUI_DECREMENT;
 		cycleSimulationSpeed.setColours(&cNormal,&cHighlight,0);
-		
+
 		textSimulationSpeed.text="Speed:";
 		textSimulationSpeed.setColours(&cNormal);
-		
+
 		buttonIncrementDay.text = "+D";
 		buttonIncrementDay.setColours(&cNormal,&cHighlight,0);
 		buttonIncrementMonth.text = "+M";
@@ -153,18 +153,18 @@ class Menu_WorldSimulator: public GUI_Interface
 		buttonCivMenu.setColours(&cNormal,&cHighlight,0);
 		buttonToggleTileset.text="V";
 		buttonToggleTileset.setColours(&cNormal,&cHighlight,0);
-    buttonSubterraneanView.text = "S";
-    buttonSubterraneanView.setColours(&cNormal,&cHighlight,0);
+		buttonSubterraneanView.text = "S";
+		buttonSubterraneanView.setColours(&cNormal,&cHighlight,0);
 		buttonTerritoryView.text="T2";
 		buttonTerritoryView.setColours(&cNormal,&cHighlight,0);
-		
+
 		guiManager.add(&textSimulationSpeed);
 		guiManager.add(&cycleSimulationSpeed);
 		guiManager.add(&buttonIncrementDay);
 		guiManager.add(&buttonIncrementMonth);
 		guiManager.add(&buttonIncrementYear);
 		guiManager.add(&buttonIncrementDecade);
-		
+
 		guiManager.add(&buttonTribeMenu);
 		guiManager.add(&buttonWorldMenu);
 		guiManager.add(&buttonBiomeMenu);
@@ -173,7 +173,7 @@ class Menu_WorldSimulator: public GUI_Interface
 		guiManager.add(&buttonTerritoryView);
 		guiManager.add(&buttonToggleTileset);
 		guiManager.add(&buttonSubterraneanView);
-		
+
 		/* Submenus */
 		guiManager.add(&menuTribes);
 		guiManager.add(&menuCivs);
@@ -188,7 +188,7 @@ class Menu_WorldSimulator: public GUI_Interface
 		buttonIncrementMonth.active=true;
 		buttonIncrementYear.active=true;
 		buttonIncrementDecade.active=true;
-		
+
 		buttonTribeMenu.active=true;
 		buttonWorldMenu.active=true;
 		buttonBiomeMenu.active=true;
@@ -197,17 +197,17 @@ class Menu_WorldSimulator: public GUI_Interface
 		buttonTerritoryView.active=true;
 		buttonToggleTileset.active=true;
 		buttonSubterraneanView.active=true;
-		
+
 		buttonExpandMap.active = false;
 		buttonStartSimulation.active = false;
 		buttonPauseSimulation.active = false;
-		
+
 		menuTribes.init();
 		menuCivs.init();
 		menuWorld.init();
 		menuCharacter.init();
 		menuBiome.init();
-		
+
 		worldViewer.centerView();
 		eventResize();
 	}
