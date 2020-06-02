@@ -23,36 +23,36 @@ Settlement_Dwarven::Settlement_Dwarven()
 
 Texture* Settlement_Dwarven::currentTexture()
 {
-   return &TEX_WORLD_SETTLEMENT_DWARFFORT_01;
+	return &TEX_WORLD_SETTLEMENT_DWARFFORT_01;
 }
 
   /* SIMULATE X TURNS OF THE SETTLEMENT. */
 void Settlement_Dwarven::incrementTicks ( int nTicks )
 {
-   dailyCounter+=nTicks;
-   monthlyCounter+=nTicks;
+	dailyCounter+=nTicks;
+	monthlyCounter+=nTicks;
 
 
 
   
-   while (monthlyCounter >= 2592000)
-   {
+	while (monthlyCounter >= 2592000)
+	{
     if ( world->aWorldTile(worldX,worldY).baseMetal > 0 )
     {
       nMetalStockpile+=30;
     }
 
-      monthlyCounter-=2592000;
-   }
+		monthlyCounter-=2592000;
+	}
   
-   while ( dailyCounter >= 86400 )
+	while ( dailyCounter >= 86400 )
   {
     // if ( world->aWorldTile(worldX,worldY).baseMetal > 0 )
     // {
       // ++nMetalStockpile;
     // }
-      dailyCounter-=86400;
-   }
+		dailyCounter-=86400;
+	}
   
   return;
 }

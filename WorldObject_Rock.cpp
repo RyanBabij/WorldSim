@@ -5,22 +5,22 @@
 #include"WorldObject_Rock.hpp"
 
 /* WorldObject_Rock.cpp
-   #include"WorldObject_Rock.cpp"
-   <DOCUMENTATION>
+	#include"WorldObject_Rock.cpp"
+	<DOCUMENTATION>
 */
 
 WorldObject_Rock::WorldObject_Rock()
 {
-   x=0; y=0;
-   weight=0;
-   bulk=0;
+	x=0; y=0;
+	weight=0;
+	bulk=0;
   
   nGold = 0;
 }
 
 std::string WorldObject_Rock::getName()
 {
-   return "Rock";
+	return "Rock";
 }
 
 
@@ -31,7 +31,7 @@ Texture* WorldObject_Rock::currentTexture()
     return &TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI_GOLD;
   }
   
-   return &TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI;
+	return &TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI;
 }
 
 #endif

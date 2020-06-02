@@ -3,7 +3,7 @@
 #define WORLDSIM_WORLDOBJECTGLOBAL_TRIBALARTIFACT_CPP
 
 /* WorldSim: WorldObjectGlobal_TribalArtifact.cpp
-   #include "WorldObjectGlobal_TribalArtifact.cpp"
+	#include "WorldObjectGlobal_TribalArtifact.cpp"
 
   Tribal Artifacts are artifacts created by Tribes. Some of them are a curiosity, others may grant powers.
 

@@ -3,7 +3,7 @@
 #define WORLDSIM_CREATURE_ALL_CPP
 
 /* WorldSim: Creature_All.cpp
-   #include"Creature_All.cpp"
+	#include"Creature_All.cpp"
 
   Implementation of Creature_All.hpp.
 */
@@ -28,7 +28,7 @@ void Creature_Bat::init(const int _sex  /*=0*/ )
   else if (_sex == 2) { isMale = false; }
   else { isMale = Random::flip(); }
   
-   age=0;
+	age=0;
   map=0;
   knowledge = new Creature_Knowledge;
   knowledge->init();
@@ -137,18 +137,18 @@ void Creature_Bat::incrementTicks(int nTicks)
   
   //Bat AI will be simple. Fly around and attack any Characters nearby.
   
-   secondsCounter+=nTicks;
-   
-   while(secondsCounter>=86400)
-   {
-      ++daysCounter;
-      secondsCounter-=86400;
-   }
-   while(daysCounter >=360)
-   {
-      age++;
-      daysCounter-=360;
-   }
+	secondsCounter+=nTicks;
+	
+	while(secondsCounter>=86400)
+	{
+		++daysCounter;
+		secondsCounter-=86400;
+	}
+	while(daysCounter >=360)
+	{
+		age++;
+		daysCounter-=360;
+	}
 }
 
 void Creature_Bat::attack (Creature* _target, Creature_Attack* _attack)

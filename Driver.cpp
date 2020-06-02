@@ -1,6 +1,6 @@
 /* WorldSim: Driver
   
-   Main file for WorldSim. Created by Ryan Babij (https://github.com/RyanBabij/WorldSim)
+	Main file for WorldSim. Created by Ryan Babij (https://github.com/RyanBabij/WorldSim)
    
   All code and binaries in WorldSim repo are copyrighted.
   Wildcat code is public domain.
@@ -16,7 +16,7 @@
 #define FREEGLUT_STATIC // static link freeGLUT
 #include <Graphics/OpenGL/freeglut.h> //
 
-   // DYNAMICALLY GENERATED HEADER FILE WITH STRING WHICH COUNTS COMPILATIONS.
+	// DYNAMICALLY GENERATED HEADER FILE WITH STRING WHICH COUNTS COMPILATIONS.
 #include "CompileCount.hpp"
 
 #include <iostream>
@@ -25,7 +25,7 @@
 
 #include <Container/Vector/Vector.hpp>
 
-   // VECTOR OF MESSAGES FOR THE PLAYER TO READ.
+	// VECTOR OF MESSAGES FOR THE PLAYER TO READ.
 Vector <std::string> vConsoleMessage;
 
 inline void consoleMessage(std::string s)
@@ -87,24 +87,24 @@ void printHelp()
 {
   std::cout<<"\nWorldSim"<<VERSION<<".\n";
   std::cout<<"  Warning: This is not a stable release.\n";
-   std::cout<<"  WorldSim is a 2D tile-based sandbox RPG with procedurally generated fantasy world.\n";
-   std::cout<<"  License: Public domain. This program uses a modified version of LodePNG.\n";
-   std::cout<<"  This is a pre-alpha release, and is not fully functional.\n";
+	std::cout<<"  WorldSim is a 2D tile-based sandbox RPG with procedurally generated fantasy world.\n";
+	std::cout<<"  License: Public domain. This program uses a modified version of LodePNG.\n";
+	std::cout<<"  This is a pre-alpha release, and is not fully functional.\n";
 
-   std::cout<<"Options:\n";
+	std::cout<<"Options:\n";
   std::cout<<"None.\n";
 
-   std::cout<<"\n";
-   std::cout<<"Version "<<VERSION<<".\n";
-   std::cout<<"Compiled: "<<__DATE__<<". "<<__TIME__<<".\n";
-   std::cout<<"Compile count: "<<COMPILE_COUNT<<".\n";
-   std::cout<<"\n";
+	std::cout<<"\n";
+	std::cout<<"Version "<<VERSION<<".\n";
+	std::cout<<"Compiled: "<<__DATE__<<". "<<__TIME__<<".\n";
+	std::cout<<"Compile count: "<<COMPILE_COUNT<<".\n";
+	std::cout<<"\n";
 }
 
 void pauseGame()
 {
-   std::cout<<"pauseGame() called.\n";
-   PAUSE_LOGIC=true;
+	std::cout<<"pauseGame() called.\n";
+	PAUSE_LOGIC=true;
 }
 
 /* This object exploits the c++ guarantee that the destructor is always called, in order to deal with unanticipated shutdowns, such as the player clicking the X. However, it seems the destructor guarantee does not apply in some cases, such as ending the process using the task manager, or using ctrl+c from the console.
@@ -196,7 +196,7 @@ World world;
 World_Local * worldLocal;
 
 #include "LocalTile.cpp"
-   
+	
 #include "Creature.cpp"
   #include "Creature_Knowledge.cpp"
   #include "Creature_All.cpp"
@@ -288,9 +288,9 @@ Menu_AdventureMode menuAdventureMode;
 /* Tidies up the game and shuts down. */
 void shutDown(int signal=0)
 {
-   std::cout<<"Driver::shutDown().\n";
+	std::cout<<"Driver::shutDown().\n";
    QUIT_FLAG=true;
-   exit(1);
+	exit(1);
 }
 
 /* OpenGL function hooks go here. */
@@ -302,22 +302,22 @@ void shutDown(int signal=0)
 
 int main(int nArgs, char ** arg)
 {
-   ArgReader argReader;
-   argReader.feed(nArgs,arg);
+	ArgReader argReader;
+	argReader.feed(nArgs,arg);
   
-   if (argReader.hasTag("-help") || argReader.hasTag("--help") || argReader.hasTag("-h"))
-   {
-      printHelp();
-      return 0;
-   }
+	if (argReader.hasTag("-help") || argReader.hasTag("--help") || argReader.hasTag("-h"))
+	{
+		printHelp();
+		return 0;
+	}
   
   
-   std::cout<<"\nWorldSim "<<VERSION<<". Warning: This is not a stable release.\n";
+	std::cout<<"\nWorldSim "<<VERSION<<". Warning: This is not a stable release.\n";
 
-   GL_init(nArgs, arg);
-   
-   /* Initialise game. Load textures, fonts etc. */
-   init();
+	GL_init(nArgs, arg);
+	
+	/* Initialise game. Load textures, fonts etc. */
+	init();
    
    // Catch CTRL+C signals
    // CTRL+C from the CMD seems to terminate threads before they
@@ -343,8 +343,8 @@ int main(int nArgs, char ** arg)
   // });
 #endif
   
-   /* Reshape is called here. */
-   glutMainLoop();
-   
-   return 0;
+	/* Reshape is called here. */
+	glutMainLoop();
+	
+	return 0;
 }

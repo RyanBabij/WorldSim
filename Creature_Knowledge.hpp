@@ -15,7 +15,7 @@
 
 class Creature_Knowledge
 {
-   public:
+	public:
   Pathing_Local p;
   
   unsigned int pathIndex;
@@ -33,9 +33,9 @@ class Creature_Knowledge
   HasXY currentGoal; /* Creatures can wander by moving toward a particular waypoint */
   HasXY threatLocation; /* Creature should avoid this location */
 
-      /* INITIALIZATION */
-   Creature_Knowledge();
-   void init();
+		/* INITIALIZATION */
+	Creature_Knowledge();
+	void init();
 
   
     // Add this tile into the Character's knowledge (if it isn't already)
@@ -55,7 +55,7 @@ class Creature_Knowledge
   
     // Return next step from path. NESW. 0 if no path.
   char nextStep();
-   
+	
     //returns true if the Character can currently see this tile.
   //bool canSee( World_Local* /* _map */, int /* _x */, int /* _y */ );
 };

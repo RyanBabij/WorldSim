@@ -25,7 +25,7 @@
    We should be able to significantly improve render efficiency by building an array or vector of textures to draw.
    Then we draw each texture, only binding them once. Texture binding seems to be expensive so I think this will save
    a lot of render time.
-   
+	
 */
 
 #include <Device/Display/DisplayInterface.hpp>
@@ -237,7 +237,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 
       rainManager.init(0,0,0,0,0);
    }
-   
+	
    // Center the view on the middle of the world. Good for initializing.
    void centerView()
    {
@@ -250,7 +250,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
       centerTileX+=0.5;
       centerTileY+=0.5;
    }
-   
+	
    bool keyboardEvent( Keyboard* _keyboard )
    {
       //zoomIn();
@@ -330,7 +330,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
          centerTileY = world->nY;
       }
    }
-   
+	
    bool mouseEvent ( Mouse* mouse )
    {
       if ( world==0 ) { return false; }
@@ -403,7 +403,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 
       rainManager.init(_x1,_y1,_x2,_y2,world);
    }
-   
+	
    inline void setCenterTile (const double _centerTileX, const double _centerTileY, const int _subTileX=LOCAL_MAP_SIZE/2, const int _subTileY=LOCAL_MAP_SIZE/2)
    {
       centerTileX = _centerTileX;
@@ -412,62 +412,62 @@ class WorldViewer: public DisplayInterface, public MouseInterface
       centerTileX += (_subTileX * localTileMantissa)+localTileMantissa/2;
       centerTileY += (_subTileY * localTileMantissa)+localTileMantissa/2;
    }
-   
-      /* Convert tile coordinates to screen (pixel) coordinates. */
-   void toScreenCoords(const int _tileX, const int _tileY, int * _pixelX, int * _pixelY)
-   {
-      
-      float centerTileXDecimal = centerTileX - (int)centerTileX;
-      float centerTileYDecimal = centerTileY - (int)centerTileY;
-      
-      float centerTileXPixels = centerTileXDecimal*tileSize;
-      float centerTileYPixels = centerTileYDecimal*tileSize;
-   
+	
+		/* Convert tile coordinates to screen (pixel) coordinates. */
+	void toScreenCoords(const int _tileX, const int _tileY, int * _pixelX, int * _pixelY)
+	{
+		
+		float centerTileXDecimal = centerTileX - (int)centerTileX;
+		float centerTileYDecimal = centerTileY - (int)centerTileY;
+		
+		float centerTileXPixels = centerTileXDecimal*tileSize;
+		float centerTileYPixels = centerTileYDecimal*tileSize;
+	
 
-      //double pixelOffsetX = tileSize*centerTileXDecimal;
-      //double pixelOffsetY = tileSize*centerTileYDecimal;
+		//double pixelOffsetX = tileSize*centerTileXDecimal;
+		//double pixelOffsetY = tileSize*centerTileYDecimal;
 
-      const int iCenterTileX = centerTileX;
-      
+		const int iCenterTileX = centerTileX;
+		
 
-      const int tilesToDrawX = (mainViewNX/tileSize) + 1;
-      const int tilesToDrawY = (mainViewNY/tileSize) + 1;
-      
-      int tileX=centerTileX;
-      int pixelTileX = mainViewX1+(mainViewNX/2) - centerTileXPixels;
-      while(pixelTileX>=mainViewX1)
-      {
-         --tileX;
-         tileX-=tilesToSkip;
-         pixelTileX-=tileSize;
-         
-      }
-      const int revertTileX = tileX;
-      
-      int tileY=centerTileY;
-      int pixelTileY = mainViewY1 + (mainViewNY/2) - centerTileYPixels;
-      while(pixelTileY>=0)
-      {
-         --tileY;
-         tileY-=tilesToSkip;
-         pixelTileY-=tileSize;
-      }
-      
-      
-      int nExtraXTiles = _tileX - tileX;
-      int nExtraYTiles = _tileY - tileY;
-      
-      if ( nExtraXTiles>=0 && nExtraYTiles>=0 )
-      {
-         *_pixelX = pixelTileX + (tileSize * nExtraXTiles);
-         *_pixelY = pixelTileY + (tileSize * nExtraYTiles);
-      }
-      else
-      {
-         *_pixelX = -1000;
+		const int tilesToDrawX = (mainViewNX/tileSize) + 1;
+		const int tilesToDrawY = (mainViewNY/tileSize) + 1;
+		
+		int tileX=centerTileX;
+		int pixelTileX = mainViewX1+(mainViewNX/2) - centerTileXPixels;
+		while(pixelTileX>=mainViewX1)
+		{
+			--tileX;
+			tileX-=tilesToSkip;
+			pixelTileX-=tileSize;
+			
+		}
+		const int revertTileX = tileX;
+		
+		int tileY=centerTileY;
+		int pixelTileY = mainViewY1 + (mainViewNY/2) - centerTileYPixels;
+		while(pixelTileY>=0)
+		{
+			--tileY;
+			tileY-=tilesToSkip;
+			pixelTileY-=tileSize;
+		}
+		
+		
+		int nExtraXTiles = _tileX - tileX;
+		int nExtraYTiles = _tileY - tileY;
+		
+		if ( nExtraXTiles>=0 && nExtraYTiles>=0 )
+		{
+			*_pixelX = pixelTileX + (tileSize * nExtraXTiles);
+			*_pixelY = pixelTileY + (tileSize * nExtraYTiles);
+		}
+		else
+		{
+			*_pixelX = -1000;
          *_pixelY = -1000;
-      }
-   }
+		}
+	}
   
    // Take the given pixels and calculate what tile they are. This is in absolute coordinates.
    // I need to add a version which can do relative coords.
@@ -494,7 +494,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
       *absX = firstTileAbsX + ((double)pixelDistanceX/pixelsPerLocalTile);
       *absY = firstTileAbsY + ((double)pixelDistanceY/pixelsPerLocalTile);
    }
-   
+	
    /* HERE I RENDER THE GRAPHICAL ICONS WHICH ARE PRESENT ON THE WORLD MAP, FOR EXAMPLE: CITIES AND ARMIES. */
    /* ONLY A SMALL NUMBER OF WORLD TILES WILL HAVE AN ICON ON THEM, SO I WILL USE A DIFFERENT TECHNIQUE. */
    void renderWorldIcons()
@@ -506,7 +506,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
          std::cout<<"ABORT: No world to render.\n";
          return;
       }
-      
+		
       // set viewport to panel
       Renderer::saveViewPort();
       Renderer::resizeViewPort(mainViewX1,mainViewY1,mainViewX2,mainViewY2);
@@ -578,7 +578,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
          {
             Renderer::placeTexture4(wogPixelX,wogPixelY,wogPixelX+tileSize,wogPixelY+tileSize,wog->currentTexture(),false);
          }
-      }
+		}
       /* RESTORE THE VIEWPORT TO THE PREVIOUS SETTING (PROBABLY THE WHOLE PANEL). */
       Renderer::restoreViewPort();
    }
@@ -592,8 +592,8 @@ class WorldViewer: public DisplayInterface, public MouseInterface
    {
    }
 
-   void render()
-   {
+	void render()
+	{
       if (active == false || world==0)
       { return; }
       

@@ -3,7 +3,7 @@
 #define WORLDSIM_LOCALTILE_HPP
 
 /*
-   LocalTile stores tile info on the local maps. Stuff like objects on that tile, etc.
+	LocalTile stores tile info on the local maps. Stuff like objects on that tile, etc.
    
    Basic details like heightmap are stored as a seed, to cut down on memory footprint. Tile can be constructed into an array on demand. Modifications to the world are stored seperately.
    
@@ -99,7 +99,7 @@ class LocalTile: public HasTexture
   
 
     // This returns the base terrain texture.
-   virtual Texture* currentTexture();
+	virtual Texture* currentTexture();
   
     // Return vector of all textures to be drawn, to be drawn from index 0 to n-1.
   virtual Vector <Texture*> * currentTextures();
@@ -123,7 +123,7 @@ class LocalTile: public HasTexture
   //Abstract data is just the bare minimum data to run simulations: Collision data and food values for wildlife.
   std::string getAbstractData();
   void loadData(std::string);
-   
+	
 };
 
 #endif

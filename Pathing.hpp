@@ -2,7 +2,7 @@
 #define WORLDSIM_PATHING_HPP
 
 /* Pathing.hpp
-   #include"Pathing.hpp"
+	#include"Pathing.hpp"
   
   This class handles all pathing within the world and local maps. Pathing objects can automatically update
   and also be built incrementally over several turns, which can improve performance. Threading will also be an option
@@ -16,76 +16,76 @@
 class Pathing_Local
 {
 
-   struct Node
-   {
-      int x,y,z;
-      int distanceFromTarget;
-      int distanceFromSource;
-      bool exhausted;
+	struct Node
+	{
+		int x,y,z;
+		int distanceFromTarget;
+		int distanceFromSource;
+		bool exhausted;
     bool created;
     
     Node* parent;
     char pathName;
-      
-      Node()
-      {
-         exhausted=false;
-         x=0; y=0;
-         distanceFromTarget=0; distanceFromSource=0;
+		
+		Node()
+		{
+			exhausted=false;
+			x=0; y=0;
+			distanceFromTarget=0; distanceFromSource=0;
       created=false;
       
       parent=0;
       pathName=0;
-      }
-      void findDistance(int _currentX, int _currentY, int _sX, int _sY, int _tX, int _tY)
-      {
-         /*manhattan distance*/
-         distanceFromTarget=abs((_currentX-_tX))+abs((_currentY-_tY));
-         distanceFromSource=abs((_currentX-_sX))+abs((_currentY-_sY));
-      }
-      void setCoords(const int _x, const int _y)
-      {
-         x=_x;
-         y=_y;
-      }
-   };
-   
-   World_Local* map;
+		}
+		void findDistance(int _currentX, int _currentY, int _sX, int _sY, int _tX, int _tY)
+		{
+			/*manhattan distance*/
+			distanceFromTarget=abs((_currentX-_tX))+abs((_currentY-_tY));
+			distanceFromSource=abs((_currentX-_sX))+abs((_currentY-_sY));
+		}
+		void setCoords(const int _x, const int _y)
+		{
+			x=_x;
+			y=_y;
+		}
+	};
+	
+	World_Local* map;
 
-   ArrayS2 <Node*> aNode;
-   Vector <Node*> vNode;
+	ArrayS2 <Node*> aNode;
+	Vector <Node*> vNode;
   /* The last node which was closest to/furthest from the target. Useful for providing incomplete solution. */
   // For now we find it from the vector. In future we might track it.
   ///Node* bestNode;
 
   
   Node* finalNode;
-   
-   int sourceOriginalX;
-   int sourceOriginalY;
-   
-   int pathSize;
-   
-   int sX;
-   int sY;
-   
-   int tX;
-   int tY;
+	
+	int sourceOriginalX;
+	int sourceOriginalY;
+	
+	int pathSize;
+	
+	int sX;
+	int sY;
+	
+	int tX;
+	int tY;
 
 
   bool finished;
   bool flipBest; /* Prevent always going a single direction. */
 
-   
-   public:
+	
+	public:
   
-   Vector <char> vPath;
+	Vector <char> vPath;
 
-   Pathing_Local()
-   {
-      map=0;
-      sourceOriginalX=0;
-      sourceOriginalY=0;
+	Pathing_Local()
+	{
+		map=0;
+		sourceOriginalX=0;
+		sourceOriginalY=0;
     pathSize=0;
     sX=0;
     sY=0;
@@ -99,7 +99,7 @@ class Pathing_Local
     flipBest = false;
     
     aNode.init(1,1,0);
-   }
+	}
   ~Pathing_Local()
   {
     for(int y=0;y<aNode.nY;++y)
@@ -111,11 +111,11 @@ class Pathing_Local
     } 
   }
 
-   void init(World_Local* _map)
-   {
+	void init(World_Local* _map)
+	{
 
-      sourceOriginalX=0;
-      sourceOriginalY=0;
+		sourceOriginalX=0;
+		sourceOriginalY=0;
     pathSize=0;
     sX=0;
     sY=0;
@@ -129,7 +129,7 @@ class Pathing_Local
     flipBest = false;
     
     
-      map=_map;
+		map=_map;
     if (_map==0 || _map->data==0 ) { return; }
     
     if (map->data->aLocalTile.nX < 1 || map->data->aLocalTile.nY < 1)
@@ -146,8 +146,8 @@ class Pathing_Local
       }
     } 
     
-      //Node* n = new Node;
-      aNode.init(map->data->aLocalTile.nX,map->data->aLocalTile.nY,0);
+		//Node* n = new Node;
+		aNode.init(map->data->aLocalTile.nX,map->data->aLocalTile.nY,0);
     vNode.clear();
     vPath.clear();
     
@@ -162,7 +162,7 @@ class Pathing_Local
         aNode(x,y)->created=false;
       }
     }
-   }
+	}
   
   // Do a simple local A* path. _pathSize 0 = unlimited
   // pathAway true sets best nodes as those furthest away from target.
@@ -172,19 +172,19 @@ class Pathing_Local
     if (map->isSafe (_startX,_startY) == false || map->isSafe (_endX, _endY) == false)
     { return false; }
   
-      sourceOriginalX=_startX;
-      sourceOriginalY=_startY;
-      
+		sourceOriginalX=_startX;
+		sourceOriginalY=_startY;
+		
     pathSize = _pathSize;
     vPath.clear();
     vNode.clear();
 
-      
-      sX=_startX;
-      sY=_startY;
-      
-      tX=_endX;
-      tY=_endY;
+		
+		sX=_startX;
+		sY=_startY;
+		
+		tX=_endX;
+		tY=_endY;
     
     vNode.push(aNode(_startX,_startY));
     aNode(_startX,_startY)->findDistance(_startX,_startY,sX,sY,tX,tY);
@@ -221,29 +221,29 @@ class Pathing_Local
 
     return false;
   }
-   
+	
   // Simple path basically just walks in the general direction of the target.
   // This is done before using the more expensive A*.
-   bool appendSimplePath()
-   {
-      return false;
-   }
+	bool appendSimplePath()
+	{
+		return false;
+	}
 
   // This only expands local tiles for pathing. Path will only be able to consider tiles in the current map.
-   void expandLocal(int _x, int _y)
-   {
-      aNode(_x,_y)->exhausted=true;
-      const int pNodeX=_x;
-      const int pNodeY=_y;
-      
+	void expandLocal(int _x, int _y)
+	{
+		aNode(_x,_y)->exhausted=true;
+		const int pNodeX=_x;
+		const int pNodeY=_y;
+		
     // NORTH
-      if(pNodeY<aNode.nY-1 && aNode(pNodeX,pNodeY+1)->exhausted==false
-         && map->data->aLocalTile(pNodeX, pNodeY+1).canTravelSouth()
-         && map->data->aLocalTile(pNodeX, pNodeY).canTravelNorth()
+		if(pNodeY<aNode.nY-1 && aNode(pNodeX,pNodeY+1)->exhausted==false
+			&& map->data->aLocalTile(pNodeX, pNodeY+1).canTravelSouth()
+			&& map->data->aLocalTile(pNodeX, pNodeY).canTravelNorth()
       && map->data->aLocalTile(pNodeX, pNodeY+1).hasMovementBlocker()==false )
-      {
-         aNode(pNodeX, pNodeY+1)->findDistance(_x,_y+1,sX,sY,tX,tY);
-         vNode.push(aNode(pNodeX, pNodeY+1));
+		{
+			aNode(pNodeX, pNodeY+1)->findDistance(_x,_y+1,sX,sY,tX,tY);
+			vNode.push(aNode(pNodeX, pNodeY+1));
       aNode(pNodeX, pNodeY+1)->created=true;
       
       if ( aNode(pNodeX, pNodeY+1)->parent == 0 )
@@ -251,15 +251,15 @@ class Pathing_Local
         aNode(pNodeX, pNodeY+1)->parent = aNode(_x,_y);
         aNode(pNodeX, pNodeY+1)->pathName = 'N';
       }
-      }
+		}
     // SOUTH
-      if(pNodeY>0 && aNode(pNodeX,pNodeY-1)->exhausted==false
-         && map->data->aLocalTile(pNodeX, pNodeY-1).canTravelNorth()
-         && map->data->aLocalTile(pNodeX, pNodeY).canTravelSouth()
+		if(pNodeY>0 && aNode(pNodeX,pNodeY-1)->exhausted==false
+			&& map->data->aLocalTile(pNodeX, pNodeY-1).canTravelNorth()
+			&& map->data->aLocalTile(pNodeX, pNodeY).canTravelSouth()
       && map->data->aLocalTile(pNodeX, pNodeY-1).hasMovementBlocker()==false )
-      {
-         aNode(pNodeX, pNodeY-1)->findDistance(_x,_y-1,sX,sY,tX,tY);
-         vNode.push(aNode(pNodeX, pNodeY-1));
+		{
+			aNode(pNodeX, pNodeY-1)->findDistance(_x,_y-1,sX,sY,tX,tY);
+			vNode.push(aNode(pNodeX, pNodeY-1));
       aNode(pNodeX, pNodeY-1)->created=true;
 
       if ( aNode(pNodeX, pNodeY-1)->parent == 0 )
@@ -269,15 +269,15 @@ class Pathing_Local
       }
       
       
-      }
+		}
     // EAST
-      if(pNodeX<aNode.nX-1 && aNode(pNodeX+1,pNodeY)->exhausted==false
-         && map->data->aLocalTile(pNodeX+1, pNodeY).canTravelWest()
-         && map->data->aLocalTile(pNodeX, pNodeY).canTravelEast()
+		if(pNodeX<aNode.nX-1 && aNode(pNodeX+1,pNodeY)->exhausted==false
+			&& map->data->aLocalTile(pNodeX+1, pNodeY).canTravelWest()
+			&& map->data->aLocalTile(pNodeX, pNodeY).canTravelEast()
       && map->data->aLocalTile(pNodeX+1, pNodeY).hasMovementBlocker()==false )
-      {
-         aNode(pNodeX+1, pNodeY)->findDistance(_x+1,_y,sX,sY,tX,tY);
-         vNode.push(aNode(pNodeX+1, pNodeY));
+		{
+			aNode(pNodeX+1, pNodeY)->findDistance(_x+1,_y,sX,sY,tX,tY);
+			vNode.push(aNode(pNodeX+1, pNodeY));
       aNode(pNodeX+1, pNodeY)->created=true;
 
       if ( aNode(pNodeX+1, pNodeY)->parent == 0 )
@@ -285,15 +285,15 @@ class Pathing_Local
         aNode(pNodeX+1, pNodeY)->parent = aNode(_x,_y);
         aNode(pNodeX+1, pNodeY)->pathName = 'E';
       }
-      }
+		}
     // WEST
-      if(pNodeX>0 && aNode(pNodeX-1,pNodeY)->exhausted==false
-         && map->data->aLocalTile(pNodeX-1, pNodeY).canTravelEast()
-         && map->data->aLocalTile(pNodeX, pNodeY).canTravelWest()
+		if(pNodeX>0 && aNode(pNodeX-1,pNodeY)->exhausted==false
+			&& map->data->aLocalTile(pNodeX-1, pNodeY).canTravelEast()
+			&& map->data->aLocalTile(pNodeX, pNodeY).canTravelWest()
       && map->data->aLocalTile(pNodeX-1, pNodeY).hasMovementBlocker()==false )
-      {
-         aNode(pNodeX-1, pNodeY)->findDistance(_x-1,_y,sX,sY,tX,tY);
-         vNode.push(aNode(pNodeX-1, pNodeY));
+		{
+			aNode(pNodeX-1, pNodeY)->findDistance(_x-1,_y,sX,sY,tX,tY);
+			vNode.push(aNode(pNodeX-1, pNodeY));
       aNode(pNodeX-1, pNodeY)->created=true;
       aNode(pNodeX-1, pNodeY)->parent = aNode(_x,_y);
       aNode(pNodeX-1, pNodeY)->pathName = 'W';
@@ -303,8 +303,8 @@ class Pathing_Local
         aNode(pNodeX-1, pNodeY)->parent = aNode(_x,_y);
         aNode(pNodeX-1, pNodeY)->pathName = 'W';
       }
-      }
-   }
+		}
+	}
   void expandLocal (Node* pNode)
   {
     if (pNode==0) { return; }

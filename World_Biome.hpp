@@ -3,7 +3,7 @@
 #define WORLDSIM_WORLD_BIOME_HPP
 
 /* WorldSim: World_Biome.hpp
-   #include "World_Biome.hpp"
+	#include "World_Biome.hpp"
 
   Stores data for the various biomes in the world.
   Useful for biome-specific simulation.
@@ -21,16 +21,16 @@ class World_Biome: public TableInterface
 {
    RandomLehmer rng;
    
-   public:
+	public:
    
    bool isGenerated; // true if all tiles have been generated.
    bool threadAccess; // true if a thread is using this biome
    
    int id; // the biome's id. Used to lookup biome tables.
-   
-   std::string name;
-   unsigned int size; /* size in tiles */
-   unsigned char type; /* Biome type */
+	
+	std::string name;
+	unsigned int size; /* size in tiles */
+	unsigned char type; /* Biome type */
    
    Vector <HasXY> vXY; // every tile coordinate of this biome.
    Vector <World_Local*> vMap; // pointer to every map on this biome
@@ -40,50 +40,50 @@ class World_Biome: public TableInterface
    Vector <Flora*> vFlora; // Vector of Flora types
    //Vector <std::string> vHerbivore;
    //Vector <std::string> vCarnivore;
-   
-   World_Biome()
-   {
-      name="";
-      size=0;
+	
+	World_Biome()
+	{
+		name="";
+		size=0;
       rng.seed(globalRandom.rand32());
       
       isGenerated=false;
       threadAccess=false;
       
       id=-1;
-   }
-   
-   virtual ~World_Biome()
-   {
-   }
-   
-   //  NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13
-   std::string getColumn(std::string _column)
-   {
-      if ( _column=="name" )
-      {
-         return name;
-      }
-      else if ( _column=="size" )
-      {
-         return DataTools::toString(size);
-      }
-      else if ( _column=="type" )
-      {
-         return WorldGenerator2::biomeName[type];
-      }
+	}
+	
+	virtual ~World_Biome()
+	{
+	}
+	
+	//  NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13
+	std::string getColumn(std::string _column)
+	{
+		if ( _column=="name" )
+		{
+			return name;
+		}
+		else if ( _column=="size" )
+		{
+			return DataTools::toString(size);
+		}
+		else if ( _column=="type" )
+		{
+			return WorldGenerator2::biomeName[type];
+		}
 
-      
-      return "?";
-   }
-   std::string getColumnType(std::string _column)
-   {
-      if ( _column == "size" )
-      {
-         return "number";
-      }
-      return "string";
-   }
+		
+		return "?";
+	}
+	std::string getColumnType(std::string _column)
+	{
+		if ( _column == "size" )
+		{
+			return "number";
+		}
+		return "string";
+	}
    
    // generate entire biome including terrain, flora, etc.
    void generate()

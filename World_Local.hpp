@@ -3,7 +3,7 @@
 #define WORLDSIM_WORLD_LOCAL_HPP
 
 /* WorldSim: World_Local.hpp
-   #include "World_Local.hpp"
+	#include "World_Local.hpp"
 
    The World stores local-level data, such as the position of local units.
 
@@ -269,10 +269,10 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
 
   
     // Initialisation
-   World_Local();
+	World_Local();
   virtual ~World_Local();
   void unload();
-   void init(const int _globalX, const int _globalY, const enumBiome _biomeID, const int _seed /*=0*/, const int _hasRiver /*=-1*/);
+	void init(const int _globalX, const int _globalY, const enumBiome _biomeID, const int _seed /*=0*/, const int _hasRiver /*=-1*/);
   
   // Access
   inline LocalTile* operator() (int _x, int _y);
@@ -390,10 +390,10 @@ class World_Local: public LogicTickInterface, public IdleTickInterface, public H
   // LOGIC
   void incrementTicks(int nTicks);
     void updateTickBacklog(Calendar);
-   
+	
    // HASTEXTURE
    // Return map tile texture
-   virtual Texture* currentTexture();
+	virtual Texture* currentTexture();
 };
 
 

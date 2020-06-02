@@ -3,7 +3,7 @@
 #define WORLDSIM_CREATURE_DEER_CPP
 
 /* WorldSim: Creature_Deer.cpp
-   #include"Creature_Deer.cpp"
+	#include"Creature_Deer.cpp"
 
   Implementation of Deer_hpp.
 */
@@ -28,7 +28,7 @@ void Creature_Deer::init(const int _sex  /*=0*/ )
   else if (_sex == 2) { isMale = false; }
   else { isMale = Random::flip(); }
   
-   age=0;
+	age=0;
   map=0;
   knowledge = new Creature_Knowledge;
   knowledge->init();

@@ -3,10 +3,10 @@
 #define WORLDSIM_TRIBE_HUMAN_CPP
 
 /* Tribe_Human.hpp
-   #include "Tribe_Human.hpp"
+	#include "Tribe_Human.hpp"
 
-   Description:
-   Tribes are nomadic groups. They wander the map trying to survive until they develop enough to become a civilization. Human tribes build towns and cities.
+	Description:
+	Tribes are nomadic groups. They wander the map trying to survive until they develop enough to become a civilization. Human tribes build towns and cities.
 
 */
 
@@ -35,48 +35,48 @@ Tribe_Human::Tribe_Human()
 
 bool Tribe_Human::spawn()
 {
-   if ( world == 0 )
-   {
-      //std::cout<<"ABORT: Tribe doesn't have pointer to world object.\n";
-      return false;
-   }
-   
-   HasXY* spawnTile = world->getRandomTileOfType(GRASSLAND);
-   
-   if ( spawnTile == 0 )
-   {
-      std::cout<<"ABORT: Human couldn't find tile to spawn into.\n";
-      return false;
-   }
+	if ( world == 0 )
+	{
+		//std::cout<<"ABORT: Tribe doesn't have pointer to world object.\n";
+		return false;
+	}
+	
+	HasXY* spawnTile = world->getRandomTileOfType(GRASSLAND);
+	
+	if ( spawnTile == 0 )
+	{
+		std::cout<<"ABORT: Human couldn't find tile to spawn into.\n";
+		return false;
+	}
 
-   name = globalNameGen.generateName();
-   nFood = 10;
-   
-   worldX=spawnTile->x;
-   worldY=spawnTile->y;
+	name = globalNameGen.generateName();
+	nFood = 10;
+	
+	worldX=spawnTile->x;
+	worldY=spawnTile->y;
 
   world->vTribe.push(this);
-   world->putObject(this,worldX,worldY);
+	world->putObject(this,worldX,worldY);
 
-   return true;
+	return true;
 }
 
 
 Texture* Tribe_Human::currentTexture()
 {
-   if ( foundSettlement )
-   {
-      return &TEX_WORLD_SETTLEMENT_TOWN_URBAN01;
-   }
-   return &TEX_WORLD_UNIT_NOMAD_01;
+	if ( foundSettlement )
+	{
+		return &TEX_WORLD_SETTLEMENT_TOWN_URBAN01;
+	}
+	return &TEX_WORLD_UNIT_NOMAD_01;
 }
 
 void Tribe_Human::wander()
 {
-   if (world==0) { return; }
-   
-   int destinationX = worldX + random.randomIntRange(-1,1);
-   int destinationY = worldY + random.randomIntRange(-1,1);
+	if (world==0) { return; }
+	
+	int destinationX = worldX + random.randomIntRange(-1,1);
+	int destinationY = worldY + random.randomIntRange(-1,1);
   
   
     // Sometimes drop an artifact on the map. (max 3)
@@ -89,35 +89,35 @@ void Tribe_Human::wander()
     world->putObject(testArtifact);
     ++nArtifactsDropped;
   }
-   
-   // Moving options:
-   //  Move to food
-   //  Move to unexplored territory
-   
-   //aTerrain.getNeighborVector(_x,_y,&vTerrain,false /* DON'T INCLUDE SELF */);
-   Vector <HasXY*> * vXY  = world->aWorldTile.getNeighbors(worldX, worldY, false /* includeself */, true /* shuffle */);
+	
+	// Moving options:
+	//  Move to food
+	//  Move to unexplored territory
+	
+	//aTerrain.getNeighborVector(_x,_y,&vTerrain,false /* DON'T INCLUDE SELF */);
+	Vector <HasXY*> * vXY  = world->aWorldTile.getNeighbors(worldX, worldY, false /* includeself */, true /* shuffle */);
   
   if (vXY==0) { return; }
-   
+	
   // IF THE TRIBE IS NOT IN ITS OWN TERRITORY, BUT ADJACENT TO IT, MOVE BACK.
   if ( world->getDominantInfluence(worldX,worldY) != this)
   {
-      for (auto xy : *vXY)
-      {
-         if (world->aWorldTile.isSafe(xy) && world->isLand(xy) )
-         {
+		for (auto xy : *vXY)
+		{
+			if (world->aWorldTile.isSafe(xy) && world->isLand(xy) )
+			{
         // If we own this tile, move to it.
-            if ( world->getDominantInfluence(xy) == this )
-            {
-               //xyDestination=xy;
-               
-               worldX=xy->x;
-               worldY=xy->y;
+				if ( world->getDominantInfluence(xy) == this )
+				{
+					//xyDestination=xy;
+					
+					worldX=xy->x;
+					worldY=xy->y;
           combat(world->combatCheck(this));
-               return;
-            }
-         }
-      }
+					return;
+				}
+			}
+		}
   }
   // If the tribe is in its own territory.
   else
@@ -203,11 +203,11 @@ void Tribe_Human::wander()
     
     
   }
-   
+	
 
   
 
-   
+	
 
     /* If there is no unowned territory. Prefer own territory. Prefer weakest influence tiles to promote holding on to territory */
   // for (auto xy : *vXY)
@@ -246,13 +246,13 @@ void Tribe_Human::wander()
   }
   combat(world->combatCheck(this));
 
-      /* If all else fails, move randomly. */
-   // if (world->isSafe(destinationX,destinationY) && world->isLand(destinationX,destinationY))
-   // {
-      // // MOVE THE TRIBE TO THE LOCATION.
-      // worldX=destinationX;
-      // worldY=destinationY;
-   // }
+		/* If all else fails, move randomly. */
+	// if (world->isSafe(destinationX,destinationY) && world->isLand(destinationX,destinationY))
+	// {
+		// // MOVE THE TRIBE TO THE LOCATION.
+		// worldX=destinationX;
+		// worldY=destinationY;
+	// }
 }
 
 void Tribe_Human::combat (Tribe* _target)
@@ -362,15 +362,15 @@ void Tribe_Human::combat (Tribe* _target)
 
 void Tribe_Human::incrementTicks ( int nTicks )
 {
-   for (auto & v: vCharacter)
-   {
-      if(v->isAlive==false)
-      {
-         vCharacter.erase(v);
+	for (auto & v: vCharacter)
+	{
+		if(v->isAlive==false)
+		{
+			vCharacter.erase(v);
       vDeceased.add(v);
-      }
-   }
-   //vCharacter.shrinkToFit();
+		}
+	}
+	//vCharacter.shrinkToFit();
 
   if ( vCharacter.size() == 0 )
   {
@@ -379,20 +379,20 @@ void Tribe_Human::incrementTicks ( int nTicks )
     
   }
   
-   //actionPoints+=nTicks;
-   dailyCounter+=nTicks;
-   monthlyCounter+=nTicks;
-   
+	//actionPoints+=nTicks;
+	dailyCounter+=nTicks;
+	monthlyCounter+=nTicks;
+	
 
   
 
   
   
-   
-   
-   for (int i=0;i<vCharacter.size();++i)
-   {
-      Character* c = vCharacter(i);
+	
+	
+	for (int i=0;i<vCharacter.size();++i)
+	{
+		Character* c = vCharacter(i);
     
     if (playerCharacter != 0 && playerCharacter->tribe == this )
     {
@@ -403,13 +403,13 @@ void Tribe_Human::incrementTicks ( int nTicks )
     
     //if ( c == playerCharacter ) { std::cout<<"PLAYER\n"; }
     //else { std::cout<<"AY\n"; }
-      c->incrementTicks(nTicks);
-   }
-   
-   while (monthlyCounter >= 2592000)
-   {
+		c->incrementTicks(nTicks);
+	}
+	
+	while (monthlyCounter >= 2592000)
+	{
 
-      //degradeInfluence();
+		//degradeInfluence();
     
     // TRIBE SPLIT CALCULATIONS
     // OCCURS IF: TOO MANY PEOPLE IN TRIBE, THERE IS A VIABLE AMOUNT OF FREE SPACE, RANDOM ELEMENT.
@@ -508,85 +508,85 @@ void Tribe_Human::incrementTicks ( int nTicks )
     vXY->clearData();
     delete vXY;
     
-      //std::cout<<"influence degraded\n";
-      //std::cout<<"Monthly\n";
-      //Do monthly stuff here.
-      //for (int i=0;i<vCharacter.size();++i)
-         
-      // if ( random.oneIn(100) )
-      // {
-         // Character * c = new Character;
-         // c = 0;
-         // c->die();
-      // }
-      
-      //for (auto & c: vCharacter)
-      for (int i=0;i<vCharacter.size();++i)
-      {
-         Character* const c = vCharacter(i);
-         
-         
-         if (c->isMale == false && c->isMarried == true && c->age >= 18 && c->isAlive && c->spouse!=0 && c->spouse->isAlive)
-         {
-            if (c->isPregnant==false)
-            {
-               if (c->vChildren.size() < 6 && c->age < 35)
-               {
-                  if(random.oneIn(24))
-                  {
-                     c->isPregnant = true;
-                     c->pregnantCounter = 0;
-                  }   
-               }
-               else if (c->age < 55)
-               {
-                  if(random.oneIn(c->age*3))
-                  {
-                     c->isPregnant = true;
-                     c->pregnantCounter = 0;
-                  }
-               }
-               else
-               {
+		//std::cout<<"influence degraded\n";
+		//std::cout<<"Monthly\n";
+		//Do monthly stuff here.
+		//for (int i=0;i<vCharacter.size();++i)
+			
+		// if ( random.oneIn(100) )
+		// {
+			// Character * c = new Character;
+			// c = 0;
+			// c->die();
+		// }
+		
+		//for (auto & c: vCharacter)
+		for (int i=0;i<vCharacter.size();++i)
+		{
+			Character* const c = vCharacter(i);
+			
+			
+			if (c->isMale == false && c->isMarried == true && c->age >= 18 && c->isAlive && c->spouse!=0 && c->spouse->isAlive)
+			{
+				if (c->isPregnant==false)
+				{
+					if (c->vChildren.size() < 6 && c->age < 35)
+					{
+						if(random.oneIn(24))
+						{
+							c->isPregnant = true;
+							c->pregnantCounter = 0;
+						}	
+					}
+					else if (c->age < 55)
+					{
+						if(random.oneIn(c->age*3))
+						{
+							c->isPregnant = true;
+							c->pregnantCounter = 0;
+						}
+					}
+					else
+					{
 
-               }
-            }
-            
-            else if (c->isPregnant == true && c->pregnantCounter >= 9)
-            {
-                  Character* babby = c->giveBirth();
-                  if ( babby!= 0) { vCharacter.push(babby); }
-                  c->isPregnant=false;
-                  c->pregnantCounter = 0;
-                  babby->tribe=this;
-            }
-            else if ( c->isPregnant == true)
-            {
-               c->pregnantCounter++;
-            }
-         }
+					}
+				}
+				
+				else if (c->isPregnant == true && c->pregnantCounter >= 9)
+				{
+						Character* babby = c->giveBirth();
+						if ( babby!= 0) { vCharacter.push(babby); }
+						c->isPregnant=false;
+						c->pregnantCounter = 0;
+						babby->tribe=this;
+				}
+				else if ( c->isPregnant == true)
+				{
+					c->pregnantCounter++;
+				}
+			}
 
-         // Marriage searching. 18+. 10% chance per month.
-         if (c->isMale == true && c->age >= 16 && c->isMarried == false && random.oneIn(38))
-         {
-            
-            // build vector of unmarried women
-            Vector <Character*> vEligibleWomen;
-            
-               // People that c can't marry
-            auto vRelatives = c->getRelatives();
-            
-            //Select maxRandoms random candidates from the vector.
-            int maxRandoms = 20;
-            while ( vEligibleWomen.size() < 3 && maxRandoms-- > 0)
-            {
-               Character* c2 = vCharacter(random.randomInt(vCharacter.size()-1));
-               
-               if ( c2!=c && c->canMarry(c2) && vRelatives->contains(c2)==false )
-               {
-                  vEligibleWomen.push(c2);
-               }
-            }
+			// Marriage searching. 18+. 10% chance per month.
+			if (c->isMale == true && c->age >= 16 && c->isMarried == false && random.oneIn(38))
+			{
+				
+				// build vector of unmarried women
+				Vector <Character*> vEligibleWomen;
+				
+					// People that c can't marry
+				auto vRelatives = c->getRelatives();
+				
+				//Select maxRandoms random candidates from the vector.
+				int maxRandoms = 20;
+				while ( vEligibleWomen.size() < 3 && maxRandoms-- > 0)
+				{
+					Character* c2 = vCharacter(random.randomInt(vCharacter.size()-1));
+					
+					if ( c2!=c && c->canMarry(c2) && vRelatives->contains(c2)==false )
+					{
+						vEligibleWomen.push(c2);
+					}
+				}
 
         // If the character can't find an eligible woman in the tribe.
         // Look through a neighboring tribe. (Sometimes check anyway.)
@@ -610,9 +610,9 @@ void Tribe_Human::incrementTicks ( int nTicks )
           }
         }
         
-            if(vEligibleWomen.size()>0)
-            {
-               const int randomWoman = random.randomInt(vEligibleWomen.size()-1);
+				if(vEligibleWomen.size()>0)
+				{
+					const int randomWoman = random.randomInt(vEligibleWomen.size()-1);
           
           // Order of marriage is randomised mostly to deal with movement between tribes.
           if ( random.flip() )
@@ -622,64 +622,64 @@ void Tribe_Human::incrementTicks ( int nTicks )
           { c->marry(vEligibleWomen(randomWoman));
           }
           
-               
-            }
-         }
-         
-            //Death calculations
-         if ( c->age < 50 && random.oneIn(2400))
-         {
-            c->die();
-         }
-         else if (c->age > 70 && random.oneIn(50))
-         {
-            c->die();
-         }
-         else if (c->age > 65 && random.oneIn(180))
-         {
-            c->die();
-         }
-         else if (c->age >= 50 && random.oneIn(600))
-         {
-            c->die();
-         }
-      }
+					
+				}
+			}
+			
+				//Death calculations
+			if ( c->age < 50 && random.oneIn(2400))
+			{
+				c->die();
+			}
+			else if (c->age > 70 && random.oneIn(50))
+			{
+				c->die();
+			}
+			else if (c->age > 65 && random.oneIn(180))
+			{
+				c->die();
+			}
+			else if (c->age >= 50 && random.oneIn(600))
+			{
+				c->die();
+			}
+		}
     
     //develop();
-      monthlyCounter-=2592000;
-   }
-   ///lastline=8;   
-   
-   while ( dailyCounter >= 86400 )
-   {
-      
-      if ( foundSettlement == false )
-      {
-         wander();
-      }
-      
-      updateTerritory();
-      
-      //hunt();
-      
-   //   eat();
-      
-      
-      
-      
-      
-      dailyCounter-=86400;
-   }
-   
-   //if ( actionPoints
-   
-   // Hourly
-   // while( actionPoints >= 3600 )
-   // {
-      
-      
-      // actionPoints-=3600;
-   // }
+		monthlyCounter-=2592000;
+	}
+	///lastline=8;	
+	
+	while ( dailyCounter >= 86400 )
+	{
+		
+		if ( foundSettlement == false )
+		{
+			wander();
+		}
+		
+		updateTerritory();
+		
+		//hunt();
+		
+	//	eat();
+		
+		
+		
+		
+		
+		dailyCounter-=86400;
+	}
+	
+	//if ( actionPoints
+	
+	// Hourly
+	// while( actionPoints >= 3600 )
+	// {
+		
+		
+		// actionPoints-=3600;
+	// }
 //std::cout<<"end tribe increment ticks\n";
 }
 

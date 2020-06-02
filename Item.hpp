@@ -3,7 +3,7 @@
 #define WORLDSIM_ITEM_HPP
 
 /* Item.cpp
-   #include"Item.hpp"
+	#include"Item.hpp"
   
   An item is an object which can be picked up and manipulated. Items are reliant on
   actors (Creatures/Characters) to be moved or used.
@@ -39,8 +39,8 @@ class Creature;
 
 class Item: public WorldObject
 {
-   public:
-   //int x, y;
+	public:
+	//int x, y;
   short int count; /* How many of this object there is (for example ammo) */
   
   short int type; /* The type of item. */
@@ -76,11 +76,11 @@ class Item: public WorldObject
       CURRENTLY ONLY USED FOR CHARACTERS
       In future World_Local should distinguish between actors and objects */
   //int worldX, worldY;
-   
-   //bool stackable; /* True if multiple objects of this class can be merged together into a single stack, sharing their data. */
-   
-   //double weight; /* in grams */
-   //double bulk; /* In cm^3 , and adjusted higher for cumbersome items.*/
+	
+	//bool stackable; /* True if multiple objects of this class can be merged together into a single stack, sharing their data. */
+	
+	//double weight; /* in grams */
+	//double bulk; /* In cm^3 , and adjusted higher for cumbersome items.*/
   
   /* True if line of sight cannot pass this object.
     Might be expanded in future. For example maybe a
@@ -89,14 +89,14 @@ class Item: public WorldObject
   
   /* True if characters and creatures cannot walk into this tile. */
   //bool blocksMovement;
-   
-   Item();
-   virtual ~Item();
+	
+	Item();
+	virtual ~Item();
   
   
-   virtual std::string getName();
-   virtual std::string getExtendedInfo();
-   
+	virtual std::string getName();
+	virtual std::string getExtendedInfo();
+	
   
   /* ITEM INTERACTIONS
     List of stuff the item can do.
@@ -122,9 +122,9 @@ class Item: public WorldObject
     std::cout<<"1\n";
     return false;
   }
-   
-   //int distanceTo(WorldObject*); /* Chebyshev (this one is distances where diagonal movement is allowed.) */
-   //   int distanceFrom(WorldObject*); /* Alias. */
+	
+	//int distanceTo(WorldObject*); /* Chebyshev (this one is distances where diagonal movement is allowed.) */
+	//	int distanceFrom(WorldObject*); /* Alias. */
     
   //int distanceTo(int /* _x */, int /* _y */); /* Same, using raw coordinates */
   
@@ -218,7 +218,7 @@ class Item: public WorldObject
 
     
 
-   virtual Texture* currentTexture();
+	virtual Texture* currentTexture();
   
   std::string getSaveData();
   void loadData(std::string);
@@ -481,14 +481,14 @@ class Item_Axe: public Item
 
 class Item_Log: public Item
 {
-   public:
+	public:
   
-   
+	
   Item_Log()
   {
 
   }
-   virtual ~Item_Log() {}
+	virtual ~Item_Log() {}
   
   virtual void interact (LocalTile* obj, int interactionType = 0) override;
   
@@ -518,7 +518,7 @@ class Item_Log: public Item
     return 30;
   }
   
-   virtual std::string getName() override
+	virtual std::string getName() override
   {
     return "Log";
   }
@@ -537,20 +537,20 @@ class Item_Fish: public Item
 {
   bool isCooked;
   
-   public:
+	public:
   
 
-   
+	
   Item_Fish()
   {
     consumeTime = 5;
     hungerRestore = 200;
     isCooked = false;
   }
-   virtual ~Item_Fish() {}
+	virtual ~Item_Fish() {}
   
   
-   virtual std::string getName() override
+	virtual std::string getName() override
   {
     if (isCooked)
     {
@@ -582,17 +582,17 @@ class Item_Campfire: public Item
 {
 
   
-   public:
+	public:
   
-   
+	
   Item_Campfire()
   {
     canCook=true;
   }
-   virtual ~Item_Campfire() {}
+	virtual ~Item_Campfire() {}
   
   
-   virtual std::string getName()
+	virtual std::string getName()
   {
     return "Campfire";
   }

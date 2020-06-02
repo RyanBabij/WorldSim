@@ -5,7 +5,7 @@
 #include "World_Viewer.hpp"
 
 /* Menu_AdventureMode.hpp
-   #include "Menu_AdventureMode.hpp"
+	#include "Menu_AdventureMode.hpp"
 
   Adventure mode menu. The player can select a character and play as them.
   This class contains the code for the Adventure Mode GUI.
@@ -83,8 +83,8 @@ class Menu_Crafting: public GUI_Interface
     }
   }
   
-   bool /* GUI_Interface */ mouseEvent (Mouse* _mouse)
-   {
+	bool /* GUI_Interface */ mouseEvent (Mouse* _mouse)
+	{
     // Scroll up and down interaction select
     if (_mouse->isWheelDown)
     {
@@ -196,8 +196,8 @@ class InteractManager: public GUI_Interface
    }
   
     // GUI INTERFACE
-   bool /* GUI_Interface */ mouseEvent (Mouse* _mouse)
-   {
+	bool /* GUI_Interface */ mouseEvent (Mouse* _mouse)
+	{
 
       // Scroll up and down interaction select
       if (_mouse->isWheelDown)
@@ -415,7 +415,7 @@ InteractManager interactManager;
 class Menu_AdventureMode: public GUI_Interface
 {
   private:
-     GUI_Manager guiManager;
+  	GUI_Manager guiManager;
     
     /* Colours / theme. */
     Colour cNormal;
@@ -499,14 +499,14 @@ class Menu_AdventureMode: public GUI_Interface
   public:
   
 
-   
+	
 
-   Menu_AdventureMode()
-   {   
-      backgroundTexture=&TEX_NEW_GAME_BACKGROUND;
+	Menu_AdventureMode()
+	{	
+		backgroundTexture=&TEX_NEW_GAME_BACKGROUND;
     font = &font8x8;
     vLineOfFire=0;
-   }
+	}
    
    void clearMenus()
    {
@@ -541,47 +541,47 @@ class Menu_AdventureMode: public GUI_Interface
   
   void init()
   {
-      /* Initialise theme. */
-      cNormal.set(200,200,200);
-      cSelected.set(180,180,180);
-      cDropPanel.set(170,170,170);
-      cHighlight.set(170,170,170);
+		/* Initialise theme. */
+		cNormal.set(200,200,200);
+		cSelected.set(180,180,180);
+		cDropPanel.set(170,170,170);
+		cHighlight.set(170,170,170);
 
-      buttonCenterCamera.text="";
-      buttonSneak.text="SNK";
+		buttonCenterCamera.text="";
+		buttonSneak.text="SNK";
     buttonSneak.font = font;
-      buttonCenterCamera.setColours(&cNormal,&cHighlight,0);
-      buttonSneak.setColours(&cNormal,&cHighlight,0);
-      guiManager.add(&buttonCenterCamera);
-      guiManager.add(&buttonSneak);
-      buttonCenterCamera.active=true;
-      buttonSneak.active=true;
+		buttonCenterCamera.setColours(&cNormal,&cHighlight,0);
+		buttonSneak.setColours(&cNormal,&cHighlight,0);
+		guiManager.add(&buttonCenterCamera);
+		guiManager.add(&buttonSneak);
+		buttonCenterCamera.active=true;
+		buttonSneak.active=true;
     buttonCenterCamera.texture = &TEX_GUI_CENTER_CAMERA;
     
     
     buttonInventory.active = true;
     buttonInventory.text = "INV";
     buttonInventory.font = font;
-      buttonInventory.setColours(&cNormal,&cHighlight,0);
-      guiManager.add(&buttonInventory);
+		buttonInventory.setColours(&cNormal,&cHighlight,0);
+		guiManager.add(&buttonInventory);
     
     buttonManual.active = true;
     buttonManual.text = "MAN";
     buttonManual.font = font;
-      buttonManual.setColours(&cNormal,&cHighlight,0);
-      guiManager.add(&buttonManual);
+		buttonManual.setColours(&cNormal,&cHighlight,0);
+		guiManager.add(&buttonManual);
     
     buttonCharacterSheet.active = true;
     buttonCharacterSheet.text = "CHR";
     buttonCharacterSheet.font = font;
-      buttonCharacterSheet.setColours(&cNormal,&cHighlight,0);
-      guiManager.add(&buttonCharacterSheet);
+		buttonCharacterSheet.setColours(&cNormal,&cHighlight,0);
+		guiManager.add(&buttonCharacterSheet);
 
     buttonCrafting.active = true;
     buttonCrafting.text = "CFT";
     buttonCrafting.font = font;
-      buttonCrafting.setColours(&cNormal,&cHighlight,0);
-      guiManager.add(&buttonCrafting);
+		buttonCrafting.setColours(&cNormal,&cHighlight,0);
+		guiManager.add(&buttonCrafting);
     
     
     craftingMenuActive=false;
@@ -641,24 +641,24 @@ class Menu_AdventureMode: public GUI_Interface
     so it doesn't matter too much. */
     
     
-      /* Preview world view. */
-      worldViewer.render();
+		/* Preview world view. */
+		worldViewer.render();
     
-      // MESSAGE CONSOLE      
-      const int nY = panelY2-panelY1;
-      Renderer::placeColour4a(200,200,250,125,panelX1,panelY1+120,panelX1+220,panelY2);
-      int currentY = panelY2-2;
-      int iMessage = vConsoleMessage.size()-1;
+		// MESSAGE CONSOLE		
+		const int nY = panelY2-panelY1;
+		Renderer::placeColour4a(200,200,250,125,panelX1,panelY1+120,panelX1+220,panelY2);
+		int currentY = panelY2-2;
+		int iMessage = vConsoleMessage.size()-1;
     
     int linesDrawn = 0;
     
-      while (currentY>panelY1+120 && iMessage>=0 && iMessage<vConsoleMessage.size() )
-      {
-         linesDrawn = font8x8.drawText(vConsoleMessage(iMessage),panelX1,currentY,panelX1+220,currentY-38,false,false);
-         --iMessage;
-         currentY-=linesDrawn*9;
+		while (currentY>panelY1+120 && iMessage>=0 && iMessage<vConsoleMessage.size() )
+		{
+			linesDrawn = font8x8.drawText(vConsoleMessage(iMessage),panelX1,currentY,panelX1+220,currentY-38,false,false);
+			--iMessage;
+			currentY-=linesDrawn*9;
       currentY-=2;
-      }
+		}
 
     Renderer::placeColour4a(200,200,250,250,panelX1,panelY1,panelX1+220,panelY1+220);
     font8x8.drawText("Minimap",panelX1,panelY1,panelX1+220,panelY1+220,true,true);
@@ -698,10 +698,10 @@ class Menu_AdventureMode: public GUI_Interface
     
     guiManager.render();
     
-      // DATE
-      //Renderer::placeColour4a(150,150,150,255,panelX2-208,panelY2-20,panelX2,panelY2-10);
-      std::string strDate = world.calendar.toString();
-      font8x8.drawText("DATE: "+strDate,panelX1,panelY1+235,panelX1+220,panelY1+245, true, true);
+		// DATE
+		//Renderer::placeColour4a(150,150,150,255,panelX2-208,panelY2-20,panelX2,panelY2-10);
+		std::string strDate = world.calendar.toString();
+		font8x8.drawText("DATE: "+strDate,panelX1,panelY1+235,panelX1+220,panelY1+245, true, true);
     
     //Draw hotbar
     int currentX2 = panelX1 + 240;
@@ -912,20 +912,20 @@ class Menu_AdventureMode: public GUI_Interface
     
   }
   
-   void logicTick()
-   {
+	void logicTick()
+	{
     return;
-   }
+	}
   
-   bool keyboardEvent (Keyboard* _keyboard)
-   { 
-         // ESCAPE - Close all submenus and go back to main game.
-         // If all submenus are already closed, bring up main menu.
-      if(_keyboard->isPressed(Keyboard::ESCAPE)) /* Flush console. */
-      {
+	bool keyboardEvent (Keyboard* _keyboard)
+	{ 
+			// ESCAPE - Close all submenus and go back to main game.
+			// If all submenus are already closed, bring up main menu.
+		if(_keyboard->isPressed(Keyboard::ESCAPE)) /* Flush console. */
+		{
          clearMenus();
-         _keyboard->keyUp(Keyboard::ESCAPE);   
-      }
+         _keyboard->keyUp(Keyboard::ESCAPE);	
+		}
       // Interactionmanager
       else if (itemSelectionActive && localTileSelected != 0 && interactManager.keyboardEvent(_keyboard))
       {
@@ -1053,8 +1053,8 @@ class Menu_AdventureMode: public GUI_Interface
     
       // TAB will switch between adventure mode and god mode.
       // Make sure to relinquish control of character.
-      if(_keyboard->isPressed(Keyboard::TAB))
-      {
+		if(_keyboard->isPressed(Keyboard::TAB))
+		{
       playerCharacter=0;
       worldViewer.subterraneanMode=false;
       
@@ -1064,7 +1064,7 @@ class Menu_AdventureMode: public GUI_Interface
       activeMenu = MENU_WORLDSIMULATOR;
       
       _keyboard->keyUp(Keyboard::TAB);
-      }
+		}
     
     if(_keyboard->isPressed(Keyboard::RIGHT) || _keyboard->isPressed(Keyboard::D) || _keyboard->isPressed(Keyboard::d))
     {
@@ -1282,64 +1282,64 @@ class Menu_AdventureMode: public GUI_Interface
     }
 
     // Hotbar selection keys
-      if(_keyboard->isPressed(Keyboard::ONE))
-      {
+		if(_keyboard->isPressed(Keyboard::ONE))
+		{
       selectedHotbar=0;
-         _keyboard->keyUp(Keyboard::ONE);   
-      }
-      if(_keyboard->isPressed(Keyboard::TWO))
-      {
+			_keyboard->keyUp(Keyboard::ONE);	
+		}
+		if(_keyboard->isPressed(Keyboard::TWO))
+		{
       selectedHotbar=1;
-         _keyboard->keyUp(Keyboard::TWO);   
-      }
-      if(_keyboard->isPressed(Keyboard::THREE))
-      {
+			_keyboard->keyUp(Keyboard::TWO);	
+		}
+		if(_keyboard->isPressed(Keyboard::THREE))
+		{
       selectedHotbar=2;
-         _keyboard->keyUp(Keyboard::THREE);   
-      }
-      if(_keyboard->isPressed(Keyboard::FOUR))
-      {
+			_keyboard->keyUp(Keyboard::THREE);	
+		}
+		if(_keyboard->isPressed(Keyboard::FOUR))
+		{
       selectedHotbar=3;
-         _keyboard->keyUp(Keyboard::FOUR);   
-      }
-      if(_keyboard->isPressed(Keyboard::FIVE))
-      {
+			_keyboard->keyUp(Keyboard::FOUR);	
+		}
+		if(_keyboard->isPressed(Keyboard::FIVE))
+		{
       selectedHotbar=4;
-         _keyboard->keyUp(Keyboard::FIVE);   
-      }
-      if(_keyboard->isPressed(Keyboard::SIX))
-      {
+			_keyboard->keyUp(Keyboard::FIVE);	
+		}
+		if(_keyboard->isPressed(Keyboard::SIX))
+		{
       selectedHotbar=5;
-         _keyboard->keyUp(Keyboard::SIX);   
-      }
-      if(_keyboard->isPressed(Keyboard::SEVEN))
-      {
+			_keyboard->keyUp(Keyboard::SIX);	
+		}
+		if(_keyboard->isPressed(Keyboard::SEVEN))
+		{
       selectedHotbar=6;
-         _keyboard->keyUp(Keyboard::SEVEN);   
-      }
-      if(_keyboard->isPressed(Keyboard::EIGHT))
-      {
+			_keyboard->keyUp(Keyboard::SEVEN);	
+		}
+		if(_keyboard->isPressed(Keyboard::EIGHT))
+		{
       selectedHotbar=7;
-         _keyboard->keyUp(Keyboard::EIGHT);   
-      }
-      if(_keyboard->isPressed(Keyboard::NINE))
-      {
+			_keyboard->keyUp(Keyboard::EIGHT);	
+		}
+		if(_keyboard->isPressed(Keyboard::NINE))
+		{
       selectedHotbar=8;
-         _keyboard->keyUp(Keyboard::NINE);   
-      }
-      if(_keyboard->isPressed(Keyboard::ZERO))
-      {
+			_keyboard->keyUp(Keyboard::NINE);	
+		}
+		if(_keyboard->isPressed(Keyboard::ZERO))
+		{
       selectedHotbar=9;
-         _keyboard->keyUp(Keyboard::ZERO);   
-      }
+			_keyboard->keyUp(Keyboard::ZERO);	
+		}
     
-      guiManager.keyboardEvent(_keyboard);
-      worldViewer.keyboardEvent(_keyboard);
-      return false;
-   }
+		guiManager.keyboardEvent(_keyboard);
+		worldViewer.keyboardEvent(_keyboard);
+		return false;
+	}
   
-   bool mouseEvent (Mouse* _mouse)
-   {
+	bool mouseEvent (Mouse* _mouse)
+	{
     
     if (playerCharacter==0)
     { return false; }
@@ -1377,7 +1377,7 @@ class Menu_AdventureMode: public GUI_Interface
             worldViewer.showHoveredTile = false;
             localTileSelected=0;
             selectedItemSlot=0;
-               
+					
             // Clear previous overlay tiles.
             for ( int i=0;i<vLineOfFire->size();++i)
             {
@@ -1417,14 +1417,14 @@ class Menu_AdventureMode: public GUI_Interface
           }
         }
         // Clear previous overlay tiles.
-            for ( int i=0;i<vLineOfFire->size();++i)
-            {
-               world((*vLineOfFire)(i))->shotOverlay=false;
-            }
-            vLineOfFire->deleteAll();
-            delete vLineOfFire;
-            vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
-            
+				for ( int i=0;i<vLineOfFire->size();++i)
+				{
+					world((*vLineOfFire)(i))->shotOverlay=false;
+				}
+				vLineOfFire->deleteAll();
+				delete vLineOfFire;
+				vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
+				
         _mouse->isLeftClick=false;
       }
       
@@ -1434,8 +1434,8 @@ class Menu_AdventureMode: public GUI_Interface
     
     // Player can use CTRL+scroll to scroll the hotbar.
     // Exit from interaction menu because otherwise I don't feel like doing it the proper way right now.
-      if(_mouse->isWheelDown && _mouse->ctrlPressed)
-      {
+		if(_mouse->isWheelDown && _mouse->ctrlPressed)
+		{
          ++selectedHotbar;
          if (selectedHotbar>9) {selectedHotbar=0;}
          _mouse->isWheelDown=false;
@@ -1448,9 +1448,9 @@ class Menu_AdventureMode: public GUI_Interface
          localTileSelected=0;
          selectedItemSlot=0;
       
-      }
-      if(_mouse->isWheelUp && _mouse->ctrlPressed)
-      {
+		}
+		if(_mouse->isWheelUp && _mouse->ctrlPressed)
+		{
          --selectedHotbar;
          if (selectedHotbar<0) {selectedHotbar=9;}
          _mouse->isWheelDown=false;
@@ -1462,7 +1462,7 @@ class Menu_AdventureMode: public GUI_Interface
          worldViewer.showHoveredTile = false;
          localTileSelected=0;
          selectedItemSlot=0;
-      }
+		}
     
 
     
@@ -1617,59 +1617,59 @@ class Menu_AdventureMode: public GUI_Interface
       {
         std::cout<<"Default hand action\n";
       }
-         
-         // Clear previous overlay tiles.
-         for ( int i=0;i<vLineOfFire->size();++i)
-         {
-            world((*vLineOfFire)(i))->shotOverlay=false;
-         }
-         vLineOfFire->deleteAll();
-         delete vLineOfFire;
-         vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
+			
+			// Clear previous overlay tiles.
+			for ( int i=0;i<vLineOfFire->size();++i)
+			{
+				world((*vLineOfFire)(i))->shotOverlay=false;
+			}
+			vLineOfFire->deleteAll();
+			delete vLineOfFire;
+			vLineOfFire=new Vector <HasXY2 <unsigned long int> * >;
     }
     
     
     
     guiManager.mouseEvent(_mouse);
     
-      if (buttonCenterCamera.clicked==true)
-      {
+		if (buttonCenterCamera.clicked==true)
+		{
       Console("Centered view");
       worldViewer.setCenterTile(playerCharacter->worldX, playerCharacter->worldY, playerCharacter->x, playerCharacter->y);
-         buttonCenterCamera.unclick();
-      }
+			buttonCenterCamera.unclick();
+		}
     
       // Toggle the manual view.
-      if (buttonManual.clicked==true)
-      {
+		if (buttonManual.clicked==true)
+		{
       std::cout<<"MANUAL\n";
       manualActive = !manualActive;
-         buttonManual.unclick();
-      }
+			buttonManual.unclick();
+		}
     
       // Toggle the character sheet view.
-      if (buttonCharacterSheet.clicked==true)
-      {
+		if (buttonCharacterSheet.clicked==true)
+		{
       std::cout<<"CHARACTER SHEET\n";
       characterSheetActive = !characterSheetActive;
-         buttonCharacterSheet.unclick();
-      }
+			buttonCharacterSheet.unclick();
+		}
     
       // Toggle the crafting menu.
-      if (buttonCrafting.clicked==true)
-      {
+		if (buttonCrafting.clicked==true)
+		{
       std::cout<<"CRAFTING\n";
       craftingMenuActive = !craftingMenuActive;
       menuCrafting.build();
-         buttonCrafting.unclick();
-      }
+			buttonCrafting.unclick();
+		}
     
     
     
     
       // Toggle the inventory view.
-      if (buttonInventory.clicked==true)
-      {
+		if (buttonInventory.clicked==true)
+		{
       std::cout<<"INVENTORY\n";
       inventoryActive = !inventoryActive;
       
@@ -1690,12 +1690,12 @@ class Menu_AdventureMode: public GUI_Interface
         }
       }
       
-         buttonInventory.unclick();
-      }
+			buttonInventory.unclick();
+		}
     
       // Toggle sneak.
-      if (buttonSneak.clicked==true)
-      {
+		if (buttonSneak.clicked==true)
+		{
       playerCharacter->isSneaking = !playerCharacter->isSneaking;
       
       if ( playerCharacter->isSneaking )
@@ -1706,8 +1706,8 @@ class Menu_AdventureMode: public GUI_Interface
       else
       { Console("Exited sneaking mode");
       }
-         buttonSneak.unclick();
-      }
+			buttonSneak.unclick();
+		}
     
     
     if (_mouse->isRightClick)
@@ -1724,26 +1724,26 @@ class Menu_AdventureMode: public GUI_Interface
       
     }
     
-      worldViewer.mouseEvent(_mouse);
-      return false;
-   }
+		worldViewer.mouseEvent(_mouse);
+		return false;
+	}
   
-   void eventResize()
-   {
-      buttonCenterCamera.setPanel(panelX1,panelY1+304,panelX1+32,panelY1+320);
-      buttonSneak.setPanel(panelX1+33,panelY1+304,panelX1+65,panelY1+320);
-      buttonInventory.setPanel(panelX1+66,panelY1+304,panelX1+98,panelY1+320);
-      buttonManual.setPanel(panelX1+99,panelY1+304,panelX1+131,panelY1+320);
-      buttonCharacterSheet.setPanel(panelX1+132,panelY1+304,panelX1+164,panelY1+320);
-      buttonCrafting.setPanel(panelX1+165,panelY1+304,panelX1+197,panelY1+320);
+	void eventResize()
+	{
+		buttonCenterCamera.setPanel(panelX1,panelY1+304,panelX1+32,panelY1+320);
+		buttonSneak.setPanel(panelX1+33,panelY1+304,panelX1+65,panelY1+320);
+		buttonInventory.setPanel(panelX1+66,panelY1+304,panelX1+98,panelY1+320);
+		buttonManual.setPanel(panelX1+99,panelY1+304,panelX1+131,panelY1+320);
+		buttonCharacterSheet.setPanel(panelX1+132,panelY1+304,panelX1+164,panelY1+320);
+		buttonCrafting.setPanel(panelX1+165,panelY1+304,panelX1+197,panelY1+320);
     
-      worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
+		worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
 
     interactManager.setPanel(panelX1,panelY1,panelX2,panelY2);
     menuCrafting.setPanel(panelX1,panelY1,panelX2,panelY2);
 
-   }
-   
+	}
+	
   
 };
 

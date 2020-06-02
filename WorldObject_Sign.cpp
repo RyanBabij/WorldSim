@@ -5,27 +5,27 @@
 #include"WorldObject_Sign.hpp"
 
 /* WorldObject_Sign.cpp
-   #include"WorldObject_Sign.cpp"
-   <DOCUMENTATION>
+	#include"WorldObject_Sign.cpp"
+	<DOCUMENTATION>
 */
 
 WorldObject_Sign::WorldObject_Sign()
 {
-   x=0; y=0;
-   weight=0;
-   bulk=0;
+	x=0; y=0;
+	weight=0;
+	bulk=0;
   
   signText = "";
 }
 
 std::string WorldObject_Sign::getName()
 {
-   return "Sign";
+	return "Sign";
 }
 
 Texture* WorldObject_Sign::currentTexture()
 {
-   return &TEX_LOCAL_SIGN;
+	return &TEX_LOCAL_SIGN;
 }
 
 #endif

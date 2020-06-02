@@ -29,37 +29,37 @@ class World_Local;
 
 class Creature: public WorldObject, public TableInterface
 {
-   public:
+	public:
 
-   bool isMale;
-   int age; /* In ticks */
-   int daysCounter; /* 0-360 */
-   int secondsCounter; /* 0 - 86,400 */
+	bool isMale;
+	int age; /* In ticks */
+	int daysCounter; /* 0-360 */
+	int secondsCounter; /* 0 - 86,400 */
   
   bool isCarnivore; /* Creature can eat other animals. Otherwise the creature is a herbivore */
   /* Herbivores are reliant on the grass and plants on their map */
   // Home biome - Biome the creature is evolved for.
 
-   
-   int actionPoints; /* Base: 100. Points are deducted for each action. */
+	
+	int actionPoints; /* Base: 100. Points are deducted for each action. */
 
-   bool isAlive;
-   
-   int health;
+	bool isAlive;
+	
+	int health;
   
     // Creatures also need to eat and drink.
     // However herbivores can eat grass.
-   int hunger;
+	int hunger;
   int thirst;
   
   short int fleeCounter; /* How many more turns the Creature should flee for. */
-   
+	
   // All loaded creatures can get a link to their world.
   World_Local* map;
   
     //Creature's knowledge of the world (optional).
   Creature_Knowledge* knowledge;
-   
+	
     // INTERACTION
     int nPelt; /* How many pelts you can harvest from the creature. */
     int nMeat; /* How many meats you can harvest from the creature. */
@@ -76,21 +76,21 @@ class Creature: public WorldObject, public TableInterface
     // short int baseAtkBlunt;
   
 
-      // INITIALIZATION
-   Creature();
+		// INITIALIZATION
+	Creature();
     // Initialise, including roll for stats. 0 - Roll gender. 1 - Male. 2 - Female.
-   void init( int _sex = 0);
-   
-      /* AI FUNCTIONS
-      
-      */
-   virtual void incrementTicks(int = 1);
-   
+	void init( int _sex = 0);
+	
+		/* AI FUNCTIONS
+		
+		*/
+	virtual void incrementTicks(int = 1);
+	
   virtual void wander();
   
-   Texture* currentTexture () override;
-   
-   void die();
+	Texture* currentTexture () override;
+	
+	void die();
   
     // KNOWLEDGE
     
@@ -98,9 +98,9 @@ class Creature: public WorldObject, public TableInterface
   bool hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */ );
   
   
-   /* TABLE INTERFACE */
-   std::string getColumn(std::string _column) override;
-   std::string getColumnType(std::string _column) override;
+	/* TABLE INTERFACE */
+	std::string getColumn(std::string _column) override;
+	std::string getColumnType(std::string _column) override;
   
 
   /* COMBAT FUNCTIONS */
@@ -114,7 +114,7 @@ class Creature: public WorldObject, public TableInterface
   // Extra processing available
   void updateKnowledgeIdle();
 
-   
+	
 };
 
 // Footprints indicate the type of creature that walked here, the direction they were walking, and a rough
@@ -130,7 +130,7 @@ class Creature_Footprint: public WorldObject
   int direction;
   int age;
   
-   Texture* currentTexture () override;
+	Texture* currentTexture () override;
 };
 
 #endif

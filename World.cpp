@@ -3,9 +3,9 @@
 #define WORLDSIM_WORLD_CPP
 
 /* WorldSim: World.cpp
-   #include "World.cpp"
+	#include "World.cpp"
    
-   Implementation of "World.hpp".
+	Implementation of "World.hpp".
 */
 
 #include "World.hpp"
@@ -209,7 +209,7 @@ void World::startSimulation()
    // BIOME INIT STUFF SHOULD GO HERE NOT IN WORLDGEN
    std::cout<<"Preparing world for simulation...\n";
    
-   // BUILD LANDMASS ID ARRAY
+	// BUILD LANDMASS ID ARRAY
    std::thread tLandmass ( [this]
    {
       int currentLandmassID = 0;
@@ -272,8 +272,8 @@ void World::startSimulation()
    Timer timerBiomeFill;
    timerBiomeFill.init();
    timerBiomeFill.start();
-   
-   int currentID3=0;
+	
+	int currentID3=0;
 
 #define THREADED_BIOME_FILL
 #ifdef THREADED_BIOME_FILL 
@@ -422,76 +422,76 @@ void World::startSimulation()
   
 #else
     
-      // BUILD BIOME VECTOR
-   for ( int _y=0;_y<nY;++_y)
-   {
-      for ( int _x=0;_x<nX;++_x)
-      {
-         if (aBiomeID(_x,_y) == -1 )
-         {
-            int biomeType = aTerrain(_x,_y);
+		// BUILD BIOME VECTOR
+	for ( int _y=0;_y<nY;++_y)
+	{
+		for ( int _x=0;_x<nX;++_x)
+		{
+			if (aBiomeID(_x,_y) == -1 )
+			{
+				int biomeType = aTerrain(_x,_y);
             
-            World_Biome* biome = new World_Biome;
-            biome->type = biomeType;
+				World_Biome* biome = new World_Biome;
+				biome->type = biomeType;
             biome->id = currentID;
         
-            Vector <HasXY*>* vFill = aTerrain.floodFillVector(_x,_y,true);
+				Vector <HasXY*>* vFill = aTerrain.floodFillVector(_x,_y,true);
             
-            for (int i=0;i<vFill->size();++i)
-            {
+				for (int i=0;i<vFill->size();++i)
+				{
                biome->vXY.push(HasXY((*vFill)(i)->x,(*vFill)(i)->y));
                
                //push map pointers to biome. Biome should handle the generation/simulation stuff.
                biome->vMap.push(&aWorldTile((*vFill)(i)->x,(*vFill)(i)->y));
                
-               HasXY* v = (*vFill)(i);
-               aBiomeID(v->x,v->y) = currentID;
-            }
-            
-            biome->size = vFill->size();
-            
-            //  NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13
-            
-            if ( biomeType == OCEAN)
-            {
-               biome->name = "Ocean of "+globalNameGen.generateName();
-            }
-            else
-            {
-               biome->name = globalNameGen.generateName();
-            }
-            
-            if ( biomeType == MOUNTAIN)
-            {
-               if ( biome->size == 1 )
-               {
-                  biome->name = "Mount " + globalNameGen.generateName();
-               }
-               else
-               {
-                  biome->name = globalNameGen.generateName() + " Mountains";
-               }
-            }
-            
-            vBiome.push(biome);
+					HasXY* v = (*vFill)(i);
+					aBiomeID(v->x,v->y) = currentID;
+				}
+				
+				biome->size = vFill->size();
+				
+				//  NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13
+				
+				if ( biomeType == OCEAN)
+				{
+					biome->name = "Ocean of "+globalNameGen.generateName();
+				}
+				else
+				{
+					biome->name = globalNameGen.generateName();
+				}
+				
+				if ( biomeType == MOUNTAIN)
+				{
+					if ( biome->size == 1 )
+					{
+						biome->name = "Mount " + globalNameGen.generateName();
+					}
+					else
+					{
+						biome->name = globalNameGen.generateName() + " Mountains";
+					}
+				}
+				
+				vBiome.push(biome);
 
             vFill->deleteAll();
-            delete vFill;
-            
-            ++currentID;
-         }
-         
-      }
-   }
+				delete vFill;
+				
+				++currentID;
+			}
+			
+		}
+	}
   
 #endif
    
    
   //isRaining=true;
   isRaining=false;
-   
-   // Build and shuffle the tile vector
-   //Vector < Vector <HasXY> > vAllTiles;
+	
+	// Build and shuffle the tile vector
+	//Vector < Vector <HasXY> > vAllTiles;
   
    std::thread tvAllTiles( [this]
    {
@@ -562,30 +562,30 @@ void World::nameRegions()
 
 bool World::putObject(WorldObjectGlobal* _object, int x /* =-1 */, int y /* =-1 */)
 {
-   if ( x != -1 && y != -1 )
-   {
-      _object->worldX=x;
-      _object->worldY=y;
-   }
-   
-   if ( isSafe(_object->worldX, _object->worldY) )
-   {
-      //return false;
-      
-      if(vWorldObjectGlobal.contains(_object)==false)
-      {
-         vWorldObjectGlobal.push(_object);
-         return true;
-      }
-      else
-      {
-         std::cout<<"Debug: WorldObjectGlobal was already placed.\n";
-      }
-   }
-   
-   std::cout<<"ERROR: Error placing worldobject.\n";
+	if ( x != -1 && y != -1 )
+	{
+		_object->worldX=x;
+		_object->worldY=y;
+	}
+	
+	if ( isSafe(_object->worldX, _object->worldY) )
+	{
+		//return false;
+		
+		if(vWorldObjectGlobal.contains(_object)==false)
+		{
+			vWorldObjectGlobal.push(_object);
+			return true;
+		}
+		else
+		{
+			std::cout<<"Debug: WorldObjectGlobal was already placed.\n";
+		}
+	}
+	
+	std::cout<<"ERROR: Error placing worldobject.\n";
 
-   return false;
+	return false;
 }
 
 bool World::removeObject(WorldObjectGlobal* _object)
@@ -596,33 +596,33 @@ bool World::removeObject(WorldObjectGlobal* _object)
 
 Vector <WorldObjectGlobal*>* World::getNeighboringObjects(WorldObjectGlobal* _obj)
 {
-   Vector <WorldObjectGlobal*>* vNearbyObjects = new Vector <WorldObjectGlobal*>;
-   
-   for (int i=0;i<vWorldObjectGlobal.size();++i)
-   {
-      WorldObjectGlobal* _o = vWorldObjectGlobal(i);
-      
-      if (_o != _obj)
-      {
-         if ( _obj->distanceTo(_o) <= 1 )
-         {
-            vNearbyObjects->push(_o);
-         }
-      }
-      
-   }
+	Vector <WorldObjectGlobal*>* vNearbyObjects = new Vector <WorldObjectGlobal*>;
+	
+	for (int i=0;i<vWorldObjectGlobal.size();++i)
+	{
+		WorldObjectGlobal* _o = vWorldObjectGlobal(i);
+		
+		if (_o != _obj)
+		{
+			if ( _obj->distanceTo(_o) <= 1 )
+			{
+				vNearbyObjects->push(_o);
+			}
+		}
+		
+	}
 
-   return vNearbyObjects;
+	return vNearbyObjects;
 }
 
 bool World::isSafe(int _x, int _y)
 {
-   return ( _x >= 0 && _x < nX && _y >= 0 && _y < nY );
+	return ( _x >= 0 && _x < nX && _y >= 0 && _y < nY );
 }
 
 bool World::isSafe(unsigned long int _x, unsigned long int _y)
 {
-   return ( _x <= maximumX && _y <= maximumY );
+	return ( _x <= maximumX && _y <= maximumY );
 }
 
 Character* World::getRandomCharacter()
@@ -947,76 +947,76 @@ void World::rayTrace (unsigned long int _x1, unsigned long int _y1, unsigned lon
 
 
 void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int nTribesDwarven = DEFAULT_NUMBER_TRIBES_DWARVEN, int nTribesElven = DEFAULT_NUMBER_TRIBES_ELVEN)
-{   
-   std::cout<<"Generate tribes\n";
+{	
+	std::cout<<"Generate tribes\n";
 
   if (nTribesHuman < 0 ) { nTribesHuman = 0; }
   if (nTribesDwarven < 0 ) { nTribesDwarven = 0; }
   if (nTribesElven < 0 ) { nTribesElven = 0; }
   
-   if (nTribesHuman < 0 || nTribesHuman > 999)
-   { std::cout<<"WARNING: Unexpected number of human tribes.\n"; }
-   if (nTribesDwarven < 0 || nTribesDwarven > 999)
-   { std::cout<<"WARNING: Unexpected number of human tribes.\n"; }
+	if (nTribesHuman < 0 || nTribesHuman > 999)
+	{ std::cout<<"WARNING: Unexpected number of human tribes.\n"; }
+	if (nTribesDwarven < 0 || nTribesDwarven > 999)
+	{ std::cout<<"WARNING: Unexpected number of human tribes.\n"; }
   if (nTribesElven < 0 || nTribesElven > 999)
-   { std::cout<<"WARNING: Unexpected number of human tribes.\n"; }
+	{ std::cout<<"WARNING: Unexpected number of human tribes.\n"; }
 
 
   std::cout<<"Generate humans: ";
-   for (int i=0;i<nTribesHuman;++i)
-   {
+	for (int i=0;i<nTribesHuman;++i)
+	{
     std::cout<<".";
-      Tribe_Human * t = new Tribe_Human;
-      t->init(this);
-      if (t->spawn() == false)
-      {
+		Tribe_Human * t = new Tribe_Human;
+		t->init(this);
+		if (t->spawn() == false)
+		{
       std::cout<<" FAIL ";
-         delete t;
+			delete t;
     }
     else
     {
       t->generateCouples(7);
     }
-   }
+	}
   std::cout<<"\n";
   
   std::cout<<"Generate dwarves: ";
-   for (int i=0;i<nTribesDwarven;++i)
-   {
+	for (int i=0;i<nTribesDwarven;++i)
+	{
     std::cout<<".";
-      Tribe_Dwarven * t = new Tribe_Dwarven;
-      t->init(this);
-      if (t->spawn() == false)
-      {
+		Tribe_Dwarven * t = new Tribe_Dwarven;
+		t->init(this);
+		if (t->spawn() == false)
+		{
       std::cout<<" FAIL ";
-         delete t;
+			delete t;
     }
     else
     {
       t->generateCouples(7);
     }
-   }
+	}
   std::cout<<"\n";
   
   std::cout<<"Generate elves: ";
-   for (int i=0;i<nTribesElven;++i)
-   {
+	for (int i=0;i<nTribesElven;++i)
+	{
     std::cout<<".";
-      Tribe_Elf * t = new Tribe_Elf;
-      t->init(this);
-      if (t->spawn() == false)
-      {
+		Tribe_Elf * t = new Tribe_Elf;
+		t->init(this);
+		if (t->spawn() == false)
+		{
       std::cout<<" FAIL ";
-         delete t;
+			delete t;
     }
     else
     {
       t->generateCouples(7);
     }
-   }
+	}
   std::cout<<"\n";
  
-   std::cout<<"END Generate tribes\n";
+	std::cout<<"END Generate tribes\n";
 }
 
 
@@ -1054,7 +1054,7 @@ void World::evolveToCiv( Tribe * _tribe )
 
 void World::incrementTicksBacklog(long long unsigned int nTicks)
 {
-   ticksBacklog+=nTicks;
+	ticksBacklog+=nTicks;
 }
 
 // Increments the world by nTicks ticks. Higher values may lead to abstraction.
@@ -1068,14 +1068,14 @@ void World::incrementTicks(int nTicks)
       // std::cout<<"biome "<<i<<"\n";
    // }
 
-   //ticksBacklog+=nTicks;
-   dailyCounter+=nTicks;
-   monthlyCounter+=nTicks;
+	//ticksBacklog+=nTicks;
+	dailyCounter+=nTicks;
+	monthlyCounter+=nTicks;
   
-   calendar.advanceSecond(nTicks);
+	calendar.advanceSecond(nTicks);
   
-   for ( int i=0;i<vTribe.size();++i)
-   {
+	for ( int i=0;i<vTribe.size();++i)
+	{
     if ( vTribe(i)->isAlive == false )
     {
       destroyInfluence(vTribe(i));
@@ -1086,34 +1086,34 @@ void World::incrementTicks(int nTicks)
       vTribe(i)->incrementTicks(nTicks);
     }
 
-   }
+	}
   
   vTribe.removeNulls();
-   
-   // for ( int i=0;i<vTribe.size();++i)
-   // {
-      // vTribe(i)->incrementTicks(nTicks);
-   // }
+	
+	// for ( int i=0;i<vTribe.size();++i)
+	// {
+		// vTribe(i)->incrementTicks(nTicks);
+	// }
   
-   for ( int i=0;i<vCiv.size();++i)
-   {
-      //vCiv(i)->incrementTicks(nTicks);
-   }
+	for ( int i=0;i<vCiv.size();++i)
+	{
+		//vCiv(i)->incrementTicks(nTicks);
+	}
   
 
-   while (monthlyCounter >= 2592000)
-   {
+	while (monthlyCounter >= 2592000)
+	{
     //std::cout<<"Degrade influence.\n";
     degradeInfluence();
-      monthlyCounter-=2592000;
+		monthlyCounter-=2592000;
     nTicks-=2592000;
-   }
+	}
   
-   while ( dailyCounter >= 86400 )
+	while ( dailyCounter >= 86400 )
   {
       dailyCounter-=86400;
       nTicks-=86400;
-   }
+	}
   
   // FOR NOW INCREMENT INDIVIDUAL TICKS THROW AWAY SOME IF THERE'S TOO MANY
   if (nTicks > 10) { nTicks = 10; }
@@ -1147,31 +1147,31 @@ void World::incrementTicks(int nTicks)
   // else
   // { isRaining = false; }
 
-   
-   //for ( int i=0;i<vCiv.size();++i)
-   //{
-      //vCiv(i)->incrementTicks(nTicks);
-   //}
-   //updateCivContacts();
+	
+	//for ( int i=0;i<vCiv.size();++i)
+	//{
+		//vCiv(i)->incrementTicks(nTicks);
+	//}
+	//updateCivContacts();
 
-   // if (nTicks == 1)
-   // {
-      // /* MINIMAL ABSTRACTION. */
-   // }
-   // else if (nTicks == 2)
-   // {
-   // }
-   // else
-   // {
-      // /* MAXIMUM ABSTRACTION. */
-   // }
+	// if (nTicks == 1)
+	// {
+		// /* MINIMAL ABSTRACTION. */
+	// }
+	// else if (nTicks == 2)
+	// {
+	// }
+	// else
+	// {
+		// /* MAXIMUM ABSTRACTION. */
+	// }
   RENDER_NEXT_FRAME=true;
 }
 
 void World::logicTick()
 {
-   //std::cout<<"logic tick\n";
-   //handleTickBacklog();
+	//std::cout<<"logic tick\n";
+	//handleTickBacklog();
 }
 
 void World::updateMaps()
@@ -1211,30 +1211,30 @@ void World::updateMaps()
 
 bool World::handleTickBacklog()
 {
-   if (ticksBacklog<=0) { return false; }
+	if (ticksBacklog<=0) { return false; }
    
 
-   
-   unsigned long long int MAXIMUM_TICKS_AT_ONCE = 2592000;
-   
-   relinquishTimer.start();
-   
-   while (ticksBacklog > MAXIMUM_TICKS_AT_ONCE)
-   {
-      incrementTicks(MAXIMUM_TICKS_AT_ONCE);
-      ticksBacklog-=MAXIMUM_TICKS_AT_ONCE;
-      relinquishTimer.update();
-      
-      if (relinquishTimer.uSeconds > 100 )
-      {
+	
+	unsigned long long int MAXIMUM_TICKS_AT_ONCE = 2592000;
+	
+	relinquishTimer.start();
+	
+	while (ticksBacklog > MAXIMUM_TICKS_AT_ONCE)
+	{
+		incrementTicks(MAXIMUM_TICKS_AT_ONCE);
+		ticksBacklog-=MAXIMUM_TICKS_AT_ONCE;
+		relinquishTimer.update();
+		
+		if (relinquishTimer.uSeconds > 100 )
+		{
       RENDER_NEXT_FRAME=true;
-         return true;
-      }
-   }
-   
-   // We have less than maximum ticks remaining, so finish them.
-   incrementTicks(ticksBacklog);
-   ticksBacklog=0;
+			return true;
+		}
+	}
+	
+	// We have less than maximum ticks remaining, so finish them.
+	incrementTicks(ticksBacklog);
+	ticksBacklog=0;
   RENDER_NEXT_FRAME=true;
   return true;
 }
@@ -1248,7 +1248,7 @@ void World::idleTick()
     playerCharacter->updateKnowledgeIdle();
   }
   
-   if (handleTickBacklog() == false)
+	if (handleTickBacklog() == false)
   {
     playerKeypressTimer.update();
     
@@ -1299,169 +1299,169 @@ void World::idleTick()
 
 bool World::isLand(int _x, int _y)
 {
-   if ( aWorldTile.isSafe(_x,_y) )
-   {
+	if ( aWorldTile.isSafe(_x,_y) )
+	{
       return aWorldTile(_x,_y).isLand();
-   }
-   return false;
+	}
+	return false;
 }
 inline bool World::isLand(HasXY* _xy)
 {
-   return isLand(_xy->x, _xy->y);
+	return isLand(_xy->x, _xy->y);
 }
 
 int mX;
 
-   // This should be done externally.
+	// This should be done externally.
 void World::buildArrays(WorldGenerator2& wg)
 {
-   // //aTopoMap.initNoFill(nX,nY,3,0);
-   
+	// //aTopoMap.initNoFill(nX,nY,3,0);
+	
 // // Create a lightening darkening texture fractal.
-   // ArrayS2 <int> aLightModifier2 (nX,nY,0);
-   // //aLightModifier2.init(mapSize,mapSize,0);
+	// ArrayS2 <int> aLightModifier2 (nX,nY,0);
+	// //aLightModifier2.init(mapSize,mapSize,0);
 
-      // // GENERATE HEIGHTMAP
-   // DiamondSquareAlgorithmCustomRange dsa2;
-   // dsa2.maxValue=12;
-   // //HEIGHTMAP TABLE FREESTEPS SMOOTHING
-   // dsa2.generate(&aLightModifier2,0,2,0.75,250);
+		// // GENERATE HEIGHTMAP
+	// DiamondSquareAlgorithmCustomRange dsa2;
+	// dsa2.maxValue=12;
+	// //HEIGHTMAP TABLE FREESTEPS SMOOTHING
+	// dsa2.generate(&aLightModifier2,0,2,0.75,250);
 
-   // for (int _y=0;_y<nY;++_y)
-   // {
-      // for (int _x=0;_x<nX;++_x)
-      // {
-         // const int lightModifier = aLightModifier2(_x,_y);
-         // //const int lightModifier = 0;
-         
-         // //aSeed(_x,_y) = random.randInt(PORTABLE_INT_MAX-1);
+	// for (int _y=0;_y<nY;++_y)
+	// {
+		// for (int _x=0;_x<nX;++_x)
+		// {
+			// const int lightModifier = aLightModifier2(_x,_y);
+			// //const int lightModifier = 0;
+			
+			// //aSeed(_x,_y) = random.randInt(PORTABLE_INT_MAX-1);
 
         // //Initialise the WorldTile with biome enum.
       // //aWorldTile(_x,_y).init(_x,_y,aTerrain(_x,_y), aSeed(_x,_y),aRiverID(_x,_y));
       // aWorldTile(_x,_y).init(_x,_y,aTerrain(_x,_y), 0, aRiverID(_x,_y));
         // //Initialise the subterranean tiles
-         
-         // int _red;
-         // int _green;
-         // int _blue;
-         
-         // if ( aTerrain(_x,_y) == OCEAN )
-         // {
-            // _red=50;
-            // _green=50;
-            // _blue=240;
-         // }
-         // else if ( aTerrain(_x,_y) == RIVER )
-         // {
-             // _red=100;
-             // _green=100;
-             // _blue=240;
-         // }
-         // else if ( aTerrain(_x,_y) == MOUNTAIN )
-         // {
-            // _red=80;
-            // _green=80;
-            // _blue=80;
-         // }
-         // else if ( aTerrain(_x,_y) == HILLY )
-         // {
-            // _red=80;
-            // _green=140;
-            // _blue=80;
-         // }
-         // else if ( aTerrain(_x,_y) == FOREST )
-         // {
-            // _red=0;
-            // _green=120;
-            // _blue=0;
-         // }
-         // else if ( aTerrain(_x,_y) == DESERT )
-         // {
-            // _red=200;
-            // _green=200;
-            // _blue=20;
-         // }
-         // else if ( aTerrain(_x,_y) == SNOW )
-         // {
-            // _red=220;
-            // _green=220;
-            // _blue=240;
-         // }
-         // else if ( aTerrain(_x,_y) == JUNGLE )
-         // {
-            // _red=0;
-            // _green=70;
-            // _blue=0;
-         // }
-         // else if ( aTerrain(_x,_y) == WETLAND )
-         // {
-            // _red=20;
-            // _green=150;
-            // _blue=200;
-         // }
-         // else if ( aTerrain(_x,_y) == STEPPES )
-         // {
-            // _red=180;
-            // _green=120;
-            // _blue=40;
-         // }
-         // else if ( aTerrain(_x,_y) == ICE )
-         // {
-            // _red=255;
-            // _green=255;
-            // _blue=255;
-         // }
-         // else if ( aTerrain(_x,_y) == CAVE )
-         // {
-            // _red=0;
-            // _green=0;
-            // _blue=0;
-         // }
-         // else if ( aTerrain(_x,_y) == RUIN )
-         // {
-            // _red=255;
-            // _green=0;
-            // _blue=255;
-         // }
-         // else
-         // {
-            // _red=66;
-            // _green=180;
-            // _blue=66;
-         // }
-         
-         // //mof light values.
-         // // _red += lightModifier;
-         // // if ( _red > 255 ) { _red = 255; }
+			
+			// int _red;
+			// int _green;
+			// int _blue;
+			
+			// if ( aTerrain(_x,_y) == OCEAN )
+			// {
+				// _red=50;
+				// _green=50;
+				// _blue=240;
+			// }
+			// else if ( aTerrain(_x,_y) == RIVER )
+			// {
+				 // _red=100;
+				 // _green=100;
+				 // _blue=240;
+			// }
+			// else if ( aTerrain(_x,_y) == MOUNTAIN )
+			// {
+				// _red=80;
+				// _green=80;
+				// _blue=80;
+			// }
+			// else if ( aTerrain(_x,_y) == HILLY )
+			// {
+				// _red=80;
+				// _green=140;
+				// _blue=80;
+			// }
+			// else if ( aTerrain(_x,_y) == FOREST )
+			// {
+				// _red=0;
+				// _green=120;
+				// _blue=0;
+			// }
+			// else if ( aTerrain(_x,_y) == DESERT )
+			// {
+				// _red=200;
+				// _green=200;
+				// _blue=20;
+			// }
+			// else if ( aTerrain(_x,_y) == SNOW )
+			// {
+				// _red=220;
+				// _green=220;
+				// _blue=240;
+			// }
+			// else if ( aTerrain(_x,_y) == JUNGLE )
+			// {
+				// _red=0;
+				// _green=70;
+				// _blue=0;
+			// }
+			// else if ( aTerrain(_x,_y) == WETLAND )
+			// {
+				// _red=20;
+				// _green=150;
+				// _blue=200;
+			// }
+			// else if ( aTerrain(_x,_y) == STEPPES )
+			// {
+				// _red=180;
+				// _green=120;
+				// _blue=40;
+			// }
+			// else if ( aTerrain(_x,_y) == ICE )
+			// {
+				// _red=255;
+				// _green=255;
+				// _blue=255;
+			// }
+			// else if ( aTerrain(_x,_y) == CAVE )
+			// {
+				// _red=0;
+				// _green=0;
+				// _blue=0;
+			// }
+			// else if ( aTerrain(_x,_y) == RUIN )
+			// {
+				// _red=255;
+				// _green=0;
+				// _blue=255;
+			// }
+			// else
+			// {
+				// _red=66;
+				// _green=180;
+				// _blue=66;
+			// }
+			
+			// //mof light values.
+			// // _red += lightModifier;
+			// // if ( _red > 255 ) { _red = 255; }
 
-         // // _green += lightModifier;
-         // // if ( _green > 255 ) { _green = 255; }
-         
-         // // _blue += lightModifier;
-         // //if ( _blue > 255 ) { _blue = 255; }
-         
-         // _red -= lightModifier;
-         // if ( _red < 0 ) { _red = 0; }
+			// // _green += lightModifier;
+			// // if ( _green > 255 ) { _green = 255; }
+			
+			// // _blue += lightModifier;
+			// //if ( _blue > 255 ) { _blue = 255; }
+			
+			// _red -= lightModifier;
+			// if ( _red < 0 ) { _red = 0; }
 
-         // _green -= lightModifier;
-         // if ( _green < 0 ) { _green = 0; }
-         
-         // _blue -= lightModifier;
-         // if ( _blue < 0 ) { _blue = 0; }
-         
-         
-         // aTopoMap(_x,_y,0) = _red;
-         // aTopoMap(_x,_y,1) = _green;
-         // aTopoMap(_x,_y,2) = _blue;
-         
+			// _green -= lightModifier;
+			// if ( _green < 0 ) { _green = 0; }
+			
+			// _blue -= lightModifier;
+			// if ( _blue < 0 ) { _blue = 0; }
+			
+			
+			// aTopoMap(_x,_y,0) = _red;
+			// aTopoMap(_x,_y,1) = _green;
+			// aTopoMap(_x,_y,2) = _blue;
+			
 
-         
-      // }
-   // }
+			
+		// }
+	// }
   
   // #ifdef SAVE_DATA
-   // Png png;
-   // png.encodeS3(strSavePath+"/worldmap.png",&aTopoMap);
+	// Png png;
+	// png.encodeS3(strSavePath+"/worldmap.png",&aTopoMap);
   // #endif
 }
 
@@ -1472,43 +1472,43 @@ void World::buildArrays(WorldGenerator2& wg)
 
 void World::generateWorld(const std::string _worldName, const int x=127, const int y=127, const int seed=0, const int fragmentation=2, const bool islandMode = true, const bool wrapX=true, const bool wrapY=false, const double landPercent = 0.66)
 {
-   if ( x <= 0 || y <= 0 )
-   {
-      std::cout<<"Error: Invalid world size.\n";
-      return;
-   }
-   if (_worldName == "")
-   {
-      std::cout<<"Error: World must have a name.\n";
-      return;
-   }
-   if (DataTools::isAlphaNumeric(_worldName,true)==false)
-   {
-      std::cout<<"Error: World name must be alphanumeric.\n";
-      return;
-   }
-   name=_worldName;
-   
+	if ( x <= 0 || y <= 0 )
+	{
+		std::cout<<"Error: Invalid world size.\n";
+		return;
+	}
+	if (_worldName == "")
+	{
+		std::cout<<"Error: World must have a name.\n";
+		return;
+	}
+	if (DataTools::isAlphaNumeric(_worldName,true)==false)
+	{
+		std::cout<<"Error: World name must be alphanumeric.\n";
+		return;
+	}
+	name=_worldName;
+	
   #ifdef SAVE_DATA
-   FileManager::createDirectory(SAVE_FOLDER_PATH);
-   if ( FileManager::directoryExists(SAVE_FOLDER_PATH) == false )
-   {
-      std::cout<<"Error: Unable to create save directory.\n";
-      return;
-   }
+	FileManager::createDirectory(SAVE_FOLDER_PATH);
+	if ( FileManager::directoryExists(SAVE_FOLDER_PATH) == false )
+	{
+		std::cout<<"Error: Unable to create save directory.\n";
+		return;
+	}
   #endif
 
-   nX = x;
-   nY = y;
+	nX = x;
+	nY = y;
   
     //maximum possible tile X/Y coordinate.
   maximumX = LOCAL_MAP_SIZE*nX-1;
   maximumY = LOCAL_MAP_SIZE*nY-1;
 
-   mX=x;
+	mX=x;
   landmassSeed = seed;
-   
-   strSavePath = SAVE_FOLDER_PATH+"/"+name;
+	
+	strSavePath = SAVE_FOLDER_PATH+"/"+name;
    currentSavePath = SAVE_FOLDER_PATH+"/"+name;
   
 #ifdef SAVE_DATA
@@ -1524,12 +1524,12 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
    }
    
 #endif
-   
-   Timer worldGenTimer;
-   worldGenTimer.init();
-   worldGenTimer.start();
-   
-   // Multithreading this segment runs 23% faster. Saves about 0.1 seconds or something.
+	
+	Timer worldGenTimer;
+	worldGenTimer.init();
+	worldGenTimer.start();
+	
+	// Multithreading this segment runs 23% faster. Saves about 0.1 seconds or something.
 #define THREAD_WORLD_INIT
 #if defined WILDCAT_THREADING || defined THREAD_WORLD_INIT 
 
@@ -1554,31 +1554,31 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 
 #endif
 
-   dailyCounter=0;
-   monthlyCounter=0;
+	dailyCounter=0;
+	monthlyCounter=0;
 
-   WorldGenerator2 wg;
-   wg.wrapX=wrapX;
-   wg.wrapY=wrapY;
-   wg.seed = seed;
-   wg.mapSize=x;
-   
-   wg.oceanPercent=landPercent;
-   
-   wg.mountainPercent=0.025;
-   wg.forestPercent=0.25;
-   wg.desertPercent=0.33;
-   wg.snowPercent=0.04;
+	WorldGenerator2 wg;
+	wg.wrapX=wrapX;
+	wg.wrapY=wrapY;
+	wg.seed = seed;
+	wg.mapSize=x;
+	
+	wg.oceanPercent=landPercent;
+	
+	wg.mountainPercent=0.025;
+	wg.forestPercent=0.25;
+	wg.desertPercent=0.33;
+	wg.snowPercent=0.04;
 
-   wg.goodPercent=0.05;
-   wg.evilPercent=0.05;
-   
-   wg.freeSteps=fragmentation;
-   wg.islandMode=islandMode;
-   wg.variance=400;
-   wg.landSmoothing=0.88;
-   
-   // Create master file.
+	wg.goodPercent=0.05;
+	wg.evilPercent=0.05;
+	
+	wg.freeSteps=fragmentation;
+	wg.islandMode=islandMode;
+	wg.variance=400;
+	wg.landSmoothing=0.88;
+	
+	// Create master file.
   worldFilePath = strSavePath+"/main.dat";
   
 #ifdef SAVE_DATA
@@ -1609,16 +1609,16 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
    t5.join();
 #endif
 
-   wg.generate();
+	wg.generate();
    aTerrain.init(nX,nY,OCEAN);
    aRiverID = wg.aRiverMap; // this needs to be moved to aTerrain.
 
    //buildArrays(wg);  // This seems to mostly just build the aTopoMap and PNG export.
    
-   for (int _y=0;_y<nY;++_y)
-   {
-      for (int _x=0;_x<nX;++_x)
-      {
+	for (int _y=0;_y<nY;++_y)
+	{
+		for (int _x=0;_x<nX;++_x)
+		{
          aWorldTile(_x,_y).init(_x,_y,wg.aTerrainType(_x,_y), 0, aRiverID(_x,_y));
          aTerrain(_x,_y) = wg.aTerrainType(_x,_y);
       }
@@ -1687,9 +1687,9 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
   }
 
    //timerBiomeFill.update();
-   //std::cout<<"Filled "<<currentID<<" biomes in "<<timerBiomeFill.fullSeconds<<" seconds.\n";
+	//std::cout<<"Filled "<<currentID<<" biomes in "<<timerBiomeFill.fullSeconds<<" seconds.\n";
    
-   generated = true;
+	generated = true;
    worldGenTimer.update();
    std::cout<<"world generated in: "<<worldGenTimer.fullSeconds<<" seconds.\n";
    std::cout<<"The world's uid is: "<<getUID()<<".\n";
@@ -1787,12 +1787,12 @@ void World::unloadLocal(const int _localX, const int _localY)
   if ( isSafe(_localX,_localY) == false )
   { return; }
 
-   FileManager::createDirectory(SAVE_FOLDER_PATH);
-   if ( FileManager::directoryExists(SAVE_FOLDER_PATH) == false )
-   {
-      std::cout<<"Error: Unable to create save directory.\n";
-      return;
-   }
+	FileManager::createDirectory(SAVE_FOLDER_PATH);
+	if ( FileManager::directoryExists(SAVE_FOLDER_PATH) == false )
+	{
+		std::cout<<"Error: Unable to create save directory.\n";
+		return;
+	}
 
   // Only unload the local map if it is loaded.
   for ( int i=0;i<vWorldLocal.size();++i)
@@ -1843,8 +1843,8 @@ int World::getTileFertility(const int _x, const int _y)
    }
    return aWorldTile(_x,_y).baseFertility;
 }
-   inline int World::getTileFertility(const HasXY* xy)
-   { return getTileFertility(xy->x, xy->y); }
+	inline int World::getTileFertility(const HasXY* xy)
+	{ return getTileFertility(xy->x, xy->y); }
 
 int World::getSurroundingFertility(const int _x, const int _y)
 {
@@ -1853,73 +1853,73 @@ int World::getSurroundingFertility(const int _x, const int _y)
       return 0;
    }
 
-   int totalFertility = 0;
+	int totalFertility = 0;
 
-   Vector < HasXY* >* vTerrain = aWorldTile.getNeighbors(_x,_y,true);
+	Vector < HasXY* >* vTerrain = aWorldTile.getNeighbors(_x,_y,true);
   if ( vTerrain==0 )
   {
     return 0;
   }
 
-   for ( int i=0;i<vTerrain->size();++i)
-   {
-      totalFertility+= getTileFertility((*vTerrain)(i));
-   }
-   vTerrain->deleteAll();
-   delete vTerrain;
-   return totalFertility;
-   
+	for ( int i=0;i<vTerrain->size();++i)
+	{
+		totalFertility+= getTileFertility((*vTerrain)(i));
+	}
+	vTerrain->deleteAll();
+	delete vTerrain;
+	return totalFertility;
+	
 }
 
 int World::getHuntingYield(const int _x, const int _y)
 {
    // This is outdated and shoult be replaced anyway
    
-   //int totalYield = 0;
+	//int totalYield = 0;
 
-   // aWorldTile.getNeighborVector(_x,_y,&vTerrain,true /* INCLUDE SELF */);
+	// aWorldTile.getNeighborVector(_x,_y,&vTerrain,true /* INCLUDE SELF */);
    // Vector < HasXY* >* vTerrain = aWorldTile.getNeighbors(_x,_y,true);
-   
-   // for ( int i=0;i<vTerrain->size();++i)
-   // {
-      // int terrainType = (*vTerrain)(i)
-      
-      // if ( terrainType == OCEAN )
-      // {
-         // totalYield += 2;
-      // }
-      // else if (terrainType == GRASSLAND )
-      // {
-         // totalYield += 1;
-      // }
-      // else if (terrainType == FOREST )
-      // {
-         // totalYield += 2;
-      // }
-      // else if (terrainType == JUNGLE)
-      // {
-         // totalYield += 2;
-      // }
-   // }
-   
-   //return totalYield;
+	
+	// for ( int i=0;i<vTerrain->size();++i)
+	// {
+		// int terrainType = (*vTerrain)(i)
+		
+		// if ( terrainType == OCEAN )
+		// {
+			// totalYield += 2;
+		// }
+		// else if (terrainType == GRASSLAND )
+		// {
+			// totalYield += 1;
+		// }
+		// else if (terrainType == FOREST )
+		// {
+			// totalYield += 2;
+		// }
+		// else if (terrainType == JUNGLE)
+		// {
+			// totalYield += 2;
+		// }
+	// }
+	
+	//return totalYield;
    
    return 5;
 }
 
 std::string World::getTileType(const int _x, const int _y)
 {
-   if (aWorldTile.isSafe(_x,_y))
-   {
-      return biomeName[aWorldTile(_x,_y).baseBiome];
-   }
-   return "?";
+	if (aWorldTile.isSafe(_x,_y))
+	{
+		return biomeName[aWorldTile(_x,_y).baseBiome];
+	}
+	return "?";
 }
 
 void World::getRandomTile (int* x, int* y)
 {
-   *x = Random::randomInt(nX);
-   *y = Random::randomInt(nY);
+	*x = Random::randomInt(nX);
+	*y = Random::randomInt(nY);
 }
 
 int World::getPopulation()
@@ -1934,34 +1934,34 @@ int World::getPopulation()
 
 bool World::getRandomLandTile(int* x, int* y)
 {
-   int randomRow = random.randomInt(nY-1);
-   int nRowsSearched = 0;
-   
-   while ( nRowsSearched < nY )
-   {
-      for (int _x=0;_x<nX;++_x)
-      {
-         int randomX = (*vAllTiles(randomRow))(_x);
-         
-         if ( aWorldTile(randomX,randomRow).baseBiome != OCEAN )
-         {
-            *x=randomX;
-            *y=randomRow;
-            return true;
-         }
+	int randomRow = random.randomInt(nY-1);
+	int nRowsSearched = 0;
+	
+	while ( nRowsSearched < nY )
+	{
+		for (int _x=0;_x<nX;++_x)
+		{
+			int randomX = (*vAllTiles(randomRow))(_x);
+			
+			if ( aWorldTile(randomX,randomRow).baseBiome != OCEAN )
+			{
+				*x=randomX;
+				*y=randomRow;
+				return true;
+			}
 
-      }
-      
-      vAllTiles(randomRow)->shuffle();
-      
-      ++randomRow;
-      if (randomRow >= nY) { randomRow=0; }
-      ++nRowsSearched;
-   }
+		}
+		
+		vAllTiles(randomRow)->shuffle();
+		
+		++randomRow;
+		if (randomRow >= nY) { randomRow=0; }
+		++nRowsSearched;
+	}
    
-   *x=0;
-   *y=0;
-   return false;
+	*x=0;
+	*y=0;
+	return false;
 }
 
 // UPDATE: This now actually returns a random distribution.
@@ -2010,20 +2010,20 @@ void World::degradeInfluence(int value /* =1 */)
 
 void World::destroyInfluence (Tribe* _tribe)
 {
-   if ( _tribe==0 )
-   { return; }
+	if ( _tribe==0 )
+	{ return; }
 
   
-   for ( int _y=0;_y<nY;++_y)
-   {
-      for ( int _x=0;_x<nX;++_x)
-      {
+	for ( int _y=0;_y<nY;++_y)
+	{
+		for ( int _x=0;_x<nX;++_x)
+		{
       aWorldTile(_x,_y).destroyInfluence(_tribe);
     }
-   }
+	}
 }
 
-   // Note that 0 influence doesn't count as influence. In this case it will return 0.
+	// Note that 0 influence doesn't count as influence. In this case it will return 0.
 Tribe* World::getDominantInfluence (const int _x, const int _y)
 {
   if ( isSafe(_x,_y) == false ) { return 0; }
@@ -2033,10 +2033,10 @@ Tribe* World::getDominantInfluence (const int _x, const int _y)
 
 Tribe* World::getDominantInfluence (HasXY* _xy)
 {
-   return getDominantInfluence(_xy->x,_xy->y);
+	return getDominantInfluence(_xy->x,_xy->y);
 }
-   
-   
+	
+	
 int World::getHighestInfluence(const int _x, const int _y)
 {
   if ( isSafe(_x,_y) == false ) { return 0; }
@@ -2044,10 +2044,10 @@ int World::getHighestInfluence(const int _x, const int _y)
   return aWorldTile(_x,_y).getDominantInfluenceValue();
 }
 
-   int World::getHighestInfluence(HasXY* _xy)
-   { return getHighestInfluence(_xy->x,_xy->y); }
+	int World::getHighestInfluence(HasXY* _xy)
+	{ return getHighestInfluence(_xy->x,_xy->y); }
 
-   
+	
 std::string World::getLandmassName(const int _x, const int _y)
 {
   if ( aWorldTile.isSafe(_x,_y) )
@@ -2256,7 +2256,7 @@ Tribe* World::combatCheck (Tribe* _tribe)
   }
   return 0;
 }
-   
+	
 World_Local * World::getTile (const int x, const int y )
 {
   if (isSafe(x,y) )

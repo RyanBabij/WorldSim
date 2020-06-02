@@ -11,15 +11,15 @@
 
 Civ::Civ()
 {
-   name="N/A";
-   money=100;
-   world=0;
+	name="N/A";
+	money=100;
+	world=0;
 }
 
 void Civ::init(World* _world)
 {
-   world = _world;
-   aVisible.init(world->nX,world->nY,false);
+	world = _world;
+	aVisible.init(world->nX,world->nY,false);
 }
 
 void Civ::addSettlement(Settlement * _settlement)
@@ -30,63 +30,63 @@ void Civ::addSettlement(Settlement * _settlement)
 
 void Civ::incrementTicks ( int nTicks )
 {
-   /* Update each city. */
-   
-   for ( int i=0;i<vSettlement.size();++i)
-   {
-      vSettlement(i)->incrementTicks(nTicks);
-   }
+	/* Update each city. */
+	
+	for ( int i=0;i<vSettlement.size();++i)
+	{
+		vSettlement(i)->incrementTicks(nTicks);
+	}
 }
 
 void Civ::setColour( const int r, const int g, const int b)
 {
-   colourRed=r;
-   colourGreen=g;
-   colourBlue=b;
+	colourRed=r;
+	colourGreen=g;
+	colourBlue=b;
 }
 
 /* TABLE INTERFACE */
 
 std::string Civ::getColumn(std::string _column)
 {
-   if ( _column=="name" )
-   {
-      return name;
-   }
-   if ( _column=="race" )
-   {
-      if (race == NONE)
+	if ( _column=="name" )
+	{
+		return name;
+	}
+	if ( _column=="race" )
+	{
+		if (race == NONE)
     {
       return "None";
     }
-      if (race == HUMAN)
+		if (race == HUMAN)
     {
       return "Human";
     }
-      if (race == DWARVEN)
+		if (race == DWARVEN)
     {
       return "Dwarven";
     }
-      if (race == ELVEN)
+		if (race == ELVEN)
     {
       return "Elven";
     }
     
-   }
-   if ( _column=="population" )
-   {
-      return DataTools::toString(vCharacter.size());
-   }
-   
-   return "?";
+	}
+	if ( _column=="population" )
+	{
+		return DataTools::toString(vCharacter.size());
+	}
+	
+	return "?";
 }
 std::string Civ::getColumnType(std::string _column)
 {
-   if ( _column == "population" || _column == "territory" || _column == "food" )
-   {
-      return "number";
-   }
-   return "string";
+	if ( _column == "population" || _column == "territory" || _column == "food" )
+	{
+		return "number";
+	}
+	return "string";
 }
 
 #endif
