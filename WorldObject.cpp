@@ -5,17 +5,17 @@
 #include"WorldObject.hpp"
 
 /* WorldObject.cpp
-	#include"WorldObject.cpp"
+   #include"WorldObject.cpp"
 
   Implementation of WorldObject.hpp.
 */
 
 WorldObject::WorldObject()
 {
-	x=0; y=0;
+   x=0; y=0;
   fullX = 0; fullY = 0;
-	weight=0;
-	bulk=0;
+   weight=0;
+   bulk=0;
   
   blocksView=false;
   blocksMovement=false;
@@ -31,24 +31,24 @@ WorldObject::WorldObject()
 
 std::string WorldObject::getName()
 {
-	return "WorldObject";
+   return "WorldObject";
 }
 
 int WorldObject::distanceTo (WorldObject* _obj) 
 {
-	return std::max(abs(x-_obj->x),abs(y-_obj->y));
+   return std::max(abs(x-_obj->x),abs(y-_obj->y));
 }
 
 int WorldObject::distanceFrom(WorldObject* _obj) { return distanceTo(_obj); } /* Alias. */
 
 int WorldObject::distanceTo (int _x, int _y) 
 {
-	return std::max(abs(x-_x),abs(y-_y));
+   return std::max(abs(x-_x),abs(y-_y));
 }
 
 Texture* WorldObject::currentTexture()
 {
-	return &TEX_TEST_404;
+   return &TEX_TEST_404;
 }
 
 std::string WorldObject::getBaseData()

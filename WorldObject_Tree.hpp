@@ -3,7 +3,7 @@
 #define WORLDSIM_WORLDOBJECT_TREE_HPP
 
 /* WorldObject.hpp
-	#include"WorldObject_Tree.hpp"
+   #include"WorldObject_Tree.hpp"
 
   Trees can be harvested for wood. They are also an obstacle for movement and LOS.
   
@@ -25,18 +25,18 @@
 // Tree should be a type of static.
 class WorldObject_Tree: public WorldObject
 {
-	public:
+   public:
 
     // Determines the stage of growth the tree is at: Sapling, young tree, tree.
   int growth;
-	
-	WorldObject_Tree(int _growth = 0);
-	virtual ~WorldObject_Tree() {}
+   
+   WorldObject_Tree(int _growth = 0);
+   virtual ~WorldObject_Tree() {}
   
   
-	virtual std::string getName();
+   virtual std::string getName();
 
-	virtual Texture* currentTexture();
+   virtual Texture* currentTexture();
 };
 
 #endif

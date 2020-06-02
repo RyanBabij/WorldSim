@@ -3,7 +3,7 @@
 #define WORLDSIM_ITEM_ALL_CPP
 
 /* Item_All.cpp
-	#include"Item.cpp"
+   #include"Item.cpp"
   
   Implementation of Item.hpp.
 

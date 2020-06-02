@@ -28,49 +28,49 @@ const std::string enumCauseOfDeathStr [5] = { "unknown", "starvation", "massacre
 
 class Character: public WorldObject, public TableInterface, public SaveFileInterface
 {
-	public:
-	
-	std::string firstName;
-	std::string lastName;
-	std::string epithet;
-	long unsigned int id;
-	
-	bool isMale;
-	int age; /* In years. (or days?) */
-	int daysCounter; /* 0-360 */
-	int secondsCounter; /* 0 - 86,400 */
-	
-	int actionPoints; /* Base: 100. Points are deducted for each action. */
-	
-	bool isPregnant;
-	int pregnantCounter;
-	
-	bool isAlive;
-	bool isMarried; /* Change to partner pointer */
+   public:
+   
+   std::string firstName;
+   std::string lastName;
+   std::string epithet;
+   long unsigned int id;
+   
+   bool isMale;
+   int age; /* In years. (or days?) */
+   int daysCounter; /* 0-360 */
+   int secondsCounter; /* 0 - 86,400 */
+   
+   int actionPoints; /* Base: 100. Points are deducted for each action. */
+   
+   bool isPregnant;
+   int pregnantCounter;
+   
+   bool isAlive;
+   bool isMarried; /* Change to partner pointer */
   
   //bool isUnderground; /* Is on the subterranean layer. */
-	
-	int money; /* Gold coins or some shit. */
-	
+   
+   int money; /* Gold coins or some shit. */
+   
   short int maxHealth;
-	short int health;
-	short int hunger; /* 500 = MAX_HUNGER */
+   short int health;
+   short int hunger; /* 500 = MAX_HUNGER */
   short int thirst;
-	
-		/* Governing attributes 0-100  (Might remove later) */
-	short int strength;
-	short int agility;
-	short int charisma;
-	short int intelligence;
-	short int perception;
-	short int endurance;
-	short int courage;
+   
+      /* Governing attributes 0-100  (Might remove later) */
+   short int strength;
+   short int agility;
+   short int charisma;
+   short int intelligence;
+   short int perception;
+   short int endurance;
+   short int courage;
   
     /* Skills */
     
   unsigned char skillFishing;
   unsigned char skillMarksmanship;
-	
+   
     // True if player has flagged this character as favourite.
   bool isFavourite;
   
@@ -88,24 +88,24 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   
   bool isSneaking;
   
-		/* Right now each character has a biological mother and father. In the future we might also have guardians */
-	Character* father;
-	Character* mother;
-	Character* spouse;
-	Vector <Character*> vChildren;
-	Vector <Character*> vSiblings;
-	
+      /* Right now each character has a biological mother and father. In the future we might also have guardians */
+   Character* father;
+   Character* mother;
+   Character* spouse;
+   Vector <Character*> vChildren;
+   Vector <Character*> vSiblings;
+   
     //People this character has killed.
   Vector <Character*> vKills;
   
-	Calendar dateOfBirth;
-	Calendar dateOfMarriage;
-	Calendar dateOfDeath;
-	
-	HasXY birthLocation;
-	HasXY deathLocation;
-	
-	Tribe* tribe;
+   Calendar dateOfBirth;
+   Calendar dateOfMarriage;
+   Calendar dateOfDeath;
+   
+   HasXY birthLocation;
+   HasXY deathLocation;
+   
+   Tribe* tribe;
   
   //int worldX, worldY;
   
@@ -116,22 +116,22 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   
     //Character's knowledge of the world (optional).
   Character_Knowledge* knowledge;
-	
-	
-		/* INITIALIZATION */
-	Character();
+   
+   
+      /* INITIALIZATION */
+   Character();
     // Initialise, including roll for stats. 0 - Roll gender. 1 - Male. 2 - Female.
-	void init( int _sex = 0);
-	
-		/* AI FUNCTIONS
-		
-		*/
-	void incrementTicks(int = 1);
+   void init( int _sex = 0);
+   
+      /* AI FUNCTIONS
+      
+      */
+   void incrementTicks(int = 1);
   
   // MOVE FUNCTIONS
   virtual void wander();
-	
-	Texture* currentTexture ();
+   
+   Texture* currentTexture ();
   
   
   /* ITEM FUNCTIONS */
@@ -149,46 +149,46 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   
   void removeFromInventoryGrid(Item* _item); /* Player-only function */
 
-	
-		/* SOCIAL FUNCTIONS
-			marry
-			canMarry
+   
+      /* SOCIAL FUNCTIONS
+         marry
+         canMarry
 
-			getDescendants
-			Return all characters descended from this one.
+         getDescendants
+         Return all characters descended from this one.
 
 
-		*/
-	
-	bool marry(Character* );
-		/* Checks that the couple is not closely related, and several other conditions. */
-	bool canMarry (Character*);
-	
-	Character* giveBirth();
-	
-	
-		/* RECURSIVE ALGORITHM WHICH RETURNS ALL CHILDREN AND CHILDREN'S CHILDREN UNTIL NO CHILDREN REMAIN */
-	Vector <Character*> * getDescendants(Vector <Character*> * vDescendants);
-	
-		/* RETURNS ALL DESCENDANTS OF ALL GRANDPARENTS. INCLUDES SELF. */
-	Vector <Character*> * getRelatives();
-	
-	
-	void die(enumCauseOfDeath = UNKNOWN);
-	
-	void starve();
-	
-		/* INFORMATION FUNCTIONS
-		
-		*/
-	
-		/* getBiography
-		returns a string of text which provides a description of this character's name,
-		appearance, life, achievements, etc.
-		*/
-	std::string getBiography();
-	std::string getFullName() const;
-	std::string getName();
+      */
+   
+   bool marry(Character* );
+      /* Checks that the couple is not closely related, and several other conditions. */
+   bool canMarry (Character*);
+   
+   Character* giveBirth();
+   
+   
+      /* RECURSIVE ALGORITHM WHICH RETURNS ALL CHILDREN AND CHILDREN'S CHILDREN UNTIL NO CHILDREN REMAIN */
+   Vector <Character*> * getDescendants(Vector <Character*> * vDescendants);
+   
+      /* RETURNS ALL DESCENDANTS OF ALL GRANDPARENTS. INCLUDES SELF. */
+   Vector <Character*> * getRelatives();
+   
+   
+   void die(enumCauseOfDeath = UNKNOWN);
+   
+   void starve();
+   
+      /* INFORMATION FUNCTIONS
+      
+      */
+   
+      /* getBiography
+      returns a string of text which provides a description of this character's name,
+      appearance, life, achievements, etc.
+      */
+   std::string getBiography();
+   std::string getFullName() const;
+   std::string getName();
 
   
     // LOCATION
@@ -203,9 +203,9 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   char hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */, bool isSubterranean = false );
   
   
-	/* TABLE INTERFACE */
-	std::string getColumn(std::string _column);
-	std::string getColumnType(std::string _column);
+   /* TABLE INTERFACE */
+   std::string getColumn(std::string _column);
+   std::string getColumnType(std::string _column);
   
   
   /* COMBAT FUNCTIONS */
@@ -224,7 +224,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   // Extra processing available
   bool updateKnowledgeIdle();
 
-	
+   
 };
 
 #endif

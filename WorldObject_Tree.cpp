@@ -5,15 +5,15 @@
 #include"WorldObject_Tree.hpp"
 
 /* WorldObject_Tree.cpp
-	#include"WorldObject_Tree.cpp"
+   #include"WorldObject_Tree.cpp"
 
   Implementation of WorldObject_Tree.hpp.
 */
 WorldObject_Tree::WorldObject_Tree(int _growth /* =0 */)
 {
-	x=0; y=0;
-	weight=0;
-	bulk=0;
+   x=0; y=0;
+   weight=0;
+   bulk=0;
   
   growth=_growth;
   
@@ -38,7 +38,7 @@ std::string WorldObject_Tree::getName()
   {
     return "Tree stump";
   }
-	return "Tree";
+   return "Tree";
 }
 
 
@@ -52,7 +52,7 @@ Texture* WorldObject_Tree::currentTexture()
   {
     return &TEX_WORLD_TERRAIN_FOREST_SAPLING;
   }
-	return &TEX_WORLD_TERRAIN_FOREST_TREE;
+   return &TEX_WORLD_TERRAIN_FOREST_TREE;
 }
 
 #endif

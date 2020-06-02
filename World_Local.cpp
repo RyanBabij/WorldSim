@@ -3,7 +3,7 @@
 #define WORLDSIM_WORLD_LOCAL_CPP
 
 /* WorldSim: World_Local
-	#include "World_Local.cpp"
+   #include "World_Local.cpp"
   
   Implementation of World_Local.hpp
 */
@@ -94,7 +94,7 @@ World_Local::~World_Local()
 
 void World_Local::unload()
 {
-	active = false;
+   active = false;
 
 #ifdef FAST_EXIT
    if (QUIT_FLAG) { return; }
@@ -632,7 +632,7 @@ bool World_Local::generate(bool cache /* =true */)
    {
       save();
    }
-	return true;
+   return true;
 }
 
 // I want to have subterranean separate from normal map generation.
@@ -2033,30 +2033,30 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
   if ( slope == std::numeric_limits<double>::infinity() )
   { slope=0; }
 
-			// SPECIAL CASE: 1 TILE.
-			// REVEAL TILE STANDING ON.
-		if ( (_x1==_x2) && (_y1==_y2) )
-		{
-			if ( data->aLocalTile.isSafe(_x1,_y2) == true )
-			{ vVisibleTiles->push(new HasXY (_x1,_y1) ); }
-		}
+         // SPECIAL CASE: 1 TILE.
+         // REVEAL TILE STANDING ON.
+      if ( (_x1==_x2) && (_y1==_y2) )
+      {
+         if ( data->aLocalTile.isSafe(_x1,_y2) == true )
+         { vVisibleTiles->push(new HasXY (_x1,_y1) ); }
+      }
     
-			// SPECIAL CASE: UP/DOWN
-		else if (_x1 == _x2)
-		{
+         // SPECIAL CASE: UP/DOWN
+      else if (_x1 == _x2)
+      {
       do
       {
-				if ( data->aLocalTile.isSafe(_x1,_y1) == true )
-				{
-					vVisibleTiles->push(new HasXY (_x1,_y1) );
+            if ( data->aLocalTile.isSafe(_x1,_y1) == true )
+            {
+               vVisibleTiles->push(new HasXY (_x1,_y1) );
           
           if (isBlockingView(_x1,_y1))
           { break; }
-				}
-				if ( _y1 < _y2 )
-				{ ++_y1; }
-				else
-				{ --_y1; }
+            }
+            if ( _y1 < _y2 )
+            { ++_y1; }
+            else
+            { --_y1; }
       } 
       while( _y1 != _y2 );
       
@@ -2064,99 +2064,99 @@ void World_Local::rayTrace (int _x1, int _y1, int _x2, int _y2, Vector <HasXY*> 
       if (_y1 == _y2)
       { vVisibleTiles->push(new HasXY (_x1,_y1) );
       }
-		}
-			//SHALLOW SLOPE
-		else if ( xDiff <= yDiff )
-		{
-			if (_x1>_x2)
-			{ slope*=-1; }
+      }
+         //SHALLOW SLOPE
+      else if ( xDiff <= yDiff )
+      {
+         if (_x1>_x2)
+         { slope*=-1; }
 
-			double currentY = _y1;
+         double currentY = _y1;
 
       do
-			{
+         {
 
-				int roundedY=0;
+            int roundedY=0;
 
-				if ( _y1 > _y2 )
-				{
-					roundedY = floor(currentY);
-				}
-				else if ( _y1 < _y2 )
-				{
-					roundedY = ceil(currentY);
-				}
-				else
-				{
-					roundedY = round(currentY);
-				}
+            if ( _y1 > _y2 )
+            {
+               roundedY = floor(currentY);
+            }
+            else if ( _y1 < _y2 )
+            {
+               roundedY = ceil(currentY);
+            }
+            else
+            {
+               roundedY = round(currentY);
+            }
 
-				if ( data->aLocalTile.isSafe(_x1,roundedY) == true )
-				{
-					vVisibleTiles->push(new HasXY (_x1,roundedY) );
+            if ( data->aLocalTile.isSafe(_x1,roundedY) == true )
+            {
+               vVisibleTiles->push(new HasXY (_x1,roundedY) );
           
           if (isBlockingView(_x1,roundedY))
           { break; }
 
 
-					currentY+=slope;
+               currentY+=slope;
 
-				}
-				if (_x1<_x2)
-				{ ++_x1; }
-				else
-				{ --_x1; }
-			}
+            }
+            if (_x1<_x2)
+            { ++_x1; }
+            else
+            { --_x1; }
+         }
       while (_x1 != _x2 );
       
       // Final case
       if (_x1 == _x2)
       { vVisibleTiles->push(new HasXY (_x1,_y2) );
       }
-		}
-			//STEEP SLOPE.
-		else
-		{
-			slope = BasicMath::getSlope(_y1,_x1,_y2,_x2);
+      }
+         //STEEP SLOPE.
+      else
+      {
+         slope = BasicMath::getSlope(_y1,_x1,_y2,_x2);
 
-			if (_y1>_y2)
-			{ slope*=-1; }
+         if (_y1>_y2)
+         { slope*=-1; }
 
-			double currentX = _x1;
+         double currentX = _x1;
 
       do
-			{
-				int roundedX=0;
+         {
+            int roundedX=0;
 
-				if ( _x1 > _x2 )
-				{ roundedX = floor(currentX); }
-				else if ( _x1 < _x2 )
-				{ roundedX = ceil(currentX); }
-				else
-				{ roundedX = round(currentX); }
+            if ( _x1 > _x2 )
+            { roundedX = floor(currentX); }
+            else if ( _x1 < _x2 )
+            { roundedX = ceil(currentX); }
+            else
+            { roundedX = round(currentX); }
 
-				if ( data->aLocalTile.isSafe(roundedX,_y1) == true )
-				{
-					vVisibleTiles->push(new HasXY (roundedX,_y1) );
+            if ( data->aLocalTile.isSafe(roundedX,_y1) == true )
+            {
+               vVisibleTiles->push(new HasXY (roundedX,_y1) );
           
           if (isBlockingView(roundedX,_y1))
           { break; }
 
-					currentX+=slope;
+               currentX+=slope;
 
-				}
-				if (_y1<_y2)
-				{ ++_y1; }
-				else
-				{ --_y1; }
-			}
+            }
+            if (_y1<_y2)
+            { ++_y1; }
+            else
+            { --_y1; }
+         }
       while (_y1 != _y2 );
       
       // Final case
       if (_y1 == _y2)
       { vVisibleTiles->push(new HasXY (_x2,_y1) );
       } 
-		}
+      }
 }
 
 //SEARCH FUNCTIONS
@@ -2240,7 +2240,7 @@ bool World_Local::isBlockingView(int _x, int _y)
 
 }
 
-	// Increments the map by nTicks ticks. Higher values may lead to abstraction.
+   // Increments the map by nTicks ticks. Higher values may lead to abstraction.
 void World_Local::incrementTicks(int nTicks)
 {
   if ( !data ) { return; }
@@ -2386,66 +2386,66 @@ Texture* World_Local::currentTexture()
    }
 
    
-	//enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13};
-	if ( baseBiome == NOTHING )
-	{
-		return &TEX_WORLD_TEST_00;
-	}
-	else if (baseBiome == OCEAN )
-	{
-		return &TEX_WORLD_TERRAIN_OCEAN_00;
-	}
-	else if (baseBiome == FOREST)
-	{
-		return &TEX_WORLD_TERRAIN_FOREST_TREES;
-	}
-	else if (baseBiome == DESERT)
-	{
-		return &TEX_WORLD_TERRAIN_DESERT_00;
-	}
-	else if (baseBiome == ICE)
-	{
-		return &TEX_WORLD_TERRAIN_ICE;
-	}
-	else if (baseBiome == SNOW)
-	{
-		return &TEX_WORLD_TERRAIN_SNOW;
-	}
-	else if (baseBiome == STEPPES)
-	{
-		return &TEX_WORLD_TERRAIN_STEPPE;
-	}
-	else if (baseBiome == WETLAND)
-	{
-		return &TEX_WORLD_TERRAIN_SWAMP;
-	}
+   //enum enumBiome { NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13};
+   if ( baseBiome == NOTHING )
+   {
+      return &TEX_WORLD_TEST_00;
+   }
+   else if (baseBiome == OCEAN )
+   {
+      return &TEX_WORLD_TERRAIN_OCEAN_00;
+   }
+   else if (baseBiome == FOREST)
+   {
+      return &TEX_WORLD_TERRAIN_FOREST_TREES;
+   }
+   else if (baseBiome == DESERT)
+   {
+      return &TEX_WORLD_TERRAIN_DESERT_00;
+   }
+   else if (baseBiome == ICE)
+   {
+      return &TEX_WORLD_TERRAIN_ICE;
+   }
+   else if (baseBiome == SNOW)
+   {
+      return &TEX_WORLD_TERRAIN_SNOW;
+   }
+   else if (baseBiome == STEPPES)
+   {
+      return &TEX_WORLD_TERRAIN_STEPPE;
+   }
+   else if (baseBiome == WETLAND)
+   {
+      return &TEX_WORLD_TERRAIN_SWAMP;
+   }
 
-	
-	//else if ( biome == GRASSLAND )
-	else
-	{
-		//std::cout<<"Returning grassyboi\n";
-		if ( seed==0 || seed %4 == 0 )
-		{
-			//std::cout<<"0\n";
-			return &TEX_WORLD_TERRAIN_GRASS_00;
-		}
-		else if ( seed %4 == 1 )
-		{
-			//std::cout<<"1\n";
-			return &TEX_WORLD_TERRAIN_GRASS_01;
-		}
-		else if ( seed %4 == 2 )
-		{
-			//std::cout<<"2\n";
-			return &TEX_WORLD_TERRAIN_GRASS_02;
-		}
-		//std::cout<<"3\n";
-		return &TEX_WORLD_TERRAIN_GRASS_03;
+   
+   //else if ( biome == GRASSLAND )
+   else
+   {
+      //std::cout<<"Returning grassyboi\n";
+      if ( seed==0 || seed %4 == 0 )
+      {
+         //std::cout<<"0\n";
+         return &TEX_WORLD_TERRAIN_GRASS_00;
+      }
+      else if ( seed %4 == 1 )
+      {
+         //std::cout<<"1\n";
+         return &TEX_WORLD_TERRAIN_GRASS_01;
+      }
+      else if ( seed %4 == 2 )
+      {
+         //std::cout<<"2\n";
+         return &TEX_WORLD_TERRAIN_GRASS_02;
+      }
+      //std::cout<<"3\n";
+      return &TEX_WORLD_TERRAIN_GRASS_03;
 
-	}
+   }
 
-	return &TEX_WORLD_TEST_00;
+   return &TEX_WORLD_TEST_00;
 }
 
 

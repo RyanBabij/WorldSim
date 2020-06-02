@@ -3,9 +3,9 @@
 #define WORLDSIM_WORLD_MAPMANAGER_CPP
 
 /* WorldSim: World_ThreadManager.cpp
-	#include "World_ThreadManager.cpp"
+   #include "World_ThreadManager.cpp"
 
-	Manages the threads being run in World class.
+   Manages the threads being run in World class.
    Currently testing, but in future will control
    background world generation, unloading, and
    simulation.

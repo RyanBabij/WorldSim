@@ -3,9 +3,9 @@
 #define WORLDSIM_WORLD_HPP
 
 /* WorldSim: World.hpp
-	#include "World.hpp"
+   #include "World.hpp"
 
-	The World stores global-level data, such as the position of global units.
+   The World stores global-level data, such as the position of global units.
    
    Map caching and generation is to be handled by World_MapManager.
    

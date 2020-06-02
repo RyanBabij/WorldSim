@@ -3,7 +3,7 @@
 #define WORLDSIM_CREATURE_ALL_HPP
 
 /* WorldSim: Creature_All.hpp
-	#include"Creature_All.hpp"
+   #include"Creature_All.hpp"
 
 */
 
@@ -11,12 +11,12 @@
 
 class Creature_Bat: public Creature
 {
-	public:
+   public:
 
-	Creature_Bat();
+   Creature_Bat();
   ~Creature_Bat();
   
-	void init( int _sex = 0);
+   void init( int _sex = 0);
   
   virtual void incrementTicks (int nTicks) override;
   
@@ -25,7 +25,7 @@ class Creature_Bat: public Creature
   
   virtual void wander() override;
   
-	virtual Texture* currentTexture() override;
+   virtual Texture* currentTexture() override;
   virtual std::string getName() override;
 };
 
@@ -37,12 +37,12 @@ class Creature_Bat: public Creature
 // They are individually weak and slow but safe in large packs. Generally the old or sick animals will fall behind and be eaten by carnivores.
 class Creature_HerbivoreGrazing: public Creature
 {
-	public:
+   public:
 
-	Creature_HerbivoreGrazing();
+   Creature_HerbivoreGrazing();
   ~Creature_HerbivoreGrazing();
   
-	void init( int _sex = 0);
+   void init( int _sex = 0);
   
   virtual void incrementTicks (int nTicks) override;
   
@@ -51,7 +51,7 @@ class Creature_HerbivoreGrazing: public Creature
   
   virtual void wander() override;
   
-	virtual Texture* currentTexture() override;
+   virtual Texture* currentTexture() override;
   virtual std::string getName() override;
 };
 
@@ -60,12 +60,12 @@ class Creature_HerbivoreGrazing: public Creature
 // They rely on speed and alertness to escape predators.
 class Creature_HerbivoreScavenging: public Creature
 {
-	public:
+   public:
 
-	Creature_HerbivoreScavenging();
+   Creature_HerbivoreScavenging();
   ~Creature_HerbivoreScavenging();
   
-	void init( int _sex = 0);
+   void init( int _sex = 0);
   
   virtual void incrementTicks (int nTicks) override;
   
@@ -74,7 +74,7 @@ class Creature_HerbivoreScavenging: public Creature
   
   virtual void wander() override;
   
-	virtual Texture* currentTexture() override;
+   virtual Texture* currentTexture() override;
   virtual std::string getName() override;
 };
 
@@ -82,12 +82,12 @@ class Creature_HerbivoreScavenging: public Creature
 // They rely on teamwork to attack larger creatures
 class Creature_CarnivorePack: public Creature
 {
-	public:
+   public:
 
-	Creature_CarnivorePack();
+   Creature_CarnivorePack();
   ~Creature_CarnivorePack();
   
-	void init( int _sex = 0);
+   void init( int _sex = 0);
   
   virtual void incrementTicks (int nTicks) override;
   
@@ -96,7 +96,7 @@ class Creature_CarnivorePack: public Creature
   
   virtual void wander() override;
   
-	virtual Texture* currentTexture() override;
+   virtual Texture* currentTexture() override;
   virtual std::string getName() override;
 };
 
@@ -105,12 +105,12 @@ class Creature_CarnivorePack: public Creature
 // An example would be bears.
 class Creature_CarnivoreSolo: public Creature
 {
-	public:
+   public:
 
-	Creature_CarnivoreSolo();
+   Creature_CarnivoreSolo();
   ~Creature_CarnivoreSolo();
   
-	void init( int _sex = 0);
+   void init( int _sex = 0);
   
   virtual void incrementTicks (int nTicks) override;
   
@@ -119,7 +119,7 @@ class Creature_CarnivoreSolo: public Creature
   
   virtual void wander() override;
   
-	virtual Texture* currentTexture() override;
+   virtual Texture* currentTexture() override;
   virtual std::string getName() override;
 };
 

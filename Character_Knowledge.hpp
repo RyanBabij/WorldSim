@@ -13,7 +13,7 @@
 
 class Character_Knowledge
 {
-	public:
+   public:
   Pathing_Local p;
   
     // Vector of places this Character has visited. I think most characters will only visit a handful of maps.
@@ -29,10 +29,10 @@ class Character_Knowledge
   HasXY currentGoal; /* Characters can wander by moving toward a particular waypoint */
   
 
-		/* INITIALIZATION */
-	Character_Knowledge();
+      /* INITIALIZATION */
+   Character_Knowledge();
     // Initialise, including roll for stats. 0 - Roll gender. 1 - Male. 2 - Female.
-	void init();
+   void init();
 
   
     // Add this tile into the Character's knowledge (if it isn't already)
@@ -48,7 +48,7 @@ class Character_Knowledge
   
   // Sets all 2 to 1 for LOS update.
   void updateLOS();
-	
+   
     //returns true if the Character can currently see this tile.
   //bool canSee( World_Local* /* _map */, int /* _x */, int /* _y */ );
 };

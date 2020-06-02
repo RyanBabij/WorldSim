@@ -13,17 +13,17 @@ class Civ;
 
 class Civ_Dwarven: public Civ
 {
-	private:
+   private:
 
 
-	public:
-	
+   public:
+   
 
-		
-		Civ_Dwarven();
-		
+      
+      Civ_Dwarven();
+      
 
-	
+   
 };
 
 

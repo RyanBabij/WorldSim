@@ -3,9 +3,9 @@
 #define WORLDSIM_WORLD_MAPMANAGER_HPP
 
 /* WorldSim: World_MapManager.hpp
-	#include "World_MapManager.hpp"
+   #include "World_MapManager.hpp"
 
-	Manages the local maps, generating and caching them as required.
+   Manages the local maps, generating and caching them as required.
    
    Currently I'm just working on generation.
 

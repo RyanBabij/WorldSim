@@ -3,7 +3,7 @@
 #define WORLDSIM_RECIPE_HPP
 
 /* Recipe.hpp
-	#include "Recipe.hpp"
+   #include "Recipe.hpp"
   
 A recipe is any collection of objects which can be consumed to make another object. Usually there are three types
 of recipes: Alchemy, crafting and cooking. I think most inputs/outputs will be items. But hey you never know.

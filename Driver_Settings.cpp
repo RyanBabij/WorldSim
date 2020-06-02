@@ -5,7 +5,7 @@
 /* WorldSim: Driver_Settings.cpp
   #include "Driver_Settings.cpp"
 
-	Gameplay settings and other global settings go here. Some of this stuff will probably end up in an .ini file.
+   Gameplay settings and other global settings go here. Some of this stuff will probably end up in an .ini file.
 */
 
 #include <string>
@@ -66,7 +66,7 @@ class Item;
 Item * inventoryGrid [10][10];
 
   // SYSTEM STRINGS
-const std::string VERSION_NUMBER = "0.0.198indev";
+const std::string VERSION_NUMBER = "0.0.199indev";
 
 #ifdef WILDCAT_THREADING
 const std::string THREAD_STATUS = "threaded";
@@ -189,9 +189,9 @@ double LOGIC_PER_SECOND = 1;
 const double PHYSICS_PER_SECOND = 10;
 double ANIMATION_PER_SECOND = 10; // SETS SPEED OF ANIMATIONS
 
-	// SLOW FRAMERATE CAN BE ACTIVATED TO GET EXTRA CYCLES FOR GAMEPLAY.
+   // SLOW FRAMERATE CAN BE ACTIVATED TO GET EXTRA CYCLES FOR GAMEPLAY.
 int SLOW_FRAMERATE = 1000000/2;
-	// TURNS ON SLOW FRAMERATE
+   // TURNS ON SLOW FRAMERATE
 bool SLOW_FRAMERATE_ACTIVE = false;
 int UFRAMERATE = 1000000/FRAMERATE;
 const int UPOLLSPERSECOND = 1000000/POLLSPERSECOND;

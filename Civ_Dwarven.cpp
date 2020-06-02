@@ -10,9 +10,9 @@
 
 Civ_Dwarven::Civ_Dwarven()
 {
-	name="N/A";
-	money=100;
-	world=0;
+   name="N/A";
+   money=100;
+   world=0;
 
   race = DWARVEN;
 }

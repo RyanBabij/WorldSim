@@ -9,7 +9,7 @@
 #include "Creature.hpp"
 
 /*
-	Local tile data gets stored here. Render stuff can't go here because that depends on neighboring tiles.
+   Local tile data gets stored here. Render stuff can't go here because that depends on neighboring tiles.
 */
 
 LocalTile::LocalTile()

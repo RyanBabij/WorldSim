@@ -3,7 +3,7 @@
 #define WORLDSIM_CREATURE_DEER_HPP
 
 /* WorldSim: Creature_Deer.hpp
-	#include"Creature_Deer.hpp"
+   #include"Creature_Deer.hpp"
 
   Deers have very good hearing and smell, and run very fast. Popular for hunting.
 */
@@ -12,14 +12,14 @@
 
 class Creature_Deer: public Creature
 {
-	public:
+   public:
 
-	Creature_Deer();
+   Creature_Deer();
   ~Creature_Deer();
   
-	void init( int _sex = 0);
+   void init( int _sex = 0);
   
-	virtual Texture* currentTexture();
+   virtual Texture* currentTexture();
   virtual std::string getName();
 };
 

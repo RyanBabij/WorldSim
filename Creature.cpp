@@ -16,21 +16,21 @@ class Texture;
 Creature::Creature()
 {
 
-	isMale = true;
-	age = -1;
-	daysCounter=0;
-	secondsCounter=0;
-	
-	isAlive=true;
+   isMale = true;
+   age = -1;
+   daysCounter=0;
+   secondsCounter=0;
+   
+   isAlive=true;
 
-	actionPoints = 0;
-	
-	health=0;
-	hunger=0;
+   actionPoints = 0;
+   
+   health=0;
+   hunger=0;
   
   worldX = -1;
   worldY = -1;
-	
+   
   map=0;
   
   nPelt=0;
@@ -47,7 +47,7 @@ void Creature::init(const int _sex /* =0 */)
   else if (_sex == 2) { isMale = false; }
   else { isMale = Random::flip(); }
   
-	age=0;
+   age=0;
   map=0;
 
   knowledge = new Creature_Knowledge;
@@ -66,23 +66,23 @@ void Creature::incrementTicks(int nTicks)
   
   wander();
   
-	secondsCounter+=nTicks;
-	
-	while(secondsCounter>=86400)
-	{
-		++daysCounter;
-		secondsCounter-=86400;
-	}
-	while(daysCounter >=360)
-	{
-		age++;
-		daysCounter-=360;
-	}
+   secondsCounter+=nTicks;
+   
+   while(secondsCounter>=86400)
+   {
+      ++daysCounter;
+      secondsCounter-=86400;
+   }
+   while(daysCounter >=360)
+   {
+      age++;
+      daysCounter-=360;
+   }
 }
 
 void Creature::die()
 {
-	isAlive = false;
+   isAlive = false;
 }
 
 void Creature::wander()
@@ -343,8 +343,8 @@ void Creature::wander()
 
 
 Texture* Creature::currentTexture ()
-{	
-	return &TEX_CREATURE_DEER;
+{   
+   return &TEX_CREATURE_DEER;
 }
 
 
@@ -352,11 +352,11 @@ Texture* Creature::currentTexture ()
 
 std::string Creature::getColumn(std::string _column)
 {
-	return "?";
+   return "?";
 }
 std::string Creature::getColumnType(std::string _column)
 {
-	return "string";
+   return "string";
 }
 
 Texture* Creature_Footprint::currentTexture ()

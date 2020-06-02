@@ -3,9 +3,9 @@
 #define WORLDSIM_TRIBE_HUMAN_HPP
 
 /* Tribe_Human.hpp
-	#include "Tribe_Human.hpp"
+   #include "Tribe_Human.hpp"
 
-	Tribes are nomadic groups. They wander the map trying to survive until they develop enough to become a civilization. Human tribes build towns and cities.
+   Tribes are nomadic groups. They wander the map trying to survive until they develop enough to become a civilization. Human tribes build towns and cities.
   
 */
 
@@ -23,19 +23,19 @@ class Tribe_Human: public Tribe
   private:
     int nArtifactsDropped;
   
-	public:
+   public:
   
   
-	
-	Tribe_Human();
-	
-	bool spawn();
+   
+   Tribe_Human();
+   
+   bool spawn();
   virtual void wander();
   virtual void incrementTicks ( int /* nTicks */ );
   
   void combat (Tribe* /* target */);
-	
-	Texture* currentTexture();
+   
+   Texture* currentTexture();
 };
 
 #endif
