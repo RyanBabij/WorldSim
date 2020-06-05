@@ -3,3 +3,4 @@
 !*.cpp
 !CMakeLists.txt
 !.editorconfig
+!.codedocs
