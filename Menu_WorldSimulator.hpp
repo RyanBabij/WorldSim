@@ -3,11 +3,11 @@
 #define WORLDSIM_MENU_WORLDSIMULATOR_HPP
 
 /* WorldSim: Menu_WorldSimulator.hpp
-	#include "Menu_WorldSimulator.hpp"
+	#include "Menu_WorldSimulator.hpp" */
 
-  World simulator menu.
-  The player can simulate the world to build up civilisation, before jumping in.
-  The player can then select on of the inhabitants to play as.
+/** @brief World simulator menu.
+	The player can simulate the world to build up civilisation, before jumping in.
+	The player can then select one of the inhabitants to play as.
 */
 
 #include "World_Viewer.hpp"
@@ -482,6 +482,7 @@ class Menu_WorldSimulator: public GUI_Interface
 		if (buttonWorldMenu.clicked==true)
 		{
 			std::cout<<"Worldmenu\n";
+			menuWorld.init();
 			menuWorld.active=true;
 			buttonWorldMenu.unclick();
 		}
