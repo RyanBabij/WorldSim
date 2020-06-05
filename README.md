@@ -108,3 +108,9 @@ Classes are UpperCamelCase, objects are camelCase, functions are camelCase. Iter
 Indentation is tabbed, best viewed at 3 spaces per tab.
 
 Indentation is a mess. I'm in the process of moving from spaced indentation to tabbed indentation, because I discovered that you can set Github's tab width with .editorconfig.
+
+### Documentation
+
+I'll be working on adding Doxygen documentation, which can be found at https://codedocs.xyz/RyanBabij/WorldSim/
+
+Non-code documentation can be found on the [wiki](https://github.com/RyanBabij/WorldSim/wiki).
