@@ -1609,6 +1609,16 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
    t5.join();
 #endif
 
+	std::cout<<"Generating astronomy\n";
+	
+	int nMoons = 1;
+	if ( globalRandom.oneIn(100) )
+	{
+		++nMoons;
+	}
+	
+	astronomy.generateSystem(nMoons,globalRandom.multiRoll8(5,3,true));
+
 	wg.generate();
    aTerrain.init(nX,nY,OCEAN);
    aRiverID = wg.aRiverMap; // this needs to be moved to aTerrain.
