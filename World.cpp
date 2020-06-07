@@ -2405,6 +2405,12 @@ bool World::loadWorld(std::string _name)
    return false;
 }
 
+
+/** This function builds a minimap texture which is later rendered in the world simulator. */
+void buildMinimap()
+{
+}
+
 // SaveFileInterface
 void World::save()
 {
