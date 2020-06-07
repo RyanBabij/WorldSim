@@ -253,7 +253,15 @@ public:
 			currentY-=2;
 		}
 
-		Renderer::placeColour4a(200,200,250,250,panelX1,panelY1,panelX1+220,panelY1+120);
+
+
+		// Minimap
+		// I think we can assume it'll be a square, although in future a rectangle may be more realistic.
+		Renderer::placeColour4a(250,200,250,250,panelX1,panelY1,panelX1+220,panelY1+220);
+		
+
+		// Tile info panel
+		Renderer::placeColour4a(200,250,250,250,panelX1,panelY1+220,panelX1+220,panelY1+320);
 
 		//if (world.queryWorldX != -1 && world.queryWorldY != -1)
 		if ( world.isSafe(world.queryWorldX,world.queryWorldY) )
@@ -262,22 +270,21 @@ public:
 
 			if ( tile != 0 )
 			{
-				// //font8x8.drawText("QUERY",panelX1,panelY1,panelX1+220,panelY1+120,true,true);
+				// Tile stats
 				font8x8.drawText
 				(Stream() << tile->getTerrainName() << " ("<<world.queryWorldX<<", "<<world.queryWorldY<<")",
-				panelX1,panelY1+110,panelX1+220,panelY1+120,false,true);
+				panelX1,panelY1+310,panelX1+220,panelY1+320,false,true);
 				font8x8.drawText
 				(Stream() << "Landmass: "<< world.getLandmassName(world.queryWorldX,world.queryWorldY),
-				panelX1,panelY1+100,panelX1+220,panelY1+110,false,true);
+				panelX1,panelY1+300,panelX1+220,panelY1+310,false,true);
 				font8x8.drawText
 				(Stream() << "Biome: "<< world.getBiomeName(world.queryWorldX,world.queryWorldY),
-				panelX1,panelY1+90,panelX1+220,panelY1+100,false,true);
-
+				panelX1,panelY1+290,panelX1+220,panelY1+300,false,true);
 				font8x8.drawText(Stream() << tile->baseMetal << " metal",
-				panelX1,panelY1+80,panelX1+220,panelY1+90,false,true);
-
+				panelX1,panelY1+280,panelX1+220,panelY1+290,false,true);
+				// Tile image
 				Renderer::setTextureMode();
-				Renderer::placeTexture4(panelX1, panelY1, panelX1+32, panelY1+32, tile->currentTexture(), false);
+				Renderer::placeTexture4(panelX1, panelY1+220, panelX1+32, panelY1+252, tile->currentTexture(), false);
 			}
 		}
 
