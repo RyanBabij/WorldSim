@@ -1702,6 +1702,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 
    //timerBiomeFill.update();
 	//std::cout<<"Filled "<<currentID<<" biomes in "<<timerBiomeFill.fullSeconds<<" seconds.\n";
+	
+	buildMinimap();
    
 	generated = true;
    worldGenTimer.update();
@@ -2407,8 +2409,27 @@ bool World::loadWorld(std::string _name)
 
 
 /** This function builds a minimap texture which is later rendered in the world simulator. */
-void buildMinimap()
+void World::buildMinimap()
 {
+	minimap.init();
+	
+	std::cout<<"Building minimap\n";
+   ArrayS3 <unsigned char> aMinimap (nX,nY,3,0);
+
+   for (int _y=0;_y<nY;++_y)
+   {
+      for (int _x=0;_x<nX;++_x)
+      {
+         enumBiome _biome = aWorldTile(_x,_y).baseBiome;
+         aMinimap(_x,_y,0) = biomeRed[_biome];
+         aMinimap(_x,_y,1) = biomeGreen[_biome];
+         aMinimap(_x,_y,2) = biomeBlue[_biome];
+      }
+   }
+   //Png png;
+   //png.encodeS3(strSavePath+"/biome.png",&aBiomeData);
+   // SAVE RESOURCE INFO AS PNG.
+	std::cout<<"END building minimap\n";
 }
 
 // SaveFileInterface

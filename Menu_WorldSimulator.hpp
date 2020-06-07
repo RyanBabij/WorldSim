@@ -11,13 +11,13 @@ The player can then select one of the inhabitants to play as.
 */
 
 #include "World_Viewer.hpp"
+#include "World_Viewer_Minimap.hpp"
 
 #include "Menu_Tribes.hpp"
 #include "Menu_Civs.hpp"
 #include "Menu_World.hpp"
 #include "Menu_Character.hpp"
 #include "Menu_Biome.hpp"
-
 
 
 class Menu_WorldSimulator: public GUI_Interface
@@ -76,7 +76,7 @@ private:
 	Menu_World menuWorld;
 	Menu_Characters menuCharacter;
 	Menu_Biome menuBiome;
-
+	
 public:
 
 
@@ -86,6 +86,10 @@ public:
 
 		worldViewer.world = &world;
 		worldViewer.active = true;
+		
+		minimap.world = &world;
+		minimap.active=true;
+		
 		simulateWorld=false;
 
 		buttonExpandMap.text="Expand";
@@ -99,6 +103,7 @@ public:
 		menuWorld.active=false;
 		menuCharacter.active=false;
 		menuBiome.active=false;
+		minimap.active=true;
 	}
 
 	void setFont(Wildcat::Font* _font)
@@ -180,6 +185,7 @@ public:
 		guiManager.add(&menuWorld);
 		guiManager.add(&menuCharacter);
 		guiManager.add(&menuBiome);
+		guiManager.add(&minimap);
 
 		textSimulationSpeed.active=true;
 		cycleSimulationSpeed.active=true;
@@ -207,6 +213,7 @@ public:
 		menuWorld.init();
 		menuCharacter.init();
 		menuBiome.init();
+		//minimap.init();
 
 		worldViewer.centerView();
 		eventResize();
@@ -381,6 +388,8 @@ public:
 			menuWorld.active = false;
 			menuCharacter.active = false;
 			menuBiome.active = false;
+			minimap.active = true;
+
 
 			//Clear the backlog so time stops progressing.
 			world.ticksBacklog=0;
@@ -411,6 +420,7 @@ public:
 					menuWorld.active = false;
 					menuCharacter.active = false;
 					menuBiome.active = false;
+					minimap.active = false;
 					//active = false;
 
 					worldViewer.subterraneanMode=playerCharacter->isUnderground;
@@ -573,6 +583,7 @@ public:
 
 	void eventResize()
 	{
+		//std::cout<<"MENU WORLDSIM RESIZED: "<<panelX1<<", "<<panelY1<<", "<<panelX2<<", "<<panelY2<<".\n";
 		/* World preview takes top-right quarter of screen. */
 
 		int panelSizeX = panelX2-panelX1;
@@ -609,6 +620,7 @@ public:
 		menuWorld.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuCharacter.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuBiome.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
+		minimap.setPanel(panelX1,panelY1,panelX1+220,panelY1+220);
 
 		if (fullScreenWorldView==true)
 		{
