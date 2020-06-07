@@ -95,6 +95,8 @@ class Menu_WorldGenerator: public GUI_Interface
 		fullScreenPreview=false;
 		worldViewer.world = &world;
 		worldViewer.active = false;
+		minimap.world=&world;
+		minimap.active=false;
 		buttonGenerate.clicked=false;
 	}
 	

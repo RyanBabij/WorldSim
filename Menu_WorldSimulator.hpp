@@ -3,14 +3,15 @@
 #define WORLDSIM_MENU_WORLDSIMULATOR_HPP
 
 /* WorldSim: Menu_WorldSimulator.hpp
-	#include "Menu_WorldSimulator.hpp" */
+#include "Menu_WorldSimulator.hpp" */
 
 /** @brief World simulator menu.
-	The player can simulate the world to build up civilisation, before jumping in.
-	The player can then select one of the inhabitants to play as.
+The player can simulate the world to build up civilisation, before jumping in.
+The player can then select one of the inhabitants to play as.
 */
 
 #include "World_Viewer.hpp"
+#include "World_Viewer_Minimap.hpp"
 
 #include "Menu_Tribes.hpp"
 #include "Menu_Civs.hpp"
@@ -19,66 +20,65 @@
 #include "Menu_Biome.hpp"
 
 
-
 class Menu_WorldSimulator: public GUI_Interface
 {
-	private:
-		GUI_Manager guiManager;
-		Wildcat::Font* font;
-		/* Texture to draw in the background of this menu. */
-		Texture* backgroundTexture;
+private:
+	GUI_Manager guiManager;
+	Wildcat::Font* font;
+	/* Texture to draw in the background of this menu. */
+	Texture* backgroundTexture;
 
-		/* Colours / theme. */
-		Colour cNormal;
-		Colour cSelected;
-		Colour cDropPanel;
-		Colour cHighlight;
+	/* Colours / theme. */
+	Colour cNormal;
+	Colour cSelected;
+	Colour cDropPanel;
+	Colour cHighlight;
 
-		/* Button: Resume or commence simulation of the world map. */
-		GUI_Button buttonStartSimulation;
-		/* Button: Pause the simulation so the player can look around the world as it currently exists. */
-		GUI_Button buttonPauseSimulation;
-		/* Number entry: Simulation speed. */
-		GUI_CycleButton cycleSimulationSpeed;
-		/* Textbox: Caption for simulation speed. */
-		GUI_TextBox textSimulationSpeed;
-		/* Button: Step the simulation forward by a certain amount of time. (Day/Month/Year). */
-		GUI_Button buttonIncrementDay;
-		GUI_Button buttonIncrementMonth;
-		GUI_Button buttonIncrementYear;
-		GUI_Button buttonIncrementDecade;
-		/* Menu for investigating an individual tribe */
-		GUI_Button buttonTribeMenu;
-		/* Menu for seeing info about the world. */
-		GUI_Button buttonWorldMenu;
-		/* Menu for a list of all biomes. */
-		GUI_Button buttonBiomeMenu;
-		/* List of all characters in the game. */
-		GUI_Button buttonCharacterMenu;
-		/* Toggle tribal territory visibility */
-		GUI_Button buttonTerritoryView;
-		/* List of all Civs in the game */
-		GUI_Button buttonCivMenu;
-		/* Switch to tileset view */
-		GUI_Button buttonToggleTileset;
-		/* Switch to subterranean view on local map */
-		GUI_Button buttonSubterraneanView;
-		/* Button: Switch between 1/4 or fullscreen view of world map. */
-		GUI_Button buttonExpandMap;
+	/* Button: Resume or commence simulation of the world map. */
+	GUI_Button buttonStartSimulation;
+	/* Button: Pause the simulation so the player can look around the world as it currently exists. */
+	GUI_Button buttonPauseSimulation;
+	/* Number entry: Simulation speed. */
+	GUI_CycleButton cycleSimulationSpeed;
+	/* Textbox: Caption for simulation speed. */
+	GUI_TextBox textSimulationSpeed;
+	/* Button: Step the simulation forward by a certain amount of time. (Day/Month/Year). */
+	GUI_Button buttonIncrementDay;
+	GUI_Button buttonIncrementMonth;
+	GUI_Button buttonIncrementYear;
+	GUI_Button buttonIncrementDecade;
+	/* Menu for investigating an individual tribe */
+	GUI_Button buttonTribeMenu;
+	/* Menu for seeing info about the world. */
+	GUI_Button buttonWorldMenu;
+	/* Menu for a list of all biomes. */
+	GUI_Button buttonBiomeMenu;
+	/* List of all characters in the game. */
+	GUI_Button buttonCharacterMenu;
+	/* Toggle tribal territory visibility */
+	GUI_Button buttonTerritoryView;
+	/* List of all Civs in the game */
+	GUI_Button buttonCivMenu;
+	/* Switch to tileset view */
+	GUI_Button buttonToggleTileset;
+	/* Switch to subterranean view on local map */
+	GUI_Button buttonSubterraneanView;
+	/* Button: Switch between 1/4 or fullscreen view of world map. */
+	GUI_Button buttonExpandMap;
 
-		bool simulateWorld;
+	bool simulateWorld;
 
-		bool fullScreenWorldView;
+	bool fullScreenWorldView;
 
-		/* Submenus */
-		Menu_Tribes menuTribes;
-		Menu_Civs menuCivs;
-		Menu_World menuWorld;
-		Menu_Characters menuCharacter;
-		Menu_Biome menuBiome;
-
-	public:
+	/* Submenus */
+	Menu_Tribes menuTribes;
+	Menu_Civs menuCivs;
+	Menu_World menuWorld;
+	Menu_Characters menuCharacter;
+	Menu_Biome menuBiome;
 	
+public:
+
 
 	Menu_WorldSimulator()
 	{	
@@ -86,6 +86,10 @@ class Menu_WorldSimulator: public GUI_Interface
 
 		worldViewer.world = &world;
 		worldViewer.active = true;
+		
+		minimap.world = &world;
+		minimap.active=true;
+		
 		simulateWorld=false;
 
 		buttonExpandMap.text="Expand";
@@ -99,14 +103,15 @@ class Menu_WorldSimulator: public GUI_Interface
 		menuWorld.active=false;
 		menuCharacter.active=false;
 		menuBiome.active=false;
+		minimap.active=true;
 	}
-	
+
 	void setFont(Wildcat::Font* _font)
 	{
 		font = _font;
 		guiManager.setFont(_font);
 	}
-	
+
 	void init()
 	{
 		/* Initialise theme. */
@@ -180,6 +185,7 @@ class Menu_WorldSimulator: public GUI_Interface
 		guiManager.add(&menuWorld);
 		guiManager.add(&menuCharacter);
 		guiManager.add(&menuBiome);
+		guiManager.add(&minimap);
 
 		textSimulationSpeed.active=true;
 		cycleSimulationSpeed.active=true;
@@ -207,23 +213,24 @@ class Menu_WorldSimulator: public GUI_Interface
 		menuWorld.init();
 		menuCharacter.init();
 		menuBiome.init();
+		//minimap.init();
 
 		worldViewer.centerView();
 		eventResize();
 	}
-	
+
 	void render()
 	{
-    // if ( active == false )
-    // {
-      // if ( menuAdventureMode.active )
-      // {
-        // menuAdventureMode.render();
-        // return;
-      // }
-      
-      // return;
-    // }
+		// if ( active == false )
+		// {
+		// if ( menuAdventureMode.active )
+		// {
+		// menuAdventureMode.render();
+		// return;
+		// }
+
+		// return;
+		// }
 		/* Draw background texture. */
 		if ( fullScreenWorldView==true)
 		{
@@ -233,133 +240,147 @@ class Menu_WorldSimulator: public GUI_Interface
 		{
 			Renderer::placeTexture4(panelX1,panelY1,panelX2,panelY2,backgroundTexture,true);
 		}
-		
+
 		/* Preview world view. */
 		worldViewer.render();
-    
+
 		// MESSAGE CONSOLE		
 		const int nY = panelY2-panelY1;
 		Renderer::placeColour4a(200,200,250,125,panelX1,panelY1+120,panelX1+220,panelY2);
 		int currentY = panelY2-2;
 		int iMessage = vConsoleMessage.size()-1;
-    
-    int linesDrawn = 0;
-    
+
+		int linesDrawn = 0;
+
 		while (currentY>panelY1+120 && iMessage>=0 && iMessage<vConsoleMessage.size() )
 		{
 			linesDrawn = font8x8.drawText(vConsoleMessage(iMessage),panelX1,currentY,panelX1+220,currentY-38,false,false);
 			--iMessage;
 			currentY-=linesDrawn*9;
-      currentY-=2;
+			currentY-=2;
 		}
 
-    Renderer::placeColour4a(200,200,250,250,panelX1,panelY1,panelX1+220,panelY1+120);
-    
-    //if (world.queryWorldX != -1 && world.queryWorldY != -1)
-    if ( world.isSafe(world.queryWorldX,world.queryWorldY) )
-    {
-      World_Local * tile = world.getTile(world.queryWorldX,world.queryWorldY);
-      
-      if ( tile != 0 )
-      {
-        // //font8x8.drawText("QUERY",panelX1,panelY1,panelX1+220,panelY1+120,true,true);
-        font8x8.drawText(Stream() << tile->getTerrainName() << " ("<<world.queryWorldX<<", "<<world.queryWorldY<<")",panelX1,panelY1+110,panelX1+220,panelY1+120,false,true);
-        font8x8.drawText(Stream() << "Landmass: "<< world.getLandmassName(world.queryWorldX,world.queryWorldY),panelX1,panelY1+100,panelX1+220,panelY1+110,false,true);
-        font8x8.drawText(Stream() << "Biome: "<< world.getBiomeName(world.queryWorldX,world.queryWorldY),panelX1,panelY1+90,panelX1+220,panelY1+100,false,true);
-        
-        font8x8.drawText(Stream() << tile->baseMetal << " metal",panelX1,panelY1+80,panelX1+220,panelY1+90,false,true);
-        
-        Renderer::setTextureMode();
-        Renderer::placeTexture4(panelX1, panelY1, panelX1+32, panelY1+32, tile->currentTexture(), false);
-      }
-    }
-    
+
+
+		// Minimap
+		// I think we can assume it'll be a square, although in future a rectangle may be more realistic.
+		Renderer::placeColour4a(250,200,250,250,panelX1,panelY1,panelX1+220,panelY1+220);
+		
+
+		// Tile info panel
+		Renderer::placeColour4a(200,250,250,250,panelX1,panelY1+220,panelX1+220,panelY1+320);
+
+		//if (world.queryWorldX != -1 && world.queryWorldY != -1)
+		if ( world.isSafe(world.queryWorldX,world.queryWorldY) )
+		{
+			World_Local * tile = world.getTile(world.queryWorldX,world.queryWorldY);
+
+			if ( tile != 0 )
+			{
+				// Tile stats
+				font8x8.drawText
+				(Stream() << tile->getTerrainName() << " ("<<world.queryWorldX<<", "<<world.queryWorldY<<")",
+				panelX1,panelY1+310,panelX1+220,panelY1+320,false,true);
+				font8x8.drawText
+				(Stream() << "Landmass: "<< world.getLandmassName(world.queryWorldX,world.queryWorldY),
+				panelX1,panelY1+300,panelX1+220,panelY1+310,false,true);
+				font8x8.drawText
+				(Stream() << "Biome: "<< world.getBiomeName(world.queryWorldX,world.queryWorldY),
+				panelX1,panelY1+290,panelX1+220,panelY1+300,false,true);
+				font8x8.drawText(Stream() << tile->baseMetal << " metal",
+				panelX1,panelY1+280,panelX1+220,panelY1+290,false,true);
+				// Tile image
+				Renderer::setTextureMode();
+				Renderer::placeTexture4(panelX1, panelY1+220, panelX1+32, panelY1+252, tile->currentTexture(), false);
+			}
+		}
+
 		buttonExpandMap.render();
 
 		// DATE
 		Renderer::placeColour4a(150,150,150,255,panelX2-208,panelY2-20,panelX2,panelY2-10);
 		std::string strDate = world.calendar.toString();
 		font8x8.drawText("DATE: "+strDate,panelX2-208,panelY2-20,panelX2,panelY2-10, false, true);
-		
+
 		worldPop=0;
 		for (int i=0;i<world.vTribe.size();++i)
 		{
 			worldPop+=world.vTribe(i)->vCharacter.size();
 		}
-		
-    //Population
-    Renderer::placeColour4a(150,150,150,255,panelX2-380,panelY2-20,panelX2-208,panelY2-10);
-    font8x8.drawText("Pop: "+DataTools::toString(worldPop),panelX2-380,panelY2-20,panelX2-208,panelY2-10, false, true);
-    
+
+		//Population
+		Renderer::placeColour4a(150,150,150,255,panelX2-380,panelY2-20,panelX2-208,panelY2-10);
+		font8x8.drawText("Pop: "+DataTools::toString(worldPop),panelX2-380,panelY2-20,panelX2-208,panelY2-10, false, true);
+
 		guiManager.render();
 	}
-	
+
 	void logicTick()
 	{
-		//textDate.text = world.date.toString("-");
-		
-		if(active)
+	//textDate.text = world.date.toString("-");
+
+	if(active)
+	{
+		if ( cycleSimulationSpeed.getCurrentOption() == "PAUSED" )
 		{
-			if ( cycleSimulationSpeed.getCurrentOption() == "PAUSED" )
-			{
-				//PAUSE_LOGIC=true;
-				//std::cout<<"Simulation paused.\n";
-				TIME_SCALE=0;
-			}
-			if ( cycleSimulationSpeed.getCurrentOption() == "1x" )
-			{
-				//PAUSE_LOGIC=false;
-				TIME_SCALE = 1;
-			}
-			else if ( cycleSimulationSpeed.getCurrentOption() == "60x" )
-			{
-				//PAUSE_LOGIC=false;
-				TIME_SCALE = 60;
-			}
-			else if ( cycleSimulationSpeed.getCurrentOption() == "100x" )
-			{
-				//PAUSE_LOGIC=false;
-				TIME_SCALE = 100;
-			}
-			else if ( cycleSimulationSpeed.getCurrentOption() == "1,000x" )
-			{
-				//PAUSE_LOGIC=false;
-				TIME_SCALE = 1000;
-			}
-			else if ( cycleSimulationSpeed.getCurrentOption() == "10,000x" )
-			{
-				//PAUSE_LOGIC=false;
-				TIME_SCALE = 10000;
-			}
-			else if ( cycleSimulationSpeed.getCurrentOption() == "100,000x" )
-			{
-				//PAUSE_LOGIC=false;
-				TIME_SCALE = 100000;
-			}
-			else if ( cycleSimulationSpeed.getCurrentOption() == "1,000,000x" )
-			{
-				//PAUSE_LOGIC=false;
-				TIME_SCALE = 1000000;
-			}
-			else if ( cycleSimulationSpeed.getCurrentOption() == "10,000,000x" )
-			{
-				//PAUSE_LOGIC=false;
-				TIME_SCALE = 10000000;
-			}
-			else if ( cycleSimulationSpeed.getCurrentOption() == "100,000,000x" )
-			{
-				//PAUSE_LOGIC=false;
-				TIME_SCALE = 100000000;
-			}
-			
+			//PAUSE_LOGIC=true;
+			//std::cout<<"Simulation paused.\n";
+			TIME_SCALE=0;
+		}
+		if ( cycleSimulationSpeed.getCurrentOption() == "1x" )
+		{
+			//PAUSE_LOGIC=false;
+			TIME_SCALE = 1;
+		}
+		else if ( cycleSimulationSpeed.getCurrentOption() == "60x" )
+		{
+			//PAUSE_LOGIC=false;
+			TIME_SCALE = 60;
+		}
+		else if ( cycleSimulationSpeed.getCurrentOption() == "100x" )
+		{
+			//PAUSE_LOGIC=false;
+			TIME_SCALE = 100;
+		}
+		else if ( cycleSimulationSpeed.getCurrentOption() == "1,000x" )
+		{
+			//PAUSE_LOGIC=false;
+			TIME_SCALE = 1000;
+		}
+		else if ( cycleSimulationSpeed.getCurrentOption() == "10,000x" )
+		{
+			//PAUSE_LOGIC=false;
+			TIME_SCALE = 10000;
+		}
+		else if ( cycleSimulationSpeed.getCurrentOption() == "100,000x" )
+		{
+			//PAUSE_LOGIC=false;
+			TIME_SCALE = 100000;
+		}
+		else if ( cycleSimulationSpeed.getCurrentOption() == "1,000,000x" )
+		{
+			//PAUSE_LOGIC=false;
+			TIME_SCALE = 1000000;
+		}
+		else if ( cycleSimulationSpeed.getCurrentOption() == "10,000,000x" )
+		{
+			//PAUSE_LOGIC=false;
+			TIME_SCALE = 10000000;
+		}
+		else if ( cycleSimulationSpeed.getCurrentOption() == "100,000,000x" )
+		{
+			//PAUSE_LOGIC=false;
+			TIME_SCALE = 100000000;
+		}
+
 		}
 	}
-	
+
 	bool keyboardEvent (Keyboard* _keyboard)
 	{
-			// ESCAPE - Close all submenus and go back to main game.
-			// If all submenus are already closed, bring up main menu.
-      // If time is progressing, pause it.
+		// ESCAPE - Close all submenus and go back to main game.
+		// If all submenus are already closed, bring up main menu.
+		// If time is progressing, pause it.
 		if(_keyboard->isPressed(Keyboard::ESCAPE))
 		{
 			menuTribes.active = false;
@@ -367,74 +388,71 @@ class Menu_WorldSimulator: public GUI_Interface
 			menuWorld.active = false;
 			menuCharacter.active = false;
 			menuBiome.active = false;
-			
-        //Clear the backlog so time stops progressing.
+			minimap.active = true;
+
+
+			//Clear the backlog so time stops progressing.
 			world.ticksBacklog=0;
-			
-			_keyboard->keyUp(Keyboard::ESCAPE);	
+
+			_keyboard->keyUp(Keyboard::ESCAPE);
 		}
-    
-      // TAB will switch between adventure mode and god mode.
+
+		// TAB will switch between adventure mode and god mode.
 		if(_keyboard->isPressed(Keyboard::TAB))
 		{
-      if (playerCharacter == 0 )
-      {
-        std::cout<<"No character selected, selecting random character.\n";
-        //Automatically select a random character so we can go straight into adventure mode.
-        playerCharacter = world.getRandomCharacter();
-      }
-      
-      if ( playerCharacter != 0 )
-      {
-      
-        std::cout<<"Entering adventure mode.\n";
-        
-        if ( world.prepareAdventureMode(playerCharacter) )
-        {
-          activeMenu = MENU_ADVENTUREMODE;
-          
-          menuTribes.active = false;
-          menuCivs.active = false;
-          menuWorld.active = false;
-          menuCharacter.active = false;
-          menuBiome.active = false;
-          //active = false;
-          
-          worldViewer.subterraneanMode=playerCharacter->isUnderground;
-      
-        }
-        else
-        {
-          std::cout<<"Error: world.prepareAdventureMode(~) failed.\n";
-        }
-        
-        _keyboard->keyUp(Keyboard::TAB);
-        
+			if (playerCharacter == 0 )
+			{
+				std::cout<<"No character selected, selecting random character.\n";
+				//Automatically select a random character so we can go straight into adventure mode.
+				playerCharacter = world.getRandomCharacter();
+			}
 
-      }
-      else
-      {
-        std::cout<<"Error: No player pointer.\n";
-      }
+			if ( playerCharacter != 0 )
+			{
+				std::cout<<"Entering adventure mode.\n";
 
-      
+				if ( world.prepareAdventureMode(playerCharacter) )
+				{
+					activeMenu = MENU_ADVENTUREMODE;
+
+					menuTribes.active = false;
+					menuCivs.active = false;
+					menuWorld.active = false;
+					menuCharacter.active = false;
+					menuBiome.active = false;
+					minimap.active = false;
+					//active = false;
+
+					worldViewer.subterraneanMode=playerCharacter->isUnderground;
+				}
+				else
+				{
+					std::cout<<"Error: world.prepareAdventureMode(~) failed.\n";
+				}
+
+				_keyboard->keyUp(Keyboard::TAB);
+			}
+			else
+			{
+				std::cout<<"Error: No player pointer.\n";
+			}
 		}
 
 		guiManager.keyboardEvent(_keyboard);
-		
+
 		worldViewer.keyboardEvent(_keyboard);
 		return false;
 	}
-	
+
 	bool mouseEvent (Mouse* _mouse)
 	{
 		worldViewer.mouseEvent(_mouse);
 		buttonExpandMap.mouseEvent(_mouse);
-		
+
 		if(buttonExpandMap.clicked==true)
 		{
 			fullScreenWorldView=!fullScreenWorldView;
-			
+
 			if (fullScreenWorldView==true)
 			{
 				worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
@@ -443,9 +461,10 @@ class Menu_WorldSimulator: public GUI_Interface
 			else
 			{
 				worldViewer.setPanel(panelX1+(panelX2/2),panelY1+(panelY2/2),panelX2,panelY2);
-				buttonExpandMap.setPanel(panelX1+(panelX2/2),panelY1+(panelY2/2),panelX1+(panelX2/2)+16,panelY1+(panelY2/2)+16);
+				buttonExpandMap.setPanel
+				(panelX1+(panelX2/2),panelY1+(panelY2/2),panelX1+(panelX2/2)+16,panelY1+(panelY2/2)+16);
 			}
-			
+
 			buttonExpandMap.unclick();
 			eventResize();
 		}
@@ -453,7 +472,6 @@ class Menu_WorldSimulator: public GUI_Interface
 		if (buttonIncrementDay.clicked==true)
 		{
 			buttonIncrementDay.unclick();
-			
 			world.incrementTicks(86400);
 		}
 		if (buttonIncrementMonth.clicked==true)
@@ -471,14 +489,14 @@ class Menu_WorldSimulator: public GUI_Interface
 			buttonIncrementDecade.unclick();
 			world.ticksBacklog+=311040000;
 		}
-		
+
 		if (buttonTribeMenu.clicked==true)
 		{
 			menuTribes.init();
 			menuTribes.active=true;
 			buttonTribeMenu.unclick();
 		}
-		
+
 		if (buttonWorldMenu.clicked==true)
 		{
 			std::cout<<"Worldmenu\n";
@@ -486,7 +504,7 @@ class Menu_WorldSimulator: public GUI_Interface
 			menuWorld.active=true;
 			buttonWorldMenu.unclick();
 		}
-		
+
 		if (buttonCharacterMenu.clicked==true)
 		{
 			std::cout<<"Character menu\n";
@@ -494,7 +512,7 @@ class Menu_WorldSimulator: public GUI_Interface
 			menuCharacter.active=true;
 			buttonCharacterMenu.unclick();
 		}
-    
+
 		if (buttonCivMenu.clicked==true)
 		{
 			std::cout<<"Civ menu\n";
@@ -509,7 +527,7 @@ class Menu_WorldSimulator: public GUI_Interface
 			worldViewer.territoryView=!worldViewer.territoryView;
 			buttonTerritoryView.unclick();
 		}
-		
+
 		if (buttonBiomeMenu.clicked==true)
 		{
 			std::cout<<"Biome menu\n";
@@ -517,27 +535,27 @@ class Menu_WorldSimulator: public GUI_Interface
 			menuBiome.active=true;
 			buttonBiomeMenu.unclick();
 		}
-		
+
 		if (buttonToggleTileset.clicked==true)
 		{
 			std::cout<<"Toggle tileset view\n";
-      worldViewer.tilesetMode = !worldViewer.tilesetMode;
+			worldViewer.tilesetMode = !worldViewer.tilesetMode;
 			buttonToggleTileset.unclick();
 		}
-		
+
 		if (buttonSubterraneanView.clicked==true)
 		{
 			std::cout<<"Toggle subterranean mode\n";
-      worldViewer.subterraneanMode = !worldViewer.subterraneanMode;
+			worldViewer.subterraneanMode = !worldViewer.subterraneanMode;
 			buttonSubterraneanView.unclick();
 		}
-		
-			/* If the guiManager did something with the mouse event. */
+
+		/* If the guiManager did something with the mouse event. */
 		if(guiManager.mouseEvent(_mouse)==true)
 		{
-			
+
 		}
-		
+
 		if (menuTribes.lastRowClicked != -1 )
 		{
 			if ( world.vTribe.isSafe(menuTribes.lastRowClicked) )
@@ -545,10 +563,10 @@ class Menu_WorldSimulator: public GUI_Interface
 				Tribe* t = world.vTribe(menuTribes.lastRowClicked);
 				worldViewer.setCenterTile(t->worldX,t->worldY);
 			}
-			
+
 			menuTribes.lastRowClicked=-1;
 		}
-		
+
 		if (menuWorld.lastRowClicked != -1 )
 		{
 			if ( world.vLandmass.isSafe(menuWorld.lastRowClicked) )
@@ -556,37 +574,38 @@ class Menu_WorldSimulator: public GUI_Interface
 				World_Landmass* l = world.vLandmass(menuWorld.lastRowClicked);
 				worldViewer.setCenterTile(l->averageX,l->averageY);
 			}
-			
+
 			menuWorld.lastRowClicked=-1;
 		}
-		
+
 		return false;
 	}
-	
+
 	void eventResize()
 	{
-    /* World preview takes top-right quarter of screen. */
+		//std::cout<<"MENU WORLDSIM RESIZED: "<<panelX1<<", "<<panelY1<<", "<<panelX2<<", "<<panelY2<<".\n";
+		/* World preview takes top-right quarter of screen. */
 
 		int panelSizeX = panelX2-panelX1;
 		int panelSizeY = panelY2-panelY1;
-		
+
 		int worldPreviewX1=panelX1+(panelSizeX/2);
 		int worldPreviewY1=panelY1+(panelSizeY/2);
-				
+
 		/* Left column, centered. */
 		const int leftColumnCenterX = panelX1+(panelNX/4);
-				
+
 		Renderer::placeColour4(0,0,0,worldPreviewX1,worldPreviewY1,panelX2,panelY2);
 		worldViewer.setPanel(worldPreviewX1,worldPreviewY1,panelX2,panelY2);
 
 		textSimulationSpeed.setPanel(panelX2-200, panelY2-30, panelX2-100, panelY2-20);
 		cycleSimulationSpeed.setPanel(panelX2-150, panelY2-30, panelX2, panelY2-20);
-		
+
 		buttonIncrementDay.setPanel(panelX2-150, panelY2-40, panelX2-120, panelY2-30);
 		buttonIncrementMonth.setPanel(panelX2-120, panelY2-40, panelX2-90, panelY2-30);
 		buttonIncrementYear.setPanel(panelX2-90, panelY2-40, panelX2-60, panelY2-30);
 		buttonIncrementDecade.setPanel(panelX2-60, panelY2-40, panelX2-30, panelY2-30);
-		
+
 		buttonTribeMenu.setPanel(panelX2-180, panelY2-40, panelX2-150, panelY2-30);
 		buttonWorldMenu.setPanel(panelX2-210, panelY2-40, panelX2-180, panelY2-30);
 		buttonCharacterMenu.setPanel(panelX2-240, panelY2-40, panelX2-210, panelY2-30);
@@ -601,7 +620,8 @@ class Menu_WorldSimulator: public GUI_Interface
 		menuWorld.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuCharacter.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuBiome.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
-		
+		minimap.setPanel(panelX1,panelY1,panelX1+220,panelY1+220);
+
 		if (fullScreenWorldView==true)
 		{
 			worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
@@ -610,10 +630,11 @@ class Menu_WorldSimulator: public GUI_Interface
 		else
 		{
 			worldViewer.setPanel(panelX1+(panelX2/2),panelY1+(panelY2/2),panelX2,panelY2);
-			buttonExpandMap.setPanel(panelX1+(panelX2/2),panelY1+(panelY2/2),panelX1+(panelX2/2)+16,panelY1+(panelY2/2)+16);
+			buttonExpandMap.setPanel
+			(panelX1+(panelX2/2),panelY1+(panelY2/2),panelX1+(panelX2/2)+16,panelY1+(panelY2/2)+16);
 		}
 	}
-	
+
 };
 
 #endif
