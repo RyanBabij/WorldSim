@@ -16,22 +16,22 @@ class Menu_World: public GUI_Interface
 {
 	public:
 	GUI_Manager guiManager;
-	
+
 	/* Colours / theme. */
 	Colour cNormal;
 	Colour cSelected;
 	Colour cDropPanel;
 	Colour cHighlight;
-	
+
 	Wildcat::Font* font;
-	
-		/* Menu for investigating an individual tribe */
+
+	/* Menu for investigating an individual tribe */
 	GUI_Button buttonClose;
-	
-		// TABLE FOR LANDMASSES
+
+	// TABLE FOR LANDMASSES
 	Table2 tLandmass;
 	GUI_Table guiTableLandmass;
-	
+
 	World_Landmass* selectedLandmass;
 	int lastRowClicked;
 	
@@ -55,14 +55,14 @@ class Menu_World: public GUI_Interface
 		cSelected.set(180,180,180);
 		cDropPanel.set(170,170,170);
 		cHighlight.set(255,160,160);
-		
+
 		buttonClose.text="X";
 		buttonClose.setColours(&cNormal,&cHighlight,0);
 		buttonClose.active=true;
-		
+
 		active = false;
-		
-		
+
+
 		guiTableLandmass.clear();
 		guiTableLandmass.table = &tLandmass;
 		guiTableLandmass.alpha=0;
@@ -75,14 +75,14 @@ class Menu_World: public GUI_Interface
 		{
 			tLandmass.addRow(world.vLandmass(i));
 		}
-		
+
 		guiManager.clear();
 		guiManager.add(&buttonClose);
 		guiManager.add(&guiTableLandmass);
-	
+
 		eventResize();
 	}
-	
+
 	void render()
 	{
 		if ( active )
@@ -90,7 +90,30 @@ class Menu_World: public GUI_Interface
 			Renderer::placeColour4a(150,150,150,200,panelX1,panelY1,panelX2,panelY2);
 			font8x8.drawText("World Info",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
 			
-			//font8x8.drawText("This menu will display interesting info about the world. For example, did you know that the world has "+DataTools::toString(world.vTribe.size())+" tribes? Fascinating stuff.\n",panelX1,panelY1,panelX2,panelY2-25, false, false);
+			std::string strWorldInfo = "The planet "+world.name+" is in the "+world.astronomy.sunName+" system, with "+
+			DataTools::toString(world.astronomy.vPlanet.size())+" planets. ";
+			
+			if ( world.astronomy.vMoon.size() == 0 )
+			{
+				strWorldInfo += "It has no moons.";
+			}
+			else if (world.astronomy.vMoon.size() == 1 )
+			{
+				strWorldInfo += "It has 1 moon called "+world.astronomy.vMoon(0)+".";
+			}
+			else
+			{
+				strWorldInfo += "It has " + DataTools::toString(world.astronomy.vMoon.size()) +" moons called ";
+				
+				
+				for (int i=0;i<world.astronomy.vMoon.size()-1;++i)
+				{
+					strWorldInfo+=world.astronomy.vMoon(i)+", ";
+				} strWorldInfo+="and "+world.astronomy.vMoon(world.astronomy.vMoon.size()-1)+".";
+				
+			}
+			
+			font8x8.drawText(strWorldInfo, panelX1+2,panelY1,panelX2-2,panelY2-25, false, false);
 			
 			guiManager.render();
 		}
@@ -137,7 +160,7 @@ class Menu_World: public GUI_Interface
 	void eventResize()
 	{
 	
-		guiTableLandmass.setPanel(panelX1,panelY1,panelX2,panelY2-30);
+		guiTableLandmass.setPanel(panelX1,panelY1,panelX2,panelY2-80);
 		buttonClose.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
 	}
 	

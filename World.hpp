@@ -13,6 +13,7 @@
 
 */
 
+#include "World_Astronomy.hpp"
 #include "LocalTile.hpp"
 #include "World_Local.hpp"
 #include "World_Landmass.hpp"
@@ -81,7 +82,10 @@ bool active; /* Whether or not the world should be simulated. */
    std::string name; /* The name of the world */
    std::string strSavePath; /* The path to the world's save data. Typically something like: "savedata/<world name>". */
    std::string worldFilePath;
-
+	
+	// Stores astronomical details from perspective of World.
+	World_Astronomy astronomy;
+	
    int landmassSeed;
 
    /* Counters to regulate logic */

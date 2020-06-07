@@ -309,7 +309,7 @@ void World::startSimulation()
          {
             const int biomeSearch = aTerrain(_x,_y);
             // Spawn a thread to process this biome type
-            #ifdef WILDCAT_THREADING
+#ifdef WILDCAT_THREADING
             aThread [aTerrain(_x,_y)] = new std::thread ( [ this, _x, _y, biomeSearch, &m, &biomeID, &biomeIncrement ]
             {
 #endif
@@ -329,12 +329,16 @@ void World::startSimulation()
                         World_Biome* biome = new World_Biome;
                         biome->type = biomeSearch;
                         
+#ifdef WILDCAT_THREADING
                         biomeIncrement.lock();
+#endif
                         //std::cout<<"Biome increment: "<<biomeID<<" to "<<biomeID+1<<"\n";
                         thisBiomeID = biomeID;
                         biome->id = thisBiomeID;
                         ++biomeID;
+#ifdef WILDCAT_THREADING
                         biomeIncrement.unlock();
+#endif
                         
                         
                         mutexCout.lock();
@@ -1608,6 +1612,16 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
    t4.join();
    t5.join();
 #endif
+
+	std::cout<<"Generating astronomy\n";
+	
+	int nMoons = 1;
+	if ( globalRandom.oneIn(100) )
+	{
+		++nMoons;
+	}
+	
+	astronomy.generateSystem(nMoons,globalRandom.multiRoll8(5,3,true));
 
 	wg.generate();
    aTerrain.init(nX,nY,OCEAN);
