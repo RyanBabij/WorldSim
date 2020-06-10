@@ -124,7 +124,8 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 {
    private:
 
-   /* Rendering coordinates. */
+   /* Rendering coordinates.
+	 These should be updated to use the standard GUI panel system */
    int mainViewX1, mainViewX2, mainViewY1, mainViewY2;
    int mainViewNX, mainViewNY;
 
@@ -391,6 +392,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 
    void setPanel( const int _x1, const int _y1, const int _x2, const int _y2)
    {
+		// Todo: Update class to use standard GUI panel system.
       mainViewX1 = _x1;
       mainViewY1 = _y1;
       mainViewX2 = _x2;
@@ -1098,6 +1100,18 @@ class WorldViewer: public DisplayInterface, public MouseInterface
          tileY+=tilesToSkip;
       }
    }
+
+
+	// return the maximum number of tiles that fit on the current panel along X axis
+	double getTilesNX()
+	{
+		return mainViewNX/tileSize;
+	}
+	// return the maximum number of tiles that fit on the current panel along Y axis
+	double getTilesNY()
+	{
+		return mainViewNY/tileSize;
+	}
 
 };
 WorldViewer worldViewer;

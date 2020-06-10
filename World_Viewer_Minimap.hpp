@@ -52,14 +52,50 @@ public:
 				}
 			}
 		}
-		
+				
 		eventResize();
 	}
 	
 	void render()
 	{
-		//Renderer::placeColour4a(250,0,0,100,panelX1,panelY1,panelX2/2,panelY2/2);
+		if (world==0)
+		{ return; }
+	
+		// Render the viewbox as a grey overlay on the minimap
+		// X axis
+		double leftMostTile = worldViewer.centerTileX - (worldViewer.getTilesNX()/2);
+		if (leftMostTile<0) {leftMostTile=0;}
+		if (leftMostTile>world->nX) {leftMostTile=world->nX;}
+		
+		double rightMostTile = worldViewer.centerTileX + (worldViewer.getTilesNX()/2)+0.5;
+		if (rightMostTile<0) {rightMostTile=0;}
+		if (rightMostTile>world->nX) {rightMostTile=world->nX;}
+		
+		double rightMostTilePercent = rightMostTile / world->nX;
+		double leftMostTilePercent = leftMostTile / world->nX;
+		
+		int minimapViewboxX2 = panelX1+(panelNX*rightMostTilePercent);
+		int minimapViewboxX1 = panelX1+(panelNX*leftMostTilePercent);
+
+		// Y axis
+		double upMostTile = worldViewer.centerTileY + (worldViewer.getTilesNY()/2)+0.5;
+		if (upMostTile<0) {upMostTile=0;}
+		if (upMostTile>world->nY) {upMostTile=world->nY;}
+		
+		double downMostTile = worldViewer.centerTileY - (worldViewer.getTilesNY()/2);
+		if (downMostTile<0) {downMostTile=0;}
+		if (downMostTile>world->nY) {downMostTile=world->nY;}
+		
+		double upMostTilePercent = upMostTile / world->nY;
+		double downMostTilePercent = downMostTile / world->nY;
+		
+		int minimapViewboxY2 = panelY1+(panelNY*upMostTilePercent);
+		int minimapViewboxY1 = panelY1+(panelNY*downMostTilePercent);
+
 		minimap.render();
+		
+		// render viewbox over minimap
+		Renderer::placeColour4a(255,255,255,60,minimapViewboxX1,minimapViewboxY1,minimapViewboxX2,minimapViewboxY2);
 	}
 	
 	bool mouseEvent (Mouse* _mouse)
