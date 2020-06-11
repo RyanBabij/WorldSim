@@ -62,11 +62,13 @@ public:
 		{ return; }
 	
 		// Render the viewbox as a grey overlay on the minimap
+		// Like many things this ought to be moved out of the render loop.
 		// X axis
 		double leftMostTile = worldViewer.centerTileX - (worldViewer.getTilesNX()/2);
 		if (leftMostTile<0) {leftMostTile=0;}
 		if (leftMostTile>world->nX) {leftMostTile=world->nX;}
 		
+		// +0.5 adjustment seems to improve the precision of the edge, not sure why.
 		double rightMostTile = worldViewer.centerTileX + (worldViewer.getTilesNX()/2)+0.5;
 		if (rightMostTile<0) {rightMostTile=0;}
 		if (rightMostTile>world->nX) {rightMostTile=world->nX;}
@@ -100,6 +102,33 @@ public:
 	
 	bool mouseEvent (Mouse* _mouse)
 	{
+		if (world==0)
+		{ return false; }
+		
+		if (_mouse->x < panelX1 || _mouse->x>panelX2 || _mouse->y < panelY1 || _mouse->y>panelY2)
+		{
+			return false;
+		}
+		
+		// center the worldViewer on the tile we clicked in the minimap.
+		if (_mouse->isLeftClick)
+		{
+			float xMousePos = _mouse->x - panelX1;
+			float xPercent = xMousePos / panelNX;
+			int tileX = xPercent * world->nX;
+			
+			float yMousePos = _mouse->y - panelY1;
+			float yPercent = yMousePos / panelNY;
+			int tileY = yPercent * world->nY;
+			
+			
+			worldViewer.setCenterTile(tileX,tileY);
+			//_mouse->isLeftClick=false;
+			return true;
+		}
+		
+
+		
 		return false;
 	}
 
