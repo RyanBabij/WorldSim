@@ -124,7 +124,8 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 {
    private:
 
-   /* Rendering coordinates. */
+   /* Rendering coordinates.
+	 These should be updated to use the standard GUI panel system */
    int mainViewX1, mainViewX2, mainViewY1, mainViewY2;
    int mainViewNX, mainViewNY;
 
@@ -181,6 +182,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
    bool territoryView;
    bool tilesetMode;
    bool subterraneanMode;
+	bool landMode; // Show only landmasses
 
    // If true, game will randomly scroll around.
    // In the future, the title screen will probably be scrolling around a map.
@@ -230,6 +232,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 
       territoryView = false;
       tilesetMode = true;
+      landMode = false;
       subterraneanMode = false;
 
       demoMode = false;
@@ -391,6 +394,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 
    void setPanel( const int _x1, const int _y1, const int _x2, const int _y2)
    {
+		// Todo: Update class to use standard GUI panel system.
       mainViewX1 = _x1;
       mainViewY1 = _y1;
       mainViewX2 = _x2;
@@ -969,6 +973,18 @@ class WorldViewer: public DisplayInterface, public MouseInterface
             {
                renderLocalMap(localMap,currentX,currentY);
             }
+				else if (landMode && world->isSafe(tileX,tileY) )
+				{
+					// only render grassland and ocean tiles.
+					if(world->isLand(tileX,tileY)==false)
+					{
+						Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
+					}
+					else if(world->isLand(tileX,tileY)==true)
+					{
+						Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
+					}
+				}
             else if ( world->isSafe(tileX,tileY) )
             { // Render tile on world view
                /* Textures are chosen here rather than from tile objects because it is highly dependent on neighboring tiles. It would be possible to delegate texture handling to tile objects, but would take too much memory maintaining pointers to neighbours. In future maybe worldtile can return hardcoded textures chosen by world object. */
@@ -1056,6 +1072,19 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                      glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
                   }
                }
+					else if (landMode)
+					{
+						// only draw land and ocean textures.
+                  if(world->isLand(tileX,tileY)==false)
+                  {
+                     glColor3ub(TEX_WORLD_TERRAIN_OCEAN_00.averageRed,TEX_WORLD_TERRAIN_OCEAN_00.averageGreen,TEX_WORLD_TERRAIN_OCEAN_00.averageBlue);
+                  }
+                  else if(world->isLand(tileX,tileY)==true)
+                  {
+                     glColor3ub(TEX_WORLD_TERRAIN_GRASS_00.averageRed,TEX_WORLD_TERRAIN_GRASS_00.averageGreen,TEX_WORLD_TERRAIN_GRASS_00.averageBlue);
+                  }
+						
+					}
                // draw normal colour mode
                else
                {
@@ -1098,6 +1127,18 @@ class WorldViewer: public DisplayInterface, public MouseInterface
          tileY+=tilesToSkip;
       }
    }
+
+
+	// return the maximum number of tiles that fit on the current panel along X axis
+	double getTilesNX()
+	{
+		return mainViewNX/tileSize;
+	}
+	// return the maximum number of tiles that fit on the current panel along Y axis
+	double getTilesNY()
+	{
+		return mainViewNY/tileSize;
+	}
 
 };
 WorldViewer worldViewer;
