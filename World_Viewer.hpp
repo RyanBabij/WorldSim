@@ -182,6 +182,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
    bool territoryView;
    bool tilesetMode;
    bool subterraneanMode;
+	bool landMode; // Show only landmasses
 
    // If true, game will randomly scroll around.
    // In the future, the title screen will probably be scrolling around a map.
@@ -231,6 +232,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 
       territoryView = false;
       tilesetMode = true;
+      landMode = false;
       subterraneanMode = false;
 
       demoMode = false;
@@ -971,6 +973,18 @@ class WorldViewer: public DisplayInterface, public MouseInterface
             {
                renderLocalMap(localMap,currentX,currentY);
             }
+				else if (landMode && world->isSafe(tileX,tileY) )
+				{
+					// only render grassland and ocean tiles.
+					if(world->isLand(tileX,tileY)==false)
+					{
+						Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_OCEAN_00, false);
+					}
+					else if(world->isLand(tileX,tileY)==true)
+					{
+						Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
+					}
+				}
             else if ( world->isSafe(tileX,tileY) )
             { // Render tile on world view
                /* Textures are chosen here rather than from tile objects because it is highly dependent on neighboring tiles. It would be possible to delegate texture handling to tile objects, but would take too much memory maintaining pointers to neighbours. In future maybe worldtile can return hardcoded textures chosen by world object. */
@@ -1058,6 +1072,19 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                      glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
                   }
                }
+					else if (landMode)
+					{
+						// only draw land and ocean textures.
+                  if(world->isLand(tileX,tileY)==false)
+                  {
+                     glColor3ub(TEX_WORLD_TERRAIN_OCEAN_00.averageRed,TEX_WORLD_TERRAIN_OCEAN_00.averageGreen,TEX_WORLD_TERRAIN_OCEAN_00.averageBlue);
+                  }
+                  else if(world->isLand(tileX,tileY)==true)
+                  {
+                     glColor3ub(TEX_WORLD_TERRAIN_GRASS_00.averageRed,TEX_WORLD_TERRAIN_GRASS_00.averageGreen,TEX_WORLD_TERRAIN_GRASS_00.averageBlue);
+                  }
+						
+					}
                // draw normal colour mode
                else
                {

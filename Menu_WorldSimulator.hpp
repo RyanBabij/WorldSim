@@ -59,12 +59,17 @@ private:
 	GUI_Button buttonTerritoryView;
 	/* List of all Civs in the game */
 	GUI_Button buttonCivMenu;
-	/* Switch to tileset view */
-	GUI_Button buttonToggleTileset;
 	/* Switch to subterranean view on local map */
 	GUI_Button buttonSubterraneanView;
 	/* Button: Switch between 1/4 or fullscreen view of world map. */
 	GUI_Button buttonExpandMap;
+	
+	
+		// Base world view modes
+		// Toggle Textures
+	GUI_Button buttonMinimapBaseTexture;
+		// Toggle landmass/biome view
+	GUI_Button buttonMinimapBaseLand;
 
 	bool simulateWorld;
 
@@ -156,13 +161,16 @@ public:
 		buttonCharacterMenu.setColours(&cNormal,&cHighlight,0);
 		buttonCivMenu.text="Civ";
 		buttonCivMenu.setColours(&cNormal,&cHighlight,0);
-		buttonToggleTileset.text="V";
-		buttonToggleTileset.setColours(&cNormal,&cHighlight,0);
 		buttonSubterraneanView.text = "S";
 		buttonSubterraneanView.setColours(&cNormal,&cHighlight,0);
 		buttonTerritoryView.text="T2";
 		buttonTerritoryView.setColours(&cNormal,&cHighlight,0);
-
+		
+		buttonMinimapBaseTexture.init("", &TEX_GUI_MINIMAP_BASE_TEXTUREMODE, &cNormal, &cHighlight, 0, true);
+		buttonMinimapBaseLand.init("", &TEX_GUI_MINIMAP_BASE_LANDMODE, &cNormal, &cHighlight, 0, true);
+		
+		guiManager.add(&minimap);
+		
 		guiManager.add(&textSimulationSpeed);
 		guiManager.add(&cycleSimulationSpeed);
 		guiManager.add(&buttonIncrementDay);
@@ -176,8 +184,11 @@ public:
 		guiManager.add(&buttonCharacterMenu);
 		guiManager.add(&buttonCivMenu);
 		guiManager.add(&buttonTerritoryView);
-		guiManager.add(&buttonToggleTileset);
 		guiManager.add(&buttonSubterraneanView);
+		
+		/* GUI Minimap Buttons */
+		guiManager.add(&buttonMinimapBaseTexture);
+		guiManager.add(&buttonMinimapBaseLand);
 
 		/* Submenus */
 		guiManager.add(&menuTribes);
@@ -185,7 +196,6 @@ public:
 		guiManager.add(&menuWorld);
 		guiManager.add(&menuCharacter);
 		guiManager.add(&menuBiome);
-		guiManager.add(&minimap);
 
 		textSimulationSpeed.active=true;
 		cycleSimulationSpeed.active=true;
@@ -201,7 +211,6 @@ public:
 		buttonCharacterMenu.active=true;
 		buttonCivMenu.active=true;
 		buttonTerritoryView.active=true;
-		buttonToggleTileset.active=true;
 		buttonSubterraneanView.active=true;
 
 		buttonExpandMap.active = false;
@@ -521,12 +530,7 @@ public:
 			buttonCivMenu.unclick();
 		}
 
-		if (buttonTerritoryView.clicked==true)
-		{
-			std::cout<<"Toggle territory visibility.\n";
-			worldViewer.territoryView=!worldViewer.territoryView;
-			buttonTerritoryView.unclick();
-		}
+
 
 		if (buttonBiomeMenu.clicked==true)
 		{
@@ -536,19 +540,34 @@ public:
 			buttonBiomeMenu.unclick();
 		}
 
-		if (buttonToggleTileset.clicked==true)
+		if (buttonMinimapBaseTexture.clicked==true)
 		{
-			std::cout<<"Toggle tileset view\n";
+			std::cout<<"Toggle texture/colour mode\n";
 			worldViewer.tilesetMode = !worldViewer.tilesetMode;
-			buttonToggleTileset.unclick();
+			buttonMinimapBaseTexture.unclick();
 		}
-
+		if (buttonMinimapBaseLand.clicked==true)
+		{
+			std::cout<<"Toggle texture/colour mode\n";
+			worldViewer.landMode = !worldViewer.landMode;
+			buttonMinimapBaseLand.unclick();
+		}
+		if (buttonTerritoryView.clicked==true)
+		{
+			std::cout<<"Toggle territory visibility.\n";
+			worldViewer.territoryView=!worldViewer.territoryView;
+			buttonTerritoryView.unclick();
+		}
 		if (buttonSubterraneanView.clicked==true)
 		{
 			std::cout<<"Toggle subterranean mode\n";
 			worldViewer.subterraneanMode = !worldViewer.subterraneanMode;
 			buttonSubterraneanView.unclick();
 		}
+		
+		//buttonMinimapBaseTexture.setPanel(panelX1,panelY1,panelX1+32,panelY1+16);
+		//buttonMinimapBaseColour.setPanel(panelX1+32,panelY1,panelX1+64,panelY1+16);
+		//buttonMinimapBaseLand.setPanel(panelX1+64,panelY1,panelX1+96,panelY1+16);
 
 		/* If the guiManager did something with the mouse event. */
 		if(guiManager.mouseEvent(_mouse)==true)
@@ -583,7 +602,6 @@ public:
 
 	void eventResize()
 	{
-		//std::cout<<"MENU WORLDSIM RESIZED: "<<panelX1<<", "<<panelY1<<", "<<panelX2<<", "<<panelY2<<".\n";
 		/* World preview takes top-right quarter of screen. */
 
 		int panelSizeX = panelX2-panelX1;
@@ -612,15 +630,17 @@ public:
 		buttonBiomeMenu.setPanel(panelX2-270, panelY2-40, panelX2-240, panelY2-30);
 		buttonTerritoryView.setPanel(panelX2-300, panelY2-40, panelX2-270, panelY2-30);
 		buttonCivMenu.setPanel(panelX2-340, panelY2-40, panelX2-300, panelY2-30);
-		buttonToggleTileset.setPanel(panelX2-370, panelY2-40, panelX2-340, panelY2-30);
 		buttonSubterraneanView.setPanel(panelX2-400, panelY2-40, panelX2-370, panelY2-30);
+		
+		buttonMinimapBaseTexture.setPanel(panelX1,panelY1,panelX1+32,panelY1+16);
+		buttonMinimapBaseLand.setPanel(panelX1+32,panelY1,panelX1+64,panelY1+16);
 
 		menuTribes.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuCivs.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuWorld.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuCharacter.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuBiome.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
-		minimap.setPanel(panelX1,panelY1,panelX1+220,panelY1+220);
+		minimap.setPanel(panelX1,panelY1+16,panelX1+220,panelY1+236);
 
 		if (fullScreenWorldView==true)
 		{
