@@ -127,47 +127,6 @@ void init()
 	mouseInterfaceManager.add(&menuTitle);
 	//keyboardInterfaceManager.add(&menuTitle);
 	globalGuiManager.add(&menuTitle);
-
-	// Load word lists
-	wlistFloraColour.loadString(FileManager::getFileAsString("raw/wordlists/flora_colours.txt"));
-	wlistFloraPattern.loadString(FileManager::getFileAsString("raw/wordlists/flora_patterns.txt"));
-	wlistFloraAdjective.loadString(FileManager::getFileAsString("raw/wordlists/flora_adjectives.txt"));
-	wlistFloraNoun.loadString(FileManager::getFileAsString("raw/wordlists/flora_nouns.txt"));
-	
-	std::cout<<"Testing flora name generator...\n";
-	
-	RNG_TEST.seed(SEEDER);
-	
-	
-	wlistFloraType.add("Tree");
-	wlistFloraType.add("Plant");
-	wlistFloraType.add("Herb");
-	wlistFloraType.add("Mushroom");
-	wlistFloraType.add("Fungus");
-	wlistFloraType.add("Cap");
-	wlistFloraType.add("Root");
-	wlistFloraType.add("Wort");
-	wlistFloraType.add("Leaf");
-	wlistFloraType.add("Fruit");
-	wlistFloraType.add("Flower");
-	wlistFloraType.add("Weed");
-	wlistFloraType.add("Grass");
-	wlistFloraType.add("Bean");
-	wlistFloraType.add("Sprout");
-	wlistFloraType.add("Fern");
-	wlistFloraType.add("Frond");
-	wlistFloraType.add("Palm");
-	
-	std::cout<<"Generating test flora.\n";
-	
-	for (int i=0; i<100; ++i)
-	{
-		WorldObject_Flora testFlora;
-		testFlora.generate();
-		std::cout<<testFlora.getName()<<"\n";
-	}
-
-
 }
 
 #endif

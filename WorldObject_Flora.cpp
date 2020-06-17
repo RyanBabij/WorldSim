@@ -8,6 +8,8 @@
 	#include"WorldObject_Flora.cpp"
 
   Implementation of WorldObject_Flora.hpp.
+  
+  This seems to have been replaced by Static_Flora.
 */
 
 WorldObject_Flora::WorldObject_Flora()
@@ -41,27 +43,6 @@ Texture* WorldObject_Flora::currentTexture()
 
 void WorldObject_Flora::generate()
 {
-	name="";
-	if (RNG_TEST.flip()) // use colour
-	{
-		name+=wlistFloraColour.getRandom()+" ";
-	}
-	if (RNG_TEST.flip()) // use pattern
-	{
-		name+=wlistFloraPattern.getRandom()+" ";
-	}
-	if (RNG_TEST.flip()) // use adjective
-	{
-		name+=wlistFloraAdjective.getRandom()+" ";
-	}
-	
-	if (RNG_TEST.flip() || name.size() == 0) // use noun
-	{
-		name+=wlistFloraNoun.getRandom()+" ";
-	}
-	
-	name+=wlistFloraType.getRandom();
-	
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -31,6 +31,7 @@
 */
 
 #include "Static.hpp"
+#include "Static_Flora.hpp"
 
 #include <Interface/IdleTick/IdleTickInterface.hpp>
 #include <Interface/LogicTick/LogicTickInterface.hpp>

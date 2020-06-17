@@ -8,14 +8,8 @@
 	Any word lists are initialised here.
 */
 
-#include <Container/WordList/WordList.hpp> // for random flora names
 
-WordList wlistFloraPattern;
-WordList wlistFloraColour;
-WordList wlistFloraAdjective;
-WordList wlistFloraNoun;
 
-// For testing
-WordList wlistFloraType;
+
 
 #endif

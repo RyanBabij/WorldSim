@@ -3,15 +3,25 @@
 #define WORLDSIM_WORLD_BIOME_HPP
 
 /* WorldSim: World_Biome.hpp
-#include "World_Biome.hpp"
+#include "World_Biome.hpp" */
 
-Stores data for the various biomes in the world.
-Useful for biome-specific simulation.
+/**
 
-Map generation should really be done by biome,
-as should Wildlife and Creature simulation.
+Biomes are essentially collections of unique environments which also include unique flora and fauna. In this respect
+biomes are a kind of container for these objects.
 
-//  NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13
+Much processing and simulation is handled on the biome level as these are the smallest discrete "chunks" of world which
+may be independently simulated. This might cause complications with overly-large biomes, so I am considering solutions
+for that, including splitting the biomes up into sub-biomes.
+
+Local Map, Creature and Flora generation is all handled per-biome. Tribes and Civilizations are not.
+
+Biome types are currently hardcoded, and it will probably stay that way. Here are the biome enums:
+NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13
+
+OCEAN and ICE are special cases which are not simulated, because nobody will be seeing much of them anyway.
+
+There should be a worldgen setting: LARGEST_BIOME_SIZE. If a biome is generated that is too large (except water), it should be removed and then a new biome layer is generated, preserving all good biomes.
 
 */
 
@@ -22,6 +32,7 @@ as should Wildlife and Creature simulation.
 class World_Biome: public TableInterface
 {
 	RandomLehmer rng;
+	FloraGenerator floraGenerator;
 
 	public:
 
@@ -42,6 +53,8 @@ class World_Biome: public TableInterface
 	Vector <Flora*> vFlora; // Vector of Flora types
 	//Vector <std::string> vHerbivore;
 	//Vector <std::string> vCarnivore;
+	
+	
 
 	World_Biome()
 	{
@@ -64,6 +77,7 @@ class World_Biome: public TableInterface
 	{
 		if ( id == -1 )
 		{ return; }
+		generateFlora();
 		generateLocals();
 		isGenerated=true;
 	}
@@ -129,6 +143,17 @@ class World_Biome: public TableInterface
 
 		if (floraAmount < 3) { floraAmount=3; }
 		if (floraAmount > 255) { floraAmount = 255; }
+		
+		// Each biome should have up to 3 hardcoded flora. For example deserts will always have Cactuses.
+		// only additional flora will be randomly generated.
+		
+		Vector <Flora*>* vFlora2 = floraGenerator.generate(floraAmount);
+
+		std::cout<<"Flora generated for biome:\n";
+		for (int i=0;i<vFlora2->size();++i)
+		{
+			std::cout<<" * "<<(*vFlora2)(i)->getName()<<"\n";
+		}
 
 		//std::cout<<"Biome size: "<<size<<" generating "<<floraAmount<<" flora.\n";
 
