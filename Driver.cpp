@@ -67,8 +67,7 @@ SaveFileManager saveFileManager;
 #include <Graphics/Texture/Texture.hpp>
 #include <Graphics/Texture/TextureLoader.hpp>
 
-#include <Math/Random/RandomLehmer.hpp>
-RandomLehmer globalRandom; // used for seeding rngs without needing to use system time.
+
 
 #include "TextureInterface.cpp"
 

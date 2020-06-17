@@ -12,6 +12,8 @@
 
 WorldObject_Flora::WorldObject_Flora()
 {
+	name="";
+	
 	x=0; y=0;
 	weight=0;
 	bulk=0;
@@ -24,7 +26,7 @@ WorldObject_Flora::WorldObject_Flora()
 
 std::string WorldObject_Flora::getName()
 {
-	return "Flora";
+	return name;
 }
 
 
@@ -35,6 +37,31 @@ Texture* WorldObject_Flora::currentTexture()
     return &TEX_FLORA_PLANT;
   }
 	return &TEX_FLORA_PLANT;
+}
+
+void WorldObject_Flora::generate()
+{
+	name="";
+	if (RNG_TEST.flip()) // use colour
+	{
+		name+=wlistFloraColour.getRandom()+" ";
+	}
+	if (RNG_TEST.flip()) // use pattern
+	{
+		name+=wlistFloraPattern.getRandom()+" ";
+	}
+	if (RNG_TEST.flip()) // use adjective
+	{
+		name+=wlistFloraAdjective.getRandom()+" ";
+	}
+	
+	if (RNG_TEST.flip() || name.size() == 0) // use noun
+	{
+		name+=wlistFloraNoun.getRandom()+" ";
+	}
+	
+	name+=wlistFloraType.getRandom();
+	
 }
 
 ////////////////////////////////////////////////////////////////////////////////

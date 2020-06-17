@@ -19,6 +19,8 @@
 class WorldObject_Flora: public WorldObject
 {
 	public:
+	
+	std::string name; // Name of the flora, for example "Red Mushroom".
 
     // Determines the stage of growth the plant is at. Can determine harvest yield.
   int growth;
@@ -28,6 +30,8 @@ class WorldObject_Flora: public WorldObject
   
 	virtual std::string getName() override;
 	virtual Texture* currentTexture() override;
+	
+	virtual void generate();
 };
 
 
