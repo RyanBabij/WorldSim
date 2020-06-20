@@ -26,9 +26,7 @@ void init()
 		std::cin.tie(NULL);
 	}
 
-	consoleMessage("CONSOLE MESSAGE TEST 1");
-	consoleMessage("CONSOLE MESSAGE TEST 2");
-	consoleMessage("CONSOLE MESSAGE TEST 3");
+	consoleMessage("GAME STARTED");
 
 	playerCharacter = 0;
 
