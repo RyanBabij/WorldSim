@@ -23,6 +23,14 @@ OCEAN and ICE are special cases which are not simulated, because nobody will be 
 
 There should be a worldgen setting: LARGEST_BIOME_SIZE. If a biome is generated that is too large (except water), it should be removed and then a new biome layer is generated, preserving all good biomes.
 
+The process for generating biomes should be:
+
+	* Generate land
+	* Generate flora and creatures
+	* Spawn flora and creatures
+	
+While this is happening, the biome should be marked as "initializing" and cannot be touched.
+
 */
 
 
@@ -147,13 +155,9 @@ class World_Biome: public TableInterface
 		// Each biome should have up to 3 hardcoded flora. For example deserts will always have Cactuses.
 		// only additional flora will be randomly generated.
 		
-		Vector <Flora*>* vFlora2 = floraGenerator.generate(floraAmount);
+		// Flora are all staticsm, therefore there is max 1 flora per tile.
+		
 
-		std::cout<<"Flora generated for biome:\n";
-		for (int i=0;i<vFlora2->size();++i)
-		{
-			std::cout<<" * "<<(*vFlora2)(i)->getName()<<"\n";
-		}
 
 		//std::cout<<"Biome size: "<<size<<" generating "<<floraAmount<<" flora.\n";
 
@@ -262,7 +266,18 @@ class World_Biome: public TableInterface
 
 
 		// }
+		
+		// Generate the random flora.
+		
+		Vector <Flora*>* vFlora2 = floraGenerator.generate(floraAmount);
 
+		std::cout<<"Flora generated for biome:\n";
+		for (int i=0;i<vFlora2->size();++i)
+		{
+			std::cout<<" * "<<(*vFlora2)(i)->getName()<<"\n";
+			vFlora.push( (*vFlora2)(i) );
+		}
+		delete vFlora2;
 
 		// assign local ids to the flora (1-255)
 

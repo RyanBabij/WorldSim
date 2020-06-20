@@ -11,14 +11,12 @@ Initialize main menus, start timers, initialise any important data.
 
 */
 
-#include <Game/NameGen/NameGen.hpp>
-NameGen ng;
-
 void init()
 {
 	SEEDER.seed(time(NULL));
 	Random::seed();
-	globalRandom.seed(123);
+	globalRandom.seed(SEEDER);
+	globalNameGen.seed(SEEDER);
 	
 
 	//Makes cout faster but less reliable

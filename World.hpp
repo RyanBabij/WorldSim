@@ -43,8 +43,6 @@ class Tribe_Human;
 class Tribe_Dwarven;
 class Tribe_Elf;
 
-NameGen globalNameGen;
-
 class World: public LogicTickInterface, public IdleTickInterface, public SaveFileInterface
 {
 	private:

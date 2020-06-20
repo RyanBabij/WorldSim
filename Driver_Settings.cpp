@@ -70,6 +70,9 @@ RandomLehmer SEEDER;
 RandomLehmer globalRandom; // global rng. Maybe should be replaced with static class functions.
 RandomLehmer RNG_TEST; // for testing
 
+#include <Game/NameGen/NameGen.hpp>
+NameGen globalNameGen;
+
 //     WINDOW        ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // SYSTEM STRINGS

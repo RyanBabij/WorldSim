@@ -181,6 +181,10 @@ class FloraGenerator
 		wlistFloraType.add("Fern");
 		wlistFloraType.add("Frond");
 		wlistFloraType.add("Palm");
+		wlistFloraType.add("Nut");
+		wlistFloraType.add("Seed");
+		wlistFloraType.add("Shrub");
+		wlistFloraType.add("Bush");
 	}
 	
 	// Flora generation.
