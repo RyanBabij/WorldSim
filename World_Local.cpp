@@ -327,7 +327,8 @@ bool World_Local::generate(bool cache /* =true */)
 	//std::cout<<"Generate called for map: "<<globalX<<", "<<globalY<<".\n";
 
 	// World is already loaded and running
-	if ( active ) { return true; }
+	if ( active )
+	{ return true; }
 
 	// World has invalid coordinates so we can't generate it.
 	if ( world.isSafe(globalX,globalY) == false )
@@ -337,8 +338,8 @@ bool World_Local::generate(bool cache /* =true */)
 	{
 		if (load())
 		{
-		active = true;
-		return true;
+			active = true;
+			return true;
 		}
 		//std::cout<<"Warning load of: "<<globalX<<", "<<globalY<<" failed.\n";
 		active=false;
@@ -351,9 +352,9 @@ bool World_Local::generate(bool cache /* =true */)
 	// Create abstract struct if necessary
 	if (abstractData==0) { abstractData = new AbstractData; }
 
-	#ifdef FAST_EXIT
+#ifdef FAST_EXIT
 	if (QUIT_FLAG) { return false; }
-	#endif
+#endif
 
 	localDate.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
 
