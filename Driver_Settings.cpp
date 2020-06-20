@@ -20,7 +20,7 @@ Gameplay settings and other global settings go here. Some of this stuff will pro
 // Note that threading is disabled on Linux until I can figure out how to get it compiling
 #ifdef _WIN32
 	#include <System/Windows.hpp> //#define WILDCAT_WINDOWS
-	#define WILDCAT_THREADING
+	//#define WILDCAT_THREADING
 #elif defined(__linux__)
 	#define WILDCAT_LINUX
 	#undef WILDCAT_THREADING // disable threading
@@ -56,10 +56,10 @@ int N_CORES = 1; // can be changed in init if threads are enabled
 
 //      PATHS       ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const std::string SAVE_FOLDER_PATH = "savedata";
+const std::string SAVE_FOLDER_PATH = "C:\\Users\\Lenovo\\Desktop\\WorldSim-savedata";
 std::string currentSavePath = "";
 
-#define SAVE_DATA // Program will save data to file. It saves a lot of data and it can end up taking up a lot of space
+#define SAVE_DATA // Program will save data to file. It saves a lot of data and it can end up taking up a lot of space, not good for your SSD.
 
 //      RNG        /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -161,10 +161,12 @@ Should be (n^2+1).
 Realistically it should be 2049, however I might need to reduce it
 depending on scaling and performance considerations.
 It will likely be set to low values during development.
+The final value will probably be fixed, because changing it will probably significantly change gameplay.
+Right now I'm thinking 1025 might be a good balanced value, making each local map a square kilometer.
 */
 //const int LOCAL_MAP_SIZE = 65;
 // 129 is good for testing, but we will probably want to go much higher for release.
-const int LOCAL_MAP_SIZE = 129;
+const int LOCAL_MAP_SIZE = 257;
 int TIME_SCALE = 10; /* How many seconds of gametime pass per logic tick. */
 // Timescale should be based on distances between cells.
 // At 1:1 scale a cell is 5km*5km. Such a cell should take about 1 hour to walk across.

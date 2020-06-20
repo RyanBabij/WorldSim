@@ -285,6 +285,19 @@ class World_Biome: public TableInterface
 		{
 			vFlora(i)->id=i+1;
 		}
+		
+		
+		// save the flora lookup list (in future we could probably hold the whole list in memory)
+		SaveFileManager sfm;
+		//std::string mapName = DataTools::toString(vMap(i)->globalX) + "-" + DataTools::toString(vMap(i)->globalY);
+		SaveChunk chonk ("BIOME");
+		chonk.add("FLORA LIST GOES HERE");
+		//chonk.add(vMap(i)->getSaveData());
+		sfm.addChunk(chonk);
+		// savefile can be the biomeID + f for Flora
+		std::string biomePath = currentSavePath + "/" + DataTools::toString(id) + "f.dat";
+		std::cout<<"Saving Flora lookup to: "<<biomePath<<"\n";
+		sfm.saveToFile(biomePath);
 	}
 
 	// pick a flora type from the weighted list to spawn

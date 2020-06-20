@@ -313,6 +313,7 @@ int main(int nArgs, char ** arg)
   
   
 	std::cout<<"\nWorldSim "<<VERSION<<". Warning: This is not a stable release.\n";
+	std::cout<<"Warning: This program writes a lot of data to disk, which may wear out SSDs.\n";
 
 	GL_init(nArgs, arg);
 	

@@ -1715,6 +1715,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 //This makes the local map visible.
 void World::generateLocal(const int _localX, const int _localY)
 {
+	std::cout<<"Generate local: "<<_localX<<", "<<_localY<<"\n";
   if ( isSafe(_localX,_localY) == false || active == false )
   { return; }
 
@@ -1726,6 +1727,9 @@ void World::generateLocal(const int _localX, const int _localY)
       return;
     }
   }
+  
+  
+  return;
   
   //mapManager.generateNow(_localX,_localY);
 

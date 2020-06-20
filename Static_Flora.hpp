@@ -185,6 +185,7 @@ class FloraGenerator
 		wlistFloraType.add("Seed");
 		wlistFloraType.add("Shrub");
 		wlistFloraType.add("Bush");
+		wlistFloraType.add("Nettle");
 	}
 	
 	// Flora generation.
