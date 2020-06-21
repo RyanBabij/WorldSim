@@ -1608,7 +1608,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	{
 		for (int _x=0;_x<nX;++_x)
 		{
-			aWorldTile(_x,_y).init(_x,_y,wg.aTerrainType(_x,_y), 0, aRiverID(_x,_y));
+			aWorldTile(_x,_y).init(_x,_y,wg.aTerrainType(_x,_y), globalRandom.rand32(), aRiverID(_x,_y));
 			aTerrain(_x,_y) = wg.aTerrainType(_x,_y);
 		}
 	}

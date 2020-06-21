@@ -208,6 +208,11 @@ private:
 	unsigned int nFloraGrass; // Grass, low quality food
 	unsigned int nFloraGood; // Shrubs and fruit, high energy food
 	unsigned int nFloraDifficult; // Food in trees, only some creatures can eat it.
+	
+	
+	// the height of the center tile. Used to build the remaining heightmap.
+	// The value is based on the tile type and is randomised on init.
+	unsigned short int centerHeight;
 
 	//Return a string with the name of the terrain.
 	std::string getTerrainName();

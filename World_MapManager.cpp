@@ -69,7 +69,8 @@ void World_MapManager::init(unsigned int _nX, unsigned int _nY, ArrayS2 <World_L
 	{
 		for (unsigned int _x=0;_x<_nX;++_x)
 		{
-			aWorldTile(_x,_y).init(_x,_y,(*aWorldTile2)(_x,_y).baseBiome /* BIOME ID */, 0 /* seed */, 0 /* hasriver */);
+			// tile is already inited on worldgen
+			//aWorldTile(_x,_y).init(_x,_y,(*aWorldTile2)(_x,_y).baseBiome /* BIOME ID */, 0 /* seed */, 0 /* hasriver */);
 			if ( (*aWorldTile2)(_x,_y).baseBiome != OCEAN && (*aWorldTile2)(_x,_y).baseBiome != ICE )
 			{
 			vJobs.push(&(aWorldTile(_x,_y)));

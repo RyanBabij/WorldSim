@@ -298,6 +298,10 @@ public:
 				panelX1,panelY1+290,panelX1+220,panelY1+300,false,true);
 				font8x8.drawText(Stream() << tile->baseMetal << " metal",
 				panelX1,panelY1+280,panelX1+220,panelY1+290,false,true);
+				// Elevation
+				font8x8.drawText
+				(Stream() << "Elevation: "<< tile->centerHeight << "m",
+				panelX1,panelY1+270,panelX1+220,panelY1+280,false,true);
 				// Tile image
 				Renderer::setTextureMode();
 				Renderer::placeTexture4(panelX1, panelY1+220, panelX1+32, panelY1+252, tile->currentTexture(), false);

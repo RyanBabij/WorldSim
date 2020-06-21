@@ -63,6 +63,8 @@ World_Local::World_Local()
 
 	data=0;
 	dataSubterranean=0;
+	
+	centerHeight=0;
 }
 
 World_Local::~World_Local()
@@ -130,6 +132,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 	globalY_TS=globalY;
 	#endif
 
+	rng.seed(seed);
 	// This needs to be changed to initialise only when generated.
 	//aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 	//aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
@@ -147,6 +150,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
+			centerHeight=0;
 			break;
 		}
 		case OCEAN:
@@ -158,6 +162,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
+			centerHeight=0;
 			break;
 		}
 		case GRASSLAND:
@@ -169,6 +174,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
+			centerHeight=rng.rand8(99)+1;
 			break;
 		}
 		case FOREST:
@@ -180,6 +186,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
+			centerHeight=rng.rand8(99)+1;
 			break;
 		}
 		case DESERT:
@@ -191,6 +198,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
+			centerHeight=rng.rand8(99)+1;
 			break;
 		}
 		case MOUNTAIN:
@@ -202,6 +210,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
+			centerHeight=rng.rand32(9500)+500;
 			break;
 		}
 		case SNOW:
@@ -213,6 +222,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
+			centerHeight=rng.rand8(99)+1;
 			break;
 		}
 		case HILLY:
@@ -224,6 +234,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
+			centerHeight=rng.rand32(900)+100;
 			break;
 		}
 		case JUNGLE:
@@ -235,6 +246,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
+			centerHeight=rng.rand8(99)+1;
 			break;
 		}
 		case WETLAND:
@@ -246,6 +258,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
+			centerHeight=rng.rand8(20)+1;
 			break;
 		}
 		case STEPPES:
@@ -257,6 +270,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
+			centerHeight=rng.rand8(99)+1;
 			break;
 		}
 		case RIVER:
@@ -268,6 +282,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
+			centerHeight=rng.rand8(99)+1;
 			break;
 		}
 		default:
@@ -279,6 +294,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
+			centerHeight=rng.rand8(99)+1;
 			break;
 		}
 		break;
