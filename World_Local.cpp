@@ -338,6 +338,7 @@ bool World_Local::generate(bool cache /* =true */)
 	{
 		if (load())
 		{
+			//std::cout<<"Load() called\n";
 			active = true;
 			return true;
 		}
@@ -355,6 +356,7 @@ bool World_Local::generate(bool cache /* =true */)
 #ifdef FAST_EXIT
 	if (QUIT_FLAG) { return false; }
 #endif
+
 
 	localDate.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
 
@@ -532,13 +534,13 @@ bool World_Local::generate(bool cache /* =true */)
 					put(new Item_Knife, _x, _y);
 					put(new Item_Pickaxe, _x, _y);
 				}
-				// Spawn Statics
-				// Spawn Flora
-				else if (rng.oneIn(baseTreeChance))
-				{
-					// spawn in a random Flora from Biome.
-					put(biome->getFlora(), _x, _y);
-				}
+				// // Spawn Statics
+				// // Spawn Flora
+				// else if (rng.oneIn(baseTreeChance))
+				// {
+					// // spawn in a random Flora from Biome.
+					// put(biome->getFlora(), _x, _y);
+				// }
 				// Spawn Mobs
 				else if (rng.oneIn(1500) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
 				{
@@ -573,10 +575,10 @@ bool World_Local::generate(bool cache /* =true */)
 				data->aLocalTile(x,y).hasFloor = true;
 			}
 		}
-
 		auto sign = new WorldObject_Sign;
 		data->aLocalTile(21,21).add(sign);
 	}
+	
 	//Generate global objects
 	Vector <Tribe * > * vTribesHere = world.getTribesOn(globalX,globalY);
 
@@ -606,7 +608,8 @@ bool World_Local::generate(bool cache /* =true */)
 	}
 	delete vTribesHere;
 
-	//generate texture
+	//This generates a distance texture of the map where 1 local tile = 1 pixel,
+	// to allow fast rendering of local maps from a distance.
 	for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
 	{
 		for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
