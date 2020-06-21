@@ -337,7 +337,7 @@ bool World_Local::generate(bool cache /* =true */)
 	if ( world.isSafe(globalX,globalY) == false )
 	{ return false; }
 
-	if (initialized)
+	if (cache && initialized)
 	{
 		std::cout<<"local is initialized\n";
 		if (load())

@@ -969,7 +969,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
             // RENDER THE LOCAL TILE
             // Should be it's own function
             //if (tileSize > 4 && localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
-            if ( localMap != 0 && localMap->data != 0 && tileSize > LOCAL_MAP_SIZE*4)
+            if ( localMap != 0 && localMap->data != 0 && localMap->initialized && tileSize > LOCAL_MAP_SIZE*4)
             {
                renderLocalMap(localMap,currentX,currentY);
             }

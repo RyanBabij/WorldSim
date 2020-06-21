@@ -107,7 +107,7 @@ class World_Biome: public TableInterface
 			{ return; }
 
 			vMap(i)->biome=this;
-			vMap(i)->generate(false);
+			vMap(i)->generate(true);
 			vMap(i)->active=true;
 			vMap(i)->initialized=true;
 
