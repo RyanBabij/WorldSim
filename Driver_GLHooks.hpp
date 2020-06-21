@@ -85,8 +85,11 @@ void GL_init(int nArgs, char ** arg)
    std::cout<<"Setting map cache to "<<MAP_CACHE_SIZE<<" maps.\n";
 #endif
   
-#ifdef WILDCAT_THREADING
+  // Automatically set the ncores to the OS reported amount of cores (includes logical and physical)
+#ifdef AUTO_SET_CORES
    N_CORES = std::thread::hardware_concurrency();
+	if (N_CORES>MAX_CORES)
+	{ N_CORES=MAX_CORES; }
 #endif
   
 	/* Set perspective? */

@@ -36,6 +36,7 @@ While this is happening, the biome should be marked as "initializing" and cannot
 
 #include <Game/WorldGenerator/WorldGenerator2.hpp>
 #include <Container/Table/TableInterface.hpp>
+#include <System/Sleep/Sleep.hpp>
 
 class World_Biome: public TableInterface
 {
@@ -81,18 +82,18 @@ class World_Biome: public TableInterface
 	}
 
 	// generate entire biome including terrain, flora, etc.
-	void generate()
+	void generate(const unsigned short int sleepTime=0)
 	{
 		if ( id == -1 )
 		{ return; }
 		generateFlora();
-		generateLocals();
+		generateLocals(sleepTime);
 		isGenerated=true;
 	}
 
 	// generate all local maps for this biome
 	// map generation will be done per-biome rather than per tile
-	void generateLocals()
+	void generateLocals(const unsigned short int sleepTime=0)
 	{
 		if ( id == -1 )
 		{ return; }
@@ -101,6 +102,7 @@ class World_Biome: public TableInterface
 
 		for (int i=0;i<vMap.size();++i)
 		{
+			sleep (sleepTime);
 			if ( QUIT_FLAG )
 			{ return; }
 
@@ -119,7 +121,7 @@ class World_Biome: public TableInterface
 
 		// savefile can be the biomeID
 		std::string biomePath = currentSavePath + "/" + DataTools::toString(id) + ".dat";
-		std::cout<<"saving to: "<<biomePath<<"\n";
+		//std::cout<<"saving to: "<<biomePath<<"\n";
 		sfm.saveToFile(biomePath);
 	}
 

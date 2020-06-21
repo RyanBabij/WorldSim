@@ -20,7 +20,7 @@ Gameplay settings and other global settings go here. Some of this stuff will pro
 // Note that threading is disabled on Linux until I can figure out how to get it compiling
 #ifdef _WIN32
 	#include <System/Windows.hpp> //#define WILDCAT_WINDOWS
-	//#define WILDCAT_THREADING
+	#define WILDCAT_THREADING
 #elif defined(__linux__)
 	#define WILDCAT_LINUX
 	#undef WILDCAT_THREADING // disable threading
@@ -52,7 +52,11 @@ const unsigned int RELINQUISH_CPU_TIMEOUT = 100; /* 10-100 seems to be okay. Max
 #include <System/Thread/Mutex.hpp>
 #include <System/Thread/Atomic.hpp>
 
-int N_CORES = 1; // can be changed in init if threads are enabled
+#define AUTO_SET_CORES // The number of cores will be set to the OS reported number of cores
+unsigned short int N_CORES = 1; // can be changed in init if threads are enabled
+const unsigned short int MAX_CORES = 4; // The number of cores will never exceed this value even if the OS has more.
+
+
 
 //      PATHS       ////////////////////////////////////////////////////////////////////////////////////////////////////
 

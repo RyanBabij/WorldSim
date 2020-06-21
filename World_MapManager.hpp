@@ -73,7 +73,7 @@ class World_MapManager
 
 	void init(unsigned int _nX, unsigned int _nY, ArrayS2 <World_Local>* aWorldTile2);
 	void main(); // Threaded NPC generator/simulator (per tile)
-	void mainBiome(); // threaded biome generator/simulator (per biome)
+	void mainBiome(const unsigned short int /* sleepTime */); // threaded biome generator/simulator (per biome)
 
 	// Generate map immediately, because we need it.
 	bool generateNow(int _mapX, int _mapY);

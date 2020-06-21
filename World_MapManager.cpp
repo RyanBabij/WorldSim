@@ -10,6 +10,8 @@
 	background world generation, unloading, and simulation.
 */
 
+#include <System/Sleep/Sleep.hpp>
+
 #include "World_MapManager.hpp"
 
 World_MapManager::World_MapManager()
@@ -33,7 +35,7 @@ World_MapManager::~World_MapManager()
 	int i=0;
 	while (nThreads > 0 && nBiomeThreads > 0 && i<MAX_WAIT  )
 	{
-		Sleep(25);
+		sleep(25);
 		++i;
 		if ( i==MAX_WAIT )
 		{
@@ -168,7 +170,6 @@ void World_MapManager::main()
 #ifdef WILDCAT_THREADING
 	// due to file IO there may be reason to maintain more threads than cores.
 	for (int i=0;i<N_CORES;++i)
-	//for (int i=0;i<8;++i)
 	{
 		std::thread testThread( [this,i]
 		{
@@ -176,7 +177,7 @@ void World_MapManager::main()
 			// Wait for the Job vector to be built.
 			while(true)
 			{
-				Sleep(500);
+				sleep(500);
 				mutexJob.lock();
 				if ( vJobs.size()>0)
 				{
@@ -271,7 +272,7 @@ void World_MapManager::main()
 					else
 					{
 						mutexJob.unlock();
-						Sleep(200);
+						sleep(200);
 					}
 					if ( QUIT_FLAG )
 					{ return; }
@@ -289,24 +290,23 @@ void World_MapManager::main()
 }
 
 // updates biome ticks in background
-void World_MapManager::mainBiome()
+void World_MapManager::mainBiome(const unsigned short int sleepTime=0)
 {
-#ifdef WILDCAT_THREADING
+	std::cout<<"MAIN BIOME\n";
 	// due to file IO there may be reason to maintain more threads than cores.
 	// however per-biome simulation is memory intensive so we should be careful
 	// biomes should be processed in an order which prevents loading multiple huge
 	// biomes.
-	for (int i=0;i<N_CORES;++i)
-	//for (int i=0;i<1;++i)
+	for (unsigned short int i=0;i<N_CORES;++i)
 	{
-		std::thread biomeThread( [this,i]
+		std::thread biomeThread( [this,i, sleepTime]
 		{
 			mutexCout.lock();
 			std::cout<<"Launching biome thread "<<i<<"\n";
 			mutexCout.unlock();
 			while ( true && QUIT_FLAG == false)
 			{
-				//Sleep(50);
+				sleep(sleepTime);
 				World_Biome* biome=0;
 
 				// select a biome that needs work
@@ -345,14 +345,13 @@ void World_MapManager::mainBiome()
 			}
 			while (true && QUIT_FLAG == false)
 			{
-				Sleep(1000);
+				sleep(1000);
 			}
 			--nBiomeThreads;
 		});
 		++nBiomeThreads;
 		biomeThread.detach();
 	}
-#endif
 }
 
 #endif
