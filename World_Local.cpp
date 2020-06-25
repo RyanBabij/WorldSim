@@ -21,6 +21,10 @@ Implementation of World_Local.hpp
 #include "Creature_Deer.hpp"
 #include "Creature_All.hpp"
 
+//#include <Math/Fractal/DiamondSquareAlgorithm.hpp>
+#include <Math/Fractal/DiamondSquareAlgorithmCustomRange.hpp> // For heightmaps
+#include <Math/Fractal/LinearMidpointDisplacement.hpp> // For border values
+
 World_Local::World_Local()
 {
 	globalX=0;
@@ -338,9 +342,12 @@ bool World_Local::isSafe(WorldObject* _object)
 	return data->aLocalTile.isSafe(_object->x,_object->y);
 }
 
-bool World_Local::generate(bool cache /* =true */)
+bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local* c1, World_Local* c2,
+	World_Local *c3, World_Local* c4, World_Local* c5, World_Local* c6, World_Local* c7)
 {
 	std::cout<<"Generate called for map: "<<globalX<<", "<<globalY<<".\n";
+	
+	std::cout<<"Maps recieved: "<<c0<<", "<<c1<<", "<<c2<<", "<<c3<<", "<<c4<<", "<<c5<<", "<<c6<<", "<<c7<<"\n";
 
 	// World is already loaded and running
 	if ( active )
@@ -399,45 +406,9 @@ bool World_Local::generate(bool cache /* =true */)
 	//abstractData->bfStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 	//abstractData->bfMob.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 
-	// GENERATE HEIGHTMAP
-	DiamondSquareAlgorithmCustomRange dsa2;
-	dsa2.maxValue=5;
 
-	ArrayS2 <int> aLocalHeight;
-	aLocalHeight.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
-
-	// If we are generating a mountain, set a summit in the middle which is 3x3 tiles.
-	if ( baseBiome == MOUNTAIN )
-	{
-		aLocalHeight(LOCAL_MAP_SIZE/2,LOCAL_MAP_SIZE/2) = 100;
-		aLocalHeight((LOCAL_MAP_SIZE/2)+1,LOCAL_MAP_SIZE/2) = 100;
-		aLocalHeight((LOCAL_MAP_SIZE/2)-1,LOCAL_MAP_SIZE/2) = 100;
-
-		aLocalHeight(LOCAL_MAP_SIZE/2,(LOCAL_MAP_SIZE/2)-1) = 100;
-		aLocalHeight((LOCAL_MAP_SIZE/2)+1,(LOCAL_MAP_SIZE/2)-1) = 100;
-		aLocalHeight((LOCAL_MAP_SIZE/2)-1,(LOCAL_MAP_SIZE/2)-1) = 100;
-
-		aLocalHeight(LOCAL_MAP_SIZE/2,(LOCAL_MAP_SIZE/2)+1) = 100;
-		aLocalHeight((LOCAL_MAP_SIZE/2)+1,(LOCAL_MAP_SIZE/2)+1) = 100;
-		aLocalHeight((LOCAL_MAP_SIZE/2)-1,(LOCAL_MAP_SIZE/2)+1) = 100;
-
-		aLocalHeight.fillBorder(1);
-		dsa2.maxValue=100;
-		dsa2.generate(&aLocalHeight,0,0,0.9,10);
-
-		for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
-		{
-			for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
-			{
-				aLocalHeight(_x,_y) = aLocalHeight(_x,_y)/20;
-			}
-		}
-	}
-	else
-	{
-		//HEIGHTMAP TABLE FREESTEPS SMOOTHING
-		dsa2.generate(&aLocalHeight,0,0,0.75,100);
-	}
+	generateHeightMap(c0?c0->centerHeight:0,c1?c1->centerHeight:0,c2?c2->centerHeight:0,c3?c3->centerHeight:0,
+	c4?c4->centerHeight:0,c5?c5->centerHeight:0,c6?c6->centerHeight:0,c7?c7->centerHeight:0,0);
 
 #ifdef FAST_EXIT
 	if (QUIT_FLAG) { return false; }
@@ -454,7 +425,7 @@ bool World_Local::generate(bool cache /* =true */)
 		{
 			data->aLocalTile(_x,_y).seed = rng.rand32(USHRT_MAX-1);
 			//data->aLocalTile(_x,_y).clearObjects();
-			data->aLocalTile(_x,_y).height = aLocalHeight(_x,_y);
+			data->aLocalTile(_x,_y).height = aFullHeight(_x,_y);
 
 			// GENERATE RIVERS
 			// FOR NOW THEY JUST RUN ALONG THE EDGE OF THE MAP
@@ -758,6 +729,228 @@ bool World_Local::generateSubterranean()
 	// delete vCaveMap;
 	// }
 	return false;
+}
+
+// For now we won't bother stitching heightmaps together. Instead we will just make it a rule that border tiles will have no slope.
+// In future heightmaps will be stitched using the following algorithm:
+// Where e = even number and o = odd number.
+//		Generate all tiles (e,e)
+//		Generate all tiles (e,o)
+//		Generate all tiles (o,e)
+//		Generate all tiles (o,o)
+// This will create a system which allows maps to be repeatably stitched together without needing to generate the
+// entire world's heightmap at once.
+void World_Local::generateHeightMap(const short int c0, const short int c1, const short int c2, const short int c3,
+	const short int c4, const short int c5, const short int c6, const short int c7, const unsigned int _seed)
+{
+	//aHeightDiff.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
+	
+	std::cout<<"Recieved c values: "<<c0<<", "<<c1<<", "<<c2<<", "<<c3<<", "<<c4<<", "<<c5<<", "<<c6<<", "<<c7<<"\n";
+	
+	
+	// calculate corner values
+	int corn1 = (c0 + c1 + c3 + centerHeight) / 4; // top-left
+	int corn2 = (c1 + c2 + c4 + centerHeight) / 4; // top-right
+	int corn3 = (c3 + c5 + c6 + centerHeight) / 4; // bottom-left
+	int corn4 = (c4 + c6 + c7 + centerHeight) / 4; // bottom-right
+	
+	std::cout<<"Corn1: "<<c0<<" + "<<c1<<" + "<<c3<<" + "<<centerHeight<<"\n";
+	
+	corn1==0?corn1=1:0;
+	corn2==0?corn2=1:0;
+	corn3==0?corn3=1:0;
+	corn4==0?corn4=1:0;
+	
+	std::cout<<"Corner values are: "<<corn1<<", "<<corn2<<", "<<corn3<<", "<<corn4<<"\n";
+	
+	
+	//lpd.seed(SEEDER);
+	//lpd.seed(123);
+	
+	// We need to generate the 4 edges using the 4 corner values (and also the same seed)
+	
+	int aBorderLeft [LOCAL_MAP_SIZE] = {0};
+	aBorderLeft[0] = corn3;
+	aBorderLeft[LOCAL_MAP_SIZE-1] = corn1;
+	
+	int aBorderRight [LOCAL_MAP_SIZE] = {0};
+	aBorderRight[0] = corn4;
+	aBorderRight[LOCAL_MAP_SIZE-1] = corn2;
+	
+	int aBorderTop [LOCAL_MAP_SIZE] = {0};
+	aBorderTop[0] = corn1;
+	aBorderTop[LOCAL_MAP_SIZE-1] = corn2;
+	
+	int aBorderBottom [LOCAL_MAP_SIZE] = {0};
+	aBorderBottom[0] = corn3;
+	aBorderBottom[LOCAL_MAP_SIZE-1] = corn4;
+	
+	LinearMidpointDisplacement lpd;
+	lpd.seed(123);
+	lpd.generate(aBorderLeft,LOCAL_MAP_SIZE,127);
+	lpd.seed(123);
+	lpd.generate(aBorderRight,LOCAL_MAP_SIZE,127);
+	lpd.seed(123);
+	lpd.generate(aBorderTop,LOCAL_MAP_SIZE,127);
+	lpd.seed(123);
+	lpd.generate(aBorderBottom,LOCAL_MAP_SIZE,127);
+	
+	// generate border values here (use fixed seed to start out).
+	
+	// we first must calculate the 4 corner values.
+	
+	//get top corner value
+	
+	//get bottom corner value.
+	
+	// GENERATE HEIGHTMAP
+	DiamondSquareAlgorithmCustomRange dsa2;
+	dsa2.seed(seed);
+	//dsa2.maxValue=centerHeight;
+	dsa2.maxValue = 127; // limit this for testing.
+	
+	// For now we keep the array in class mem for testing.
+	// In future the array is to be loaded on demand using the relative heightmap.
+	//ArrayS2 <int> aFullHeight;
+	aFullHeight.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
+	
+	std::cout<<"Final border values:\n";
+	
+	for (int i=0;i<LOCAL_MAP_SIZE;++i)
+	{
+		if ( aBorderLeft[i]==0 )
+		{
+			aBorderLeft[i]=1;
+		}
+		if ( aBorderRight[i]==0 )
+		{
+			aBorderRight[i]=1;
+		}
+		if ( aBorderTop[i]==0 )
+		{
+			aBorderTop[i]=1;
+		}
+		if ( aBorderBottom[i]==0 )
+		{
+			aBorderBottom[i]=1;
+		}
+		std::cout<<aBorderLeft[i]<<", ";
+	}
+	
+	
+	// set the border values now.
+	for (int x=0;x<LOCAL_MAP_SIZE;++x)
+	{
+		aFullHeight(x,0) = aBorderBottom[x];
+		aFullHeight(x,LOCAL_MAP_SIZE-1) =  aBorderTop[x];
+		//aFullHeight(x,0) = aBorderLeft[x];
+		//aFullHeight(x,LOCAL_MAP_SIZE-1) = aBorderLeft[x];
+	}
+	// set the border values now.
+	for (int y=0;y<LOCAL_MAP_SIZE;++y)
+	{
+		aFullHeight(0,y) = aBorderLeft[y];
+		aFullHeight(LOCAL_MAP_SIZE-1,y) =  aBorderRight[y];
+		//aFullHeight(0,y) = aBorderLeft[y];
+		//aFullHeight(LOCAL_MAP_SIZE-1,y) =  aBorderLeft[y];
+	}
+	
+	
+	//aFullHeight.fillBorder(1);
+	// Generate the heightmap
+	dsa2.generate(&aFullHeight,0,0,0.75,100);
+	
+	for (unsigned short int y=0;y<LOCAL_MAP_SIZE;++y)
+	{
+		for (unsigned short int x=0;x<LOCAL_MAP_SIZE;++x)
+		{
+			
+			aFullHeight(x,y) = aFullHeight(x,y) / 14;
+			aFullHeight(x,y) = aFullHeight(x,y) * 14;
+		}
+	}
+	
+	// build the relative height map.
+	
+	// we build the relative heights using a defined offset based on the quadrant.
+	// height is always compressed to the offset with a maximum range: -127, 127. Any offsets exceeding this range are
+	// set to max/min and any resulting strange geography is ignored. It's unlikely for there to be such large
+	// offsets anyway.
+	
+	// Since local map size is always x^2+1, there is always a center tile.
+	unsigned short int cX = LOCAL_MAP_SIZE / 2;
+	unsigned short int cY = LOCAL_MAP_SIZE / 2;
+	
+	//centerHeight = aFullHeight(cX,cY);
+	
+	//ArrayS2 <char> aHeightOffset; // stores height offset from point close to center to compress to 1 byte per tile.
+	//aHeightOffset.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
+	
+	//std::cout<<"Center coord is: "<<cX<<", "<<cY<<"\n";
+	
+	// for (unsigned short int y=0;y<LOCAL_MAP_SIZE;++y)
+	// {
+		// for (unsigned short int x=0;x<LOCAL_MAP_SIZE;++x)
+		// {
+			// if ( x < cX ) // left quadrant
+			// {
+				// if ( y < cY ) // bottom-left quadrant
+				// {
+					// aHeightDiff(x,y) = (char) aFullHeight(x,y) - aFullHeight(x+1,y+1);
+				// }
+				// else if ( y > cY ) // top-left quadrant
+				// {
+					// aHeightDiff(x,y) = (char) aFullHeight(x,y) - aFullHeight(x+1,y-1);
+				// }
+				// else // exactly left of center
+				// {
+					// aHeightDiff(x,y) = (char) aFullHeight(x,y) - aFullHeight(x+1,y);
+				// }
+			// }
+			// else if (x > cX) // right quadrant
+			// {
+				// if ( y < cY ) // bottom-right quadrant
+				// {
+					// aHeightDiff(x,y) = (char) aFullHeight(x,y) - aFullHeight(x-1,y+1);
+				// }
+				// else if ( y > cY ) // top-right quadrant
+				// {
+					// aHeightDiff(x,y) = (char) aFullHeight(x,y) - aFullHeight(x-1,y-1);
+				// }
+				// else // exactly right of center
+				// {
+					// aHeightDiff(x,y) = (char) aFullHeight(x,y) - aFullHeight(x-1,y);
+				// }
+			// }
+			// else // directly above/below.
+			// {
+				// if ( y < cY ) // below, use above tile as offset ref.
+				// {
+					// aHeightDiff(x,y) = (char) aFullHeight(x,y) - aFullHeight(x,y+1);
+				// }
+				// else if ( y > cY ) // above, use below tile as offset ref.
+				// {
+					// aHeightDiff(x,y) = (char) aFullHeight(x,y) - aFullHeight(x,y-1);
+				// }
+				// else // center tile is always the final reference point.
+				// {
+					// aHeightDiff(x,y)=0;
+				// }
+			// }
+		// }
+	// }
+	
+	
+	
+	// std::cout<<"Printing heightmap orig/offset:\n";
+	// for (int i=0;i<LOCAL_MAP_SIZE;++i)
+	// {
+		
+		// //std::cout<<"("<<cX<<", "<<i<<")"<<aFullHeight(cX,i)<<" -> "<<(int)aHeightOffset(cX,i)<<"\n";
+	// }
+	//sleep(1000);
+	//exit(0);
+	
 }
 
 std::string World_Local::getSaveData()

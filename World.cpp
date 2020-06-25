@@ -1703,9 +1703,59 @@ void World::generateLocal(const int _localX, const int _localY)
 	}
 
 	//mapManager.generateNow(_localX,_localY);
+	
+	short int gX = _localX;
+	short int gY = _localY;
+
+	std::cout<<"global coords: "<<gX<<", "<<gY<<"\n";
+	World_Local* wl0 = 0;
+	if (aWorldTile.isSafe(gX-1,gY+1))
+	{
+		wl0 = &aWorldTile(gX-1,gY+1);
+	}
+	World_Local* wl1 = 0;
+	if (aWorldTile.isSafe(gX,gY+1))
+	{
+		wl1 = &aWorldTile(gX,gY+1);
+	}
+	World_Local* wl2 = 0;
+	if (aWorldTile.isSafe(gX+1,gY+1))
+	{
+		wl2 = &aWorldTile(gX+1,gY+1);
+	}
+	
+	World_Local* wl3 = 0;
+	if (aWorldTile.isSafe(gX-1,gY))
+	{
+		wl3 = &aWorldTile(gX-1,gY);
+	}
+	World_Local* wl4 = 0;
+	if (aWorldTile.isSafe(gX+1,gY))
+	{
+		wl4 = &aWorldTile(gX+1,gY);
+	}
+
+	World_Local* wl5 = 0;
+	if (aWorldTile.isSafe(gX-1,gY-1))
+	{
+		wl5 = &aWorldTile(gX-1,gY-1);
+	}
+	World_Local* wl6 = 0;
+	if (aWorldTile.isSafe(gX,gY-1))
+	{
+		wl6 = &aWorldTile(gX,gY-1);
+	}
+	World_Local* wl7 = 0;
+	if (aWorldTile.isSafe(gX+1,gY-1))
+	{
+		wl7 = &aWorldTile(gX+1,gY-1);
+	}
+	// vMap(i)->generate(false,wl0,wl1,wl2,wl3,wl4,wl5,wl6,wl7);
+	// vMap(i)->active=true;
+	// vMap(i)->initialized=true;
 
 	// don't cache the generated map because the map manager does it
-	aWorldTile(_localX,_localY).generate(false);
+	aWorldTile(_localX,_localY).generate(false,wl0,wl1,wl2,wl3,wl4,wl5,wl6,wl7);
 	//aWorldTile(_localX,_localY).generateSubterranean();
 	aWorldTile(_localX,_localY).active=true;
 	aWorldTile(_localX,_localY).initialized=true;

@@ -821,7 +821,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                         LocalTile* localTile = &localMap->data->aLocalTile(localXTile,localYTile);
 
                         // this belongs in World.
-                        unsigned char lightValue = localTile->height*15;
+                        unsigned char lightValue = localTile->height+127;
 
                         int currentSecond = world->calendar.second;
                         int sunsetCounter = currentSecond-50;
@@ -829,22 +829,25 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                         int currentMinute = world->calendar.minute;
                         int currentHour = world->calendar.hour;
 
+								// This is a bad implementation. We should overlay a colour over the whole playfield instead.
+								glColor3ub(lightValue,lightValue,lightValue);
                         // NIGHT
                         if (currentHour < 6 || currentHour > 19)
                         {
-                           glColor3ub(50+lightValue,50+lightValue,50+lightValue);
+                           //glColor3ub(50+lightValue,50+lightValue,50+lightValue);
+                           //glColor3ub(lightValue,lightValue,lightValue);
                         }
                         else if (currentHour == 6) // SUNRISE
                         {
-                           glColor3ub(110+lightValue,100+lightValue,120+lightValue);
+                           //glColor3ub(110+lightValue,100+lightValue,120+lightValue);
                         }
                         else if (currentHour == 19) // SUNSET
                         {
-                           glColor3ub(130+lightValue,100+lightValue,100+lightValue);
+                           //glColor3ub(130+lightValue,100+lightValue,100+lightValue);
                         }
                         else
                         {
-                           glColor3ub(180+lightValue,180+lightValue,180+lightValue);
+                           //glColor3ub(180+lightValue,180+lightValue,180+lightValue);
                            //glColor3ub(80+(lightValue/2),80+(lightValue/2),80+(lightValue/2));
                            //if (currentSecond > 50 ) { glColor3ub(80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*10)+(lightValue/2)); }
                         }

@@ -293,6 +293,7 @@ void World_MapManager::main()
 // updates biome ticks in background
 void World_MapManager::mainBiome(const unsigned short int sleepTime=0)
 {
+	return;
 	std::cout<<"MAIN BIOME\n";
 	// due to file IO there may be reason to maintain more threads than cores.
 	// however per-biome simulation is memory intensive so we should be careful

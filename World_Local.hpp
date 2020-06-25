@@ -57,6 +57,7 @@ private:
 
 	RandomLehmer rng;
 	// The generation seed for this local map.
+	// Used to derive heightmaps and spawning
 	unsigned int seed;
 
 	Vector <WorldObject_Tree*> vTree;
@@ -213,7 +214,10 @@ private:
 	// the height of the center tile. Used to build the remaining heightmap.
 	// The value is based on the tile type and is randomised on init.
 	unsigned short int centerHeight;
+	ArrayS2 <char> aHeightDiff; //each value is the height difference from the neighboring tile closest to the center.
 
+
+	ArrayS2 <int> aFullHeight; // should be short int in future.
 	//Return a string with the name of the terrain.
 	std::string getTerrainName();
 
@@ -292,11 +296,15 @@ private:
 	bool isLand(); // returns true if this is a land tile.
 
 	// Generate a world or load from cache.
-	bool generate(bool cache=true);
+	bool generate(bool cache=true, World_Local* c0=0, World_Local* c1=0, World_Local* c2=0,
+	World_Local *c3=0, World_Local* c4=0, World_Local* c5=0, World_Local* c6=0, World_Local* c7=0);
 	bool generateSubterranean(); // subterranean maps should be generated on demand.
 	bool save();
 	std::string getSaveData();
 	bool load();
+	
+	void generateHeightMap(const short int c0=0, const short int c1=0, const short int c2=0, const short int c3=0,
+	const short int c4=0, const short int c5=0, const short int c6=0, const short int c7=0, const unsigned int _seed=0);
 
 	//bool saveToFile(std::string /* path */);
 

@@ -190,6 +190,8 @@ Timer debugTimer;
 #include "World.cpp"
 World world;
 
+#include "World_Biome.cpp"
+
 #include "Pathing.hpp"
 
 #include "World_Local.cpp"
