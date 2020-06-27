@@ -307,6 +307,9 @@ public:
 				Renderer::placeTexture4(panelX1, panelY1+220, panelX1+32, panelY1+252, tile->currentTexture(), false);
 			}
 		}
+		
+		// Map info panel
+		Renderer::placeColour4a(250,200,250,250,panelX1,panelY1+320,panelX1+220,panelY1+420);
 
 		buttonExpandMap.render();
 

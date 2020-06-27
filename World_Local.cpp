@@ -425,7 +425,7 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 		{
 			data->aLocalTile(_x,_y).seed = rng.rand32(USHRT_MAX-1);
 			//data->aLocalTile(_x,_y).clearObjects();
-			data->aLocalTile(_x,_y).height = aFullHeight(_x,_y);
+			//data->aLocalTile(_x,_y).height = aFullHeight(_x,_y);
 
 			// GENERATE RIVERS
 			// FOR NOW THEY JUST RUN ALONG THE EDGE OF THE MAP
@@ -861,9 +861,46 @@ void World_Local::generateHeightMap(const short int c0, const short int c1, cons
 	{
 		for (unsigned short int x=0;x<LOCAL_MAP_SIZE;++x)
 		{
-			
 			aFullHeight(x,y) = aFullHeight(x,y) / 14;
 			aFullHeight(x,y) = aFullHeight(x,y) * 14;
+			data->aLocalTile(x,y).height = aFullHeight(x,y);
+		}
+	}
+	
+	// determine cliff values here
+	for (unsigned short int y=1;y<LOCAL_MAP_SIZE-1;++y)
+	{
+		for (unsigned short int x=1;x<LOCAL_MAP_SIZE-1;++x)
+		{
+			//check left, right, up, down
+			
+			const short int heightDiffLeft = aFullHeight(x-1,y) - aFullHeight(x,y);
+			const short int heightDiffRight = aFullHeight(x+1,y) - aFullHeight(x,y);
+			const short int heightDiffUp = aFullHeight(x,y+1) - aFullHeight(x,y);
+			const short int heightDiffDown = aFullHeight(x,y-1) - aFullHeight(x,y);
+			
+			data->aLocalTile(x,y).bWall = 0;
+			
+			if ( heightDiffLeft > 10 || heightDiffLeft < -10 )
+			{
+				//std::cout<<"BWALL\n";
+				data->aLocalTile(x,y).bWall |= 0b00010001;
+			}
+			if ( heightDiffRight > 10 || heightDiffRight < -10 )
+			{
+				//std::cout<<"BWALL\n";
+				data->aLocalTile(x,y).bWall |= 0b01000100;
+			}
+			if ( heightDiffUp > 10 || heightDiffUp < -10 )
+			{
+				//std::cout<<"BWALL\n";
+				data->aLocalTile(x,y).bWall |= 0b10001000;
+			}
+			if ( heightDiffDown > 10 || heightDiffDown < -10 )
+			{
+				//std::cout<<"BWALL\n";
+				data->aLocalTile(x,y).bWall |= 0b00100010;
+			}
 		}
 	}
 	

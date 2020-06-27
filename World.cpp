@@ -2023,6 +2023,15 @@ void World::queryTile( const int hoveredXTile, const int hoveredYTile)
 	queryWorldX = hoveredXTile;
 	queryWorldY = hoveredYTile;
 }
+void World::queryTileLocal( const int hoveredXTile, const int hoveredYTile)
+{
+	if ( isSafe (hoveredXTile,hoveredXTile) == false )
+	{
+		return;
+	}
+	queryWorldXLocal = hoveredXTile;
+	queryWorldYLocal = hoveredYTile;
+}
 
 void World::addInfluence(Tribe* tribe, int amount)
 {

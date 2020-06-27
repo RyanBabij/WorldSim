@@ -45,6 +45,9 @@ public:
 	// The last 4 bits control travel INTO the tile. NESW.
 	// This allows one-way travel, which would be useful for traps, pits, etc.
 	unsigned char bWall;
+	
+	// same but for cliffs.
+	unsigned char bCliff;
 
 	short int height;
 
