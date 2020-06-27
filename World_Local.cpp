@@ -731,15 +731,12 @@ bool World_Local::generateSubterranean()
 	return false;
 }
 
-// For now we won't bother stitching heightmaps together. Instead we will just make it a rule that border tiles will have no slope.
-// In future heightmaps will be stitched using the following algorithm:
-// Where e = even number and o = odd number.
-//		Generate all tiles (e,e)
-//		Generate all tiles (e,o)
-//		Generate all tiles (o,e)
-//		Generate all tiles (o,o)
-// This will create a system which allows maps to be repeatably stitched together without needing to generate the
-// entire world's heightmap at once.
+// Elevation consistency across borders is done by generating the border values first using a linear midpoint
+// displacement algorithm. The seed is currently fixed but in future will probably use an agreed map seed which is
+// shared by both sides of the border.
+// The heightmap generator then uses these border values when generating the map. This ensures a smooth elevation across
+// map borders, with the minor side-effect that map borders share the same elevation values with the adjacent map.
+// However I think this will probably end up being a good thing for helping pathfinding across maps.
 void World_Local::generateHeightMap(const short int c0, const short int c1, const short int c2, const short int c3,
 	const short int c4, const short int c5, const short int c6, const short int c7, const unsigned int _seed)
 {
