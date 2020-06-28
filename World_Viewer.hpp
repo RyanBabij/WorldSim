@@ -822,7 +822,11 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                         LocalTile* localTile = &localMap->data->aLocalTile(localXTile,localYTile);
 
                         // this belongs in World.
+								// Due to increase in height levels we will remove the height shading and replace it with
+								// height shading relative to player's height. This obviously will only work when a player
+								// exists
                         unsigned char lightValue = localTile->height+127;
+								//unsigned char lightValue = 255;
 
                         int currentSecond = world->calendar.second;
                         int sunsetCounter = currentSecond-50;

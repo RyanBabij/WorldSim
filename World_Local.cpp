@@ -154,7 +154,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=0;
+			centerHeight=1;
 			break;
 		}
 		case OCEAN:
@@ -166,7 +166,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=0;
+			centerHeight=1;
 			break;
 		}
 		case GRASSLAND:
@@ -202,7 +202,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand8(99)+1;
+			centerHeight=rng.rand8(20)+1;
 			break;
 		}
 		case MOUNTAIN:
@@ -214,7 +214,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand32(9500)+500;
+			centerHeight=rng.rand32(99)+1;
 			break;
 		}
 		case SNOW:
@@ -226,7 +226,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand8(99)+1;
+			centerHeight=rng.rand8(20)+1;
 			break;
 		}
 		case HILLY:
@@ -238,7 +238,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand32(900)+100;
+			centerHeight=rng.rand32(99)+1;
 			break;
 		}
 		case JUNGLE:
@@ -406,9 +406,9 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 	//abstractData->bfStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 	//abstractData->bfMob.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 
-
-	generateHeightMap(c0?c0->centerHeight:0,c1?c1->centerHeight:0,c2?c2->centerHeight:0,c3?c3->centerHeight:0,
-	c4?c4->centerHeight:0,c5?c5->centerHeight:0,c6?c6->centerHeight:0,c7?c7->centerHeight:0,0);
+	// nulls must be passed as 1, because 0 will be overwritten by the midpoint displacement algorithm.
+	generateHeightMap(c0?c0->centerHeight:1,c1?c1->centerHeight:1,c2?c2->centerHeight:1,c3?c3->centerHeight:1,
+	c4?c4->centerHeight:1,c5?c5->centerHeight:1,c6?c6->centerHeight:1,c7?c7->centerHeight:1,0);
 
 #ifdef FAST_EXIT
 	if (QUIT_FLAG) { return false; }
@@ -745,11 +745,37 @@ void World_Local::generateHeightMap(const short int c0, const short int c1, cons
 	std::cout<<"Recieved c values: "<<c0<<", "<<c1<<", "<<c2<<", "<<c3<<", "<<c4<<", "<<c5<<", "<<c6<<", "<<c7<<"\n";
 	
 	
-	// calculate corner values
-	int corn1 = (c0 + c1 + c3 + centerHeight) / 4; // top-left
-	int corn2 = (c1 + c2 + c4 + centerHeight) / 4; // top-right
-	int corn3 = (c3 + c5 + c6 + centerHeight) / 4; // bottom-left
-	int corn4 = (c4 + c6 + c7 + centerHeight) / 4; // bottom-right
+	// calculate corner values (note that no corner value may be greater than the max height of a connected map)
+	int corn1 = centerHeight; // top-left
+	if (c0 < corn1) { corn1 = c0; }
+	if (c1 < corn1) { corn1 = c1; }
+	if (c3 < corn1) { corn1 = c3; }
+	
+	int corn2 = centerHeight; // top-right
+	if (c1 < corn2) { corn2 = c1; }
+	if (c2 < corn2) { corn2 = c2; }
+	if (c4 < corn2) { corn2 = c4; }
+	
+	int corn3 = centerHeight; //bottom-left
+	if (c3 < corn3) { corn3 = c3; }
+	if (c5 < corn3) { corn3 = c5; }
+	if (c6 < corn3) { corn3 = c6; }
+	
+	int corn4 = centerHeight; // bottom-right
+	if (c4 < corn4) { corn4 = c4; }
+	if (c6 < corn4) { corn4 = c6; }
+	if (c7 < corn4) { corn4 = c7; }
+	
+	int leftMax = corn1<corn3?corn1:corn3;
+	int rightMax = corn2<corn4?corn2:corn4;
+	int topMax = corn1<corn2?corn1:corn2;
+	int bottomMax = corn3<corn4?corn3:corn4;
+	
+	
+	//int corn1 = (c0 + c1 + c3 + centerHeight) / 4; // top-left
+	//int corn2 = (c1 + c2 + c4 + centerHeight) / 4; // top-right
+	//int corn3 = (c3 + c5 + c6 + centerHeight) / 4; // bottom-left
+	//int corn4 = (c4 + c6 + c7 + centerHeight) / 4; // bottom-right
 	
 	std::cout<<"Corn1: "<<c0<<" + "<<c1<<" + "<<c3<<" + "<<centerHeight<<"\n";
 	
@@ -770,6 +796,9 @@ void World_Local::generateHeightMap(const short int c0, const short int c1, cons
 	aBorderLeft[0] = corn3;
 	aBorderLeft[LOCAL_MAP_SIZE-1] = corn1;
 	
+	// The maximum height of the borders can't be higher then the maximum height of either 2 tiles.
+	// set maximum left border val here. 
+	
 	int aBorderRight [LOCAL_MAP_SIZE] = {0};
 	aBorderRight[0] = corn4;
 	aBorderRight[LOCAL_MAP_SIZE-1] = corn2;
@@ -784,13 +813,13 @@ void World_Local::generateHeightMap(const short int c0, const short int c1, cons
 	
 	LinearMidpointDisplacement lpd;
 	lpd.seed(123);
-	lpd.generate(aBorderLeft,LOCAL_MAP_SIZE,127);
+	lpd.generate(aBorderLeft,LOCAL_MAP_SIZE,leftMax);
 	lpd.seed(123);
-	lpd.generate(aBorderRight,LOCAL_MAP_SIZE,127);
+	lpd.generate(aBorderRight,LOCAL_MAP_SIZE,rightMax);
 	lpd.seed(123);
-	lpd.generate(aBorderTop,LOCAL_MAP_SIZE,127);
+	lpd.generate(aBorderTop,LOCAL_MAP_SIZE,topMax);
 	lpd.seed(123);
-	lpd.generate(aBorderBottom,LOCAL_MAP_SIZE,127);
+	lpd.generate(aBorderBottom,LOCAL_MAP_SIZE,bottomMax);
 	
 	// generate border values here (use fixed seed to start out).
 	
@@ -803,8 +832,10 @@ void World_Local::generateHeightMap(const short int c0, const short int c1, cons
 	// GENERATE HEIGHTMAP
 	DiamondSquareAlgorithmCustomRange dsa2;
 	dsa2.seed(seed);
-	//dsa2.maxValue=centerHeight;
-	dsa2.maxValue = 127; // limit this for testing.
+	std::cout<<"Setting dsa maxvalue to: "<<centerHeight<<"\n";
+	dsa2.maxValue=centerHeight;
+	//dsa2.maxValue = 127; // limit this for testing.
+	//dsa2.maxValue = 257; // limit this for testing.
 	
 	// For now we keep the array in class mem for testing.
 	// In future the array is to be loaded on demand using the relative heightmap.
@@ -861,45 +892,50 @@ void World_Local::generateHeightMap(const short int c0, const short int c1, cons
 	{
 		for (unsigned short int x=0;x<LOCAL_MAP_SIZE;++x)
 		{
-			aFullHeight(x,y) = aFullHeight(x,y) / 14;
-			aFullHeight(x,y) = aFullHeight(x,y) * 14;
+			//aFullHeight(x,y) = aFullHeight(x,y) / 14;
+			//aFullHeight(x,y) = aFullHeight(x,y) * 14;
 			data->aLocalTile(x,y).height = aFullHeight(x,y);
 		}
 	}
 	
 	// determine cliff values here
-	for (unsigned short int y=1;y<LOCAL_MAP_SIZE-1;++y)
+	if (baseBiome == MOUNTAIN)
 	{
-		for (unsigned short int x=1;x<LOCAL_MAP_SIZE-1;++x)
+		for (unsigned short int y=1;y<LOCAL_MAP_SIZE-1;++y)
 		{
-			//check left, right, up, down
-			
-			const short int heightDiffLeft = aFullHeight(x-1,y) - aFullHeight(x,y);
-			const short int heightDiffRight = aFullHeight(x+1,y) - aFullHeight(x,y);
-			const short int heightDiffUp = aFullHeight(x,y+1) - aFullHeight(x,y);
-			const short int heightDiffDown = aFullHeight(x,y-1) - aFullHeight(x,y);
-			
-			data->aLocalTile(x,y).bWall = 0;
-			
-			if ( heightDiffLeft > 10 || heightDiffLeft < -10 )
+			for (unsigned short int x=1;x<LOCAL_MAP_SIZE-1;++x)
 			{
-				//std::cout<<"BWALL\n";
-				data->aLocalTile(x,y).bWall |= 0b00010001;
-			}
-			if ( heightDiffRight > 10 || heightDiffRight < -10 )
-			{
-				//std::cout<<"BWALL\n";
-				data->aLocalTile(x,y).bWall |= 0b01000100;
-			}
-			if ( heightDiffUp > 10 || heightDiffUp < -10 )
-			{
-				//std::cout<<"BWALL\n";
-				data->aLocalTile(x,y).bWall |= 0b10001000;
-			}
-			if ( heightDiffDown > 10 || heightDiffDown < -10 )
-			{
-				//std::cout<<"BWALL\n";
-				data->aLocalTile(x,y).bWall |= 0b00100010;
+				//check left, right, up, down
+				
+				const short int heightDiffLeft = aFullHeight(x-1,y) - aFullHeight(x,y);
+				const short int heightDiffRight = aFullHeight(x+1,y) - aFullHeight(x,y);
+				const short int heightDiffUp = aFullHeight(x,y+1) - aFullHeight(x,y);
+				const short int heightDiffDown = aFullHeight(x,y-1) - aFullHeight(x,y);
+				
+				data->aLocalTile(x,y).bWall = 0;
+				
+				const short int cliffDiff = 5;
+				
+				if ( heightDiffLeft > cliffDiff || heightDiffLeft < -cliffDiff )
+				{
+					//std::cout<<"BWALL\n";
+					data->aLocalTile(x,y).bWall |= 0b00010001;
+				}
+				if ( heightDiffRight > cliffDiff || heightDiffRight < -cliffDiff )
+				{
+					//std::cout<<"BWALL\n";
+					//data->aLocalTile(x,y).bWall |= 0b01000100;
+				}
+				if ( heightDiffUp > cliffDiff || heightDiffUp < -cliffDiff )
+				{
+					//std::cout<<"BWALL\n";
+					data->aLocalTile(x,y).bWall |= 0b10001000;
+				}
+				if ( heightDiffDown > cliffDiff || heightDiffDown < -cliffDiff )
+				{
+					//std::cout<<"BWALL\n";
+					//data->aLocalTile(x,y).bWall |= 0b00100010;
+				}
 			}
 		}
 	}

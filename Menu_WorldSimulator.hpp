@@ -277,7 +277,7 @@ public:
 		
 
 		// Tile info panel
-		Renderer::placeColour4a(200,250,250,250,panelX1,panelY1+220,panelX1+220,panelY1+320);
+		Renderer::placeColour4a(200,250,250,250,panelX1,panelY1+236,panelX1+220,panelY1+356);
 
 		//if (world.queryWorldX != -1 && world.queryWorldY != -1)
 		if ( world.isSafe(world.queryWorldX,world.queryWorldY) )
@@ -304,12 +304,34 @@ public:
 				panelX1,panelY1+270,panelX1+220,panelY1+280,false,true);
 				// Tile image
 				Renderer::setTextureMode();
-				Renderer::placeTexture4(panelX1, panelY1+220, panelX1+32, panelY1+252, tile->currentTexture(), false);
+				Renderer::placeTexture4(panelX1, panelY1+236, panelX1+32, panelY1+268, tile->currentTexture(), false);
 			}
 		}
 		
 		// Map info panel
-		Renderer::placeColour4a(250,200,250,250,panelX1,panelY1+320,panelX1+220,panelY1+420);
+		Renderer::placeColour4a(250,200,250,250,panelX1,panelY1+356,panelX1+220,panelY1+476);
+		if ( world.isSafe(world.queryWorldX,world.queryWorldY) )
+		{
+			World_Local * tile = world.getTile(world.queryWorldX,world.queryWorldY);
+
+			if ( tile != 0 )
+			{
+				if (tile->data !=0 )
+				{
+					if (tile->data->aLocalTile.isSafe(world.queryWorldXLocal,world.queryWorldYLocal))
+					{
+						font8x8.drawText
+						(Stream() << "Elevation: "<< tile->data->aLocalTile
+						(world.queryWorldXLocal,world.queryWorldYLocal).height << "m",
+						panelX1,panelY1+388,panelX1+220,panelY1+398,false,true);
+					}
+					
+				}
+				// Tile image
+				Renderer::setTextureMode();
+				Renderer::placeTexture4(panelX1, panelY1+356, panelX1+32, panelY1+388, tile->currentTexture(), false);
+			}
+		}
 
 		buttonExpandMap.render();
 

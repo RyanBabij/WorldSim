@@ -170,7 +170,7 @@ Right now I'm thinking 1025 might be a good balanced value, making each local ma
 */
 //const int LOCAL_MAP_SIZE = 65;
 // 129 is good for testing, but we will probably want to go much higher for release.
-const int LOCAL_MAP_SIZE = 65;
+const int LOCAL_MAP_SIZE = 257;
 int TIME_SCALE = 10; /* How many seconds of gametime pass per logic tick. */
 // Timescale should be based on distances between cells.
 // At 1:1 scale a cell is 5km*5km. Such a cell should take about 1 hour to walk across.

@@ -2025,7 +2025,7 @@ void World::queryTile( const int hoveredXTile, const int hoveredYTile)
 }
 void World::queryTileLocal( const int hoveredXTile, const int hoveredYTile)
 {
-	if ( isSafe (hoveredXTile,hoveredXTile) == false )
+	if (hoveredXTile >= LOCAL_MAP_SIZE && hoveredYTile >= LOCAL_MAP_SIZE )
 	{
 		return;
 	}
