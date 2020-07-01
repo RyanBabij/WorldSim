@@ -825,7 +825,11 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 								// Due to increase in height levels we will remove the height shading and replace it with
 								// height shading relative to player's height. This obviously will only work when a player
 								// exists
+								
+								
+								// This is an absolute shading system. It allows for 127 shades of height, and then wraps back down to the lowest. This seems to be a reasonably effective way of showing absolute heights which exceed 127, as the player can simply count out how many "rings" of wrapping there are to get a good idea of the elevation.
                         unsigned char lightValue = localTile->height+127;
+								if ( lightValue < 127 ) { lightValue += 127; }
 								//unsigned char lightValue = 255;
 
                         int currentSecond = world->calendar.second;
@@ -978,7 +982,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
             // RENDER THE LOCAL TILE
             // Should be it's own function
             //if (tileSize > 4 && localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
-            if ( localMap != 0 && localMap->data != 0 && localMap->initialized && tileSize > LOCAL_MAP_SIZE*4)
+            if ( localMap != 0 && localMap->data != 0 && localMap->initialized && tileSize > LOCAL_MAP_SIZE*2)
             {
                renderLocalMap(localMap,currentX,currentY);
             }

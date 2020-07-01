@@ -23,6 +23,8 @@ LocalTile::LocalTile()
   isCave=false;
   seed=0;
   
+  bCliff=false;
+  
   nGems=0;
   nMetal=0;
   

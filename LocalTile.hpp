@@ -47,7 +47,9 @@ public:
 	unsigned char bWall;
 	
 	// same but for cliffs.
-	unsigned char bCliff;
+	//unsigned char bCliff;
+	// change this to a simple bool
+	bool bCliff;
 
 	short int height;
 

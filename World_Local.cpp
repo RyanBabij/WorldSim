@@ -178,7 +178,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand8(99)+1;
+			centerHeight=rng.rand32(LOCAL_MAP_SIZE/5)+1;
 			break;
 		}
 		case FOREST:
@@ -190,7 +190,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand8(99)+1;
+			centerHeight=rng.rand32(LOCAL_MAP_SIZE/5)+1;
 			break;
 		}
 		case DESERT:
@@ -202,7 +202,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand8(20)+1;
+			centerHeight=rng.rand32(LOCAL_MAP_SIZE/10)+1;
 			break;
 		}
 		case MOUNTAIN:
@@ -214,7 +214,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand32(99)+1;
+			centerHeight=rng.rand32(LOCAL_MAP_SIZE/2)+LOCAL_MAP_SIZE;
 			break;
 		}
 		case SNOW:
@@ -226,7 +226,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand8(20)+1;
+			centerHeight=centerHeight=rng.rand32(LOCAL_MAP_SIZE/5)+1;
 			break;
 		}
 		case HILLY:
@@ -238,7 +238,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand32(99)+1;
+			centerHeight=centerHeight=rng.rand32(LOCAL_MAP_SIZE/2)+LOCAL_MAP_SIZE/5;
 			break;
 		}
 		case JUNGLE:
@@ -250,7 +250,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand8(99)+1;
+			centerHeight=rng.rand32(LOCAL_MAP_SIZE/5)+1;
 			break;
 		}
 		case WETLAND:
@@ -262,7 +262,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand8(20)+1;
+			centerHeight=rng.rand32(LOCAL_MAP_SIZE/20)+1;
 			break;
 		}
 		case STEPPES:
@@ -274,7 +274,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand8(99)+1;
+			centerHeight=rng.rand32(LOCAL_MAP_SIZE/15)+1;
 			break;
 		}
 		case RIVER:
@@ -286,7 +286,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand8(99)+1;
+			centerHeight=rng.rand32(LOCAL_MAP_SIZE/5)+1;
 			break;
 		}
 		default:
@@ -298,7 +298,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=rng.rand8(99)+1;
+			centerHeight=1;
 			break;
 		}
 		break;
@@ -500,6 +500,13 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 					data->aLocalTile(_x,_y).baseTerrain = WETLAND;
 					baseTreeChance=9;
 				}
+				
+				// make high-altitude tiles into snow tiles.
+				if ( data->aLocalTile(_x,_y).height > LOCAL_MAP_SIZE / 2 )
+				{
+					data->aLocalTile(_x,_y).baseTerrain = SNOW;
+					baseTreeChance=100;
+				}
 
 				//Put down some water for drinking
 				if (rng.oneIn(500))
@@ -542,6 +549,11 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 					deer->init();
 					put(deer,_x,_y);
 				}
+				else if (rng.oneIn(100) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
+				{
+					//auto tree = new Static_Tree();
+					//put (new Static_Tree(), _x, _y);
+				}
 				else if ( baseBiome == MOUNTAIN )
 				{
 					if (rng.oneIn(10))
@@ -551,8 +563,32 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 						{
 							rockyBoi->nGold = 100;
 						}
-						put (rockyBoi,_x,_y);
+						//put (rockyBoi,_x,_y);
 					}
+				}
+				
+				
+				// if the tile is mostly cliffs, or cliffs on opposite sides, make it inaccessible.
+				if ( data->aLocalTile(_x,_y).bWall == 0b11111111
+				// mostly cliffs
+|| data->aLocalTile(_x,_y).bWall == 0b11101110
+|| data->aLocalTile(_x,_y).bWall == 0b11011101
+|| data->aLocalTile(_x,_y).bWall == 0b10111011
+|| data->aLocalTile(_x,_y).bWall == 0b01110111
+
+// cliffs on opposite sides
+
+|| data->aLocalTile(_x,_y).bWall == 0b10101010
+|| data->aLocalTile(_x,_y).bWall == 0b01010101
+
+// any cliff at all
+|| data->aLocalTile(_x,_y).bWall != 0
+
+)
+				{
+					//std::cout<<"Found inaccassible\n";
+					data->aLocalTile(_x,_y).bWall = 0;
+					data->aLocalTile(_x,_y).baseTerrain = UNDERGROUND;
 				}
 			}
 		}
@@ -884,27 +920,55 @@ void World_Local::generateHeightMap(const short int c0, const short int c1, cons
 	}
 	
 	
-	//aFullHeight.fillBorder(1);
-	// Generate the heightmap
-	dsa2.generate(&aFullHeight,0,0,0.75,100);
-	
-	for (unsigned short int y=0;y<LOCAL_MAP_SIZE;++y)
-	{
-		for (unsigned short int x=0;x<LOCAL_MAP_SIZE;++x)
-		{
-			//aFullHeight(x,y) = aFullHeight(x,y) / 14;
-			//aFullHeight(x,y) = aFullHeight(x,y) * 14;
-			data->aLocalTile(x,y).height = aFullHeight(x,y);
-		}
-	}
+
 	
 	// determine cliff values here
 	if (baseBiome == MOUNTAIN)
 	{
+		//aFullHeight.fillBorder(1);
+		// Generate the heightmap
+		dsa2.generate(&aFullHeight,0,2,0.72,centerHeight,1);
+		
+		// smoothing pass
+		for (int i=0;i<4;++i)
+		{
+			for (unsigned short int y=1;y<LOCAL_MAP_SIZE-1;++y)
+			{
+				for (unsigned short int x=1;x<LOCAL_MAP_SIZE-1;++x)
+				{
+					int avgNeighbors = (aFullHeight(x-1,y)+aFullHeight(x+1,y)+aFullHeight(x,y-1)+aFullHeight(x,y+1))/4;
+					
+					// smooth out small cliffs
+					if ( aFullHeight(x,y) > aFullHeight(x-1,y)
+						&& aFullHeight(x,y) > aFullHeight(x+1,y)
+					&& aFullHeight(x,y) > aFullHeight(x,y-1)
+					&& aFullHeight(x,y) > aFullHeight(x,y+1) )
+					{
+						aFullHeight(x,y) = avgNeighbors;
+					}
+				}
+			}
+		}
+		
+
+		for (unsigned short int y=0;y<LOCAL_MAP_SIZE;++y)
+		{
+			for (unsigned short int x=0;x<LOCAL_MAP_SIZE;++x)
+			{
+				//aFullHeight(x,y) = aFullHeight(x,y) / 14;
+				//aFullHeight(x,y) = aFullHeight(x,y) * 14;
+				data->aLocalTile(x,y).height = aFullHeight(x,y);
+			}
+		}
+		
+		
 		for (unsigned short int y=1;y<LOCAL_MAP_SIZE-1;++y)
 		{
 			for (unsigned short int x=1;x<LOCAL_MAP_SIZE-1;++x)
 			{
+				
+
+				
 				//check left, right, up, down
 				
 				const short int heightDiffLeft = aFullHeight(x-1,y) - aFullHeight(x,y);
@@ -916,6 +980,7 @@ void World_Local::generateHeightMap(const short int c0, const short int c1, cons
 				
 				const short int cliffDiff = 5;
 				
+				// set cliff bits
 				if ( heightDiffLeft > cliffDiff || heightDiffLeft < -cliffDiff )
 				{
 					//std::cout<<"BWALL\n";
@@ -924,7 +989,7 @@ void World_Local::generateHeightMap(const short int c0, const short int c1, cons
 				if ( heightDiffRight > cliffDiff || heightDiffRight < -cliffDiff )
 				{
 					//std::cout<<"BWALL\n";
-					//data->aLocalTile(x,y).bWall |= 0b01000100;
+					data->aLocalTile(x,y).bWall |= 0b01000100;
 				}
 				if ( heightDiffUp > cliffDiff || heightDiffUp < -cliffDiff )
 				{
@@ -934,8 +999,47 @@ void World_Local::generateHeightMap(const short int c0, const short int c1, cons
 				if ( heightDiffDown > cliffDiff || heightDiffDown < -cliffDiff )
 				{
 					//std::cout<<"BWALL\n";
-					//data->aLocalTile(x,y).bWall |= 0b00100010;
+					data->aLocalTile(x,y).bWall |= 0b00100010;
 				}
+				
+
+				
+				// if ( heightDiffLeft % cliffDiff == 0 )
+				// {
+					// //std::cout<<"BWALL\n";
+					// data->aLocalTile(x,y).bWall |= 0b00010001;
+				// }
+				// if ( heightDiffRight % cliffDiff == 0 )
+				// {
+					// //std::cout<<"BWALL\n";
+					// data->aLocalTile(x,y).bWall |= 0b01000100;
+				// }
+				// if ( heightDiffUp % cliffDiff == 0 )
+				// {
+					// //std::cout<<"BWALL\n";
+					// data->aLocalTile(x,y).bWall |= 0b10001000;
+				// }
+				// if ( heightDiffDown % cliffDiff == 0 )
+				// {
+					// //std::cout<<"BWALL\n";
+					// data->aLocalTile(x,y).bWall |= 0b00100010;
+				// }
+			}
+		}
+	}
+	else
+	{
+		//aFullHeight.fillBorder(1);
+		// Generate the heightmap
+		dsa2.generate(&aFullHeight,0,0,0.75,centerHeight);
+		
+		for (unsigned short int y=0;y<LOCAL_MAP_SIZE;++y)
+		{
+			for (unsigned short int x=0;x<LOCAL_MAP_SIZE;++x)
+			{
+				//aFullHeight(x,y) = aFullHeight(x,y) / 14;
+				//aFullHeight(x,y) = aFullHeight(x,y) * 14;
+				data->aLocalTile(x,y).height = aFullHeight(x,y);
 			}
 		}
 	}
@@ -1367,7 +1471,8 @@ bool World_Local::load()
 				{
 					if (isSafe( objectX, objectY ) )
 					{
-						put (new WorldObject_Tree(1), objectX, objectY);
+						//put (new WorldObject_Tree(1), objectX, objectY);
+						//put (new Static_Tree(1), objectX, objectY);
 					}
 				}
 				delete vToke;
@@ -1530,7 +1635,7 @@ bool World_Local::put (Static* _static, int _x, int _y, bool subterranean)
 
 
 	// if ( data->aStatic(_x,_y) == 0 )
-	// {
+	// { 
 	// data->aStatic(_x,_y) = _static;
 	// }
 
