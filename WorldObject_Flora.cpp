@@ -8,10 +8,14 @@
 	#include"WorldObject_Flora.cpp"
 
   Implementation of WorldObject_Flora.hpp.
+  
+  This seems to have been replaced by Static_Flora.
 */
 
 WorldObject_Flora::WorldObject_Flora()
 {
+	name="";
+	
 	x=0; y=0;
 	weight=0;
 	bulk=0;
@@ -24,7 +28,7 @@ WorldObject_Flora::WorldObject_Flora()
 
 std::string WorldObject_Flora::getName()
 {
-	return "Flora";
+	return name;
 }
 
 
@@ -35,6 +39,10 @@ Texture* WorldObject_Flora::currentTexture()
     return &TEX_FLORA_PLANT;
   }
 	return &TEX_FLORA_PLANT;
+}
+
+void WorldObject_Flora::generate()
+{
 }
 
 ////////////////////////////////////////////////////////////////////////////////

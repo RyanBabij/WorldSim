@@ -43,8 +43,6 @@ class Tribe_Human;
 class Tribe_Dwarven;
 class Tribe_Elf;
 
-NameGen globalNameGen;
-
 class World: public LogicTickInterface, public IdleTickInterface, public SaveFileInterface
 {
 	private:
@@ -72,6 +70,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 
 	/* The current tile that the player wants information on */
 	int queryWorldX, queryWorldY; 
+	// same but for local map tile (if it exists)
+	int queryWorldXLocal, queryWorldYLocal; 
 
 	long long unsigned int ticksBacklog; /* World will simulate these ticks whenever it can, while still relinquishing for input etc. */
 	Timer relinquishTimer;
@@ -263,7 +263,10 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 
 	//INFO GETTING FUNCTIONS
 	std::string getTileType (const int _x, const int _y);
+	// provide info on the info panel for this tile
 	void queryTile( int hoveredXTile, int hoveredYTile);
+	// provide info on the info panel for this local tile
+	void queryTileLocal( int hoveredXTile, int hoveredYTile);
 
 	// TRIBE FUNCTIONS
 	void addInfluence(Tribe* tribe, int amount);

@@ -379,6 +379,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
       if ( mouse->isLeftClick == true )
       {
          world->queryTile(hoveredXTile,hoveredYTile);
+         world->queryTileLocal(hoveredXTileLocal,hoveredYTileLocal);
       }
 
       if (mouse->isRightClick)
@@ -821,7 +822,15 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                         LocalTile* localTile = &localMap->data->aLocalTile(localXTile,localYTile);
 
                         // this belongs in World.
-                        unsigned char lightValue = localTile->height*15;
+								// Due to increase in height levels we will remove the height shading and replace it with
+								// height shading relative to player's height. This obviously will only work when a player
+								// exists
+								
+								
+								// This is an absolute shading system. It allows for 127 shades of height, and then wraps back down to the lowest. This seems to be a reasonably effective way of showing absolute heights which exceed 127, as the player can simply count out how many "rings" of wrapping there are to get a good idea of the elevation.
+                        unsigned char lightValue = localTile->height+127;
+								if ( lightValue < 127 ) { lightValue += 127; }
+								//unsigned char lightValue = 255;
 
                         int currentSecond = world->calendar.second;
                         int sunsetCounter = currentSecond-50;
@@ -829,22 +838,25 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                         int currentMinute = world->calendar.minute;
                         int currentHour = world->calendar.hour;
 
+								// This is a bad implementation. We should overlay a colour over the whole playfield instead.
+								glColor3ub(lightValue,lightValue,lightValue);
                         // NIGHT
                         if (currentHour < 6 || currentHour > 19)
                         {
-                           glColor3ub(50+lightValue,50+lightValue,50+lightValue);
+                           //glColor3ub(50+lightValue,50+lightValue,50+lightValue);
+                           //glColor3ub(lightValue,lightValue,lightValue);
                         }
                         else if (currentHour == 6) // SUNRISE
                         {
-                           glColor3ub(110+lightValue,100+lightValue,120+lightValue);
+                           //glColor3ub(110+lightValue,100+lightValue,120+lightValue);
                         }
                         else if (currentHour == 19) // SUNSET
                         {
-                           glColor3ub(130+lightValue,100+lightValue,100+lightValue);
+                           //glColor3ub(130+lightValue,100+lightValue,100+lightValue);
                         }
                         else
                         {
-                           glColor3ub(180+lightValue,180+lightValue,180+lightValue);
+                           //glColor3ub(180+lightValue,180+lightValue,180+lightValue);
                            //glColor3ub(80+(lightValue/2),80+(lightValue/2),80+(lightValue/2));
                            //if (currentSecond > 50 ) { glColor3ub(80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*9)+(lightValue/2),80+(sunsetCounter*10)+(lightValue/2)); }
                         }
@@ -866,48 +878,49 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 
                         // Draw wall if necessary.
                         // Move this to static
+								// this is bad, needs to account for multiple blockers
                         if (localTile->bWall != 0 )
                         {
-                           if ( localTile->bWall == 0b10001000) // NORTH
+                           if ( (localTile->bWall & 0b10001000) == 0b10001000) // NORTH
                            {
                               Renderer::placeTexture4RotatedDegrees
                               (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 180);
                            }
-                           else if ( localTile->bWall == 0b00010001) // WEST
+                           if ( (localTile->bWall & 0b00010001) == 0b00010001) // WEST
                            {
                               Renderer::placeTexture4RotatedDegrees
                               (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 90);
                            }
-                           else if ( localTile->bWall == 0b01000100) // EAST
+                           if ( (localTile->bWall & 0b01000100) == 0b01000100) // EAST
                            {
                               Renderer::placeTexture4RotatedDegrees
                               (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, 270);
                            }
-                           else if ( localTile->bWall == 0b00100010) // SOUTH
+                           if ( (localTile->bWall & 0b00100010) == 0b00100010) // SOUTH
                            {
                               Renderer::placeTexture4
                               (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SOUTH, false);
                            }
-                           else if ( localTile->bWall == 0b01100110) // SE
-                           {
-                              Renderer::placeTexture4
-                              (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, false);
-                           }
-                           else if ( localTile->bWall == 0b00110011) // SW
-                           {
-                              Renderer::placeTexture4RotatedDegrees
-                              (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 90);
-                           }
-                           else if ( localTile->bWall == 0b10011001) // NW
-                           {
-                              Renderer::placeTexture4RotatedDegrees
-                              (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 180);
-                           }
-                           else if ( localTile->bWall == 0b11001100) // NE
-                           {
-                              Renderer::placeTexture4RotatedDegrees
-                              (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 270);
-                           }
+                           // else if ( localTile->bWall == 0b01100110) // SE
+                           // {
+                              // Renderer::placeTexture4
+                              // (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, false);
+                           // }
+                           // else if ( localTile->bWall == 0b00110011) // SW
+                           // {
+                              // Renderer::placeTexture4RotatedDegrees
+                              // (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 90);
+                           // }
+                           // else if ( localTile->bWall == 0b10011001) // NW
+                           // {
+                              // Renderer::placeTexture4RotatedDegrees
+                              // (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 180);
+                           // }
+                           // else if ( localTile->bWall == 0b11001100) // NE
+                           // {
+                              // Renderer::placeTexture4RotatedDegrees
+                              // (currentPixel, currentSubY, ceil(nextPixel), ceil(nextSubY), &TEX_WALL_GREYBRICK_SE, 270);
+                           // }
                         }
                      }
                   }
@@ -969,7 +982,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
             // RENDER THE LOCAL TILE
             // Should be it's own function
             //if (tileSize > 4 && localX == tileX && localY == tileY && world->isSafe(tileX,tileY))
-            if ( localMap != 0 && localMap->data != 0 && tileSize > LOCAL_MAP_SIZE*4)
+            if ( localMap != 0 && localMap->data != 0 && localMap->initialized && tileSize > LOCAL_MAP_SIZE*2)
             {
                renderLocalMap(localMap,currentX,currentY);
             }

@@ -36,9 +36,7 @@
 class World_Astronomy
 {
 	private:
-	
-	NameGen nameGenAstronomy;
-	
+
 	public:
 	std::string sunName;
 	
@@ -52,22 +50,21 @@ class World_Astronomy
 	
 	void generateSystem (int nMoon, int nPlanet)
 	{
-		sunName = nameGenAstronomy.generateName();
+		sunName = globalNameGen.generateName();
 		
 		vMoon.clear();
 		vPlanet.clear();
 		
 		for (int i=0;i<nMoon;++i)
 		{
-			vMoon.push(nameGenAstronomy.generateName());
+			vMoon.push(globalNameGen.generateName());
 		}
 		
 		for (int i=0;i<nPlanet;++i)
 		{
-			vPlanet.push(nameGenAstronomy.generateName());
+			vPlanet.push(globalNameGen.generateName());
 		}
 	}
-
 
 };
 

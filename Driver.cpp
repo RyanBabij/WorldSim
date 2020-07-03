@@ -67,8 +67,7 @@ SaveFileManager saveFileManager;
 #include <Graphics/Texture/Texture.hpp>
 #include <Graphics/Texture/TextureLoader.hpp>
 
-#include <Math/Random/RandomLehmer.hpp>
-RandomLehmer globalRandom; // used for seeding rngs without needing to use system time.
+
 
 #include "TextureInterface.cpp"
 
@@ -190,6 +189,8 @@ Timer debugTimer;
   // Moving world to global context means that we don't need to create millions of World pointers. */
 #include "World.cpp"
 World world;
+
+#include "World_Biome.cpp"
 
 #include "Pathing.hpp"
 
@@ -314,6 +315,7 @@ int main(int nArgs, char ** arg)
   
   
 	std::cout<<"\nWorldSim "<<VERSION<<". Warning: This is not a stable release.\n";
+	std::cout<<"Warning: This program writes a lot of data to disk, which may wear out SSDs.\n";
 
 	GL_init(nArgs, arg);
 	
