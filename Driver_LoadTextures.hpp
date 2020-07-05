@@ -152,6 +152,8 @@ const std::string PATH_TEX_FLORA_REDWEED = "Textures/Flora/Redweed/Redweed.png";
 Texture TEX_FLORA_BLUEWEED;
 const std::string PATH_TEX_FLORA_BLUEWEED = "Textures/Flora/Blueweed/Blueweed.png";
 
+Texture TEX_FLORA_RED_MUSHROOM;
+const std::string PATH_TEX_FLORA_RED_MUSHROOM = "Textures/Flora/RedMushroom/RedMushroom.png";
 
 Texture TEX_WORLD_TERRAIN_MOUNTAIN_00;
 const std::string PATH_TEX_WORLD_TERRAIN_MOUNTAIN_00 = "Textures/World/Terrain/Mountain/01.png";
@@ -521,6 +523,7 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
 	loadTextureVerbose(PATH_TEX_FLORA_BLACKWEED,&TEX_FLORA_BLACKWEED);
 	loadTextureVerbose(PATH_TEX_FLORA_REDWEED,&TEX_FLORA_REDWEED);
 	loadTextureVerbose(PATH_TEX_FLORA_BLUEWEED,&TEX_FLORA_BLUEWEED);
+	loadTextureVerbose(PATH_TEX_FLORA_RED_MUSHROOM,&TEX_FLORA_RED_MUSHROOM);
 
 	//OBJECTS
 	loadTextureVerbose(PATH_TEX_OBJECT_STUMP,&TEX_OBJECT_STUMP);

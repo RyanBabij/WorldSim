@@ -28,6 +28,12 @@ Implementation of WorlD_Biome.hpp
 		threadAccess=false;
 
 		id=-1;
+		
+		averageX=-1;
+		averageY=-1;
+		
+		centerX=-1;
+		centerY=-1;
 	}
 
 	World_Biome::~World_Biome()
@@ -253,33 +259,18 @@ Implementation of WorlD_Biome.hpp
 				vFlora.push(flora2);
 			}
 		}
-
-		// //std::cout<<"Spawning 10 flora:\n";
-		// for (int i=0;i<10;++i)
-		// {
-		// Flora * flora = getFlora();
-		// if ( flora )
-		// {
-		// //std::cout<<"   "<<flora->name<<"\n";
-		// }
-		// else
-		// {
-		// //std::cout<<"Error: No flora\n";
-		// }
-
-
-		// }
 		
 		// Generate the random flora.
 		
 		Vector <Flora*>* vFlora2 = floraGenerator.generate(floraAmount);
 
-		std::cout<<"Flora generated for biome:\n";
-		for (int i=0;i<vFlora2->size();++i)
-		{
-			std::cout<<" * "<<(*vFlora2)(i)->getName()<<"\n";
-			vFlora.push( (*vFlora2)(i) );
-		}
+		// std::cout<<"Flora generated for biome:\n";
+		// for (int i=0;i<vFlora2->size();++i)
+		// {
+			// std::cout<<" * "<<(*vFlora2)(i)->getName()<<"\n";
+			// vFlora.push( (*vFlora2)(i) );
+			
+		// }
 		delete vFlora2;
 
 		// assign local ids to the flora (1-255)
@@ -287,6 +278,14 @@ Implementation of WorlD_Biome.hpp
 		for (int i=0;i<vFlora.size();++i)
 		{
 			vFlora(i)->id=i+1;
+			vFlora(i)->spawnWeight = 10;
+			vFlora(i)->setFoodValues(0,0,0,0,0,0);
+		}
+		
+		for (int i=0;i<vMap.size();++i)
+		{
+			//std::cout<<"Setting biom\n";
+			vMap(i)->biome = this;
 		}
 		
 		
@@ -299,7 +298,7 @@ Implementation of WorlD_Biome.hpp
 		sfm.addChunk(chonk);
 		// savefile can be the biomeID + f for Flora
 		std::string biomePath = currentSavePath + "/" + DataTools::toString(id) + "f.dat";
-		std::cout<<"Saving Flora lookup to: "<<biomePath<<"\n";
+		//std::cout<<"Saving Flora lookup to: "<<biomePath<<"\n";
 		sfm.saveToFile(biomePath);
 	}
 
@@ -331,6 +330,39 @@ Implementation of WorlD_Biome.hpp
 		}
 
 		return 0;
+	}
+	
+		// Uses a safe rolling average to prevent overflow.
+	void World_Biome::getAverageCoordinates(/*Vector <HasXY*> * vXY*/)
+	{
+		int n = 0;
+		int n2 = 0;
+		averageX = 0;
+		averageY = 0;
+		for ( int i=0;i<vXY.size();++i)
+		{
+			double deltaX = vXY(i).x - averageX;
+			averageX += deltaX/++n;
+			
+			double deltaY = vXY(i).y - averageY;
+			averageY += deltaY/++n2;
+		}
+		
+		// now find the tile closest to these average points.
+		double closestDistance = -1;
+		for ( int i=0;i<vXY.size();++i)
+		{
+			double deltaX = abs(vXY(i).x - averageX);
+			double deltaY = abs(vXY(i).y - averageY);
+			
+			if ( closestDistance == -1 || closestDistance > deltaX+deltaY)
+			{
+				centerX = vXY(i).x;
+				centerY = vXY(i).y;
+				closestDistance = deltaX+deltaY;
+			}
+		}
+		std::cout<<"Biome center coords: "<<centerX<<", "<<centerY<<"\n";
 	}
 	
 	

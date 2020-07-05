@@ -61,6 +61,10 @@ private:
 	unsigned int seed;
 
 	Vector <WorldObject_Tree*> vTree;
+	// list of all types of flora in the game
+	Vector <Flora*> vFlora;
+	
+	FloraManager floraManager;
 
 	// Simplified world data for use in fast abstract simulations.
 	// Should generally always be loaded in, but I'd like to add caching support regardless.
@@ -75,7 +79,7 @@ private:
 	// Grouping data by biome is probably the most sensible option.
 
 	// in future we could probably have a generate function which solely deals in abstract data, and lets
-	// the details get filled in later. For example just randomly put down movement blockers in the
+	// the details get filled in later. For example just randomaly put down movement blockers in the
 	// collision bitfield and later on we can actually generate their object data.
 	struct AbstractData
 	{

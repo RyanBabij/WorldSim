@@ -271,9 +271,10 @@ void World::startSimulation()
 	timerBiomeFill.init();
 	timerBiomeFill.start();
 
-	int currentID3=0;
+	//int currentID3=0;
+	//int currentID = 0;
 
-#define THREADED_BIOME_FILL
+//#define THREADED_BIOME_FILL
 #ifdef THREADED_BIOME_FILL 
 
 	// Here I am spawning 1 thread for every possible biome. Each thread then processes biomes that have that type.
@@ -351,6 +352,7 @@ void World::startSimulation()
 									biome->vMap.push(&aWorldTile((*vFill)(i)->x,(*vFill)(i)->y));
 								}
 								biome->size = vFill->size();
+								std::cout<<"Biome size: "<<biome->size<<"\n";
 #ifdef WILDCAT_THREADING
 								m.lock();
 #endif
@@ -421,6 +423,10 @@ void World::startSimulation()
 
 #else
 
+unsigned int currentID = 0;
+unsigned long int totalFillTiles = 0;
+std::cout<<"currentID is "<<currentID<<"\n";
+
 	// BUILD BIOME VECTOR
 	for ( int _y=0;_y<nY;++_y)
 	{
@@ -435,6 +441,10 @@ void World::startSimulation()
 				biome->id = currentID;
 
 				Vector <HasXY*>* vFill = aTerrain.floodFillVector(_x,_y,true);
+				
+				totalFillTiles += vFill->size();
+				
+				std::cout<<"Floodfill returned size: "<<vFill->size()<<" for ID: "<<currentID<<"\n";
 
 				for (int i=0;i<vFill->size();++i)
 				{
@@ -448,6 +458,8 @@ void World::startSimulation()
 				}
 
 				biome->size = vFill->size();
+				// build the average coordinates so we can center on the biome in the biome menu
+				biome->getAverageCoordinates();
 
 				//  NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13
 
@@ -478,6 +490,19 @@ void World::startSimulation()
 				delete vFill;
 
 				++currentID;
+			}
+		}
+	}
+	std::cout<<"Total biome fills: "<<totalFillTiles<<"\n";
+	
+	// BUILD BIOME VECTOR
+	for ( int _y=0;_y<nY;++_y)
+	{
+		for ( int _x=0;_x<nX;++_x)
+		{
+			if (aBiomeID(_x,_y) == -1 )
+			{
+				std::cout<<"ERROR: Unfilled biome tile found\n";
 			}
 		}
 	}
@@ -2110,10 +2135,14 @@ std::string World::getLandmassName (HasXY* _xy)
 
 std::string World::getBiomeName(const int _x, const int _y)
 {
+	
 	if ( isSafe(_x,_y) )
 	{
+		std::cout<<"Getbiomename: "<<_x<<", "<<_y<<" : "<<aBiomeID(_x,_y)<<"\n";
+
 		if (vBiome.isSafe(aBiomeID(_x,_y)))
 		{
+			std::cout<<"Querying tile: "<<_x<<", "<<_y<<": "<<aBiomeID(_x,_y)<<"\n";
 			return vBiome(aBiomeID(_x,_y))->name;
 		}
 	}

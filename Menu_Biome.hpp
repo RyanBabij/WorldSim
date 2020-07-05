@@ -33,10 +33,13 @@ class Menu_Biome: public GUI_Interface
 	Table2 tBiome;
 	GUI_Table guiTableBiome;
 	
+	int lastRowClicked;
+	World_Biome * selectedBiome; // The biome the user has selected in the menu.
 	
 	Menu_Biome()
-	{	
-
+	{
+		lastRowClicked=-1;
+		selectedBiome=0;
 	}
 	
 	void setFont(Wildcat::Font* _font)
@@ -106,13 +109,20 @@ class Menu_Biome: public GUI_Interface
 				/* If the guiManager did something with the mouse event. */
 			if(guiManager.mouseEvent(_mouse)==true)
 			{
-				
 			}
-
 			if  (buttonClose.clicked==true)
 			{
 				active=false;
 				buttonClose.unclick();
+			}
+			if ( guiTableBiome.lastClickedIndex != -1 )
+			{
+				lastRowClicked=guiTableBiome.lastClickedIndex;
+				if (world.vBiome.isSafe(lastRowClicked))
+				{
+					selectedBiome=world.vBiome(lastRowClicked);
+				}
+				guiTableBiome.lastClickedIndex = -1;
 			}
 		}
 		return false;
@@ -120,7 +130,6 @@ class Menu_Biome: public GUI_Interface
 	
 	void eventResize()
 	{
-	
 		guiTableBiome.setPanel(panelX1,panelY1,panelX2,panelY2-30);
 		buttonClose.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
 	}

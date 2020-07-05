@@ -33,6 +33,66 @@
 	static class. I will probably give Flora objects a Package which will store any unique characteristics.
 */
 
+
+// Consolidates all Flora info for a biome to save space.
+// There are max 255 Flora per biome therefore a lookup table is more efficient than a pointer.
+// flora should just be in a map of values... easy, medium, hard, and current values of each.
+// 4 bits per value should suffice, but for now we might just go with 1 byte per value
+
+// 1 creature may occupy 1 space.
+// (this is resolved for the player and NPCs by allowing people to swap their position with another person)
+
+// Each map loaded should have an array of values for the flora
+
+// to simplify things a bit better, a flora will have a single type of food (hard, medium, easy)
+// all flora will prodide the same nutrition for each type. Additionally replenishment can be random. This means only the flora type needs to be stored on the array, a single value from 1-3.
+
+// 00000000 - 111 - Type (multiple/none allowed). 111 - Eaten/not eaten.
+// Flora will randomly fully replenish.
+// Extra 2 bits reserved for trees (extra food type and movement blocking)
+// 1 bit symbolises trees (movement blockers), and the final bit represents if a creature is on the tile.
+
+// 00000010 - tree
+// 00000001 - creature is here
+// 11111111 - natural feature blocking movement (creature may not be on tree) 
+
+// grazers - can live off grass (any non-blocked tile, as a final elemant)
+// speed/energy tradeoff allows multiple types of creatures to survive. Slower creatures get more food for less, but faster creatures can get there first.
+// creatures breed by bring adjacent with at over 50% energy. Breeding brings energy down to 50%. Old age is not simulated.
+
+// more complex ai can be added over time.
+// Replenishment gives a creature X turns to keep living. This will also occur in full-mode in a similar way..
+// Therefore each biome can run flora/wildlife simulation with 1 byte per tile ( 
+
+
+
+// class FloraAbstract: public Static
+// {
+	// public:
+	// // this only tracks food amount and for everything else uses a lookup on the Flora type
+	// unsigned char easyFood, mediumFood, hardFood;
+	
+	// Flora* lookup;
+	// //unsigned char biomeLookup;
+
+
+	// FloraAbstract()
+	// {
+	// }
+// };
+
+// class FloraDynamic
+// {
+	// public:
+	
+	// FloraDynamic()
+	// {
+	// }
+// };
+
+// This class sets the stats for a type of flora. Individual instances should use another class.
+
+
 class Flora: public Static
 {
    // Easy food: Food which can easily be obtained/eaten such as fruit
@@ -45,7 +105,7 @@ class Flora: public Static
    unsigned char mediumFood, maxMediumFood, mediumFoodIncrement;
    unsigned char hardFood, maxHardFood, hardFoodIncrement;
    
-   Vector <unsigned char> vAllowedBiomeTypes;
+   //Vector <unsigned char> vAllowedBiomeTypes;
    
    public:
    
@@ -94,11 +154,11 @@ class Flora: public Static
    }
    void allowBiome(unsigned char biomeType)
    {
-      vAllowedBiomeTypes.push(biomeType);
+      //vAllowedBiomeTypes.push(biomeType);
    }
    virtual Texture* currentTexture() override
    {
-      return 0;
+      return &TEX_FLORA_RED_MUSHROOM;
    }
 };
 
@@ -132,7 +192,6 @@ class Static_Tree: public Flora
       if (chopAmount==0)
       { return &TEX_OBJECT_STUMP;
       }
-
       if ( growth==0 )
       {
          return &TEX_WORLD_TERRAIN_FOREST_SAPLING;
@@ -145,6 +204,9 @@ class Static_Tree: public Flora
 
 class FloraGenerator
 {
+	// It might be better practise to have a more centralised name generator which can handle all the different
+	// names to generate, for example Flora, cities, people, etc. However there is still a lot to implement here
+	// eg alchemy effects, before I'll look at doing that.
 	WordList wlistFloraPattern;
 	WordList wlistFloraColour;
 	WordList wlistFloraAdjective;
@@ -188,6 +250,29 @@ class FloraGenerator
 		wlistFloraType.add("Nettle");
 	}
 	
+	std::string generateName()
+	{
+		std::string _name="";
+		if (RNG_TEST.flip()) // use colour
+		{
+			_name+=wlistFloraColour.getRandom()+" ";
+		}
+		if (RNG_TEST.flip()) // use pattern
+		{
+			_name+=wlistFloraPattern.getRandom()+" ";
+		}
+		if (RNG_TEST.flip()) // use adjective
+		{
+			_name+=wlistFloraAdjective.getRandom()+" ";
+		}
+		if (RNG_TEST.flip() || _name.size() == 0) // use noun
+		{
+			_name+=wlistFloraNoun.getRandom()+" ";
+		}
+		_name+=wlistFloraType.getRandom();
+		return _name;
+	}
+	
 	// Flora generation.
 	// Name is randomly generated from wordlists.
 	// Current system makes each additional Flora half as common as the previous.
@@ -197,32 +282,52 @@ class FloraGenerator
 		
 		int currentPoints=1000;
 		for (int i=0;i<amount;++i)
-		{
-			// generate flora name.
-			std::string _name="";
-			if (RNG_TEST.flip()) // use colour
-			{
-				_name+=wlistFloraColour.getRandom()+" ";
-			}
-			if (RNG_TEST.flip()) // use pattern
-			{
-				_name+=wlistFloraPattern.getRandom()+" ";
-			}
-			if (RNG_TEST.flip()) // use adjective
-			{
-				_name+=wlistFloraAdjective.getRandom()+" ";
-			}
-			if (RNG_TEST.flip() || _name.size() == 0) // use noun
-			{
-				_name+=wlistFloraNoun.getRandom()+" ";
-			}
-			_name+=wlistFloraType.getRandom();
-			
-			Flora * flora = new Flora(_name,currentPoints);
+		{			
+			Flora * flora = new Flora(generateName(),currentPoints);
 			vFlora->push(flora);
 			currentPoints/=2;
 		}
 		return vFlora;
+	}
+	
+	// return a single flora
+	Flora* get(const int spawnWeighting=0)
+	{
+		return new Flora(generateName(),spawnWeighting);
+	}
+};
+FloraGenerator floraGenerator;
+
+
+
+class FloraManager
+{
+	public:
+	
+	// All flora types in the biome (max 255 types)
+	Vector <Flora*> vFlora;
+	
+	// All abstracted flora in the map
+	//Vector <FloraAbstract*> vFloraAbstract;
+	
+	FloraManager()
+	{
+	}
+	
+	void generate (const int amount)
+	{
+		int currentPoints=1000;
+		for (int i=0;i<amount;++i)
+		{			
+			vFlora.push(floraGenerator.get(currentPoints));
+			currentPoints/=2;
+		}
+	}
+	
+	// return a random flora from the weighted lists
+	Flora* spawn()
+	{
+		return 0;
 	}
 };
 
