@@ -164,7 +164,6 @@ private:
 	bool hasCave; // should be ncaves
 	bool hasRuin; // should be nruins
 
-#ifdef WILDCAT_THREADING
 	//WORLD DATA
 	std::atomic <short int> globalX_TS;
 	std::atomic <short int> globalY_TS;
@@ -177,13 +176,6 @@ private:
 
 	//WORLD DATA
 	//short int globalY; /* The local world's position in the world. */
-
-#else
-	//WORLD DATA
-	short int globalX, globalY; /* The local world's position in the world. */
-	bool initialized; /* True if the world has been loaded at least once. */
-	bool active; /* Whether or not the world should be simulated. */
-#endif
 
 	// How many metals may be mined from this tile.
 	short int baseMetal;

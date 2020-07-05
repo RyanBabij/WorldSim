@@ -313,19 +313,36 @@ public:
 		if ( world.isSafe(world.queryWorldX,world.queryWorldY) )
 		{
 			World_Local * tile = world.getTile(world.queryWorldX,world.queryWorldY);
-
+			
 			if ( tile != 0 )
 			{
-				if (tile->data !=0 )
+				if (tile->data && tile->data->aLocalTile.isSafe(world.queryWorldXLocal,world.queryWorldYLocal))
 				{
-					if (tile->data->aLocalTile.isSafe(world.queryWorldXLocal,world.queryWorldYLocal))
+					
+					if ( tile->data->aLocalTile(world.queryWorldXLocal,world.queryWorldYLocal).objStatic )
 					{
+						const std::string sName =
+						tile->data->aLocalTile(world.queryWorldXLocal,world.queryWorldYLocal).objStatic->getName();
 						font8x8.drawText
-						(Stream() << "Elevation: "<< tile->data->aLocalTile
-						(world.queryWorldXLocal,world.queryWorldYLocal).height << "m",
-						panelX1,panelY1+388,panelX1+220,panelY1+398,false,true);
+						(Stream() << sName,
+						panelX1,panelY1+418,panelX1+220,panelY1+428,false,true);
 					}
 					
+					font8x8.drawText
+					(Stream() << tile->data->aLocalTile
+					(world.queryWorldXLocal,world.queryWorldYLocal).getName()
+					<< " ("<<world.queryWorldXLocal<<", "<<world.queryWorldYLocal<<")",
+					panelX1,panelY1+408,panelX1+220,panelY1+418,false,true);
+					
+
+					
+					font8x8.drawText
+					(Stream() << tile->getTerrainName() << " ("<<world.queryWorldXLocal<<", "<<world.queryWorldYLocal<<")",
+					panelX1,panelY1+398,panelX1+220,panelY1+408,false,true);
+					font8x8.drawText
+					(Stream() << "Elevation: "<< tile->data->aLocalTile
+					(world.queryWorldXLocal,world.queryWorldYLocal).height << "m",
+					panelX1,panelY1+388,panelX1+220,panelY1+398,false,true);
 				}
 				// Tile image
 				Renderer::setTextureMode();

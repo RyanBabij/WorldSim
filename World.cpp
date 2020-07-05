@@ -406,7 +406,8 @@ void World::startSimulation()
 		// convert biome names to all upper case for now to make sorting easier.
 		for (auto & c: vBiome(i)->name) c = toupper(c);
 	}
-
+	
+	std::cout<<"Filled "<<vBiome.size()<<" biomes.\n";
 
 	//isRaining=true;
 	isRaining=false;

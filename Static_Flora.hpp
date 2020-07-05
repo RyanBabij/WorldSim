@@ -323,7 +323,7 @@ class FloraManager
 	
 	void generate (const int amount=1)
 	{
-		std::cout<<"FloraManager generating "<<amount<<" flora.\n";
+		//std::cout<<"FloraManager generating "<<amount<<" flora.\n";
 		int currentPoints=1000;
 		for (int i=0;i<amount;++i)
 		{			

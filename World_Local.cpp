@@ -400,6 +400,7 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 
 	data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 	//data->aStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
+	//data->aStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
 
 	abstractData->bfCollision.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 	abstractData->aStaticID.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
@@ -1432,6 +1433,7 @@ bool World_Local::load()
 	if ( data == 0 )
 	{ data=new Data; }
 	data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+	//data->aStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
 	//dataSubterranean->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 
 	// Open the cache file for loading into memory.
@@ -1683,7 +1685,7 @@ bool World_Local::put (Static* _static, int _x, int _y, bool subterranean)
 
 	// if ( data->aStatic(_x,_y) == 0 )
 	// { 
-	// data->aStatic(_x,_y) = _static;
+		// data->aStatic(_x,_y) = _static;
 	// }
 
 	if ( data->aLocalTile(_x,_y).objStatic == 0 )
