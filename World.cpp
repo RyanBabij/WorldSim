@@ -285,8 +285,10 @@ void World::startSimulation()
 	std::atomic<int> biomeID=0; /* Atomic is generally more efficient than using lock because of OS-level support. */
 	Mutex biomeIncrement;
 	int currentBiomeID=0; /* Every unique biome gets a unique ID, which will make later processing much easier. */
-
-
+	
+	// The threaded biome fill works by looking for a biome is hasn't seen before. It then spawns a new search
+	// thread from this coordinate, which will then fill all biomes of that type from that point onward.
+	
 	// BUILD BIOME VECTOR
 	for ( int _y=0;_y<nY;++_y)
 	{
@@ -304,49 +306,52 @@ void World::startSimulation()
 					int thisBiomeID;
 					// ++biomeID;
 					// biomeIncrement.unlock();
+					
+					int startX = _x;
 
+					// Begin scanning from the current x and y of the main scanning loop.
+					// Remember that x2 needs to reset to 0 after the first row.
 					for ( int _y2=_y;_y2<nY;++_y2)
 					{
-						for ( int _x2=_x;_x2<nX;++_x2)
+						for ( int _x2=startX;_x2<nX;++_x2)
 						{
 							if (aTerrain(_x2,_y2) == biomeSearch && aBiomeID(_x2,_y2) == -1)
 							{
 								World_Biome* biome = new World_Biome;
 								biome->type = biomeSearch;
 								biomeIncrement.lock();
-								//std::cout<<"Biome increment: "<<biomeID<<" to "<<biomeID+1<<"\n";
 								thisBiomeID = biomeID;
 								biome->id = thisBiomeID;
 								++biomeID;
-								// Note that the biome is pushed onto the vector in the same time it is assigned the id,
-								// this means biome id corresponds with it's vector position, which is useful for some
-								// later things.
+								// The biome is immediately pushed onto the vector when assigned an ID, to ensure the position
+								// on the vector corresponds with the Vector index. This makes later searches more convenient.
 								vBiome.push(biome);
 								biomeIncrement.unlock();
 								mutexCout.lock();
-								std::cout<<"assigning biome id: "<<thisBiomeID<<"\n";
+								//std::cout<<"assigning biome id: "<<thisBiomeID<<"\n";
 								mutexCout.unlock();
 
+								// Perform a flood fill from this point to find all connected tiles of this type, this defines
+								// the biome.
 								Vector <HasXY*>* vFill = aTerrain.floodFillVector(_x2,_y2,true);
 								for (int i=0;i<vFill->size();++i)
 								{
 									HasXY* v = (*vFill)(i);
 									aBiomeID(v->x,v->y) = thisBiomeID;
 									biome->vXY.push(HasXY((*vFill)(i)->x,(*vFill)(i)->y));
-									//push map pointers to biome. Biome should handle the generation/simulation stuff.
-									//biome->vMap.push(&aWorldTile((*vFill)(i)->x,(*vFill)(i)->y));
+									// give the map to the biome object to keep track of.
 									biome->addMap(&aWorldTile((*vFill)(i)->x,(*vFill)(i)->y));
 								}
 								biome->size = vFill->size();
 								biome->getAverageCoordinates();
-								std::cout<<"Biome size: "<<biome->size<<"\n";
-								//m.lock();
-								//vBiome.push(biome);
-								//m.unlock();
+								
+								// free up flood fill memory
 								vFill->deleteAll();
 								delete vFill;
 							}
 						}
+						// x2 must reset to 0 after scanning the first partial row.
+						startX=0;
 					}
 				});
 			}
@@ -402,11 +407,7 @@ void World::startSimulation()
 		for (auto & c: vBiome(i)->name) c = toupper(c);
 	}
 
-	for (int i=0;i<vBiome.size();++i)
-	{
-		std::cout<<vBiome(i)->id<<" : "<<vBiome(i)->name<<"\n";
-	}
-	
+
 	//isRaining=true;
 	isRaining=false;
 
