@@ -366,6 +366,12 @@ Implementation of WorlD_Biome.hpp
 		}
 	}
 	
+	void World_Biome::addMap(World_Local* map)
+	{
+		map->biome=this;
+		vMap.push(map);
+	}
+	
 	
 	// TableInterface
 	std::string World_Biome::getColumn(std::string _column)

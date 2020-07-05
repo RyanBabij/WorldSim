@@ -85,6 +85,8 @@ class World_Biome: public TableInterface
 	
 	void getAverageCoordinates(/*Vector <HasXY*> * vXY*/);
 	
+	void addMap(World_Local * map);
+	
 	
 	// TableInterface
 	std::string getColumn(std::string _column);

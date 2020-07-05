@@ -310,12 +310,15 @@ class FloraManager
 	// All flora types in the biome (max 255 types)
 	Vector <Flora*> vFlora;
 	
+	RandomLehmer rng;
+	
 	// All abstracted flora in the map
 	//Vector <FloraAbstract*> vFloraAbstract;
 	
 	FloraManager()
 	{
 		totalSpawnWeight=0;
+		rng.seed(SEEDER);
 	}
 	
 	void generate (const int amount=1)
@@ -333,7 +336,32 @@ class FloraManager
 	// return a random flora from the weighted lists
 	Flora* get()
 	{
+		if (vFlora.size() == 0 )
+		{
+			return 0;
+		}
+		if ( vFlora.size() == 1 )
+		{
+			return vFlora(0);
+		}
+		
+		int floraSlot = rng.rand32(totalSpawnWeight-1);
+		
+		int currentWeighting = 0;
+		for (int i=0;i<vFlora.size();++i)
+		{
+			currentWeighting+=vFlora(i)->spawnWeight;
+			
+			if ( currentWeighting >= floraSlot )
+			{
+				//std::cout<<"Spawning: "<<vFlora(i)->name<<"\n";
+				return vFlora(i);
+			}
+		}
+		
 		return 0;
+		
+		
 	}
 };
 

@@ -296,7 +296,7 @@ void World::startSimulation()
 			{
 				const int biomeSearch = aTerrain(_x,_y);
 				// Spawn a thread to process this biome type
-				aThread [aTerrain(_x,_y)] = new std::thread ( [ this, _x, _y, biomeSearch, &m, &biomeID, &biomeIncrement ]
+				aThread [aTerrain(_x,_y)] = new std::thread ( [ this, _x, _y, biomeSearch, /* &m, */ &biomeID, &biomeIncrement ]
 				{
 					// This technically works because same biomes can never touch. However it's asking for trouble so we should change it.
 					// biomeIncrement.lock();
@@ -334,7 +334,8 @@ void World::startSimulation()
 									aBiomeID(v->x,v->y) = thisBiomeID;
 									biome->vXY.push(HasXY((*vFill)(i)->x,(*vFill)(i)->y));
 									//push map pointers to biome. Biome should handle the generation/simulation stuff.
-									biome->vMap.push(&aWorldTile((*vFill)(i)->x,(*vFill)(i)->y));
+									//biome->vMap.push(&aWorldTile((*vFill)(i)->x,(*vFill)(i)->y));
+									biome->addMap(&aWorldTile((*vFill)(i)->x,(*vFill)(i)->y));
 								}
 								biome->size = vFill->size();
 								biome->getAverageCoordinates();
