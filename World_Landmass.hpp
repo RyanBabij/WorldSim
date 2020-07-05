@@ -18,6 +18,7 @@ class World_Landmass: public TableInterface
 	int size; /* size in tiles */
 	
 	double averageX, averageY; /* For zooming to landmass. */
+	int centerX, centerY; /* The closest tile to the average which is owned by the landmass */
 	
 	World_Landmass()
 	{
@@ -26,6 +27,9 @@ class World_Landmass: public TableInterface
 		
 		averageX=-1;
 		averageY=-1;
+		
+		centerX=-1;
+		centerY=-1;
 	}
 	
 	virtual ~World_Landmass()
@@ -71,8 +75,21 @@ class World_Landmass: public TableInterface
 			double deltaY = (*vXY)(i)->y - averageY;
 			averageY += deltaY/++n2;
 		}
-
-
+		
+		// now find the tile closest to these average points.
+		double closestDistance = -1;
+		for ( int i=0;i<vXY->size();++i)
+		{
+			double deltaX = abs((*vXY)(i)->x - averageX);
+			double deltaY = abs((*vXY)(i)->y - averageY);
+			
+			if ( closestDistance == -1 || closestDistance > deltaX+deltaY)
+			{
+				centerX = (*vXY)(i)->x;
+				centerY = (*vXY)(i)->y;
+				closestDistance = deltaX+deltaY;
+			}
+		}
 	}
 };
 

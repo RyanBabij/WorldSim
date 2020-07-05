@@ -615,14 +615,18 @@ public:
 			menuTribes.lastRowClicked=-1;
 		}
 
+		// maybe some kind of EVENT class would work better for this kind of thing?
 		if (menuWorld.lastRowClicked != -1 )
 		{
 			if ( world.vLandmass.isSafe(menuWorld.lastRowClicked) )
 			{
-				World_Landmass* l = world.vLandmass(menuWorld.lastRowClicked);
-				worldViewer.setCenterTile(l->averageX,l->averageY);
+				World_Landmass* l = menuWorld.selectedLandmass;
+				if ( l != 0 )
+				{
+					//worldViewer.setCenterTile(l->averageX,l->averageY);
+					worldViewer.setCenterTile(l->centerX,l->centerY);
+				}
 			}
-
 			menuWorld.lastRowClicked=-1;
 		}
 
