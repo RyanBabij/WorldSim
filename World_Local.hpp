@@ -62,9 +62,7 @@ private:
 
 	Vector <WorldObject_Tree*> vTree;
 	// list of all types of flora in the game
-	Vector <Flora*> vFlora;
-	
-	FloraManager floraManager;
+	//Vector <Flora*> vFlora;
 
 	// Simplified world data for use in fast abstract simulations.
 	// Should generally always be loaded in, but I'd like to add caching support regardless.

@@ -274,24 +274,16 @@ void World::startSimulation()
 	//int currentID3=0;
 	//int currentID = 0;
 
-//#define THREADED_BIOME_FILL
-#ifdef THREADED_BIOME_FILL 
-
 	// Here I am spawning 1 thread for every possible biome. Each thread then processes biomes that have that type.
 	// Performance is significantly improved and I'm getting solid 100% CPU on my quad core. It's important to spawn
 	// a small number of large threads, rather than a large number of small threads. I tried the latter and I only gained
 	// a few seconds on large maps, and small maps generated slower. This new approach is more than 3x faster.
 	// threaded - cb - 2049 - seed 12345: 6.61 7.15 6.98        Biome time: 2.48, 2.46, 2.44
 	// unthreaded - cb - 2049 - seed 12345: 12.47 13.02 13.06   Biome time: 8.25, 8.17, 8.16
-
-#ifdef WILDCAT_THREADING
 	std::thread * aThread [N_BIOMES] = { 0 };
 	std::mutex m;
 	std::atomic<int> biomeID=0; /* Atomic is generally more efficient than using lock because of OS-level support. */
 	Mutex biomeIncrement;
-#else
-	int biomeID = 0;
-#endif
 	int currentBiomeID=0; /* Every unique biome gets a unique ID, which will make later processing much easier. */
 
 
@@ -300,18 +292,12 @@ void World::startSimulation()
 	{
 		for ( int _x=0;_x<nX;++_x)
 		{
-#ifdef WILDCAT_THREADING
 			if (aBiomeID(_x,_y) == -1 && aThread[aTerrain(_x,_y)] == 0)
-#else
-			if (aBiomeID(_x,_y) == -1)
-#endif
 			{
 				const int biomeSearch = aTerrain(_x,_y);
 				// Spawn a thread to process this biome type
-#ifdef WILDCAT_THREADING
 				aThread [aTerrain(_x,_y)] = new std::thread ( [ this, _x, _y, biomeSearch, &m, &biomeID, &biomeIncrement ]
 				{
-#endif
 					// This technically works because same biomes can never touch. However it's asking for trouble so we should change it.
 					// biomeIncrement.lock();
 					// std::cout<<"Biome increment: "<<biomeID<<" to "<<biomeID+1<<"\n";
@@ -327,17 +313,16 @@ void World::startSimulation()
 							{
 								World_Biome* biome = new World_Biome;
 								biome->type = biomeSearch;
-
-#ifdef WILDCAT_THREADING
 								biomeIncrement.lock();
-#endif
 								//std::cout<<"Biome increment: "<<biomeID<<" to "<<biomeID+1<<"\n";
 								thisBiomeID = biomeID;
 								biome->id = thisBiomeID;
 								++biomeID;
-#ifdef WILDCAT_THREADING
+								// Note that the biome is pushed onto the vector in the same time it is assigned the id,
+								// this means biome id corresponds with it's vector position, which is useful for some
+								// later things.
+								vBiome.push(biome);
 								biomeIncrement.unlock();
-#endif
 								mutexCout.lock();
 								std::cout<<"assigning biome id: "<<thisBiomeID<<"\n";
 								mutexCout.unlock();
@@ -352,27 +337,21 @@ void World::startSimulation()
 									biome->vMap.push(&aWorldTile((*vFill)(i)->x,(*vFill)(i)->y));
 								}
 								biome->size = vFill->size();
+								biome->getAverageCoordinates();
 								std::cout<<"Biome size: "<<biome->size<<"\n";
-#ifdef WILDCAT_THREADING
-								m.lock();
-#endif
-								vBiome.push(biome);
-#ifdef WILDCAT_THREADING
-								m.unlock();
-#endif
+								//m.lock();
+								//vBiome.push(biome);
+								//m.unlock();
 								vFill->deleteAll();
 								delete vFill;
 							}
 						}
 					}
-#ifdef WILDCAT_THREADING
 				});
-#endif
 			}
 		}
 	}
-
-#ifdef WILDCAT_THREADING
+	
 	// Let all threads finish.
 	for (int i=0; i<N_BIOMES; ++i)
 	{
@@ -383,7 +362,6 @@ void World::startSimulation()
 			aThread[i]=0;
 		}
 	}
-#endif
 
 	// Name the biomes
 	// and generate flora
@@ -394,7 +372,7 @@ void World::startSimulation()
 		int biomeType = vBiome(i)->type;
 		if ( biomeType == OCEAN)
 		{
-			if ( vBiome(i)->size < 20 )
+			if ( vBiome(i)->size < LOCAL_MAP_SIZE )
 			{
 				vBiome(i)->name = "Lake " + globalNameGen.generateName();
 			}
@@ -419,96 +397,15 @@ void World::startSimulation()
 				vBiome(i)->name = globalNameGen.generateName() + " Mountains";
 			}
 		}
+		// convert biome names to all upper case for now to make sorting easier.
+		for (auto & c: vBiome(i)->name) c = toupper(c);
 	}
 
-#else
-
-unsigned int currentID = 0;
-unsigned long int totalFillTiles = 0;
-std::cout<<"currentID is "<<currentID<<"\n";
-
-	// BUILD BIOME VECTOR
-	for ( int _y=0;_y<nY;++_y)
+	for (int i=0;i<vBiome.size();++i)
 	{
-		for ( int _x=0;_x<nX;++_x)
-		{
-			if (aBiomeID(_x,_y) == -1 )
-			{
-				int biomeType = aTerrain(_x,_y);
-
-				World_Biome* biome = new World_Biome;
-				biome->type = biomeType;
-				biome->id = currentID;
-
-				Vector <HasXY*>* vFill = aTerrain.floodFillVector(_x,_y,true);
-				
-				totalFillTiles += vFill->size();
-				
-				std::cout<<"Floodfill returned size: "<<vFill->size()<<" for ID: "<<currentID<<"\n";
-
-				for (int i=0;i<vFill->size();++i)
-				{
-					biome->vXY.push(HasXY((*vFill)(i)->x,(*vFill)(i)->y));
-
-					//push map pointers to biome. Biome should handle the generation/simulation stuff.
-					biome->vMap.push(&aWorldTile((*vFill)(i)->x,(*vFill)(i)->y));
-
-					HasXY* v = (*vFill)(i);
-					aBiomeID(v->x,v->y) = currentID;
-				}
-
-				biome->size = vFill->size();
-				// build the average coordinates so we can center on the biome in the biome menu
-				biome->getAverageCoordinates();
-
-				//  NOTHING=0, OCEAN=1, GRASSLAND=2, FOREST=3, DESERT=4, MOUNTAIN=5, SNOW=6, HILLY=7, JUNGLE=8, WETLAND=9, STEPPES=10, CAVE=11, RUIN=12, ICE=13
-
-				if ( biomeType == OCEAN)
-				{
-					biome->name = "Ocean of "+globalNameGen.generateName();
-				}
-				else
-				{
-					biome->name = globalNameGen.generateName();
-				}
-
-				if ( biomeType == MOUNTAIN)
-				{
-					if ( biome->size == 1 )
-					{
-						biome->name = "Mount " + globalNameGen.generateName();
-					}
-					else
-					{
-						biome->name = globalNameGen.generateName() + " Mountains";
-					}
-				}
-
-				vBiome.push(biome);
-
-				vFill->deleteAll();
-				delete vFill;
-
-				++currentID;
-			}
-		}
+		std::cout<<vBiome(i)->id<<" : "<<vBiome(i)->name<<"\n";
 	}
-	std::cout<<"Total biome fills: "<<totalFillTiles<<"\n";
 	
-	// BUILD BIOME VECTOR
-	for ( int _y=0;_y<nY;++_y)
-	{
-		for ( int _x=0;_x<nX;++_x)
-		{
-			if (aBiomeID(_x,_y) == -1 )
-			{
-				std::cout<<"ERROR: Unfilled biome tile found\n";
-			}
-		}
-	}
-#endif
-
-
 	//isRaining=true;
 	isRaining=false;
 
@@ -2133,16 +2030,25 @@ std::string World::getLandmassName(const int _x, const int _y)
 std::string World::getLandmassName (HasXY* _xy)
 { return getLandmassName(_xy->x,_xy->y); }
 
+World_Biome * World::getBiome(const int id)
+{
+	for (int i=0;i<vBiome.size();++i)
+	{
+		if ( vBiome(i)->id == id)
+		{
+			return vBiome(i);
+		}
+	}
+	
+	return 0;
+}
+
 std::string World::getBiomeName(const int _x, const int _y)
 {
-	
 	if ( isSafe(_x,_y) )
 	{
-		std::cout<<"Getbiomename: "<<_x<<", "<<_y<<" : "<<aBiomeID(_x,_y)<<"\n";
-
 		if (vBiome.isSafe(aBiomeID(_x,_y)))
 		{
-			std::cout<<"Querying tile: "<<_x<<", "<<_y<<": "<<aBiomeID(_x,_y)<<"\n";
 			return vBiome(aBiomeID(_x,_y))->name;
 		}
 	}

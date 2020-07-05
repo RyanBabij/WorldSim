@@ -259,6 +259,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	std::string getLandmassName(const int /* x */, const int /* y */);
 	std::string getLandmassName (HasXY*);
 
+	World_Biome* getBiome(const int id);
 	std::string getBiomeName( const int /* x */, const int /* y */);
 
 	//INFO GETTING FUNCTIONS

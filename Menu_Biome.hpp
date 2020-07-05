@@ -118,10 +118,20 @@ class Menu_Biome: public GUI_Interface
 			if ( guiTableBiome.lastClickedIndex != -1 )
 			{
 				lastRowClicked=guiTableBiome.lastClickedIndex;
-				if (world.vBiome.isSafe(lastRowClicked))
+				
+				// find the biome with the correct id
+				//for (int i=0;i<world.vBiome
+				World_Biome * b = world.getBiome(lastRowClicked);
+				
+				if (b)
 				{
-					selectedBiome=world.vBiome(lastRowClicked);
+					selectedBiome = b;
 				}
+				
+				//if (world.vBiome.isSafe(lastRowClicked))
+				//{
+				//	selectedBiome=world.vBiome(lastRowClicked);
+				//}
 				guiTableBiome.lastClickedIndex = -1;
 			}
 		}

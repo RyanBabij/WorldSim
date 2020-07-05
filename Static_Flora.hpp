@@ -290,7 +290,8 @@ class FloraGenerator
 		return vFlora;
 	}
 	
-	// return a single flora
+	// generate and return a single flora type
+	// note this is Flora type, not object.
 	Flora* get(const int spawnWeighting=0)
 	{
 		return new Flora(generateName(),spawnWeighting);
@@ -304,6 +305,8 @@ class FloraManager
 {
 	public:
 	
+	int totalSpawnWeight;
+	
 	// All flora types in the biome (max 255 types)
 	Vector <Flora*> vFlora;
 	
@@ -312,20 +315,23 @@ class FloraManager
 	
 	FloraManager()
 	{
+		totalSpawnWeight=0;
 	}
 	
-	void generate (const int amount)
+	void generate (const int amount=1)
 	{
+		std::cout<<"FloraManager generating "<<amount<<" flora.\n";
 		int currentPoints=1000;
 		for (int i=0;i<amount;++i)
 		{			
 			vFlora.push(floraGenerator.get(currentPoints));
+			totalSpawnWeight+=currentPoints;
 			currentPoints/=2;
 		}
 	}
 	
 	// return a random flora from the weighted lists
-	Flora* spawn()
+	Flora* get()
 	{
 		return 0;
 	}

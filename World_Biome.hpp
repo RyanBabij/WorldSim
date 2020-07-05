@@ -41,14 +41,15 @@ While this is happening, the biome should be marked as "initializing" and cannot
 class World_Biome: public TableInterface
 {
 	RandomLehmer rng;
-	FloraGenerator floraGenerator;
+	//FloraGenerator floraGenerator;
+	FloraManager floraManager;
 
 	public:
 
 	bool isGenerated; // true if all tiles have been generated.
 	bool threadAccess; // true if a thread is using this biome
 
-	int id; // the biome's id. Used to lookup biome tables.
+	int id; // the biome's id. Used to lookup biome tables. The id is equal to it's position in the biome vector.
 
 	std::string name;
 	unsigned int size; /* size in tiles */

@@ -152,6 +152,11 @@ Implementation of WorlD_Biome.hpp
 		if (size==0) { return; }
 
 		if (type==OCEAN || type == ICE) { return; }
+		
+		for (int i=0;i<vMap.size();++i)
+		{
+			vMap(i)->biome = this;
+		}
 
 		unsigned int minFlora = sqrt(size)/1.5;
 		if ( minFlora < 3 ) { minFlora=3; }
@@ -262,7 +267,8 @@ Implementation of WorlD_Biome.hpp
 		
 		// Generate the random flora.
 		
-		Vector <Flora*>* vFlora2 = floraGenerator.generate(floraAmount);
+		//Vector <Flora*>* vFlora2 = floraGenerator.generate(floraAmount);
+		floraManager.generate(floraAmount);
 
 		// std::cout<<"Flora generated for biome:\n";
 		// for (int i=0;i<vFlora2->size();++i)
@@ -271,7 +277,7 @@ Implementation of WorlD_Biome.hpp
 			// vFlora.push( (*vFlora2)(i) );
 			
 		// }
-		delete vFlora2;
+		//delete vFlora2;
 
 		// assign local ids to the flora (1-255)
 
@@ -280,14 +286,7 @@ Implementation of WorlD_Biome.hpp
 			vFlora(i)->id=i+1;
 			vFlora(i)->spawnWeight = 10;
 			vFlora(i)->setFoodValues(0,0,0,0,0,0);
-		}
-		
-		for (int i=0;i<vMap.size();++i)
-		{
-			//std::cout<<"Setting biom\n";
-			vMap(i)->biome = this;
-		}
-		
+		}		
 		
 		// save the flora lookup list (in future we could probably hold the whole list in memory)
 		SaveFileManager sfm;
@@ -305,6 +304,9 @@ Implementation of WorlD_Biome.hpp
 	// pick a flora type from the weighted list to spawn
 	Flora* World_Biome::getFlora()
 	{
+		return floraManager.get();
+		
+		
 		unsigned long int cumulativeProb = 0;
 
 		for (int i=0;i<vFlora.size();++i)
@@ -362,7 +364,6 @@ Implementation of WorlD_Biome.hpp
 				closestDistance = deltaX+deltaY;
 			}
 		}
-		std::cout<<"Biome center coords: "<<centerX<<", "<<centerY<<"\n";
 	}
 	
 	

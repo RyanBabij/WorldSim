@@ -558,10 +558,14 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 					if (biome)
 					{
 						//std::cout<<"biome\n";
-						//Flora * f = biome->getFlora();
+						Flora * f = biome->getFlora();
+						if (f)
+						{
+							put(f, _x, _y);
+						}
 						
 						//std::cout<<"Put: "<<f->name<<"\n";
-						put (biome->getFlora(), _x, _y);
+						
 					}
 					else
 					{
@@ -589,6 +593,24 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 						}
 						//put (rockyBoi,_x,_y);
 					}
+					
+					if (biome)
+					{
+						//std::cout<<"biome\n";
+						Flora * f = biome->getFlora();
+						if (f)
+						{
+							put(f, _x, _y);
+						}
+						
+						//std::cout<<"Put: "<<f->name<<"\n";
+						
+					}
+					else
+					{
+						std::cout<<"Nobiome\n";
+					}
+					
 				}
 				
 				
