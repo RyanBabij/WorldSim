@@ -28,6 +28,12 @@ Implementation of WorlD_Biome.hpp
 		threadAccess=false;
 
 		id=-1;
+		
+		averageX=-1;
+		averageY=-1;
+		
+		centerX=-1;
+		centerY=-1;
 	}
 
 	World_Biome::~World_Biome()
@@ -146,6 +152,11 @@ Implementation of WorlD_Biome.hpp
 		if (size==0) { return; }
 
 		if (type==OCEAN || type == ICE) { return; }
+		
+		for (int i=0;i<vMap.size();++i)
+		{
+			vMap(i)->biome = this;
+		}
 
 		unsigned int minFlora = sqrt(size)/1.5;
 		if ( minFlora < 3 ) { minFlora=3; }
@@ -171,124 +182,111 @@ Implementation of WorlD_Biome.hpp
 		// The rest should be random.
 
 		// assign base flora for each biome
-		if (type == DESERT)
-		{
-			Flora* flora = new Flora("Cactus",100);
-			flora->setFoodValues(0,0,0,0,0,0);
-			vFlora.push(flora);
-
-			Flora* flora2 = new Flora("Shrub",25);
-			flora2->setFoodValues(0,0,0,0,5,1);
-			vFlora.push(flora2);
-
-			Flora* flora3 = new Flora("Desert plant",10);
-			flora3->setFoodValues(0,0,5,1,4,1);
-			vFlora.push(flora3);
-		}
-		else if (type == SNOW)
-		{
-			Flora* flora = new Flora("Fir tree",100);
-			flora->setFoodValues(0,0,0,0,5,1);
-			vFlora.push(flora);
-
-			Flora* flora2 = new Flora("Bush",25);
-			flora2->setFoodValues(0,0,5,1,5,1);
-			vFlora.push(flora2);
-
-			Flora* flora3 = new Flora("Hardy plant",10);
-			flora3->setFoodValues(0,0,5,1,4,1);
-			vFlora.push(flora3);
-		}
-		else if (type == WETLAND)
-		{
-			Flora* flora = new Flora("Willow tree",100);
-			flora->setFoodValues(0,0,0,0,5,1);
-			vFlora.push(flora);
-
-			Flora* flora2 = new Flora("Swamp plant",25);
-			flora2->setFoodValues(0,0,5,1,5,1);
-			vFlora.push(flora2);
-
-			Flora* flora3 = new Flora("Swamp plant",10);
-			flora3->setFoodValues(0,0,5,1,4,1);
-			vFlora.push(flora3);
-		}
-		else
-		{
-			Flora* flora = new Flora("Tree",100);
-			flora->setFoodValues(0,0,0,0,5,1);
-			vFlora.push(flora);
-
-			Flora* flora2 = new Flora("Common plant",25);
-			flora2->setFoodValues(0,0,5,1,5,1);
-			vFlora.push(flora2);
-
-			Flora* flora3 = new Flora("Uncommon plant",10);
-			flora3->setFoodValues(0,0,5,1,4,1);
-			vFlora.push(flora3);
-		}
-
-		for (unsigned int i=3;i<floraAmount;++i)
-		{
-			std::string floraName = "";
-
-			int common = rng.rand8()%3;
-
-			if (common==0)
-			{
-				Flora* flora2 = new Flora("Common flora",20);
-				flora2->setFoodValues(0,0,5,1,5,1);
-				vFlora.push(flora2);
-			}
-			else if (common==1)
-			{
-				Flora* flora2 = new Flora("Uncommon flora",10);
-				flora2->setFoodValues(0,0,5,1,5,1);
-				vFlora.push(flora2);
-			}
-			else
-			{
-				Flora* flora2 = new Flora("Rare flora",5);
-				flora2->setFoodValues(0,0,5,1,5,1);
-				vFlora.push(flora2);
-			}
-		}
-
-		// //std::cout<<"Spawning 10 flora:\n";
-		// for (int i=0;i<10;++i)
+		// if (type == DESERT)
 		// {
-		// Flora * flora = getFlora();
-		// if ( flora )
+			// Flora* flora = new Flora("Cactus",100);
+			// flora->setFoodValues(0,0,0);
+			// vFlora.push(flora);
+
+			// Flora* flora2 = new Flora("Shrub",25);
+			// flora2->setFoodValues(0,0,0);
+			// vFlora.push(flora2);
+
+			// Flora* flora3 = new Flora("Desert plant",10);
+			// flora3->setFoodValues(0,0,5);
+			// vFlora.push(flora3);
+		// }
+		// else if (type == SNOW)
 		// {
-		// //std::cout<<"   "<<flora->name<<"\n";
+			// Flora* flora = new Flora("Fir tree",100);
+			// flora->setFoodValues(0,0,0);
+			// vFlora.push(flora);
+
+			// Flora* flora2 = new Flora("Bush",25);
+			// flora2->setFoodValues(0,0,5);
+			// vFlora.push(flora2);
+
+			// Flora* flora3 = new Flora("Hardy plant",10);
+			// flora3->setFoodValues(0,0,5);
+			// vFlora.push(flora3);
+		// }
+		// else if (type == WETLAND)
+		// {
+			// Flora* flora = new Flora("Willow tree",100);
+			// flora->setFoodValues(0,0,0);
+			// vFlora.push(flora);
+
+			// Flora* flora2 = new Flora("Swamp plant",25);
+			// flora2->setFoodValues(0,0,0);
+			// vFlora.push(flora2);
+
+			// Flora* flora3 = new Flora("Swamp plant",10);
+			// flora3->setFoodValues(0,0,5);
+			// vFlora.push(flora3);
 		// }
 		// else
 		// {
-		// //std::cout<<"Error: No flora\n";
+			// Flora* flora = new Flora("Tree",100);
+			// flora->setFoodValues(0,0,0);
+			// vFlora.push(flora);
+
+			// Flora* flora2 = new Flora("Common plant",25);
+			// flora2->setFoodValues(0,0,5);
+			// vFlora.push(flora2);
+
+			// Flora* flora3 = new Flora("Uncommon plant",10);
+			// flora3->setFoodValues(0,0,5);
+			// vFlora.push(flora3);
 		// }
 
+		// for (unsigned int i=3;i<floraAmount;++i)
+		// {
+			// std::string floraName = "";
 
+			// int common = rng.rand8()%3;
+
+			// if (common==0)
+			// {
+				// Flora* flora2 = new Flora("Common flora",20);
+				// flora2->setFoodValues(0,0,5,1,5,1);
+				// vFlora.push(flora2);
+			// }
+			// else if (common==1)
+			// {
+				// Flora* flora2 = new Flora("Uncommon flora",10);
+				// flora2->setFoodValues(0,0,5,1,5,1);
+				// vFlora.push(flora2);
+			// }
+			// else
+			// {
+				// Flora* flora2 = new Flora("Rare flora",5);
+				// flora2->setFoodValues(0,0,5,1,5,1);
+				// vFlora.push(flora2);
+			// }
 		// }
 		
 		// Generate the random flora.
 		
-		Vector <Flora*>* vFlora2 = floraGenerator.generate(floraAmount);
+		//Vector <Flora*>* vFlora2 = floraGenerator.generate(floraAmount);
+		floraManager.generate(floraAmount);
 
-		std::cout<<"Flora generated for biome:\n";
-		for (int i=0;i<vFlora2->size();++i)
-		{
-			std::cout<<" * "<<(*vFlora2)(i)->getName()<<"\n";
-			vFlora.push( (*vFlora2)(i) );
-		}
-		delete vFlora2;
+		// std::cout<<"Flora generated for biome:\n";
+		// for (int i=0;i<vFlora2->size();++i)
+		// {
+			// std::cout<<" * "<<(*vFlora2)(i)->getName()<<"\n";
+			// vFlora.push( (*vFlora2)(i) );
+			
+		// }
+		//delete vFlora2;
 
 		// assign local ids to the flora (1-255)
 
 		for (int i=0;i<vFlora.size();++i)
 		{
 			vFlora(i)->id=i+1;
-		}
-		
+			vFlora(i)->spawnWeight = 10;
+			vFlora(i)->setFoodValues(0,0,0);
+		}		
 		
 		// save the flora lookup list (in future we could probably hold the whole list in memory)
 		SaveFileManager sfm;
@@ -299,13 +297,16 @@ Implementation of WorlD_Biome.hpp
 		sfm.addChunk(chonk);
 		// savefile can be the biomeID + f for Flora
 		std::string biomePath = currentSavePath + "/" + DataTools::toString(id) + "f.dat";
-		std::cout<<"Saving Flora lookup to: "<<biomePath<<"\n";
+		//std::cout<<"Saving Flora lookup to: "<<biomePath<<"\n";
 		sfm.saveToFile(biomePath);
 	}
 
 	// pick a flora type from the weighted list to spawn
 	Flora* World_Biome::getFlora()
 	{
+		return floraManager.get();
+		
+		
 		unsigned long int cumulativeProb = 0;
 
 		for (int i=0;i<vFlora.size();++i)
@@ -331,6 +332,44 @@ Implementation of WorlD_Biome.hpp
 		}
 
 		return 0;
+	}
+	
+		// Uses a safe rolling average to prevent overflow.
+	void World_Biome::getAverageCoordinates(/*Vector <HasXY*> * vXY*/)
+	{
+		int n = 0;
+		int n2 = 0;
+		averageX = 0;
+		averageY = 0;
+		for ( int i=0;i<vXY.size();++i)
+		{
+			double deltaX = vXY(i).x - averageX;
+			averageX += deltaX/++n;
+			
+			double deltaY = vXY(i).y - averageY;
+			averageY += deltaY/++n2;
+		}
+		
+		// now find the tile closest to these average points.
+		double closestDistance = -1;
+		for ( int i=0;i<vXY.size();++i)
+		{
+			double deltaX = abs(vXY(i).x - averageX);
+			double deltaY = abs(vXY(i).y - averageY);
+			
+			if ( closestDistance == -1 || closestDistance > deltaX+deltaY)
+			{
+				centerX = vXY(i).x;
+				centerY = vXY(i).y;
+				closestDistance = deltaX+deltaY;
+			}
+		}
+	}
+	
+	void World_Biome::addMap(World_Local* map)
+	{
+		map->biome=this;
+		vMap.push(map);
 	}
 	
 	

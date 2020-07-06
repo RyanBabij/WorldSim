@@ -69,6 +69,8 @@ World_Local::World_Local()
 	dataSubterranean=0;
 	
 	centerHeight=0;
+	
+	biome=0;
 }
 
 World_Local::~World_Local()
@@ -398,6 +400,7 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 
 	data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 	//data->aStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
+	//data->aStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
 
 	abstractData->bfCollision.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 	abstractData->aStaticID.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
@@ -549,9 +552,35 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 					deer->init();
 					put(deer,_x,_y);
 				}
-				else if (rng.oneIn(100) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
+				else if (rng.oneIn(50) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
 				{
 					//auto tree = new Static_Tree();
+					
+					if (biome)
+					{
+						//std::cout<<"biome\n";
+						Flora * f = biome->getFlora();
+						if (f)
+						{
+							put(f, _x, _y);
+						}
+						
+						//std::cout<<"Put: "<<f->name<<"\n";
+						
+					}
+					else
+					{
+						//std::cout<<"Nobiome\n";
+					}
+					
+					// if (rng.oneIn(3))
+					// {
+						// put (new Static_Tree(), _x, _y);
+					// }
+					// else
+					// {
+						// put (new Flora(), _x, _y);
+					// }
 					//put (new Static_Tree(), _x, _y);
 				}
 				else if ( baseBiome == MOUNTAIN )
@@ -565,6 +594,24 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 						}
 						//put (rockyBoi,_x,_y);
 					}
+					
+					else if (biome && rng.oneIn(100))
+					{
+						//std::cout<<"biome\n";
+						Flora * f = biome->getFlora();
+						if (f)
+						{
+							put(f, _x, _y);
+						}
+						
+						//std::cout<<"Put: "<<f->name<<"\n";
+						
+					}
+					else
+					{
+						///std::cout<<"Nobiome\n";
+					}
+					
 				}
 				
 				
@@ -640,15 +687,16 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 
 	//This generates a distance texture of the map where 1 local tile = 1 pixel,
 	// to allow fast rendering of local maps from a distance.
+	// textures are upside-down for some reason
 	for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
 	{
 		for ( int _x=0;_x<LOCAL_MAP_SIZE;++_x)
 		{
 			const Texture * t =data->aLocalTile(_x,_y).currentTexture();
-			texFar.setPixel(_x,_y,0,t->averageRed);
-			texFar.setPixel(_x,_y,1,t->averageGreen);
-			texFar.setPixel(_x,_y,2,t->averageBlue);
-			texFar.setPixel(_x,_y,3,255);
+			texFar.setPixel(_x,LOCAL_MAP_SIZE-_y,0,t->averageRed);
+			texFar.setPixel(_x,LOCAL_MAP_SIZE-_y,1,t->averageGreen);
+			texFar.setPixel(_x,LOCAL_MAP_SIZE-_y,2,t->averageBlue);
+			texFar.setPixel(_x,LOCAL_MAP_SIZE-_y,3,255);
 		}
 	}
 	bindNearestNeighbour(&texFar,COMPRESS_TEXTURES);
@@ -802,10 +850,10 @@ void World_Local::generateHeightMap(const short int c0, const short int c1, cons
 	if (c6 < corn4) { corn4 = c6; }
 	if (c7 < corn4) { corn4 = c7; }
 	
-	int leftMax = corn1<corn3?corn1:corn3;
-	int rightMax = corn2<corn4?corn2:corn4;
-	int topMax = corn1<corn2?corn1:corn2;
-	int bottomMax = corn3<corn4?corn3:corn4;
+	int leftMax = c3<centerHeight?c3:centerHeight;
+	int rightMax = c4<centerHeight?c4:centerHeight;
+	int topMax = c1<centerHeight?c1:centerHeight;
+	int bottomMax = c6<centerHeight?c6:centerHeight;
 	
 	
 	//int corn1 = (c0 + c1 + c3 + centerHeight) / 4; // top-left
@@ -849,13 +897,13 @@ void World_Local::generateHeightMap(const short int c0, const short int c1, cons
 	
 	LinearMidpointDisplacement lpd;
 	lpd.seed(123);
-	lpd.generate(aBorderLeft,LOCAL_MAP_SIZE,leftMax);
+	lpd.generate(aBorderLeft,LOCAL_MAP_SIZE,leftMax,2);
 	lpd.seed(123);
-	lpd.generate(aBorderRight,LOCAL_MAP_SIZE,rightMax);
+	lpd.generate(aBorderRight,LOCAL_MAP_SIZE,rightMax,2);
 	lpd.seed(123);
-	lpd.generate(aBorderTop,LOCAL_MAP_SIZE,topMax);
+	lpd.generate(aBorderTop,LOCAL_MAP_SIZE,topMax,2);
 	lpd.seed(123);
-	lpd.generate(aBorderBottom,LOCAL_MAP_SIZE,bottomMax);
+	lpd.generate(aBorderBottom,LOCAL_MAP_SIZE,bottomMax,2);
 	
 	// generate border values here (use fixed seed to start out).
 	
@@ -1385,6 +1433,7 @@ bool World_Local::load()
 	if ( data == 0 )
 	{ data=new Data; }
 	data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+	//data->aStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
 	//dataSubterranean->aSubterranean.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 
 	// Open the cache file for loading into memory.
@@ -1636,7 +1685,7 @@ bool World_Local::put (Static* _static, int _x, int _y, bool subterranean)
 
 	// if ( data->aStatic(_x,_y) == 0 )
 	// { 
-	// data->aStatic(_x,_y) = _static;
+		// data->aStatic(_x,_y) = _static;
 	// }
 
 	if ( data->aLocalTile(_x,_y).objStatic == 0 )

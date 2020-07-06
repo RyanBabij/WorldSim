@@ -313,19 +313,36 @@ public:
 		if ( world.isSafe(world.queryWorldX,world.queryWorldY) )
 		{
 			World_Local * tile = world.getTile(world.queryWorldX,world.queryWorldY);
-
+			
 			if ( tile != 0 )
 			{
-				if (tile->data !=0 )
+				if (tile->data && tile->data->aLocalTile.isSafe(world.queryWorldXLocal,world.queryWorldYLocal))
 				{
-					if (tile->data->aLocalTile.isSafe(world.queryWorldXLocal,world.queryWorldYLocal))
+					
+					if ( tile->data->aLocalTile(world.queryWorldXLocal,world.queryWorldYLocal).objStatic )
 					{
+						const std::string sName =
+						tile->data->aLocalTile(world.queryWorldXLocal,world.queryWorldYLocal).objStatic->getName();
 						font8x8.drawText
-						(Stream() << "Elevation: "<< tile->data->aLocalTile
-						(world.queryWorldXLocal,world.queryWorldYLocal).height << "m",
-						panelX1,panelY1+388,panelX1+220,panelY1+398,false,true);
+						(Stream() << sName,
+						panelX1,panelY1+418,panelX1+220,panelY1+428,false,true);
 					}
 					
+					font8x8.drawText
+					(Stream() << tile->data->aLocalTile
+					(world.queryWorldXLocal,world.queryWorldYLocal).getName()
+					<< " ("<<world.queryWorldXLocal<<", "<<world.queryWorldYLocal<<")",
+					panelX1,panelY1+408,panelX1+220,panelY1+418,false,true);
+					
+
+					
+					font8x8.drawText
+					(Stream() << tile->getTerrainName() << " ("<<world.queryWorldXLocal<<", "<<world.queryWorldYLocal<<")",
+					panelX1,panelY1+398,panelX1+220,panelY1+408,false,true);
+					font8x8.drawText
+					(Stream() << "Elevation: "<< tile->data->aLocalTile
+					(world.queryWorldXLocal,world.queryWorldYLocal).height << "m",
+					panelX1,panelY1+388,panelX1+220,panelY1+398,false,true);
 				}
 				// Tile image
 				Renderer::setTextureMode();
@@ -615,15 +632,30 @@ public:
 			menuTribes.lastRowClicked=-1;
 		}
 
+		// maybe some kind of EVENT class would work better for this kind of thing?
 		if (menuWorld.lastRowClicked != -1 )
 		{
 			if ( world.vLandmass.isSafe(menuWorld.lastRowClicked) )
 			{
-				World_Landmass* l = world.vLandmass(menuWorld.lastRowClicked);
-				worldViewer.setCenterTile(l->averageX,l->averageY);
+				World_Landmass* l = menuWorld.selectedLandmass;
+				if ( l != 0 )
+				{
+					worldViewer.setCenterTile(l->centerX,l->centerY);
+				}
 			}
-
 			menuWorld.lastRowClicked=-1;
+		}
+		if (menuBiome.lastRowClicked != -1 )
+		{
+			if ( world.vBiome.isSafe(menuBiome.lastRowClicked) )
+			{
+				World_Biome* b = menuBiome.selectedBiome;
+				if ( b != 0 )
+				{
+					worldViewer.setCenterTile(b->centerX,b->centerY);
+				}
+			}
+			menuBiome.lastRowClicked=-1;
 		}
 
 		return false;

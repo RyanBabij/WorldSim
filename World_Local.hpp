@@ -61,6 +61,8 @@ private:
 	unsigned int seed;
 
 	Vector <WorldObject_Tree*> vTree;
+	// list of all types of flora in the game
+	//Vector <Flora*> vFlora;
 
 	// Simplified world data for use in fast abstract simulations.
 	// Should generally always be loaded in, but I'd like to add caching support regardless.
@@ -75,7 +77,7 @@ private:
 	// Grouping data by biome is probably the most sensible option.
 
 	// in future we could probably have a generate function which solely deals in abstract data, and lets
-	// the details get filled in later. For example just randomly put down movement blockers in the
+	// the details get filled in later. For example just randomaly put down movement blockers in the
 	// collision bitfield and later on we can actually generate their object data.
 	struct AbstractData
 	{
@@ -162,7 +164,6 @@ private:
 	bool hasCave; // should be ncaves
 	bool hasRuin; // should be nruins
 
-#ifdef WILDCAT_THREADING
 	//WORLD DATA
 	std::atomic <short int> globalX_TS;
 	std::atomic <short int> globalY_TS;
@@ -175,13 +176,6 @@ private:
 
 	//WORLD DATA
 	//short int globalY; /* The local world's position in the world. */
-
-#else
-	//WORLD DATA
-	short int globalX, globalY; /* The local world's position in the world. */
-	bool initialized; /* True if the world has been loaded at least once. */
-	bool active; /* Whether or not the world should be simulated. */
-#endif
 
 	// How many metals may be mined from this tile.
 	short int baseMetal;

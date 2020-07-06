@@ -1025,7 +1025,8 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                   Renderer::placeTexture4
                   (currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_JUNGLE, false);
                }
-               if(world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == MOUNTAIN)
+               if(world->isLand(tileX,tileY) && world->aWorldTile(tileX,tileY).baseBiome == MOUNTAIN &&
+					world->aWorldTile(tileX,tileY).active==false)
                {
                   Renderer::placeTexture4
                   (currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_MOUNTAIN_00, false);

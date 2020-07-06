@@ -41,14 +41,15 @@ While this is happening, the biome should be marked as "initializing" and cannot
 class World_Biome: public TableInterface
 {
 	RandomLehmer rng;
-	FloraGenerator floraGenerator;
+	//FloraGenerator floraGenerator;
+	FloraManager floraManager;
 
 	public:
 
 	bool isGenerated; // true if all tiles have been generated.
 	bool threadAccess; // true if a thread is using this biome
 
-	int id; // the biome's id. Used to lookup biome tables.
+	int id; // the biome's id. Used to lookup biome tables. The id is equal to it's position in the biome vector.
 
 	std::string name;
 	unsigned int size; /* size in tiles */
@@ -63,6 +64,8 @@ class World_Biome: public TableInterface
 	//Vector <std::string> vHerbivore;
 	//Vector <std::string> vCarnivore;
 	
+	double averageX, averageY; /* For zooming to biome. */
+	int centerX, centerY; /* The closest tile to the average which is owned by the biome */
 	
 
 	World_Biome();
@@ -79,6 +82,10 @@ class World_Biome: public TableInterface
 	
 	// pick a flora type from the weighted list to spawn
 	Flora* getFlora();
+	
+	void getAverageCoordinates(/*Vector <HasXY*> * vXY*/);
+	
+	void addMap(World_Local * map);
 	
 	
 	// TableInterface
