@@ -101,9 +101,7 @@ class Flora: public Static
    // This should allow a balance of large and slow, and small and fast herbivores
    // Increment is per 24 hours
    // 1 food = 1 day of food for 1 herbivore
-   unsigned char easyFood, maxEasyFood, easyFoodIncrement;
-   unsigned char mediumFood, maxMediumFood, mediumFoodIncrement;
-   unsigned char hardFood, maxHardFood, hardFoodIncrement;
+   unsigned char easyFood, mediumFood, hardFood;
    
    //Vector <unsigned char> vAllowedBiomeTypes;
    
@@ -118,39 +116,29 @@ class Flora: public Static
    }
    void increment(unsigned short int nDays)
    {
-      for (int i=0;i<nDays;++i)
-      {
-         const unsigned short int newEasy = easyFood+easyFoodIncrement;
-         if ( newEasy > 255 ) { easyFood = 255; }
-         else { easyFood = newEasy; }
-         if ( easyFood > maxEasyFood ) { easyFood = maxEasyFood; }
+      // for (int i=0;i<nDays;++i)
+      // {
+         // const unsigned short int newEasy = easyFood+easyFoodIncrement;
+         // if ( newEasy > 255 ) { easyFood = 255; }
+         // else { easyFood = newEasy; }
+         // if ( easyFood > maxEasyFood ) { easyFood = maxEasyFood; }
 
-         const unsigned short int newMedium = mediumFood+mediumFoodIncrement;
-         if ( newMedium > 255 ) { mediumFood = 255; }
-         else { mediumFood = newMedium; }
-         if ( mediumFood > maxMediumFood ) { mediumFood = maxMediumFood; }
+         // const unsigned short int newMedium = mediumFood+mediumFoodIncrement;
+         // if ( newMedium > 255 ) { mediumFood = 255; }
+         // else { mediumFood = newMedium; }
+         // if ( mediumFood > maxMediumFood ) { mediumFood = maxMediumFood; }
          
-         const unsigned short int newHard = hardFood+hardFoodIncrement;
-         if ( newHard > 255 ) { hardFood = 255; }
-         else { hardFood = newHard; }
-         if ( hardFood > maxHardFood ) { hardFood = maxHardFood; }
-      }
+         // const unsigned short int newHard = hardFood+hardFoodIncrement;
+         // if ( newHard > 255 ) { hardFood = 255; }
+         // else { hardFood = newHard; }
+         // if ( hardFood > maxHardFood ) { hardFood = maxHardFood; }
+      // }
    }
-   void setFoodValues(unsigned char _easyIncrement, unsigned char _maxEasy,
-      unsigned char _mediumIncrement, unsigned char _maxMedium,
-      unsigned char _hardIncrement, unsigned char _maxHard)
+   void setFoodValues(unsigned char _maxEasy, unsigned char _maxMedium, unsigned char _maxHard)
    {
       easyFood = _maxEasy;
-      maxEasyFood = _maxEasy;
-      easyFoodIncrement = _easyIncrement;
-      
       mediumFood = _maxMedium;
-      maxMediumFood = _maxMedium;
-      mediumFoodIncrement = _mediumIncrement;
-      
       hardFood = _maxHard;
-      maxHardFood = _maxHard;
-      hardFoodIncrement = _hardIncrement;
    }
    void allowBiome(unsigned char biomeType)
    {
@@ -158,7 +146,7 @@ class Flora: public Static
    }
    virtual Texture* currentTexture() override
    {
-      return &TEX_FLORA_RED_MUSHROOM;
+      return &TEX_FLORA_PLANT;
    }
 };
 
@@ -282,7 +270,7 @@ class FloraGenerator
 		
 		int currentPoints=1000;
 		for (int i=0;i<amount;++i)
-		{			
+		{
 			Flora * flora = new Flora(generateName(),currentPoints);
 			vFlora->push(flora);
 			currentPoints/=2;

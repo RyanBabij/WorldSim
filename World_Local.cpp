@@ -570,7 +570,7 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 					}
 					else
 					{
-						std::cout<<"Nobiome\n";
+						//std::cout<<"Nobiome\n";
 					}
 					
 					// if (rng.oneIn(3))
@@ -595,7 +595,7 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 						//put (rockyBoi,_x,_y);
 					}
 					
-					if (biome)
+					else if (biome && rng.oneIn(100))
 					{
 						//std::cout<<"biome\n";
 						Flora * f = biome->getFlora();
@@ -609,7 +609,7 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 					}
 					else
 					{
-						std::cout<<"Nobiome\n";
+						///std::cout<<"Nobiome\n";
 					}
 					
 				}

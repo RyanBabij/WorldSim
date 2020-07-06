@@ -182,88 +182,88 @@ Implementation of WorlD_Biome.hpp
 		// The rest should be random.
 
 		// assign base flora for each biome
-		if (type == DESERT)
-		{
-			Flora* flora = new Flora("Cactus",100);
-			flora->setFoodValues(0,0,0,0,0,0);
-			vFlora.push(flora);
+		// if (type == DESERT)
+		// {
+			// Flora* flora = new Flora("Cactus",100);
+			// flora->setFoodValues(0,0,0);
+			// vFlora.push(flora);
 
-			Flora* flora2 = new Flora("Shrub",25);
-			flora2->setFoodValues(0,0,0,0,5,1);
-			vFlora.push(flora2);
+			// Flora* flora2 = new Flora("Shrub",25);
+			// flora2->setFoodValues(0,0,0);
+			// vFlora.push(flora2);
 
-			Flora* flora3 = new Flora("Desert plant",10);
-			flora3->setFoodValues(0,0,5,1,4,1);
-			vFlora.push(flora3);
-		}
-		else if (type == SNOW)
-		{
-			Flora* flora = new Flora("Fir tree",100);
-			flora->setFoodValues(0,0,0,0,5,1);
-			vFlora.push(flora);
+			// Flora* flora3 = new Flora("Desert plant",10);
+			// flora3->setFoodValues(0,0,5);
+			// vFlora.push(flora3);
+		// }
+		// else if (type == SNOW)
+		// {
+			// Flora* flora = new Flora("Fir tree",100);
+			// flora->setFoodValues(0,0,0);
+			// vFlora.push(flora);
 
-			Flora* flora2 = new Flora("Bush",25);
-			flora2->setFoodValues(0,0,5,1,5,1);
-			vFlora.push(flora2);
+			// Flora* flora2 = new Flora("Bush",25);
+			// flora2->setFoodValues(0,0,5);
+			// vFlora.push(flora2);
 
-			Flora* flora3 = new Flora("Hardy plant",10);
-			flora3->setFoodValues(0,0,5,1,4,1);
-			vFlora.push(flora3);
-		}
-		else if (type == WETLAND)
-		{
-			Flora* flora = new Flora("Willow tree",100);
-			flora->setFoodValues(0,0,0,0,5,1);
-			vFlora.push(flora);
+			// Flora* flora3 = new Flora("Hardy plant",10);
+			// flora3->setFoodValues(0,0,5);
+			// vFlora.push(flora3);
+		// }
+		// else if (type == WETLAND)
+		// {
+			// Flora* flora = new Flora("Willow tree",100);
+			// flora->setFoodValues(0,0,0);
+			// vFlora.push(flora);
 
-			Flora* flora2 = new Flora("Swamp plant",25);
-			flora2->setFoodValues(0,0,5,1,5,1);
-			vFlora.push(flora2);
+			// Flora* flora2 = new Flora("Swamp plant",25);
+			// flora2->setFoodValues(0,0,0);
+			// vFlora.push(flora2);
 
-			Flora* flora3 = new Flora("Swamp plant",10);
-			flora3->setFoodValues(0,0,5,1,4,1);
-			vFlora.push(flora3);
-		}
-		else
-		{
-			Flora* flora = new Flora("Tree",100);
-			flora->setFoodValues(0,0,0,0,5,1);
-			vFlora.push(flora);
+			// Flora* flora3 = new Flora("Swamp plant",10);
+			// flora3->setFoodValues(0,0,5);
+			// vFlora.push(flora3);
+		// }
+		// else
+		// {
+			// Flora* flora = new Flora("Tree",100);
+			// flora->setFoodValues(0,0,0);
+			// vFlora.push(flora);
 
-			Flora* flora2 = new Flora("Common plant",25);
-			flora2->setFoodValues(0,0,5,1,5,1);
-			vFlora.push(flora2);
+			// Flora* flora2 = new Flora("Common plant",25);
+			// flora2->setFoodValues(0,0,5);
+			// vFlora.push(flora2);
 
-			Flora* flora3 = new Flora("Uncommon plant",10);
-			flora3->setFoodValues(0,0,5,1,4,1);
-			vFlora.push(flora3);
-		}
+			// Flora* flora3 = new Flora("Uncommon plant",10);
+			// flora3->setFoodValues(0,0,5);
+			// vFlora.push(flora3);
+		// }
 
-		for (unsigned int i=3;i<floraAmount;++i)
-		{
-			std::string floraName = "";
+		// for (unsigned int i=3;i<floraAmount;++i)
+		// {
+			// std::string floraName = "";
 
-			int common = rng.rand8()%3;
+			// int common = rng.rand8()%3;
 
-			if (common==0)
-			{
-				Flora* flora2 = new Flora("Common flora",20);
-				flora2->setFoodValues(0,0,5,1,5,1);
-				vFlora.push(flora2);
-			}
-			else if (common==1)
-			{
-				Flora* flora2 = new Flora("Uncommon flora",10);
-				flora2->setFoodValues(0,0,5,1,5,1);
-				vFlora.push(flora2);
-			}
-			else
-			{
-				Flora* flora2 = new Flora("Rare flora",5);
-				flora2->setFoodValues(0,0,5,1,5,1);
-				vFlora.push(flora2);
-			}
-		}
+			// if (common==0)
+			// {
+				// Flora* flora2 = new Flora("Common flora",20);
+				// flora2->setFoodValues(0,0,5,1,5,1);
+				// vFlora.push(flora2);
+			// }
+			// else if (common==1)
+			// {
+				// Flora* flora2 = new Flora("Uncommon flora",10);
+				// flora2->setFoodValues(0,0,5,1,5,1);
+				// vFlora.push(flora2);
+			// }
+			// else
+			// {
+				// Flora* flora2 = new Flora("Rare flora",5);
+				// flora2->setFoodValues(0,0,5,1,5,1);
+				// vFlora.push(flora2);
+			// }
+		// }
 		
 		// Generate the random flora.
 		
@@ -285,7 +285,7 @@ Implementation of WorlD_Biome.hpp
 		{
 			vFlora(i)->id=i+1;
 			vFlora(i)->spawnWeight = 10;
-			vFlora(i)->setFoodValues(0,0,0,0,0,0);
+			vFlora(i)->setFoodValues(0,0,0);
 		}		
 		
 		// save the flora lookup list (in future we could probably hold the whole list in memory)
