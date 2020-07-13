@@ -4,6 +4,9 @@
 
 /* WorldSim: Creature_All.hpp
 	#include"Creature_All.hpp"
+	
+	Each creature has its own class. I think it would be better to have a system like in DF where
+	creatures are instead created from tags.
 
 */
 

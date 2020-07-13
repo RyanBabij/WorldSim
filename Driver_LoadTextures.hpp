@@ -170,6 +170,8 @@ const std::string PATH_TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI = "Textures/World/Ter
 Texture TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI_GOLD;
 const std::string PATH_TEX_WORLD_TERRAIN_MOUNTAIN_ROCKYBOI_GOLD = "Textures/World/Terrain/Mountain/RockyboiGold.png";
 
+// CREATURES ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 Texture TEX_CREATURE_DEER;
 const std::string PATH_TEX_CREATURE_DEER = "Textures/Creature/Deer/Deer.png";
 Texture TEX_CREATURE_DEER_DED;
@@ -188,6 +190,28 @@ const std::string PATH_TEX_CREATURE_BAT = "Textures/Creature/Bat/Zubat.png";
 Texture TEX_CREATURE_BAT_DED;
 const std::string PATH_TEX_CREATURE_BAT_DED = "Textures/Creature/Bat/Zubat-ded.png";
 
+Texture TEX_CREATURE_SLIME_01;
+const std::string PATH_TEX_CREATURE_SLIME_01 = "Textures/Creature/Slime/01.png";
+Texture TEX_CREATURE_SLIME_02;
+const std::string PATH_TEX_CREATURE_SLIME_02 = "Textures/Creature/Slime/02.png";
+Texture TEX_CREATURE_SLIME_03;
+const std::string PATH_TEX_CREATURE_SLIME_03 = "Textures/Creature/Slime/03.png";
+Texture TEX_CREATURE_SLIME_04;
+const std::string PATH_TEX_CREATURE_SLIME_04 = "Textures/Creature/Slime/04.png";
+Texture TEX_CREATURE_SLIME_05;
+const std::string PATH_TEX_CREATURE_SLIME_05 = "Textures/Creature/Slime/05.png";
+Texture TEX_CREATURE_SLIME_06;
+const std::string PATH_TEX_CREATURE_SLIME_06 = "Textures/Creature/Slime/06.png";
+Texture TEX_CREATURE_SLIME_07;
+const std::string PATH_TEX_CREATURE_SLIME_07 = "Textures/Creature/Slime/07.png";
+Texture TEX_CREATURE_SLIME_08;
+const std::string PATH_TEX_CREATURE_SLIME_08 = "Textures/Creature/Slime/08.png";
+Texture TEX_CREATURE_SLIME_09;
+const std::string PATH_TEX_CREATURE_SLIME_09 = "Textures/Creature/Slime/09.png";
+Texture TEX_CREATURE_SLIME_10;
+const std::string PATH_TEX_CREATURE_SLIME_10 = "Textures/Creature/Slime/10.png";
+Texture TEX_CREATURE_SLIME_DED;
+const std::string PATH_TEX_CREATURE_SLIME_DED = "Textures/Creature/Slime/ded.png";
 
 Texture TEX_WORLD_TERRAIN_DESERT_00;
 Texture TEX_WORLD_TERRAIN_DESERT_01;
@@ -477,6 +501,8 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
 
 	loadTextureVerbose(PATH_TEX_LOCAL_SIGN,&TEX_LOCAL_SIGN);
 	loadTextureVerbose(PATH_TEX_GUI_CENTER_CAMERA,&TEX_GUI_CENTER_CAMERA);
+	
+	// CREATURES ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	loadTextureVerbose(PATH_TEX_CREATURE_DEER,&TEX_CREATURE_DEER);
 	loadTextureVerbose(PATH_TEX_CREATURE_DEER_DED,&TEX_CREATURE_DEER_DED);
@@ -484,9 +510,20 @@ void loadTextures() // Testing some multithreading here. Probably shouldn't beca
 	loadTextureVerbose(PATH_TEX_CREATURE_DOE_DED,&TEX_CREATURE_DOE_DED);
 	loadTextureVerbose(PATH_TEX_CREATURE_DEER_FOOTPRINT,&TEX_CREATURE_DEER_FOOTPRINT);
 
-
 	loadTextureVerbose(PATH_TEX_CREATURE_BAT,&TEX_CREATURE_BAT);
 	loadTextureVerbose(PATH_TEX_CREATURE_BAT_DED,&TEX_CREATURE_BAT_DED);
+	
+	loadTextureVerbose(PATH_TEX_CREATURE_SLIME_01,&TEX_CREATURE_SLIME_01);
+	loadTextureVerbose(PATH_TEX_CREATURE_SLIME_02,&TEX_CREATURE_SLIME_02);
+	loadTextureVerbose(PATH_TEX_CREATURE_SLIME_03,&TEX_CREATURE_SLIME_03);
+	loadTextureVerbose(PATH_TEX_CREATURE_SLIME_04,&TEX_CREATURE_SLIME_04);
+	loadTextureVerbose(PATH_TEX_CREATURE_SLIME_05,&TEX_CREATURE_SLIME_05);
+	loadTextureVerbose(PATH_TEX_CREATURE_SLIME_06,&TEX_CREATURE_SLIME_06);
+	loadTextureVerbose(PATH_TEX_CREATURE_SLIME_07,&TEX_CREATURE_SLIME_07);
+	loadTextureVerbose(PATH_TEX_CREATURE_SLIME_08,&TEX_CREATURE_SLIME_08);
+	loadTextureVerbose(PATH_TEX_CREATURE_SLIME_09,&TEX_CREATURE_SLIME_09);
+	loadTextureVerbose(PATH_TEX_CREATURE_SLIME_10,&TEX_CREATURE_SLIME_10);
+	loadTextureVerbose(PATH_TEX_CREATURE_SLIME_DED,&TEX_CREATURE_SLIME_DED);
 
 	loadTextureVerbose(PATH_TEX_PORTRAIT_SNEK,&TEX_PORTRAIT_SNEK);
 	loadTextureVerbose(PATH_TEX_PORTRAIT_LING,&TEX_PORTRAIT_LING);
