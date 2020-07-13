@@ -5,3 +5,6 @@
 !.editorconfig
 !.codedocs
 !.doxygen
+!/raw/
+!/raw/wordlists/
+!/raw/wordlists/flora*.txt
