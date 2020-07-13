@@ -236,6 +236,8 @@ class FloraGenerator
 		wlistFloraType.add("Shrub");
 		wlistFloraType.add("Bush");
 		wlistFloraType.add("Nettle");
+		wlistFloraType.add("Slime");
+		wlistFloraType.add("Essence");
 	}
 	
 	std::string generateName()
