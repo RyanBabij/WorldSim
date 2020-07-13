@@ -80,7 +80,7 @@ NameGen globalNameGen;
 //     WINDOW        ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // SYSTEM STRINGS
-const std::string VERSION_NUMBER = "0.0.203indev";
+const std::string VERSION_NUMBER = "0.0.204indev";
 
 #ifdef WILDCAT_THREADING
 	const std::string THREAD_STATUS = "threaded";
