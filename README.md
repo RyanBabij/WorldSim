@@ -45,7 +45,7 @@ This program, like all of my programs, depends on the [Wildcat](https://github.c
 
 I don't have a makefile or anything so you have to do it manually.
 
-I do a lot of compilation so I use LLVM clang++ for quick test builds, and MingW-W64 g++ for release builds. Ideally you will want to set up both of these, but you can install just MingW-W64 if you prefer.
+I do a lot of compilation so I use LLVM clang++ for quick test builds, and MingW-W64 g++ for release builds. Ideally you will want to set up both of these, but you can skip clang++ and just use MingW-W64 if you prefer. However clang++ compiles like twice as fast as g++ so it's pretty cool.
 
 I have tested these instructions on a fresh Windows 10 install, so hopefully they should work for everyone. Setting up the environment on Linux is probably much easier but I do most of my development on Windows.
 
@@ -63,7 +63,9 @@ Install LLVM Clang Windows 64 bit binary from https://releases.llvm.org/download
 
 Make sure you set the PATH for the current user. You should be able to call clang++ from this point. The PATH should be something like C:\Program Files\LLVM\bin
 
-NOTE: LLVM Clang doesn't come with the basic libstdc++ libraries. The best way to deal with this is to also install MingW g++ and let it use those libraries.
+NOTE: LLVM Clang is not a complete port and doesn't come with the basic libstdc++ libraries. Normally it searches for Visual Studio's libraries to compile, however in my case I use MingW-W64.
+
+If you're getting some "unable to find a Visual Studio installation" error I think you bypass this by specifying a target platform, for example: clang++ -target i686-pc-windows-gnu Driver.cpp
 
 6. g++
 
