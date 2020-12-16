@@ -334,6 +334,12 @@ Implementation of WorlD_Biome.hpp
 		return 0;
 	}
 	
+	Vector <Flora*> * World_Biome::getAllFloraTypes()
+	{
+		return &floraManager.vFlora;
+		//return 0;
+	}
+	
 		// Uses a safe rolling average to prevent overflow.
 	void World_Biome::getAverageCoordinates(/*Vector <HasXY*> * vXY*/)
 	{

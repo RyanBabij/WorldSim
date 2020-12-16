@@ -83,6 +83,9 @@ class World_Biome: public TableInterface
 	// pick a flora type from the weighted list to spawn
 	Flora* getFlora();
 	
+	// return all flora types on this biome
+	Vector <Flora*> * getAllFloraTypes();
+	
 	void getAverageCoordinates(/*Vector <HasXY*> * vXY*/);
 	
 	void addMap(World_Local * map);

@@ -60,7 +60,9 @@ const unsigned short int MAX_CORES = 4; // The number of cores will never exceed
 
 //      PATHS       ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const std::string SAVE_FOLDER_PATH = "C:\\Users\\Lenovo\\Desktop\\WorldSim-savedata";
+// This needs to error if path is bad
+//const std::string SAVE_FOLDER_PATH = "C:\\Users\\Lenovo\\Desktop\\WorldSim-savedata";
+const std::string SAVE_FOLDER_PATH = "C:\\Users\\user\\Desktop\\WorldSim-savedata";
 std::string currentSavePath = "";
 
 #define SAVE_DATA // Program will save data to file. It saves a lot of data and it can end up taking up a lot of space, not good for your SSD.
@@ -80,7 +82,7 @@ NameGen globalNameGen;
 //     WINDOW        ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // SYSTEM STRINGS
-const std::string VERSION_NUMBER = "0.0.204indev";
+const std::string VERSION_NUMBER = "0.0.205indev";
 
 #ifdef WILDCAT_THREADING
 	const std::string THREAD_STATUS = "threaded";

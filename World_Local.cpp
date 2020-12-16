@@ -228,7 +228,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=centerHeight=rng.rand32(LOCAL_MAP_SIZE/5)+1;
+			centerHeight=rng.rand32(LOCAL_MAP_SIZE/5)+1;
 			break;
 		}
 		case HILLY:
@@ -240,7 +240,7 @@ void World_Local::init(const int _globalX, const int _globalY, const enumBiome _
 			//baseLogisticsCost = 0;
 			//defensiveBonus = 0;
 			baseMetal = 0;
-			centerHeight=centerHeight=rng.rand32(LOCAL_MAP_SIZE/2)+LOCAL_MAP_SIZE/5;
+			centerHeight=rng.rand32(LOCAL_MAP_SIZE/2)+LOCAL_MAP_SIZE/5;
 			break;
 		}
 		case JUNGLE:

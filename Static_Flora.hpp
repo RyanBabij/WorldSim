@@ -91,9 +91,9 @@
 // };
 
 // This class sets the stats for a type of flora. Individual instances should use another class.
+#include <Container/Table/TableInterface.hpp>
 
-
-class Flora: public Static
+class Flora: public Static, public TableInterface
 {
    // Easy food: Food which can easily be obtained/eaten such as fruit
    // Medium food: Food which is moderately easy to obtain/eat such as bark
@@ -148,6 +148,33 @@ class Flora: public Static
    {
       return &TEX_FLORA_PLANT;
    }
+   
+	// TableInterface
+	std::string getColumn(std::string _column) override
+	{
+		if ( _column=="name" )
+		{
+			return name;
+		}
+		// else if ( _column=="size" )
+		// {
+			// return DataTools::toString(size);
+		// }
+		// else if ( _column=="type" )
+		// {
+			// return WorldGenerator2::biomeName[type];
+		// }
+		return "?";
+	}
+	// TableInterface
+	std::string getColumnType(std::string _column) override
+	{
+		// if ( _column == "size" )
+		// {
+			// return "number";
+		// }
+		return "string";
+	}
 };
 
 // Trees will be special-case flora because they can block LOS and movement.

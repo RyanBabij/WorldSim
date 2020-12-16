@@ -18,6 +18,7 @@ The player can then select one of the inhabitants to play as.
 #include "Menu_World.hpp"
 #include "Menu_Character.hpp"
 #include "Menu_Biome.hpp"
+#include "Menu_Flora.hpp"
 
 
 class Menu_WorldSimulator: public GUI_Interface
@@ -64,6 +65,8 @@ private:
 	/* Button: Switch between 1/4 or fullscreen view of world map. */
 	GUI_Button buttonExpandMap;
 	
+	/* Button to view list of all Flora in World */
+	GUI_Button buttonFlora;
 	
 		// Base world view modes
 		// Toggle Textures
@@ -81,6 +84,7 @@ private:
 	Menu_World menuWorld;
 	Menu_Characters menuCharacter;
 	Menu_Biome menuBiome;
+	Menu_Flora menuFlora;
 	
 public:
 
@@ -108,6 +112,7 @@ public:
 		menuWorld.active=false;
 		menuCharacter.active=false;
 		menuBiome.active=false;
+		menuFlora.active=false;
 		minimap.active=true;
 	}
 
@@ -165,6 +170,8 @@ public:
 		buttonSubterraneanView.setColours(&cNormal,&cHighlight,0);
 		buttonTerritoryView.text="T2";
 		buttonTerritoryView.setColours(&cNormal,&cHighlight,0);
+		buttonFlora.text="F";
+		buttonFlora.setColours(&cNormal,&cHighlight,0);
 		
 		buttonMinimapBaseTexture.init("", &TEX_GUI_MINIMAP_BASE_TEXTUREMODE, &cNormal, &cHighlight, 0, true);
 		buttonMinimapBaseLand.init("", &TEX_GUI_MINIMAP_BASE_LANDMODE, &cNormal, &cHighlight, 0, true);
@@ -183,6 +190,7 @@ public:
 		guiManager.add(&buttonBiomeMenu);
 		guiManager.add(&buttonCharacterMenu);
 		guiManager.add(&buttonCivMenu);
+		guiManager.add(&buttonFlora);
 		guiManager.add(&buttonTerritoryView);
 		guiManager.add(&buttonSubterraneanView);
 		
@@ -196,6 +204,7 @@ public:
 		guiManager.add(&menuWorld);
 		guiManager.add(&menuCharacter);
 		guiManager.add(&menuBiome);
+		guiManager.add(&menuFlora);
 
 		textSimulationSpeed.active=true;
 		cycleSimulationSpeed.active=true;
@@ -210,6 +219,7 @@ public:
 		buttonBiomeMenu.active=true;
 		buttonCharacterMenu.active=true;
 		buttonCivMenu.active=true;
+		buttonFlora.active=true;
 		buttonTerritoryView.active=true;
 		buttonSubterraneanView.active=true;
 
@@ -222,6 +232,7 @@ public:
 		menuWorld.init();
 		menuCharacter.init();
 		menuBiome.init();
+		menuFlora.init();
 		//minimap.init();
 
 		worldViewer.centerView();
@@ -440,6 +451,7 @@ public:
 		{
 			menuTribes.active = false;
 			menuCivs.active = false;
+			menuFlora.active = false;
 			menuWorld.active = false;
 			menuCharacter.active = false;
 			menuBiome.active = false;
@@ -472,6 +484,7 @@ public:
 
 					menuTribes.active = false;
 					menuCivs.active = false;
+					menuFlora.active = false;
 					menuWorld.active = false;
 					menuCharacter.active = false;
 					menuBiome.active = false;
@@ -575,6 +588,17 @@ public:
 			menuCivs.active=true;
 			buttonCivMenu.unclick();
 		}
+		
+		if (buttonFlora.clicked==true)
+		{
+			std::cout<<"Flora menu\n";
+			menuFlora.init();
+			menuFlora.active=true;
+			buttonFlora.unclick();
+		}
+		
+		
+		
 
 
 
@@ -693,6 +717,8 @@ public:
 		buttonCivMenu.setPanel(panelX2-340, panelY2-40, panelX2-300, panelY2-30);
 		buttonSubterraneanView.setPanel(panelX2-400, panelY2-40, panelX2-370, panelY2-30);
 		
+		buttonFlora.setPanel(panelX2-370, panelY2-40, panelX2-340, panelY2-30);
+		
 		buttonMinimapBaseTexture.setPanel(panelX1,panelY1,panelX1+32,panelY1+16);
 		buttonMinimapBaseLand.setPanel(panelX1+32,panelY1,panelX1+64,panelY1+16);
 
@@ -701,6 +727,7 @@ public:
 		menuWorld.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuCharacter.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		menuBiome.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
+		menuFlora.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
 		minimap.setPanel(panelX1,panelY1+16,panelX1+220,panelY1+236);
 
 		if (fullScreenWorldView==true)
