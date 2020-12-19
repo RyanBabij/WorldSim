@@ -13,6 +13,8 @@ Implementation of World_Biome.hpp
 
 #include "World_Biome.hpp"
 
+#include "Creature_Manager.hpp"
+
 
 #include <Game/WorldGenerator/WorldGenerator2.hpp>
 #include <Container/Table/TableInterface.hpp>
@@ -321,9 +323,8 @@ Implementation of World_Biome.hpp
 
 		if (nCreatures < 3) { nCreatures=3; }
 		if (nCreatures > 255) { nCreatures = 255; }
-		
-		//floraManager.generate(floraAmount);
-		//creatureManager.generate(nCreatures);
+
+		creatureManager.generate(nCreatures);
 
 		// assign local ids to the creatures (1-255)
 

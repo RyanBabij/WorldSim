@@ -34,6 +34,8 @@ The second type of data is only generated when necessary. It's basically in-dept
 #include "Static.hpp"
 #include "Static_Flora.hpp"
 
+#include "Creature_Species.hpp"
+
 #include <Interface/IdleTick/IdleTickInterface.hpp>
 #include <Interface/LogicTick/LogicTickInterface.hpp>
 #include <System/Time/Calendar.hpp>

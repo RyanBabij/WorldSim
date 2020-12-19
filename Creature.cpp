@@ -11,6 +11,8 @@
 #include "World.hpp"
 #include "Creature.hpp"
 
+#include "Pathing.cpp"
+
 class Texture;
 
 Creature::Creature()

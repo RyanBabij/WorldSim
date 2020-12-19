@@ -29,18 +29,7 @@ class World_Local;
 
 #include "Creature_Attack.hpp"
 
-/*
-	Meta information about all Creatures of a certain type
-*/
-
-class Creature_Species
-{
-	public:
-	
-	std::string name;
-	
-};
-
+#include "Creature_Species.hpp"
 
 class Creature: public WorldObject, public TableInterface
 {
@@ -148,22 +137,7 @@ class Creature_Footprint: public WorldObject
 	Texture* currentTexture () override;
 };
 
-/*
-	Container for Creature_Species, stored per-biome.
-*/
-
-class Creature_Manager
-{
-	public:
-};
-
-/*
-	Class to generate new Creature_Species.
-*/
-
-class Creature_Generator()
-{
-	public:
-};
+#include "Creature_Generator.hpp"
+#include "Creature_Manager.hpp"
 
 #endif

@@ -33,6 +33,7 @@ While this is happening, the biome should be marked as "initializing" and cannot
 
 */
 
+#include "Creature_Manager.hpp"
 
 #include <Game/WorldGenerator/WorldGenerator2.hpp>
 #include <Container/Table/TableInterface.hpp>
@@ -43,6 +44,7 @@ class World_Biome: public TableInterface
 	RandomLehmer rng;
 	//FloraGenerator floraGenerator;
 	FloraManager floraManager;
+	Creature_Manager creatureManager;
 
 	public:
 
