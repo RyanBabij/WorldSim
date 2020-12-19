@@ -13,6 +13,10 @@
   
   Creatures are usually simulated using the abstract data layer.
   
+  Creature should refer to the base type. Creature_Implementation should refer to infividual Creature instances.
+  This also provides the opportunity to later divide Creature instances into Creature_Abstract and fully detailed
+  instances.
+  
 */
 
 #include "System/Time/Calendar.hpp"
@@ -25,6 +29,17 @@ class World_Local;
 
 #include "Creature_Attack.hpp"
 
+/*
+	Meta information about all Creatures of a certain type
+*/
+
+class Creature_Species
+{
+	public:
+	
+	std::string name;
+	
+};
 
 
 class Creature: public WorldObject, public TableInterface
@@ -131,6 +146,24 @@ class Creature_Footprint: public WorldObject
   int age;
   
 	Texture* currentTexture () override;
+};
+
+/*
+	Container for Creature_Species, stored per-biome.
+*/
+
+class Creature_Manager
+{
+	public:
+};
+
+/*
+	Class to generate new Creature_Species.
+*/
+
+class Creature_Generator()
+{
+	public:
 };
 
 #endif

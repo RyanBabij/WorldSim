@@ -64,6 +64,8 @@ class World_Biome: public TableInterface
 	//Vector <std::string> vHerbivore;
 	//Vector <std::string> vCarnivore;
 	
+	Vector <Creature*> vCreature;
+	
 	double averageX, averageY; /* For zooming to biome. */
 	int centerX, centerY; /* The closest tile to the average which is owned by the biome */
 	
@@ -79,6 +81,8 @@ class World_Biome: public TableInterface
 	void generateLocals(const unsigned short int sleepTime=0);
 
 	void generateFlora();
+	
+	void generateCreatures();
 	
 	// pick a flora type from the weighted list to spawn
 	Flora* getFlora();

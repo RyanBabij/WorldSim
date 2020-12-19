@@ -21,7 +21,7 @@
 	flora growth/death won't be modelled when player is absent because it won't be noticable.
 	each biome gets its own list of flora
 
-	flora should replenish to max amount every 24 hours on average
+	flora should replenish to max amount every 7 days or so, depending on scaling.
 
 	flora generation:
 	each biome will randomly generate its own unique flora
@@ -31,6 +31,35 @@
 
 	Flora is a little bit complicated because each Flora may have unique characteristics, but mostly will draw from a 
 	static class. I will probably give Flora objects a Package which will store any unique characteristics.
+*/
+
+/*
+	Types of Flora classes:
+	
+	Flora - Each object represents a species of Flora.
+	Flora_Instance - Represents an individual instance of a Flora species.
+	Flora_Abstract - Same as above, but storing only the minimum amount of data, most likely simply a pointer to Flora.
+	
+	During generation the world is populated with Flora_Abstract, and then when interacted with or viewed, it is
+	converted into a Flora_Instance with a generate() function.
+	
+	A Flora_Instance is visible on the World and can be interacted with. If a creature interacts with a Flora_Instance,
+	it recieved a value which represents energy gained from eating it. If a Character interacts with the
+	Flora_Instance, it recieves Ingredients which can then be used for eating/cooking/crafting/alchemy.
+
+	Harvesting may be done by hand, or with a tool such as a knife.
+
+	Flora are a type of Static and therefore there may be maximum 1 Flora_Instance per tile and are stored in the
+	statics file for the map.
+	
+	Statics will probably be compressed to a byte lookup table. I think it's unlikely there will ever need to be more
+	than about 16 Flora per Biome, so it shouldn't be a problem reserving this much space for Flora.
+	
+	Trees should probably be regarded largely the same as Flora, with the exeption they may block movement/LOS. As Flora may be harvested with tools, so may Trees be harvested, except of course they need something like an Axe.'
+	
+	For simplicity, a Tree shouldn't return anything except wood products, basically logs or bark. Complications would otherwise arise about whether something can or cannot be reached.
+	
+	Unlike with other Flora, there are a fixed number of Tree types, once again for simplicity. Each Biome probably gets 2 or 3 unique Tree types which are common across all Biomes of that type. Trees cannot be partially chopped or damaged so they can easily be stored as a Static lookup ID.
 */
 
 
@@ -92,6 +121,15 @@
 
 // This class sets the stats for a type of flora. Individual instances should use another class.
 #include <Container/Table/TableInterface.hpp>
+
+
+// Flora will probably refer to both instances and types, however maybe not, in which case Flora will refer to
+// types of Flora, and then Flora_Instance will refer to actual Flora instances. We can then also differentiate
+// instances into Flora_Abstract, which will probably just be a pointer to the Flora species until generated properly.
+// A Flora instance is necessary even if it simply tracks the time it was last harvested.
+
+// Wildlife simulation will be greatly simplified and therefore there will not be a need ot provide different food
+// values for flora. They can have a single caloric value per harvest, and optionally return an ingredient.
 
 class Flora: public Static, public TableInterface
 {

@@ -7,7 +7,7 @@
 
 /**
 
-Implementation of WorlD_Biome.hpp
+Implementation of World_Biome.hpp
 
 */
 
@@ -297,6 +297,52 @@ Implementation of WorlD_Biome.hpp
 		sfm.addChunk(chonk);
 		// savefile can be the biomeID + f for Flora
 		std::string biomePath = currentSavePath + "/" + DataTools::toString(id) + "f.dat";
+		//std::cout<<"Saving Flora lookup to: "<<biomePath<<"\n";
+		sfm.saveToFile(biomePath);
+	}
+	
+	void World_Biome::generateCreatures()
+	{
+		// generate the creatures which exist in this biome
+		
+		if (size==0) { return; }
+
+		if (type==OCEAN || type == ICE) { return; }
+		
+		for (int i=0;i<vMap.size();++i)
+		{
+			vMap(i)->biome = this;
+		}
+
+		unsigned int minCreatures = sqrt(size)/1.5;
+		if ( minCreatures < 3 ) { minCreatures=3; }
+
+		unsigned int nCreatures = minCreatures+rng.rand32(1+(sqrt(size)/1.5));
+
+		if (nCreatures < 3) { nCreatures=3; }
+		if (nCreatures > 255) { nCreatures = 255; }
+		
+		//floraManager.generate(floraAmount);
+		//creatureManager.generate(nCreatures);
+
+		// assign local ids to the creatures (1-255)
+
+		for (int i=0;i<vCreature.size();++i)
+		{
+			//vCreature(i)->id=i+1;
+			//vCreature(i)->spawnWeight = 10;
+			//vCreature(i)->setFoodValues(0,0,0);
+		}		
+		
+		// save the flora lookup list (in future we could probably hold the whole list in memory)
+		SaveFileManager sfm;
+		//std::string mapName = DataTools::toString(vMap(i)->globalX) + "-" + DataTools::toString(vMap(i)->globalY);
+		SaveChunk chonk ("BIOME");
+		chonk.add("CREATURE LIST GOES HERE");
+		//chonk.add(vMap(i)->getSaveData());
+		sfm.addChunk(chonk);
+		// savefile can be the biomeID + f for Flora
+		std::string biomePath = currentSavePath + "/" + DataTools::toString(id) + "c.dat";
 		//std::cout<<"Saving Flora lookup to: "<<biomePath<<"\n";
 		sfm.saveToFile(biomePath);
 	}
