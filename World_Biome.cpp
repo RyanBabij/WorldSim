@@ -43,11 +43,13 @@ Implementation of World_Biome.hpp
 	}
 
 	// generate entire biome including terrain, flora, etc.
+	// this seems to not actually be called when entering Worldsim.
 	void World_Biome::generate(const unsigned short int sleepTime)
 	{
 		if ( id == -1 )
 		{ return; }
 		generateFlora();
+		generateCreatures();
 		generateLocals(sleepTime);
 		isGenerated=true;
 	}
@@ -384,6 +386,12 @@ Implementation of World_Biome.hpp
 	Vector <Flora*> * World_Biome::getAllFloraTypes()
 	{
 		return &floraManager.vFlora;
+		//return 0;
+	}
+	
+	Vector <Creature_Species*> * World_Biome::getAllCreatureTypes()
+	{
+		return &creatureManager.vSpecies;
 		//return 0;
 	}
 	

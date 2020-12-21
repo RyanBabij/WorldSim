@@ -91,6 +91,8 @@ class World_Biome: public TableInterface
 	
 	// return all flora types on this biome
 	Vector <Flora*> * getAllFloraTypes();
+	// return all Creature types on this biome
+	Vector <Creature_Species*> * getAllCreatureTypes();
 	
 	void getAverageCoordinates(/*Vector <HasXY*> * vXY*/);
 	

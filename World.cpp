@@ -374,6 +374,7 @@ void World::startSimulation()
 	for (int i=0;i<vBiome.size();++i)
 	{
 		vBiome(i)->generateFlora();
+		vBiome(i)->generateCreatures();
 
 		int biomeType = vBiome(i)->type;
 		if ( biomeType == OCEAN)

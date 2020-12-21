@@ -19,6 +19,7 @@ The player can then select one of the inhabitants to play as.
 #include "Menu_Character.hpp"
 #include "Menu_Biome.hpp"
 #include "Menu_Flora.hpp"
+#include "Menu_Creatures.hpp"
 
 
 class Menu_WorldSimulator: public GUI_Interface
@@ -67,6 +68,8 @@ private:
 	
 	/* Button to view list of all Flora in World */
 	GUI_Button buttonFlora;
+	/* Button to view list of all Creatures in the World */
+	GUI_Button buttonCreaturesMenu;
 	
 		// Base world view modes
 		// Toggle Textures
@@ -85,6 +88,7 @@ private:
 	Menu_Characters menuCharacter;
 	Menu_Biome menuBiome;
 	Menu_Flora menuFlora;
+	Menu_Creatures menuCreatures;
 	
 public:
 
@@ -113,6 +117,7 @@ public:
 		menuCharacter.active=false;
 		menuBiome.active=false;
 		menuFlora.active=false;
+		menuCreatures.active=false;
 		minimap.active=true;
 	}
 
@@ -154,24 +159,26 @@ public:
 		buttonIncrementMonth.setColours(&cNormal,&cHighlight,0);
 		buttonIncrementYear.text = "+Y";
 		buttonIncrementYear.setColours(&cNormal,&cHighlight,0);
-		buttonIncrementDecade.text = "+D";
+		buttonIncrementDecade.text = "+De";
 		buttonIncrementDecade.setColours(&cNormal,&cHighlight,0);
-		buttonTribeMenu.text="T";
+		buttonTribeMenu.text="Tri";
 		buttonTribeMenu.setColours(&cNormal,&cHighlight,0);
-		buttonWorldMenu.text="W";
+		buttonWorldMenu.text="Wor";
 		buttonWorldMenu.setColours(&cNormal,&cHighlight,0);
-		buttonBiomeMenu.text="B";
+		buttonBiomeMenu.text="Bio";
 		buttonBiomeMenu.setColours(&cNormal,&cHighlight,0);
-		buttonCharacterMenu.text="C";
+		buttonCharacterMenu.text="Cha";
 		buttonCharacterMenu.setColours(&cNormal,&cHighlight,0);
 		buttonCivMenu.text="Civ";
 		buttonCivMenu.setColours(&cNormal,&cHighlight,0);
-		buttonSubterraneanView.text = "S";
+		buttonSubterraneanView.text = "Sub";
 		buttonSubterraneanView.setColours(&cNormal,&cHighlight,0);
-		buttonTerritoryView.text="T2";
+		buttonTerritoryView.text="Ter";
 		buttonTerritoryView.setColours(&cNormal,&cHighlight,0);
 		buttonFlora.text="F";
 		buttonFlora.setColours(&cNormal,&cHighlight,0);
+		buttonCreaturesMenu.text="Crt";
+		buttonCreaturesMenu.setColours(&cNormal,&cHighlight,0);
 		
 		buttonMinimapBaseTexture.init("", &TEX_GUI_MINIMAP_BASE_TEXTUREMODE, &cNormal, &cHighlight, 0, true);
 		buttonMinimapBaseLand.init("", &TEX_GUI_MINIMAP_BASE_LANDMODE, &cNormal, &cHighlight, 0, true);
@@ -191,6 +198,7 @@ public:
 		guiManager.add(&buttonCharacterMenu);
 		guiManager.add(&buttonCivMenu);
 		guiManager.add(&buttonFlora);
+		guiManager.add(&buttonCreaturesMenu);
 		guiManager.add(&buttonTerritoryView);
 		guiManager.add(&buttonSubterraneanView);
 		
@@ -205,6 +213,7 @@ public:
 		guiManager.add(&menuCharacter);
 		guiManager.add(&menuBiome);
 		guiManager.add(&menuFlora);
+		guiManager.add(&menuCreatures);
 
 		textSimulationSpeed.active=true;
 		cycleSimulationSpeed.active=true;
@@ -220,6 +229,7 @@ public:
 		buttonCharacterMenu.active=true;
 		buttonCivMenu.active=true;
 		buttonFlora.active=true;
+		buttonCreaturesMenu.active=true;
 		buttonTerritoryView.active=true;
 		buttonSubterraneanView.active=true;
 
@@ -233,6 +243,7 @@ public:
 		menuCharacter.init();
 		menuBiome.init();
 		menuFlora.init();
+		menuCreatures.init();
 		//minimap.init();
 
 		worldViewer.centerView();
@@ -452,6 +463,7 @@ public:
 			menuTribes.active = false;
 			menuCivs.active = false;
 			menuFlora.active = false;
+			menuCreatures.active = false;
 			menuWorld.active = false;
 			menuCharacter.active = false;
 			menuBiome.active = false;
@@ -485,6 +497,7 @@ public:
 					menuTribes.active = false;
 					menuCivs.active = false;
 					menuFlora.active = false;
+					menuCreatures.active = false;
 					menuWorld.active = false;
 					menuCharacter.active = false;
 					menuBiome.active = false;
@@ -597,6 +610,14 @@ public:
 			buttonFlora.unclick();
 		}
 		
+		if (buttonCreaturesMenu.clicked==true)
+		{
+			std::cout<<"Creatures menu\n";
+			menuCreatures.init();
+			menuCreatures.active=true;
+			buttonCreaturesMenu.unclick();
+		}
+		
 		
 		
 
@@ -704,30 +725,32 @@ public:
 		textSimulationSpeed.setPanel(panelX2-200, panelY2-30, panelX2-100, panelY2-20);
 		cycleSimulationSpeed.setPanel(panelX2-150, panelY2-30, panelX2, panelY2-20);
 
-		buttonIncrementDay.setPanel(panelX2-150, panelY2-40, panelX2-120, panelY2-30);
-		buttonIncrementMonth.setPanel(panelX2-120, panelY2-40, panelX2-90, panelY2-30);
-		buttonIncrementYear.setPanel(panelX2-90, panelY2-40, panelX2-60, panelY2-30);
-		buttonIncrementDecade.setPanel(panelX2-60, panelY2-40, panelX2-30, panelY2-30);
+		buttonIncrementDay.setPanel(panelX2-120, panelY2-40, panelX2-160, panelY2-30);
+		buttonIncrementMonth.setPanel(panelX2-80, panelY2-40, panelX2-120, panelY2-30);
+		buttonIncrementYear.setPanel(panelX2-40, panelY2-40, panelX2-80, panelY2-30);
+		buttonIncrementDecade.setPanel(panelX2, panelY2-40, panelX2-40, panelY2-30);
 
-		buttonTribeMenu.setPanel(panelX2-180, panelY2-40, panelX2-150, panelY2-30);
-		buttonWorldMenu.setPanel(panelX2-210, panelY2-40, panelX2-180, panelY2-30);
-		buttonCharacterMenu.setPanel(panelX2-240, panelY2-40, panelX2-210, panelY2-30);
-		buttonBiomeMenu.setPanel(panelX2-270, panelY2-40, panelX2-240, panelY2-30);
-		buttonTerritoryView.setPanel(panelX2-300, panelY2-40, panelX2-270, panelY2-30);
-		buttonCivMenu.setPanel(panelX2-340, panelY2-40, panelX2-300, panelY2-30);
-		buttonSubterraneanView.setPanel(panelX2-400, panelY2-40, panelX2-370, panelY2-30);
+		buttonTribeMenu.setPanel(panelX2-180, panelY2-40, panelX2-220, panelY2-30);
+		buttonWorldMenu.setPanel(panelX2-220, panelY2-40, panelX2-260, panelY2-30);
+		buttonCharacterMenu.setPanel(panelX2-260, panelY2-40, panelX2-300, panelY2-30);
+		buttonBiomeMenu.setPanel(panelX2-300, panelY2-40, panelX2-340, panelY2-30);
+		buttonTerritoryView.setPanel(panelX2-340, panelY2-40, panelX2-380, panelY2-30);
+		buttonCivMenu.setPanel(panelX2-380, panelY2-40, panelX2-420, panelY2-30);
+		buttonSubterraneanView.setPanel(panelX2-420, panelY2-40, panelX2-460, panelY2-30);
 		
-		buttonFlora.setPanel(panelX2-370, panelY2-40, panelX2-340, panelY2-30);
+		buttonFlora.setPanel(panelX2-460, panelY2-40, panelX2-500, panelY2-30);
+		buttonCreaturesMenu.setPanel(panelX2-500, panelY2-40, panelX2-540, panelY2-30);
 		
 		buttonMinimapBaseTexture.setPanel(panelX1,panelY1,panelX1+32,panelY1+16);
 		buttonMinimapBaseLand.setPanel(panelX1+32,panelY1,panelX1+64,panelY1+16);
 
-		menuTribes.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
-		menuCivs.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
-		menuWorld.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
-		menuCharacter.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
-		menuBiome.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
-		menuFlora.setPanel(panelX1+20,panelY1+20,panelX2-20,panelY2-20);
+		menuTribes.setPanel(panelX1,panelY1+5,panelX2,panelY2-40);
+		menuCivs.setPanel(panelX1,panelY1+5,panelX2,panelY2-40);
+		menuWorld.setPanel(panelX1,panelY1+5,panelX2,panelY2-40);
+		menuCharacter.setPanel(panelX1,panelY1+5,panelX2,panelY2-40);
+		menuBiome.setPanel(panelX1,panelY1+5,panelX2,panelY2-40);
+		menuFlora.setPanel(panelX1,panelY1+5,panelX2,panelY2-40);
+		menuCreatures.setPanel(panelX1,panelY1+5,panelX2,panelY2-40);
 		minimap.setPanel(panelX1,panelY1+16,panelX1+220,panelY1+236);
 
 		if (fullScreenWorldView==true)

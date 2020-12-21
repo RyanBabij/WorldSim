@@ -8,7 +8,9 @@
   Meta information about all Creatures of a certain type. Creature instances should be generated from here.
 */
 
-class Creature_Species
+#include <Container/Table/TableInterface.hpp>
+
+class Creature_Species: public TableInterface
 {
 	public:
 	Creature_Species(std::string _name, int _spawnWeight)
@@ -19,6 +21,20 @@ class Creature_Species
 	
 	std::string name;
 	int spawnWeight;
+	
+	// TABLE INTERFACE
+	std::string getColumn(std::string _column)
+	{
+		if ( _column=="name" )
+		{
+			return name;
+		}
+		return "?";
+	}
+	std::string getColumnType(std::string _column)
+	{
+		return "string";
+	}
 	
 };
 
