@@ -413,48 +413,6 @@ void World::startSimulation()
 	//isRaining=true;
 	isRaining=false;
 
-	// Build and shuffle the tile vector
-	//Vector < Vector <HasXY> > vAllTiles;
-
-	std::thread tvAllTiles( [this]
-	{
-		for (int i=0;i<vAllTiles.size();++i)
-		{
-			delete vAllTiles(i);
-		}
-		vAllTiles.clear();
-		for (int i=0;i<nY;++i)
-		{
-			Vector <int>* vCoord = new Vector <int>;
-			for (int _x=0;_x<nX;++_x)
-			{
-				vCoord->push(_x);
-			}
-			vCoord->shuffle();
-			vAllTiles.push(vCoord);
-		}
-	});
-
-	std::thread tvAllTiles2( [this]
-	{
-		for (int i=0;i<vAllTiles2.size();++i)
-		{
-			delete vAllTiles2(i);
-		}
-		vAllTiles2.clear();
-		for (int _y=0;_y<nY;++_y)
-		{
-			for (int _x=0;_x<nX;++_x)
-			{
-				vAllTiles2.push( new HasXY (_x,_y) );
-			}
-		}
-		vAllTiles2.shuffle();
-	});
-
-	tvAllTiles.join();
-	tvAllTiles2.join();
-
 	active=true;
 	mapManager.init(nX,nY,&aWorldTile);
 
@@ -1599,6 +1557,49 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 			}
 		}
 	}
+	
+	// Build and shuffle the tile vector
+	// We need this in generation because tribe spawning uses it.
+	//Vector < Vector <HasXY> > vAllTiles;
+
+	std::thread tvAllTiles( [this]
+	{
+		for (int i=0;i<vAllTiles.size();++i)
+		{
+			delete vAllTiles(i);
+		}
+		vAllTiles.clear();
+		for (int i=0;i<nY;++i)
+		{
+			Vector <int>* vCoord = new Vector <int>;
+			for (int _x=0;_x<nX;++_x)
+			{
+				vCoord->push(_x);
+			}
+			vCoord->shuffle();
+			vAllTiles.push(vCoord);
+		}
+	});
+
+	std::thread tvAllTiles2( [this]
+	{
+		for (int i=0;i<vAllTiles2.size();++i)
+		{
+			delete vAllTiles2(i);
+		}
+		vAllTiles2.clear();
+		for (int _y=0;_y<nY;++_y)
+		{
+			for (int _x=0;_x<nX;++_x)
+			{
+				vAllTiles2.push( new HasXY (_x,_y) );
+			}
+		}
+		vAllTiles2.shuffle();
+	});
+
+	tvAllTiles.join();
+	tvAllTiles2.join();
 
 	//timerBiomeFill.update();
 	//std::cout<<"Filled "<<currentID<<" biomes in "<<timerBiomeFill.fullSeconds<<" seconds.\n";
@@ -1926,9 +1927,23 @@ bool World::getRandomLandTile(int* x, int* y)
 	return false;
 }
 
+HasXY* World::getRandomLandTile()
+{
+	vAllTiles2.shuffle();
+	for (auto xy : vAllTiles2)
+	{
+		if ( aWorldTile(xy->x,xy->y).baseBiome != OCEAN )
+		{
+			return xy;
+		}
+	}
+	return 0;
+}
+
 // UPDATE: This now actually returns a random distribution.
 HasXY* World::getRandomTileOfType(enumBiome _type)
 {
+	std::cout<<"Getrandom vect size: "<<vAllTiles2.size()<<"\n";
 	vAllTiles2.shuffle();
 	for (auto xy : vAllTiles2)
 	{

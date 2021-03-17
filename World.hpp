@@ -243,6 +243,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	void getRandomTile (int* x, int* y);
 	/* Set the pointers to a coordinate of a random land tile in the world. May fail, in which case returns false and sets coords to (0,0). */
 	bool getRandomLandTile(int* x, int* y);
+	
+	HasXY* getRandomLandTile();
 
 	HasXY* getRandomTileOfType(enumBiome _type);
 
