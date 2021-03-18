@@ -965,9 +965,13 @@ class WorldViewer: public DisplayInterface, public MouseInterface
   
          for (int currentX = pixelTileX; currentX<mainViewNX+tileSize; currentX+=tileSize)
          {
+			 
+		if (world->isSafe(tileX,tileY))
+		{
+			 
             // Check if we're supposed to render a local map on this tile.
             World_Local * localMap = 0;
-            if ( tileSize >= 12 && world->isSafe(tileX,tileY) )
+            if ( tileSize >= 12 )
             {
                for ( int i=0;i<world->vWorldLocal.size();++i)
                {
@@ -986,7 +990,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
             {
                renderLocalMap(localMap,currentX,currentY);
             }
-				else if (landMode && world->isSafe(tileX,tileY) )
+				else if (landMode)
 				{
 					// only render grassland and ocean tiles.
 					if(world->isLand(tileX,tileY)==false)
@@ -998,7 +1002,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 						Renderer::placeTexture4(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_GRASS_00, false);
 					}
 				}
-            else if ( world->isSafe(tileX,tileY) )
+            else
             { // Render tile on world view
                /* Textures are chosen here rather than from tile objects because it is highly dependent on neighboring tiles. It would be possible to delegate texture handling to tile objects, but would take too much memory maintaining pointers to neighbours. In future maybe worldtile can return hardcoded textures chosen by world object. */
                
@@ -1042,6 +1046,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
                   (currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_RIVER_FULL, false);
                }
             }
+		}
             ++tileX;
             tileX+=tilesToSkip;
          }
@@ -1141,7 +1146,6 @@ class WorldViewer: public DisplayInterface, public MouseInterface
          tileY+=tilesToSkip;
       }
    }
-
 
 	// return the maximum number of tiles that fit on the current panel along X axis
 	double getTilesNX()
