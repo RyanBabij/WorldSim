@@ -1078,6 +1078,20 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 							Renderer::placeTexture4
 							(currentX, currentY, currentX+tileSize, currentY+tileSize, &TEX_WORLD_TERRAIN_RIVER_FULL, false);
 						}
+						
+						// Render tribe territory colour if necessary
+						if (territoryView)
+						{
+							//Renderer::setColourMode();
+							// Get territory colour of dominant tribe on this tile and draw it as a transparent overlay
+							const Tribe* dominantTribe = world->aWorldTile(tileX,tileY).getDominantInfluence();
+							if (dominantTribe!=0)
+							{
+								Renderer::placeColour4a(dominantTribe->colourRed,dominantTribe->colourGreen,
+								dominantTribe->colourBlue, 150, currentX, currentY, currentX+tileSize, currentY+tileSize);
+							}
+							//Renderer::setTextureMode();
+						}
 					}
 				}
 				++tileX;
@@ -1130,7 +1144,7 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 						// only draw land and ocean textures.
 						if(world->isLand(tileX,tileY)==false)
 						{
-							glColor3ub(TEX_WORLD_TERRAIN_OCEAN_00.averageRed,TEX_WORLD_TERRAIN_OCEAN_00.averageGreen
+							glColor3ub(TEX_WORLD_TERRAIN_OCEAN_00.averageRed,TEX_WORLD_TERRAIN_OCEAN_00.averageGreen,
 							TEX_WORLD_TERRAIN_OCEAN_00.averageBlue);
 						}
 						else if(world->isLand(tileX,tileY)==true)
