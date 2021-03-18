@@ -1092,103 +1092,108 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 	// render the world using the old colour system. Generally not used.
 	void renderColourMode(int tileX, int tileY, float pixelTileX, float pixelTileY)
 	{
-	// Pixel coords for leftmost tile.
-	Renderer::setColourMode();
+		// Pixel coords for leftmost tile.
+		Renderer::setColourMode();
 
-	const int revertTileX = tileX;
+		const int revertTileX = tileX;
 
-	for (int currentY = pixelTileY; currentY<mainViewNY; currentY+=tileSize)
-	{
-	glBegin(GL_QUAD_STRIP);
+		for (int currentY = pixelTileY; currentY<mainViewNY; currentY+=tileSize)
+		{
+			glBegin(GL_QUAD_STRIP);
 
-	// initial case
-	glColor3ub(0,0,0);
+			// initial case
+			glColor3ub(0,0,0);
 
-	for (int currentX = pixelTileX; currentX<mainViewNX+tileSize; currentX+=tileSize)
-	{
-	if(world->isSafe(tileX,tileY)==true)
-	{
-	glVertex2s(currentX,currentY);
-	glVertex2s(currentX,currentY+tileSize);
+			for (int currentX = pixelTileX; currentX<mainViewNX+tileSize; currentX+=tileSize)
+			{
+				if(world->isSafe(tileX,tileY)==true)
+				{
+					glVertex2s(currentX,currentY);
+					glVertex2s(currentX,currentY+tileSize);
 
-	// Territory view
-	if (territoryView)
-	{
-	const Tribe* dominantTribe = world->aWorldTile(tileX,tileY).getDominantInfluence();
-	if (dominantTribe!=0)
-	{
-	glColor3ub(dominantTribe->colourRed,dominantTribe->colourGreen,dominantTribe->colourBlue);
-	}
-	else
-	{
-	glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
-	}
-	}
-	else if (landMode)
-	{
-	// only draw land and ocean textures.
-	if(world->isLand(tileX,tileY)==false)
-	{
-	glColor3ub(TEX_WORLD_TERRAIN_OCEAN_00.averageRed,TEX_WORLD_TERRAIN_OCEAN_00.averageGreen,TEX_WORLD_TERRAIN_OCEAN_00.averageBlue);
-	}
-	else if(world->isLand(tileX,tileY)==true)
-	{
-	glColor3ub(TEX_WORLD_TERRAIN_GRASS_00.averageRed,TEX_WORLD_TERRAIN_GRASS_00.averageGreen,TEX_WORLD_TERRAIN_GRASS_00.averageBlue);
-	}
+					// Territory view
+					if (territoryView)
+					{
+						const Tribe* dominantTribe = world->aWorldTile(tileX,tileY).getDominantInfluence();
+						if (dominantTribe!=0)
+						{
+							glColor3ub(dominantTribe->colourRed,dominantTribe->colourGreen,dominantTribe->colourBlue);
+						}
+						else
+						{
+							glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),
+							world->aTopoMap(tileX,tileY,2));
+						}
+					}
+					else if (landMode)
+					{
+						// only draw land and ocean textures.
+						if(world->isLand(tileX,tileY)==false)
+						{
+							glColor3ub(TEX_WORLD_TERRAIN_OCEAN_00.averageRed,TEX_WORLD_TERRAIN_OCEAN_00.averageGreen
+							TEX_WORLD_TERRAIN_OCEAN_00.averageBlue);
+						}
+						else if(world->isLand(tileX,tileY)==true)
+						{
+							glColor3ub(TEX_WORLD_TERRAIN_GRASS_00.averageRed,TEX_WORLD_TERRAIN_GRASS_00.averageGreen,
+							TEX_WORLD_TERRAIN_GRASS_00.averageBlue);
+						}
+					}
+					// draw normal colour mode
+					else
+					{
+						// Cool feature where we keep track of the average colour of a texture and just draw that colour
+						// in colour mode. Could also be adapted for distant rendering.
+						// it allows for much smoother transition between texture and colur mode
+						if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==false)
+						{
+							glColor3ub(TEX_WORLD_TERRAIN_OCEAN_00.averageRed,TEX_WORLD_TERRAIN_OCEAN_00.averageGreen,
+							TEX_WORLD_TERRAIN_OCEAN_00.averageBlue);
+						}
+						else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true)
+						{
+							//glColor3ub(TEX_WORLD_TERRAIN_GRASS_00.averageRed,TEX_WORLD_TERRAIN_GRASS_00.averageGreen,
+							//TEX_WORLD_TERRAIN_GRASS_00.averageBlue);
+							Texture * tex = world->aWorldTile(tileX,tileY).currentTexture();
+							if ( tex )
+							{
+								glColor3ub(tex->averageRed,tex->averageGreen,tex->averageBlue);
+							}
+						}
+						else
+						{
+							//glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),
+							//world->aTopoMap(tileX,tileY,2));
+						}
+					}
+				}
 
-	}
-	// draw normal colour mode
-	else
-	{
-	// Cool feature where we keep track of the average colour of a texture and just draw that colour
-	// in colour mode. Could also be adapted for distant rendering.
-	// it allows for much smoother transition between texture and colur mode
-	if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==false)
-	{
-	glColor3ub(TEX_WORLD_TERRAIN_OCEAN_00.averageRed,TEX_WORLD_TERRAIN_OCEAN_00.averageGreen,TEX_WORLD_TERRAIN_OCEAN_00.averageBlue);
-	}
-	else if(world->isSafe(tileX,tileY)==true && world->isLand(tileX,tileY)==true)
-	{
-	//glColor3ub(TEX_WORLD_TERRAIN_GRASS_00.averageRed,TEX_WORLD_TERRAIN_GRASS_00.averageGreen,TEX_WORLD_TERRAIN_GRASS_00.averageBlue);
-	Texture * tex = world->aWorldTile(tileX,tileY).currentTexture();
-	if ( tex )
-	{
-	glColor3ub(tex->averageRed,tex->averageGreen,tex->averageBlue);
-	}
-	}
-	else
-	{
-	//glColor3ub(world->aTopoMap(tileX,tileY,0),world->aTopoMap(tileX,tileY,1),world->aTopoMap(tileX,tileY,2));
-	}
-	}
-	}
+				// final case
+				else if(world->isSafe(tileX-1,tileY)==true)
+				{
+					glVertex2s(currentX,currentY);
+					glVertex2s(currentX,currentY+tileSize);
+				}
+				++tileX;
+				tileX+=tilesToSkip;
+			}
+			glEnd();
 
-	// final case
-	else if(world->isSafe(tileX-1,tileY)==true)
-	{
-	glVertex2s(currentX,currentY);
-	glVertex2s(currentX,currentY+tileSize);
-	}
-	++tileX;
-	tileX+=tilesToSkip;
-	}
-	glEnd();
-
-	tileX=revertTileX;
-	++tileY;
-	tileY+=tilesToSkip;
-	}
+			tileX=revertTileX;
+			++tileY;
+			tileY+=tilesToSkip;
+		}
 	}
 
 	// return the maximum number of tiles that fit on the current panel along X axis
-	double getTilesNX()
+	inline double getTilesNX()
 	{
-	return mainViewNX/tileSize;
+		return mainViewNX/tileSize;
 	}
 	// return the maximum number of tiles that fit on the current panel along Y axis
-	double getTilesNY()
+	inline double getTilesNY()
 	{
-	return mainViewNY/tileSize;
+		return mainViewNY/tileSize;
 	}
 
 };
@@ -1197,36 +1202,36 @@ WorldViewer worldViewer;
 
 void RainManager::render()
 {
-if (world==0 || worldViewer.pixelsPerLocalTile < 1)
-{return;}
+	if (world==0 || worldViewer.pixelsPerLocalTile < 1)
+	{return;}
 
-unsigned long int bX,bY;
-worldViewer.toTileCoords(0,0,&bX,&bY);
+	unsigned long int bX,bY;
+	worldViewer.toTileCoords(0,0,&bX,&bY);
 
-Renderer::setColourMode();
-glColor3ub(0,0,220);
-for (int i=0;i<vRainDrop.size();++i)
-{
-int rX = vRainDrop(i)->x;
-int rY = vRainDrop(i)->y;
-unsigned long int aX,aY;
+	Renderer::setColourMode();
+	glColor3ub(0,0,220);
+	for (int i=0;i<vRainDrop.size();++i)
+	{
+		int rX = vRainDrop(i)->x;
+		int rY = vRainDrop(i)->y;
+		unsigned long int aX,aY;
 
-worldViewer.toTileCoords(rX,rY,&aX,&aY);
+		worldViewer.toTileCoords(rX,rY,&aX,&aY);
 
-if ( world->isGenerated(aX,aY) )
-{
-if ( (*world)(aX,aY)->hasFloor == 0 )
-{
-vRainDrop(i)->render();
-}
-}
-else
-{
-vRainDrop(i)->render();
-}
-}
-glColor3ub(255,255,255);
-Renderer::setTextureMode();
+		if ( world->isGenerated(aX,aY) )
+		{
+			if ( (*world)(aX,aY)->hasFloor == 0 )
+			{
+				vRainDrop(i)->render();
+			}
+		}
+		else
+		{
+			vRainDrop(i)->render();
+		}
+	}
+	glColor3ub(255,255,255);
+	Renderer::setTextureMode();
 }
 
 #endif
