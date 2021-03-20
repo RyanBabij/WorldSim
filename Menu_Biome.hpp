@@ -5,8 +5,11 @@
 /* WorldSim: Menu_Biome.hpp
 	#include "Menu_Biome.hpp"
 
-	fff
+	Shows sortable table of all biomes with size and type. Also centers on the biome when you click the entry.
+	Leads to a "Biome Detail" menu.
 */
+
+#include "Menu_Biome_Details.hpp"
 
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
@@ -26,8 +29,10 @@ class Menu_Biome: public GUI_Interface
 	
 	Wildcat::Font* font;
 	
-		/* Menu for investigating an individual tribe */
+		/* Menu for investigating an individual biome */
 	GUI_Button buttonClose;
+	
+	GUI_Button buttonBiomeDetail;
 	
 		// TABLE FOR BIOMES
 	Table2 tBiome;
@@ -35,6 +40,8 @@ class Menu_Biome: public GUI_Interface
 	
 	int lastRowClicked;
 	World_Biome * selectedBiome; // The biome the user has selected in the menu.
+	
+	Menu_Biome_Details menuBiomeDetails;
 	
 	Menu_Biome()
 	{
@@ -46,6 +53,7 @@ class Menu_Biome: public GUI_Interface
 	{
 		font = _font;
 		guiManager.setFont(_font);
+		menuBiomeDetails.setFont(_font);
 	}
 	
 	void init()
@@ -59,6 +67,10 @@ class Menu_Biome: public GUI_Interface
 		buttonClose.text="X";
 		buttonClose.setColours(&cNormal,&cHighlight,0);
 		buttonClose.active=true;
+		
+		buttonBiomeDetail.text="Details";
+		buttonBiomeDetail.setColours(&cNormal,&cHighlight,0);
+		buttonBiomeDetail.active=true;
 		
 		active = false;
 		
@@ -79,17 +91,27 @@ class Menu_Biome: public GUI_Interface
 		
 		guiManager.clear();
 		guiManager.add(&buttonClose);
+		guiManager.add(&buttonBiomeDetail);
 		guiManager.add(&guiTableBiome);
-	
+		
+		
+		menuBiomeDetails.init();
+		menuBiomeDetails.active=false;
+		
 		eventResize();
+		menuBiomeDetails.eventResize();
 	}
 	
 	void render()
 	{
-		if ( active )
+		if ( menuBiomeDetails.active )
+		{
+			menuBiomeDetails.render();
+		}
+		else if ( active )
 		{
 			Renderer::placeColour4a(150,150,150,200,panelX1,panelY1,panelX2,panelY2);
-			font8x8.drawText("Biome Info",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
+			font8x8.drawText("Biome Menu",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
 			
 			//font8x8.drawText("This menu will display interesting info about the world. For example, did you know that the world has "+DataTools::toString(world.vTribe.size())+" tribes? Fascinating stuff.\n",panelX1,panelY1,panelX2,panelY2-25, false, false);
 			
@@ -99,12 +121,24 @@ class Menu_Biome: public GUI_Interface
 
 	bool keyboardEvent (Keyboard* _keyboard)
 	{
+		if ( menuBiomeDetails.active )
+		{
+			return menuBiomeDetails.keyboardEvent(_keyboard);
+		}
+		else if ( active )
+		{
+			return guiManager.keyboardEvent(_keyboard);
+		}
 		return false;
 	}
 
 	bool mouseEvent (Mouse* _mouse)
 	{
-		if ( active )
+		if ( menuBiomeDetails.active )
+		{
+			menuBiomeDetails.mouseEvent(_mouse);
+		}
+		else if ( active )
 		{
 				/* If the guiManager did something with the mouse event. */
 			if(guiManager.mouseEvent(_mouse)==true)
@@ -115,6 +149,24 @@ class Menu_Biome: public GUI_Interface
 				active=false;
 				buttonClose.unclick();
 			}
+
+			if  (buttonBiomeDetail.clicked==true)
+			{
+				if ( selectedBiome != 0 )
+				{
+					menuBiomeDetails.selectedBiome=selectedBiome;
+					menuBiomeDetails.init();
+					menuBiomeDetails.active=true;
+				}
+				else
+				{
+					std::cout<<"Select a biome first.\n";
+				}
+
+				buttonBiomeDetail.unclick();
+			}
+			
+			
 			if ( guiTableBiome.lastClickedIndex != -1 )
 			{
 				lastRowClicked=guiTableBiome.lastClickedIndex;
@@ -126,7 +178,9 @@ class Menu_Biome: public GUI_Interface
 				if (b)
 				{
 					selectedBiome = b;
+					//std::cout<<"Selectedbiome: "<<selectedBiome->name<<"\n";
 				}
+				
 				
 				//if (world.vBiome.isSafe(lastRowClicked))
 				//{
@@ -142,6 +196,9 @@ class Menu_Biome: public GUI_Interface
 	{
 		guiTableBiome.setPanel(panelX1,panelY1,panelX2,panelY2-30);
 		buttonClose.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
+		buttonBiomeDetail.setPanel(panelX2-150, panelY1+40, panelX2-20, panelY1+20);
+		menuBiomeDetails.setPanel(panelX1,panelY1,panelX2,panelY2);
+		menuBiomeDetails.eventResize();
 	}
 	
 };
