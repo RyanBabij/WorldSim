@@ -28,6 +28,7 @@ Implementation of World_Biome.hpp
 
 		isGenerated=false;
 		threadAccess=false;
+		isFloraGenerated=false;
 
 		id=-1;
 		
@@ -152,6 +153,9 @@ Implementation of World_Biome.hpp
 
 		// it would be better if we first determine the number of valid spots to place flora, before generating flora types.
 		// that way diversity can be tied to the flora capacity of the biome
+		
+		// if we already generated flora on this biome, abort.
+		if (isFloraGenerated) { return; }
 
 		if (size==0) { return; }
 
@@ -172,119 +176,12 @@ Implementation of World_Biome.hpp
 		
 		// Each biome should have up to 3 hardcoded flora. For example deserts will always have Cactuses.
 		// only additional flora will be randomly generated.
+		// Flora are all statics, therefore there is max 1 flora per tile.
 		
-		// Flora are all staticsm, therefore there is max 1 flora per tile.
-		
-
-
-		//std::cout<<"Biome size: "<<size<<" generating "<<floraAmount<<" flora.\n";
-
-		// generate rarities. A 3-way split would probably be fine.
-		// ID 0 is always the primary flora for the biome, typically a tree
-		// ID 1 is always some kind of plant
-		// and ID 2 is always some kind of rare plant.
-		// The rest should be random.
-
-		// assign base flora for each biome
-		// if (type == DESERT)
-		// {
-			// Flora* flora = new Flora("Cactus",100);
-			// flora->setFoodValues(0,0,0);
-			// vFlora.push(flora);
-
-			// Flora* flora2 = new Flora("Shrub",25);
-			// flora2->setFoodValues(0,0,0);
-			// vFlora.push(flora2);
-
-			// Flora* flora3 = new Flora("Desert plant",10);
-			// flora3->setFoodValues(0,0,5);
-			// vFlora.push(flora3);
-		// }
-		// else if (type == SNOW)
-		// {
-			// Flora* flora = new Flora("Fir tree",100);
-			// flora->setFoodValues(0,0,0);
-			// vFlora.push(flora);
-
-			// Flora* flora2 = new Flora("Bush",25);
-			// flora2->setFoodValues(0,0,5);
-			// vFlora.push(flora2);
-
-			// Flora* flora3 = new Flora("Hardy plant",10);
-			// flora3->setFoodValues(0,0,5);
-			// vFlora.push(flora3);
-		// }
-		// else if (type == WETLAND)
-		// {
-			// Flora* flora = new Flora("Willow tree",100);
-			// flora->setFoodValues(0,0,0);
-			// vFlora.push(flora);
-
-			// Flora* flora2 = new Flora("Swamp plant",25);
-			// flora2->setFoodValues(0,0,0);
-			// vFlora.push(flora2);
-
-			// Flora* flora3 = new Flora("Swamp plant",10);
-			// flora3->setFoodValues(0,0,5);
-			// vFlora.push(flora3);
-		// }
-		// else
-		// {
-			// Flora* flora = new Flora("Tree",100);
-			// flora->setFoodValues(0,0,0);
-			// vFlora.push(flora);
-
-			// Flora* flora2 = new Flora("Common plant",25);
-			// flora2->setFoodValues(0,0,5);
-			// vFlora.push(flora2);
-
-			// Flora* flora3 = new Flora("Uncommon plant",10);
-			// flora3->setFoodValues(0,0,5);
-			// vFlora.push(flora3);
-		// }
-
-		// for (unsigned int i=3;i<floraAmount;++i)
-		// {
-			// std::string floraName = "";
-
-			// int common = rng.rand8()%3;
-
-			// if (common==0)
-			// {
-				// Flora* flora2 = new Flora("Common flora",20);
-				// flora2->setFoodValues(0,0,5,1,5,1);
-				// vFlora.push(flora2);
-			// }
-			// else if (common==1)
-			// {
-				// Flora* flora2 = new Flora("Uncommon flora",10);
-				// flora2->setFoodValues(0,0,5,1,5,1);
-				// vFlora.push(flora2);
-			// }
-			// else
-			// {
-				// Flora* flora2 = new Flora("Rare flora",5);
-				// flora2->setFoodValues(0,0,5,1,5,1);
-				// vFlora.push(flora2);
-			// }
-		// }
-		
-		// Generate the random flora.
-		
-		//Vector <Flora*>* vFlora2 = floraGenerator.generate(floraAmount);
+		std::cout<<"Generating flora\n";
 		floraManager.generate(floraAmount);
 
-		// std::cout<<"Flora generated for biome:\n";
-		// for (int i=0;i<vFlora2->size();++i)
-		// {
-			// std::cout<<" * "<<(*vFlora2)(i)->getName()<<"\n";
-			// vFlora.push( (*vFlora2)(i) );
-			
-		// }
-		//delete vFlora2;
-
 		// assign local ids to the flora (1-255)
-
 		for (int i=0;i<vFlora.size();++i)
 		{
 			vFlora(i)->id=i+1;
@@ -303,6 +200,8 @@ Implementation of World_Biome.hpp
 		std::string biomePath = currentSavePath + "/" + DataTools::toString(id) + "f.dat";
 		//std::cout<<"Saving Flora lookup to: "<<biomePath<<"\n";
 		sfm.saveToFile(biomePath);
+		
+		isFloraGenerated=true;
 	}
 	
 	void World_Biome::generateCreatures()

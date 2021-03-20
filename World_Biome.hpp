@@ -50,6 +50,8 @@ class World_Biome: public TableInterface
 
 	bool isGenerated; // true if all tiles have been generated.
 	bool threadAccess; // true if a thread is using this biome
+	
+	bool isFloraGenerated; // flag so we only generate flora once for this biome.
 
 	int id; // the biome's id. Used to lookup biome tables. The id is equal to it's position in the biome vector.
 

@@ -65,10 +65,34 @@ class Menu_Biome_Details: public GUI_Interface
 	{
 		if ( active )
 		{
+			if (selectedBiome==0) { return; }
+			
+			// if (selectedBiome->isGenerated == false)
+			// {
+				// std::cout<<"Not generated\n";
+				// selectedBiome->generate();
+			// }
+			
 			Renderer::placeColour4a(150,150,150,200,panelX1,panelY1,panelX2,panelY2);
 			font8x8.drawText("Biome Details Menu",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
 			
-			font8x8.drawText("Menu text.\n",panelX1,panelY1,panelX2,panelY2-25, false, false);
+			std::cout<<"nflora: "<<selectedBiome->vFlora.size()<<"\n";
+			std::string strFlora = "Flora:\n";
+			for (int i=0;i<selectedBiome->vFlora.size();++i)
+			{
+				strFlora+=selectedBiome->vFlora(i)->name;
+			}
+			
+			Vector <Flora*> * vFlora2 = selectedBiome->getAllFloraTypes();
+			std::cout<<"nflora2: "<<vFlora2->size()<<"\n";
+			
+			for (int i=0;i<vFlora2->size();++i)
+			{
+				strFlora+=(*vFlora2)(i)->name+"\n";
+			}
+			delete vFlora2;
+			
+			font8x8.drawText("Menu text.\n"+strFlora,panelX1,panelY1,panelX2,panelY2-25, false, false);
 			
 			guiManager.render();
 		}

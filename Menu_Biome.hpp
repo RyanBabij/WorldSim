@@ -154,6 +154,11 @@ class Menu_Biome: public GUI_Interface
 			{
 				if ( selectedBiome != 0 )
 				{
+					//we need to quickly generate the flora if it hasn't been already
+					// we might need a higher level meta generator for flora/creatures which
+					// doesn't need land to be generated.
+					selectedBiome->generate();
+					
 					menuBiomeDetails.selectedBiome=selectedBiome;
 					menuBiomeDetails.init();
 					menuBiomeDetails.active=true;
