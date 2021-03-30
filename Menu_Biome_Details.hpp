@@ -74,9 +74,10 @@ class Menu_Biome_Details: public GUI_Interface
 			// }
 			
 			Renderer::placeColour4a(150,150,150,200,panelX1,panelY1,panelX2,panelY2);
+			
 			font8x8.drawText("Biome Details Menu",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
 			
-			std::cout<<"nflora: "<<selectedBiome->vFlora.size()<<"\n";
+			//std::cout<<"nflora: "<<selectedBiome->vFlora.size()<<"\n";
 			std::string strFlora = "Flora:\n";
 			for (int i=0;i<selectedBiome->vFlora.size();++i)
 			{
@@ -84,7 +85,7 @@ class Menu_Biome_Details: public GUI_Interface
 			}
 			
 			Vector <Flora*> * vFlora2 = selectedBiome->getAllFloraTypes();
-			std::cout<<"nflora2: "<<vFlora2->size()<<"\n";
+			//std::cout<<"nflora2: "<<vFlora2->size()<<"\n";
 			
 			for (int i=0;i<vFlora2->size();++i)
 			{
@@ -92,7 +93,7 @@ class Menu_Biome_Details: public GUI_Interface
 			}
 			delete vFlora2;
 			
-			font8x8.drawText("Menu text.\n"+strFlora,panelX1,panelY1,panelX2,panelY2-25, false, false);
+			font8x8.drawText("Menu text.\n"+strFlora,panelX1,panelY1,panelX2,panelY2-25, false, false, false, 0, 0, 0, 255, 2);
 			
 			guiManager.render();
 		}
