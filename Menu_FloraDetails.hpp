@@ -82,26 +82,17 @@ class Menu_FloraDetails: public GUI_Interface
 
 		if ( active )
 		{
+			
 			Renderer::placeColour4a(150,150,150,220,panelX1,panelY1,panelX2,panelY2);
 			font8x8.drawText("Flora details",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
 
 			int yOffset=35;
 			int vSpacing=12;
+			
+			std::string mainText="This is the "+selectedFlora->getName()+".\nIt is flora.\nEffects:\n"
+				+"   Effect 1\n   Effect 2\n   Effect 3";
 
-			// std::string characterName = "Name: " + selectedFlora->getFullName() + ".";
-			// font8x8.drawText(characterName,panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing, false, true);
-			// yOffset+=vSpacing;
-			// font8x8.drawText("Age: "+DataTools::toString(selectedFlora->age),panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing, false, true);
-			// yOffset+=vSpacing;
-			// std::string strSex;
-			// if ( selectedFlora->isMale ) { strSex="Male"; }
-			// else { strSex="Female"; }
-			// font8x8.drawText("Sex: "+strSex,panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing, false, true);
-			// yOffset+=vSpacing;
-
-
-			// yOffset+=vSpacing;
-
+			font8x8.drawText(mainText,panelX1,panelY1,panelX2,panelY2-25, false, false, false, 0, 0, 0, 255, 2);
 			guiManager.render();
 		}
 	}

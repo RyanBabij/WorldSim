@@ -463,6 +463,7 @@ public:
 			menuTribes.active = false;
 			menuCivs.active = false;
 			menuFlora.active = false;
+			menuFlora.menuFloraDetails.active = false;
 			menuCreatures.active = false;
 			menuWorld.active = false;
 			menuCharacter.active = false;

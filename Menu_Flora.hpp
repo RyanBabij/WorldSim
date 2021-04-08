@@ -172,7 +172,7 @@ class Menu_Flora: public GUI_Interface
 				// (in future an ID system would be useful)]
 				int floraIndex=0;
 				
-				for (int i=0;i<world.vBiome.size();++i)
+				for (int i=0;i<world.vBiome.size()&&selectedFlora==0;++i)
 				{
 					World_Biome * biome = world.vBiome(i);
 					Vector <Flora*> * vFloraTypes = biome->getAllFloraTypes();
@@ -183,14 +183,16 @@ class Menu_Flora: public GUI_Interface
 						return false;
 					}
 					
-					for (int j=0;j<vFloraTypes->size();++j)
+					for (int j=0;j<vFloraTypes->size()&&selectedFlora==0;++j)
 					{
 						
 						if ( floraIndex == lastRowClicked )
 						{
 							// we found the matching index.
+							
 							selectedFlora=(*vFloraTypes)(j);
-							break;
+							std::cout<<"Found match: "<<selectedFlora->getName()<<"\n";
+							//break;
 						}
 						++floraIndex;
 					}
