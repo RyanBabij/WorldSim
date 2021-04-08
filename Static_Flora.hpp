@@ -121,6 +121,7 @@
 
 // This class sets the stats for a type of flora. Individual instances should use another class.
 #include <Container/Table/TableInterface.hpp>
+#include <Container/WordList/WordList.hpp> // for random flora names
 
 
 // Flora will probably refer to both instances and types, however maybe not, in which case Flora will refer to
@@ -131,6 +132,47 @@
 // Wildlife simulation will be greatly simplified and therefore there will not be a need ot provide different food
 // values for flora. They can have a single caloric value per harvest, and optionally return an ingredient.
 
+class Ingredient
+{
+	public:
+	std::string name;
+	
+	Ingredient(std::string _name)
+	{
+		name = _name;
+	}
+};
+
+class IngredientGenerator
+{
+	public:
+	std::string name;
+	
+	WordList wListIngredient;
+	
+	IngredientGenerator()
+	{
+		// for now just give random name from small list for testing
+		// Load word lists
+		wListIngredient.loadString(FileManager::getFileAsString("raw/wordlists/ingredient.txt"));
+		RNG_TEST.seed(SEEDER);
+	}
+	
+	Ingredient * generateIngredient()
+	{
+		auto ingredient = new Ingredient(wListIngredient.getRandom());
+		
+		//ingredient->name=wListIngredient.getRandom();
+		
+		std::cout<<"Generated ingredient: "<<ingredient->name<<"\n";
+		
+		return ingredient;
+	}
+
+};
+
+IngredientGenerator ingredientGenerator;
+
 class Flora: public Static, public TableInterface
 {
    // Easy food: Food which can easily be obtained/eaten such as fruit
@@ -140,10 +182,13 @@ class Flora: public Static, public TableInterface
    // Increment is per 24 hours
    // 1 food = 1 day of food for 1 herbivore
    unsigned char easyFood, mediumFood, hardFood;
+	
+	
    
    //Vector <unsigned char> vAllowedBiomeTypes;
    
    public:
+	Ingredient * ingredient; // Each Flora may contain 1 ingredient.
    
    unsigned short int spawnWeight; // probability of being selected to spawn. higher = more common
    
@@ -151,6 +196,7 @@ class Flora: public Static, public TableInterface
    {
       name=_name;
       spawnWeight=_spawnWeight;
+		ingredient = ingredientGenerator.generateIngredient();
    }
    void increment(unsigned short int nDays)
    {
@@ -252,8 +298,6 @@ class Static_Tree: public Flora
       return &TEX_WORLD_TERRAIN_FOREST_TREE;
    }
 };
-
-#include <Container/WordList/WordList.hpp> // for random flora names
 
 class FloraGenerator
 {

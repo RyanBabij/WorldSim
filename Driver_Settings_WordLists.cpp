@@ -6,7 +6,10 @@
   #include "Driver_Settings_WordLists.cpp"
 
 	Any word lists are initialised here.
+	Maybe best to keep them local not global
 */
+
+#include <Container/WordList/WordList.hpp>
 
 
 
