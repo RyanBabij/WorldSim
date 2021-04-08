@@ -79,10 +79,10 @@ class Menu_Biome_Details: public GUI_Interface
 			
 			//std::cout<<"nflora: "<<selectedBiome->vFlora.size()<<"\n";
 			std::string strFlora = "Flora:\n";
-			for (int i=0;i<selectedBiome->vFlora.size();++i)
-			{
-				strFlora+=selectedBiome->vFlora(i)->name;
-			}
+			// for (int i=0;i<selectedBiome->vFlora.size();++i)
+			// {
+				// strFlora+=selectedBiome->vFlora(i)->name;
+			// }
 			
 			Vector <Flora*> * vFlora2 = selectedBiome->getAllFloraTypes();
 			//std::cout<<"nflora2: "<<vFlora2->size()<<"\n";
@@ -92,6 +92,16 @@ class Menu_Biome_Details: public GUI_Interface
 				strFlora+=(*vFlora2)(i)->name+"\n";
 			}
 			delete vFlora2;
+			
+			strFlora+="\n\nCreatures:\n";
+			
+			Vector <Creature_Species*> * vCreature = selectedBiome->getAllCreatureTypes();
+			
+			for (int i=0;i<vCreature->size();++i)
+			{
+				strFlora+=(*vCreature)(i)->name+"\n";
+			}
+			delete vCreature;
 			
 			font8x8.drawText("Menu text.\n"+strFlora,panelX1,panelY1,panelX2,panelY2-25, false, false, false, 0, 0, 0, 255, 2);
 			

@@ -5,13 +5,16 @@
 /* WorldSim: Menu_Flora.hpp
 	#include "Menu_Flora.hpp"
 
-	fff
+	Table of all Flora in World, with option to view submenu for a specific Flora.
 */
+
+#include "Menu_FloraDetails.hpp" //Flora Details Submenu
 
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
-
 #include <Data/DataTools.hpp>
+
+
 
 class Menu_Flora: public GUI_Interface
 {
@@ -26,20 +29,26 @@ class Menu_Flora: public GUI_Interface
 	
 	Wildcat::Font* font;
 	
-		/* Menu for investigating an individual tribe */
+		/*  Button to close the menu */
 	GUI_Button buttonClose;
 	
+		/* Button to open Flora Details menu */
+	GUI_Button buttonFloraDetails;
+	
 		// TABLE FOR BIOMES
+		// why are there 2 tables here?
 	Table2 tFlora;
 	GUI_Table guiTableBiome;
 	
+	//Menu_FloraDetails menuFloraDetails;
+	
 	int lastRowClicked;
-	World_Biome * selectedBiome; // The biome the user has selected in the menu.
+	World_Biome * selectedFlora; // The Flora the user has selected in the menu.
 	
 	Menu_Flora()
 	{
 		lastRowClicked=-1;
-		selectedBiome=0;
+		selectedFlora=0;
 	}
 	
 	void setFont(Wildcat::Font* _font)
@@ -60,8 +69,11 @@ class Menu_Flora: public GUI_Interface
 		buttonClose.setColours(&cNormal,&cHighlight,0);
 		buttonClose.active=true;
 		
-		active = false;
+		buttonFloraDetails.text="Flora Details";
+		buttonFloraDetails.setColours(&cNormal,&cHighlight,0);
+		buttonFloraDetails.active=true;
 		
+		active = false;
 		
 		guiTableBiome.clear();
 		guiTableBiome.table = &tFlora;
@@ -92,6 +104,7 @@ class Menu_Flora: public GUI_Interface
 		
 		guiManager.clear();
 		guiManager.add(&buttonClose);
+		guiManager.add(&buttonFloraDetails);
 		guiManager.add(&guiTableBiome);
 	
 		eventResize();
@@ -128,25 +141,41 @@ class Menu_Flora: public GUI_Interface
 				active=false;
 				buttonClose.unclick();
 			}
-			if ( guiTableBiome.lastClickedIndex != -1 )
+			if  (buttonFloraDetails.clicked==true)
 			{
-				lastRowClicked=guiTableBiome.lastClickedIndex;
-				
-				// find the biome with the correct id
-				//for (int i=0;i<world.vBiome
-				World_Biome * b = world.getBiome(lastRowClicked);
-				
-				if (b)
+				std::cout<<"Clicked flora details.\n";
+				if ( selectedFlora != 0 )
 				{
-					selectedBiome = b;
+					std::cout<<"Flora details\n";
+					//menuFloraDetails.init(selectedFlora);
+					//menuFloraDetails.active=true;
 				}
-				
-				//if (world.vBiome.isSafe(lastRowClicked))
-				//{
-				//	selectedBiome=world.vBiome(lastRowClicked);
-				//}
-				guiTableBiome.lastClickedIndex = -1;
+				else
+				{
+					std::cout<<"Select a Flora first.\n";
+				}
+
+				buttonFloraDetails.unclick();
 			}
+			// if ( guiTableBiome.lastClickedIndex != -1 )
+			// {
+				// lastRowClicked=guiTableBiome.lastClickedIndex;
+				
+				// // find the biome with the correct id
+				// //for (int i=0;i<world.vBiome
+				// World_Biome * b = world.getBiome(lastRowClicked);
+				
+				// if (b)
+				// {
+					// selectedFlora = b;
+				// }
+				
+				// //if (world.vBiome.isSafe(lastRowClicked))
+				// //{
+				// //	selectedBiome=world.vBiome(lastRowClicked);
+				// //}
+				// guiTableBiome.lastClickedIndex = -1;
+			// }
 		}
 		return false;
 	}
@@ -155,6 +184,7 @@ class Menu_Flora: public GUI_Interface
 	{
 		guiTableBiome.setPanel(panelX1,panelY1,panelX2,panelY2-30);
 		buttonClose.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
+		buttonFloraDetails.setPanel(panelX2-150, panelY1+40, panelX2-20, panelY1+20);
 	}
 	
 };

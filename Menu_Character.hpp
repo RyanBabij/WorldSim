@@ -5,13 +5,17 @@
 /* WorldSim: Menu_Tribes.hpp
   #include "Menu_Tribes.hpp"
 
-	This menu shows a database of all tribes in the world. The player can click a tribe to get a detailed view of the tribe.
+	This menu shows a database of all Characters in the world.
+	The player can click a Character to get their Character Sheet.
+	This system seems to work with millions of Characters but obviously can get a bit unwieldy.
+	In future it might be better to split them by city/tribe/civ, or at least have better filtering options.
+	For now it works well enough though.
 */
+
+#include "Menu_CharacterDetails.cpp"
 
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
-
-#include "Menu_CharacterDetails.cpp"
 
 class Menu_Characters: public GUI_Interface
 {
@@ -26,10 +30,10 @@ class Menu_Characters: public GUI_Interface
 	
 	Wildcat::Font* font;
 	
-		/* Menu for investigating an individual tribe */
+		/* Button to close the menu */
 	GUI_Button buttonClose;
 	
-		/* Menu for investigating an individual tribe */
+		/* Button to open Character Details menu */
 	GUI_Button buttonCharacterDetails;
 	
 		// TABLE FOR CHARACTERS

@@ -467,6 +467,7 @@ public:
 			menuWorld.active = false;
 			menuCharacter.active = false;
 			menuBiome.active = false;
+			menuBiome.menuBiomeDetails.active = false;
 			minimap.active = true;
 
 

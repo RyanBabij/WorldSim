@@ -2,8 +2,8 @@
 #ifndef WORLDSIM_MENU_CHARACTER_DETAILS_CPP
 #define WORLDSIM_MENU_CHARACTER_DETAILS_CPP
 
-/* WorldSim: Menu_TribeDetails.cpp
-	#include "Menu_TribeDetails.cpp"
+/* WorldSim: Menu_CharacterDetails.cpp
+	#include "Menu_CharacterDetails.cpp"
 
 	
 */
