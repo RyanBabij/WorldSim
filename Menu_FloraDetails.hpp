@@ -38,6 +38,7 @@ class Menu_FloraDetails: public GUI_Interface
 	Menu_FloraDetails()
 	{	
 		selectedFlora=0;
+		active=false;
 	}
 
 	void setFont(Wildcat::Font* _font)
