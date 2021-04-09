@@ -89,10 +89,10 @@ class Menu_FloraDetails: public GUI_Interface
 			int yOffset=35;
 			int vSpacing=12;
 			
-			std::string mainText="This is the "+selectedFlora->getName()+".\nIt is flora.\nEffects:\n"
-				+"   Effect 1\n   Effect 2\n   Effect 3";
+			std::string mainText="This is the "+selectedFlora->getName()+".\n";
 				
-			mainText+="\n\nIt can be harvested for "+selectedFlora->ingredient->name+"\n";
+			mainText+="\n\nIt can be harvested for its "+selectedFlora->ingredient->name+" which causes "
+			+selectedFlora->ingredient->effect->name+"\n";
 
 			font8x8.drawText(mainText,panelX1,panelY1,panelX2,panelY2-25, false, false, false, 0, 0, 0, 255, 2);
 			guiManager.render();

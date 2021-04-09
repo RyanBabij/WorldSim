@@ -123,6 +123,40 @@
 #include <Container/Table/TableInterface.hpp>
 #include <Container/WordList/WordList.hpp> // for random flora names
 
+// ingredient effects
+// realistically we will probably just have a hardcoded table of effects
+class Effect
+{
+	public:
+	std::string name;
+	
+	Effect(std::string _name)
+	{
+		name=_name;
+	}
+};
+
+class EffectGenerator
+{
+	WordList wListEffects;
+	public:
+	
+	EffectGenerator()
+	{
+		wListEffects.add("Death");
+		wListEffects.add("Poison");
+		wListEffects.add("Health");
+		wListEffects.add("Magic");
+	}
+	
+	Effect * generate()
+	{
+		auto effect = new Effect(wListEffects.getRandom());
+		return effect;
+	}
+};
+EffectGenerator effectGenerator;
+
 
 // Flora will probably refer to both instances and types, however maybe not, in which case Flora will refer to
 // types of Flora, and then Flora_Instance will refer to actual Flora instances. We can then also differentiate
@@ -136,10 +170,12 @@ class Ingredient
 {
 	public:
 	std::string name;
+	Effect * effect;
 	
 	Ingredient(std::string _name)
 	{
 		name = _name;
+		effect = effectGenerator.generate();
 	}
 };
 
@@ -172,6 +208,8 @@ class IngredientGenerator
 };
 
 IngredientGenerator ingredientGenerator;
+
+// todo: track base biome and allow migration between biomes (mutation of 1 trait)
 
 class Flora: public Static, public TableInterface
 {
