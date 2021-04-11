@@ -181,14 +181,22 @@ Implementation of World_Biome.hpp
 		std::cout<<"Generating flora\n";
 		floraManager.generate(floraAmount);
 
-		// assign local ids to the flora (1-255)
-		for (int i=0;i<vFlora.size();++i)
+		// // assign local ids to the flora (1-255)
+		// this loop no longer works because we are storing Flora in FloraManager...
+		// for (int i=0;i<vFlora.size();++i)
+		// {
+			// vFlora(i)->id=i+1;
+			// vFlora(i)->spawnWeight = 10;
+			// vFlora(i)->setFoodValues(0,0,0);
+			// std::cout<<"SET BIOME\n";
+			// vFlora(i)->biome = this;
+		// }
+		
+		for (int i=0;i<floraManager.vFlora.size();++i)
 		{
-			vFlora(i)->id=i+1;
-			vFlora(i)->spawnWeight = 10;
-			vFlora(i)->setFoodValues(0,0,0);
-			vFlora(i)->biome = this;
-		}		
+			//std::cout<<"Actual flora loop\n";
+			floraManager.vFlora(i)->biome = this;
+		}
 		
 		// save the flora lookup list (in future we could probably hold the whole list in memory)
 		SaveFileManager sfm;

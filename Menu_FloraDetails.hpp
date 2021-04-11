@@ -90,6 +90,15 @@ class Menu_FloraDetails: public GUI_Interface
 			int vSpacing=12;
 			
 			std::string mainText="This is the "+selectedFlora->getName()+".\n";
+			
+			if (selectedFlora->biome)
+			{ // all Flora should have a parent Biome
+				mainText += "It comes from the "+selectedFlora->biome->name+".\n";
+			}
+			else
+			{
+				mainText+= "Biome unknown.\n";
+			}
 				
 			mainText+="\n\nIt can be harvested for its "+selectedFlora->ingredient->name+" which causes "
 			+selectedFlora->ingredient->effect->name+"\n";
