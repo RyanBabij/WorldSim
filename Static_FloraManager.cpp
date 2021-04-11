@@ -7,9 +7,17 @@
 
 	Implementation of Static_FloraManager.cpp.
 	
+	Note that FloraManager is currently depending on a global instance of FloraGenerator.
+	This should probably be fixed at some point.
+	
 */
 
+#include "Static_Flora.hpp"
+
+#include "Static_FloraGenerator.cpp"
 #include "Static_FloraManager.hpp"
+
+
 
 FloraManager::FloraManager()
 {

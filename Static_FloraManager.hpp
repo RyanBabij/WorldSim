@@ -7,6 +7,8 @@
 
 	Container class for Flora objects.
 	
+	Subfunctionality of Biome objects.
+	
 */
 
 class Flora;
