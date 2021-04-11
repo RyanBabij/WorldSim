@@ -33,7 +33,10 @@ While this is happening, the biome should be marked as "initializing" and cannot
 
 */
 
+#include "Static_FloraManager.hpp"
 #include "Creature_Manager.hpp"
+
+class World_Local;
 
 #include <Game/WorldGenerator/WorldGenerator2.hpp>
 #include <Container/Table/TableInterface.hpp>

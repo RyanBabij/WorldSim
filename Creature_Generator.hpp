@@ -8,6 +8,8 @@
   Class to generate new Creature_Species.
 */
 
+#include "Creature_Species.hpp"
+
 class Creature_Generator
 {
 	// It might be better practise to have a more centralised name generator which can handle all the different

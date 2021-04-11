@@ -211,6 +211,8 @@ IngredientGenerator ingredientGenerator;
 
 // todo: track base biome and allow migration between biomes (mutation of 1 trait)
 
+#include "World_Biome.hpp"
+
 class Flora: public Static, public TableInterface
 {
    // Easy food: Food which can easily be obtained/eaten such as fruit
@@ -227,77 +229,25 @@ class Flora: public Static, public TableInterface
    
    public:
 	Ingredient * ingredient; // Each Flora may contain 1 ingredient.
+	World_Biome * biome; // biome in which this Flora may spawn (Flora are limited to their biome)
    
    unsigned short int spawnWeight; // probability of being selected to spawn. higher = more common
    
-   Flora(const std::string _name = "Flora", const unsigned short int _spawnWeight=1)
-   {
-      name=_name;
-      spawnWeight=_spawnWeight;
-		ingredient = ingredientGenerator.generateIngredient();
-   }
-   void increment(unsigned short int nDays)
-   {
-      // for (int i=0;i<nDays;++i)
-      // {
-         // const unsigned short int newEasy = easyFood+easyFoodIncrement;
-         // if ( newEasy > 255 ) { easyFood = 255; }
-         // else { easyFood = newEasy; }
-         // if ( easyFood > maxEasyFood ) { easyFood = maxEasyFood; }
-
-         // const unsigned short int newMedium = mediumFood+mediumFoodIncrement;
-         // if ( newMedium > 255 ) { mediumFood = 255; }
-         // else { mediumFood = newMedium; }
-         // if ( mediumFood > maxMediumFood ) { mediumFood = maxMediumFood; }
-         
-         // const unsigned short int newHard = hardFood+hardFoodIncrement;
-         // if ( newHard > 255 ) { hardFood = 255; }
-         // else { hardFood = newHard; }
-         // if ( hardFood > maxHardFood ) { hardFood = maxHardFood; }
-      // }
-   }
-   void setFoodValues(unsigned char _maxEasy, unsigned char _maxMedium, unsigned char _maxHard)
-   {
-      easyFood = _maxEasy;
-      mediumFood = _maxMedium;
-      hardFood = _maxHard;
-   }
-   void allowBiome(unsigned char biomeType)
-   {
-      //vAllowedBiomeTypes.push(biomeType);
-   }
-   virtual Texture* currentTexture() override
-   {
-      return &TEX_FLORA_PLANT;
-   }
-   
+   Flora(const std::string _name = "Flora", const unsigned short int _spawnWeight=1);
+	
+   void increment(unsigned short int /* nDays */);
+   void setFoodValues(unsigned char /* _maxEasy */, unsigned char /* _maxMedium */, unsigned char /* _maxHard */);
+   void allowBiome(unsigned char /* biomeType */);
+	
+   virtual Texture* currentTexture() override;
+	
 	// TableInterface
-	std::string getColumn(std::string _column) override
-	{
-		if ( _column=="name" )
-		{
-			return name;
-		}
-		// else if ( _column=="size" )
-		// {
-			// return DataTools::toString(size);
-		// }
-		// else if ( _column=="type" )
-		// {
-			// return WorldGenerator2::biomeName[type];
-		// }
-		return "?";
-	}
+	std::string getColumn(std::string _column) override;
 	// TableInterface
-	std::string getColumnType(std::string _column) override
-	{
-		// if ( _column == "size" )
-		// {
-			// return "number";
-		// }
-		return "string";
-	}
+	std::string getColumnType(std::string _column) override;
+	
 };
+
 
 // Trees will be special-case flora because they can block LOS and movement.
 class Static_Tree: public Flora
@@ -436,71 +386,9 @@ class FloraGenerator
 };
 FloraGenerator floraGenerator;
 
+#include "Static_FloraManager.hpp"
 
-
-class FloraManager
-{
-	public:
-	
-	int totalSpawnWeight;
-	
-	// All flora types in the biome (max 255 types)
-	Vector <Flora*> vFlora;
-	
-	RandomLehmer rng;
-	
-	// All abstracted flora in the map
-	//Vector <FloraAbstract*> vFloraAbstract;
-	
-	FloraManager()
-	{
-		totalSpawnWeight=0;
-		rng.seed(SEEDER);
-	}
-	
-	void generate (const int amount=1)
-	{
-		//std::cout<<"FloraManager generating "<<amount<<" flora.\n";
-		int currentPoints=1000;
-		for (int i=0;i<amount;++i)
-		{			
-			vFlora.push(floraGenerator.get(currentPoints));
-			totalSpawnWeight+=currentPoints;
-			currentPoints/=2;
-		}
-	}
-	
-	// return a random flora from the weighted lists
-	Flora* get()
-	{
-		if (vFlora.size() == 0 )
-		{
-			return 0;
-		}
-		if ( vFlora.size() == 1 )
-		{
-			return vFlora(0);
-		}
-		
-		int floraSlot = rng.rand32(totalSpawnWeight-1);
-		
-		int currentWeighting = 0;
-		for (int i=0;i<vFlora.size();++i)
-		{
-			currentWeighting+=vFlora(i)->spawnWeight;
-			
-			if ( currentWeighting >= floraSlot )
-			{
-				//std::cout<<"Spawning: "<<vFlora(i)->name<<"\n";
-				return vFlora(i);
-			}
-		}
-		
-		return 0;
-		
-		
-	}
-};
-
+#include "Static_Flora.cpp"
+#include "Static_FloraManager.cpp"
 
 #endif

@@ -187,6 +187,7 @@ Implementation of World_Biome.hpp
 			vFlora(i)->id=i+1;
 			vFlora(i)->spawnWeight = 10;
 			vFlora(i)->setFoodValues(0,0,0);
+			vFlora(i)->biome = this;
 		}		
 		
 		// save the flora lookup list (in future we could probably hold the whole list in memory)
