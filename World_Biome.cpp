@@ -238,8 +238,9 @@ Implementation of World_Biome.hpp
 
 		// assign local ids to the creatures (1-255)
 
-		for (int i=0;i<vCreature.size();++i)
+		for (int i=0;i<creatureManager.vSpecies.size();++i)
 		{
+			creatureManager.vSpecies(i)->biome = this;
 			//vCreature(i)->id=i+1;
 			//vCreature(i)->spawnWeight = 10;
 			//vCreature(i)->setFoodValues(0,0,0);

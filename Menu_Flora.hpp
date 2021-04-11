@@ -119,7 +119,6 @@ class Menu_Flora: public GUI_Interface
 		{
 			Renderer::placeColour4a(150,150,150,200,panelX1,panelY1,panelX2,panelY2);
 			font8x8.drawText("Flora Info",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
-			
 			guiManager.render();
 		}
 	}

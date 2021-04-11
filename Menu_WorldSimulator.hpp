@@ -465,6 +465,7 @@ public:
 			menuFlora.active = false;
 			menuFlora.menuFloraDetails.active = false;
 			menuCreatures.active = false;
+			menuCreatures.menuCreatureDetails.active = false;
 			menuWorld.active = false;
 			menuCharacter.active = false;
 			menuBiome.active = false;

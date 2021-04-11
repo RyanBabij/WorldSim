@@ -8,6 +8,8 @@
 	Menu of all creatures in World.
 */
 
+#include "Menu_SpeciesDetails.hpp"
+
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
 
@@ -29,23 +31,30 @@ class Menu_Creatures: public GUI_Interface
 		/* Menu for investigating an individual tribe */
 	GUI_Button buttonClose;
 	
+		/* Button to open Creature Details menu */
+	GUI_Button buttonCreatureDetails;
+	
 		// TABLE FOR BIOMES
-	Table2 tFlora;
-	GUI_Table guiTableBiome;
+	Table2 tCreatures;
+	GUI_Table guiTableCreatures;
 	
 	int lastRowClicked;
-	World_Biome * selectedBiome; // The biome the user has selected in the menu.
+	Creature_Species * selectedSpecies; // The biome the user has selected in the menu.
+	
+	Menu_SpeciesDetails menuCreatureDetails;
 	
 	Menu_Creatures()
 	{
 		lastRowClicked=-1;
-		selectedBiome=0;
+		selectedSpecies=0;
+		menuCreatureDetails.active=false;
 	}
 	
 	void setFont(Wildcat::Font* _font)
 	{
 		font = _font;
 		guiManager.setFont(_font);
+		menuCreatureDetails.setFont(_font);
 	}
 	
 	void init()
@@ -60,18 +69,22 @@ class Menu_Creatures: public GUI_Interface
 		buttonClose.setColours(&cNormal,&cHighlight,0);
 		buttonClose.active=true;
 		
+		buttonCreatureDetails.text="Species Details";
+		buttonCreatureDetails.setColours(&cNormal,&cHighlight,0);
+		buttonCreatureDetails.active=true;
+		
 		active = false;
 		
 		
-		guiTableBiome.clear();
-		guiTableBiome.table = &tFlora;
-		guiTableBiome.alpha=0;
-		guiTableBiome.active=true;
-		guiTableBiome.addColumn("Name","name",300);
-		//guiTableBiome.addColumn("Size","size",80);
-		//guiTableBiome.addColumn("Type","type",80);
+		guiTableCreatures.clear();
+		guiTableCreatures.table = &tCreatures;
+		guiTableCreatures.alpha=0;
+		guiTableCreatures.active=true;
+		guiTableCreatures.addColumn("Name","name",300);
+		//guiTableCreatures.addColumn("Size","size",80);
+		//guiTableCreatures.addColumn("Type","type",80);
 
-		tFlora.clear();
+		tCreatures.clear();
 		for (int i=0;i<world.vBiome.size();++i)
 		{
 			World_Biome * biome = world.vBiome(i);
@@ -85,27 +98,29 @@ class Menu_Creatures: public GUI_Interface
 			
 			for (int j=0;j<vCreatureTypes->size();++j)
 			{
-				tFlora.addRow( (*vCreatureTypes)(j) );
+				tCreatures.addRow( (*vCreatureTypes)(j) );
 			}
-			//tFlora.addRow(world.vBiome(i));
+			//tCreatures.addRow(world.vBiome(i));
 		}
 		
 		guiManager.clear();
 		guiManager.add(&buttonClose);
-		guiManager.add(&guiTableBiome);
+		guiManager.add(&buttonCreatureDetails);
+		guiManager.add(&guiTableCreatures);
 	
 		eventResize();
 	}
 	
 	void render()
 	{
-		if ( active )
+		if (menuCreatureDetails.active)
+		{
+			menuCreatureDetails.render();
+		}
+		else if (active)
 		{
 			Renderer::placeColour4a(150,150,150,200,panelX1,panelY1,panelX2,panelY2);
-			font8x8.drawText("Creature Info",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
-			
-			//font8x8.drawText("This menu will display interesting info about the world. For example, did you know that the world has "+DataTools::toString(world.vTribe.size())+" tribes? Fascinating stuff.\n",panelX1,panelY1,panelX2,panelY2-25, false, false);
-			
+			font8x8.drawText("Species Info",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
 			guiManager.render();
 		}
 	}
@@ -117,7 +132,11 @@ class Menu_Creatures: public GUI_Interface
 
 	bool mouseEvent (Mouse* _mouse)
 	{
-		if ( active )
+		if (menuCreatureDetails.active)
+		{
+			menuCreatureDetails.mouseEvent(_mouse);
+		}
+		else if ( active )
 		{
 				/* If the guiManager did something with the mouse event. */
 			if(guiManager.mouseEvent(_mouse)==true)
@@ -128,24 +147,58 @@ class Menu_Creatures: public GUI_Interface
 				active=false;
 				buttonClose.unclick();
 			}
-			if ( guiTableBiome.lastClickedIndex != -1 )
+			if  (buttonCreatureDetails.clicked==true)
 			{
-				lastRowClicked=guiTableBiome.lastClickedIndex;
-				
-				// find the biome with the correct id
-				//for (int i=0;i<world.vBiome
-				World_Biome * b = world.getBiome(lastRowClicked);
-				
-				if (b)
+				std::cout<<"Clicked creature details.\n";
+				if ( selectedSpecies != 0 )
 				{
-					selectedBiome = b;
+					std::cout<<"Creature details\n";
+					menuCreatureDetails.init(selectedSpecies);
+					menuCreatureDetails.active=true;
 				}
+				else
+				{
+					std::cout<<"Select a Species first.\n";
+				}
+
+				buttonCreatureDetails.unclick();
+			}
+			if ( guiTableCreatures.lastClickedIndex != -1 )
+			{
+				selectedSpecies=0;
+				lastRowClicked=guiTableCreatures.lastClickedIndex;
+				std::cout<<"You clicked index: "<<lastRowClicked<<"\n";
 				
-				//if (world.vBiome.isSafe(lastRowClicked))
-				//{
-				//	selectedBiome=world.vBiome(lastRowClicked);
-				//}
-				guiTableBiome.lastClickedIndex = -1;
+				// get the species of this index.
+				// (in future an ID system would be useful)]
+				int creatureIndex=0;
+				
+				for (int i=0;i<world.vBiome.size()&&selectedSpecies==0;++i)
+				{
+					World_Biome * biome = world.vBiome(i);
+					Vector <Creature_Species*> * vCreatureTypes = biome->getAllCreatureTypes();
+					
+					if ( vCreatureTypes == 0 )
+					{
+						// error null vector ptr
+						return false;
+					}
+					
+					for (int j=0;j<vCreatureTypes->size()&&selectedSpecies==0;++j)
+					{
+						
+						if ( creatureIndex == lastRowClicked )
+						{
+							// we found the matching index.
+							
+							selectedSpecies=(*vCreatureTypes)(j);
+							std::cout<<"Found match: "<<selectedSpecies->name<<"\n";
+							//break;
+						}
+						++creatureIndex;
+					}
+				}
+				guiTableCreatures.lastClickedIndex = -1;
 			}
 		}
 		return false;
@@ -153,8 +206,11 @@ class Menu_Creatures: public GUI_Interface
 	
 	void eventResize()
 	{
-		guiTableBiome.setPanel(panelX1,panelY1,panelX2,panelY2-30);
+		guiTableCreatures.setPanel(panelX1,panelY1,panelX2,panelY2-30);
 		buttonClose.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
+		buttonCreatureDetails.setPanel(panelX2-150, panelY1+40, panelX2-20, panelY1+20);
+		menuCreatureDetails.setPanel(panelX1,panelY1,panelX2,panelY2);
+		menuCreatureDetails.eventResize();
 	}
 	
 };

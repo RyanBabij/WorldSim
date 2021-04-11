@@ -5,14 +5,23 @@
 /* WorldSim: Creature_Species
   #include "Creature_Species.hpp"
   
-  Meta information about all Creatures of a certain type. Creature instances should be generated from here.
+  Meta information about all Creatures of a certain type.
+  
+  Creature instances should be generated from here.
+  
+  This is necessary because unlike something like Flora, Creatures may have individually different attributes.
 */
 
 #include <Container/Table/TableInterface.hpp>
 
+class World_Biome;
+
 class Creature_Species: public TableInterface
 {
 	public:
+	
+	World_Biome* biome;
+	
 	Creature_Species(std::string _name, int _spawnWeight)
 	{
 		name = _name;
