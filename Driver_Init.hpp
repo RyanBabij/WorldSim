@@ -11,13 +11,23 @@ Initialize main menus, start timers, initialise any important data.
 
 */
 
+#include <File/WTFManager.hpp> // loading raws
+#include <Graphics/Colour/Colour.hpp> // loading raw colours
+
 void init()
 {
+	std::cout<<"\n*** INIT ***\n";
 	SEEDER.seed(time(NULL));
 	Random::seed();
 	globalRandom.seed(SEEDER);
 	globalNameGen.seed(SEEDER);
 	
+	std::cout<<"   *** RAWS ***\n";
+	WTFManager wtfManager;
+	
+	wtfManager.parse(FileManager::getFileAsString("raw/colours.txt"));
+	
+	std::cout<<"   *** END RAWS ***\n";
 
 	//Makes cout faster but less reliable
 	if ( FAST_COUT )
@@ -123,6 +133,8 @@ void init()
 	mouseInterfaceManager.add(&menuTitle);
 	//keyboardInterfaceManager.add(&menuTitle);
 	globalGuiManager.add(&menuTitle);
+	
+	std::cout<<" *** END INIT ***\n\n";
 }
 
 #endif
