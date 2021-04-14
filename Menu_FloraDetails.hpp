@@ -102,6 +102,8 @@ class Menu_FloraDetails: public GUI_Interface
 				
 			mainText+="\n\nIt can be harvested for its "+selectedFlora->ingredient->name+" which causes "
 			+selectedFlora->ingredient->effect->name+"\n";
+			
+			mainText += "It is "+selectedFlora->getColour()+"\n";
 
 			font8x8.drawText(mainText,panelX1,panelY1,panelX2,panelY2-25, false, false, false, 0, 0, 0, 255, 2);
 			guiManager.render();

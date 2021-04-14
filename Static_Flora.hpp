@@ -241,6 +241,8 @@ class Flora: public Static, public TableInterface
    void setFoodValues(unsigned char /* _maxEasy */, unsigned char /* _maxMedium */, unsigned char /* _maxHard */);
    void allowBiome(unsigned char /* biomeType */);
 	
+	std::string getColour();
+	
    virtual Texture* currentTexture() override;
 	
 	// TableInterface

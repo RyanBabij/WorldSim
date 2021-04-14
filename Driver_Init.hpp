@@ -12,7 +12,7 @@ Initialize main menus, start timers, initialise any important data.
 */
 
 #include <File/WTFManager.hpp> // loading raws
-#include <Graphics/Colour/Colour.hpp> // loading raw colours
+
 
 void init()
 {
@@ -31,7 +31,7 @@ void init()
 	// BUILD COLOURS FROM THE RAW
 	
 	// Global container for colour raws.
-	ColourManager colourManager;
+	//ColourManager colourManager;
 	
 	wtfManager.parse(FileManager::getFileAsString("raw/colours.wtf"));
 	
@@ -71,11 +71,18 @@ void init()
 		}
 		std::cout<<"Colours built:\n"<<colourManager.toString()<<"\n";
 	}
+	Colour c (64,64,64);
+	Colour * c2 = colourManager.getClosestTo(&c);
+	
+	if (c2)
+	{
+		std::cout<<"The closest colour to "<<c.toString()<<" is "<<c2->toString()<<"\n";
+	}
 	
 	std::cout<<"   *** END RAWS ***\n";
 	
-			//CLEAN_SAVES_ON_EXIT=false;
-			//QUIT_FLAG=true;
+			// CLEAN_SAVES_ON_EXIT=false;
+			// QUIT_FLAG=true;
 
 	//Makes cout faster but less reliable
 	if ( FAST_COUT )

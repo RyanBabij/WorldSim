@@ -18,6 +18,7 @@ Flora::Flora(const std::string _name /* = "Flora" */, const unsigned short int _
 	spawnWeight=_spawnWeight;
 	ingredient = ingredientGenerator.generateIngredient();
 	
+	// base flora will probably just be greenish
 	colour.setRandomRange(0,50,0,50,0,255,globalRandom);
 }
 void Flora::increment(unsigned short int nDays)
@@ -50,6 +51,13 @@ void Flora::allowBiome(unsigned char biomeType)
 {
 	//vAllowedBiomeTypes.push(biomeType);
 }
+
+std::string Flora::getColour()
+{
+	return colourManager.getNameOfColour(colour);
+}
+
+
 Texture* Flora::currentTexture()
 {
 	return &TEX_FLORA_PLANT;
