@@ -1,10 +1,12 @@
+# Ignore everything
 *
+# Allow directories
+!*/
+
 !*.hpp
 !*.cpp
 !CMakeLists.txt
 !.editorconfig
 !.codedocs
 !.doxygen
-!/raw/
-!/raw/wordlists/
-!/raw/wordlists/flora*.txt
+!*.wtf

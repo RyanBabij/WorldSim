@@ -7,6 +7,8 @@
 */
 
 #include "Driver_Settings.cpp"
+#include "Driver_GlobalSettings.cpp"
+GlobalSettings globalSettings;
 
 #include <string>
 
@@ -123,10 +125,10 @@ class QuitChecker
       gameTime.start();
 
       // For now we will clear the savedata on startup because it can cause some instability.
-      std::cout<<"Deleting temporary data folder ("<<SAVE_FOLDER_PATH<<")\n";
-      if (SAVE_FOLDER_PATH.length() > 0 )
+      std::cout<<"Deleting temporary data folder ("<<globalSettings.SAVE_FOLDER_PATH<<")\n";
+      if (globalSettings.SAVE_FOLDER_PATH.length() > 0 )
       {
-         FileManager::deleteDirectory(SAVE_FOLDER_PATH,true);
+         FileManager::deleteDirectory(globalSettings.SAVE_FOLDER_PATH,true);
       }
    }
    ~QuitChecker()
@@ -145,10 +147,10 @@ class QuitChecker
 
       if (CLEAN_SAVES_ON_EXIT)
       {
-         std::cout<<"Deleting temporary data folder ("<<SAVE_FOLDER_PATH<<")\n";
-         if (SAVE_FOLDER_PATH.length() > 0 )
+         std::cout<<"Deleting temporary data folder ("<<globalSettings.SAVE_FOLDER_PATH<<")\n";
+         if (globalSettings.SAVE_FOLDER_PATH.length() > 0 )
          {
-            FileManager::deleteDirectory(SAVE_FOLDER_PATH,true);
+            FileManager::deleteDirectory(globalSettings.SAVE_FOLDER_PATH,true);
          }
       }
    }

@@ -1,0 +1,57 @@
+https://www.rapidtables.com/web/color/RGB_Color.html
+https://dwarffortresswiki.org/index.php/DF2014:Color
+https://en.wikipedia.org/wiki/List_of_colors:_A%E2%80%93F
+
+[COLOUR
+	[BLACK:
+		[RGB:0,0,0]
+		[NAME:"black"]
+	]
+	[GRAY:
+		[RGB:128,128,128]
+		[NAME:"gray"]
+	]
+	[SILVER:
+		[RGB:192,192,192]
+		[NAME:"silver"]
+	]
+	[WHITE:
+		[RGB:255,255,255]
+		[NAME:"white"]
+	]
+	
+	[RED:
+		[RGB:255,0,0]
+		[NAME:"red"]
+	]
+	
+	[ORANGE:
+		[RGB:255,165,0]
+		[NAME:"orange"]
+	]
+	
+	[ORANGE:
+		[RGB:255,165,0]
+		[NAME:"orange"]
+	]
+	
+	[YELLOW:
+		[RGB:255,255,0]
+		[NAME:"yellow"]
+	]
+	
+	[BLUE:
+		[RGB:0,0,255]
+		[NAME:"blue"]
+	]
+	
+	[INDIGO:
+		[RGB:75,0,130]
+		[NAME:"indigo"]
+	]
+	
+	[VIOLET:
+		[RGB:238,130,238]
+		[NAME:"violet"]
+	]
+]

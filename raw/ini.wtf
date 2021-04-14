@@ -1,0 +1,8 @@
+Notes:
+SAVE_FOLDER_PATH should be alphanumeric... It is not checked for safety atm. Avoid leading slashes, ideally it
+should be a folder name alone, or an absolute path if you need it somewhere specifically. Folder should be automatically
+created. Beware that it may clear the given folder on closing, therefore don't mix it with other data.
+
+[INI:
+	[SAVE_FOLDER_PATH:SAVES]
+]

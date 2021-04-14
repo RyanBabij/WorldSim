@@ -358,7 +358,7 @@ static void GL_keyboardEvent(const unsigned char key, const int x, const int y)
 		if(key==Keyboard::CTRL_C) /* CTRL_C is value 3 and works like normal keypress. */
 		{
       // If we exit with CTRL+C, don't erase save data.
-      CLEAN_SAVES_ON_EXIT=false;
+			CLEAN_SAVES_ON_EXIT=false;
 			QUIT_FLAG=true;
 		}
     

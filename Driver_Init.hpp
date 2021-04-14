@@ -22,12 +22,57 @@ void init()
 	globalRandom.seed(SEEDER);
 	globalNameGen.seed(SEEDER);
 	
+	// load globalSettings
+	globalSettings.load(FileManager::getFileAsString("raw/ini.wtf"));
+	
 	std::cout<<"   *** RAWS ***\n";
 	WTFManager wtfManager;
 	
-	wtfManager.parse(FileManager::getFileAsString("raw/colours.txt"));
+	wtfManager.parse(FileManager::getFileAsString("raw/colours.wtf"));
+	
+	std::cout<<"All raws:\n"<<wtfManager.getAll()<<"\n\n";
+	
+	WTFNode* node = wtfManager.getRandom("COLOUR", globalRandom);
+
+	
+	if (node==0)
+	{
+		std::cout<<"Search returned null ptr\n";
+	}
+	else
+	{
+		std::cout<<"Searched node: "<<node->toString()<<"\n";
+		
+		std::cout<<"Getting node RGB.\n";
+		std::cout<<node->getSub("NAME")->toString()<<"\n";
+		std::cout<<node->getSub("RGB")->toString()<<"\n";
+		
+		// alternate: get all colours
+		Vector <WTFNode*>* vNode = wtfManager.getAllSub("COLOUR");
+		for (int i=0;i<vNode->size();++i)
+		{
+			std::cout<<(*vNode)(i)->toString()<<"\n";
+			
+			// build colour object
+		}
+		
+		// build colour object
+		
+		
+	}
+	
+	//std::cout<<"Value for searched node: "<<
+	
+	ColourManager <unsigned char> colourManager;
+	
+	// build colours from raws...
+	
+	Colour c(0,0,0);
 	
 	std::cout<<"   *** END RAWS ***\n";
+	
+			//CLEAN_SAVES_ON_EXIT=false;
+			//QUIT_FLAG=true;
 
 	//Makes cout faster but less reliable
 	if ( FAST_COUT )

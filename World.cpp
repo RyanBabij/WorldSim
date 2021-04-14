@@ -1353,8 +1353,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	name=_worldName;
 
 #ifdef SAVE_DATA
-	FileManager::createDirectory(SAVE_FOLDER_PATH);
-	if ( FileManager::directoryExists(SAVE_FOLDER_PATH) == false )
+	FileManager::createDirectory(globalSettings.SAVE_FOLDER_PATH);
+	if ( FileManager::directoryExists(globalSettings.SAVE_FOLDER_PATH) == false )
 	{
 		std::cout<<"Error: Unable to create save directory.\n";
 		return;
@@ -1371,8 +1371,8 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	mX=x;
 	landmassSeed = seed;
 
-	strSavePath = SAVE_FOLDER_PATH+"/"+name;
-	currentSavePath = SAVE_FOLDER_PATH+"/"+name;
+	strSavePath = globalSettings.SAVE_FOLDER_PATH+"/"+name;
+	currentSavePath = globalSettings.SAVE_FOLDER_PATH+"/"+name;
 
 #ifdef SAVE_DATA
 
@@ -1462,7 +1462,7 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	masterData+="[SAVEPATH:"+strSavePath+"]";
 	masterData+="[VERSION ID:"+COMPILE_COUNT+"]";
 
-	FileManager::writeString(masterData,SAVE_FOLDER_PATH+"/master.dat");
+	FileManager::writeString(masterData,globalSettings.SAVE_FOLDER_PATH+"/master.dat");
 
 #endif
 
@@ -1754,8 +1754,8 @@ void World::unloadLocal(const int _localX, const int _localY)
 	if ( isSafe(_localX,_localY) == false )
 	{ return; }
 
-	FileManager::createDirectory(SAVE_FOLDER_PATH);
-	if ( FileManager::directoryExists(SAVE_FOLDER_PATH) == false )
+	FileManager::createDirectory(globalSettings.SAVE_FOLDER_PATH);
+	if ( FileManager::directoryExists(globalSettings.SAVE_FOLDER_PATH) == false )
 	{
 		std::cout<<"Error: Unable to create save directory.\n";
 		return;
@@ -2289,7 +2289,7 @@ bool World::loadWorld(std::string _name)
 #ifdef SAVE_DATA
 	SaveFileManager sfm;
 
-	strSavePath = SAVE_FOLDER_PATH+"/"+_name;
+	strSavePath = globalSettings.SAVE_FOLDER_PATH+"/"+_name;
 
 	std::cout<<"Attempting to load data from: "<<strSavePath<<".\n";
 
