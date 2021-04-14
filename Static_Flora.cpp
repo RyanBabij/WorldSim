@@ -17,6 +17,8 @@ Flora::Flora(const std::string _name /* = "Flora" */, const unsigned short int _
 	name=_name;
 	spawnWeight=_spawnWeight;
 	ingredient = ingredientGenerator.generateIngredient();
+	
+	colour.setRandomRange(0,50,0,50,0,255,globalRandom);
 }
 void Flora::increment(unsigned short int nDays)
 {

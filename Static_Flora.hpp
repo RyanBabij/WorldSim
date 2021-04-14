@@ -232,6 +232,8 @@ class Flora: public Static, public TableInterface
 	World_Biome * biome; // biome in which this Flora may spawn (Flora are limited to their biome)
    
    unsigned short int spawnWeight; // probability of being selected to spawn. higher = more common
+	
+	Colour colour; // The base colour of the Flora (ingredients may also have their own colour)
    
    Flora(const std::string _name = "Flora", const unsigned short int _spawnWeight=1);
 	

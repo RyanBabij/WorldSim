@@ -28,6 +28,11 @@ void init()
 	std::cout<<"   *** RAWS ***\n";
 	WTFManager wtfManager;
 	
+	// BUILD COLOURS FROM THE RAW
+	
+	// Global container for colour raws.
+	ColourManager colourManager;
+	
 	wtfManager.parse(FileManager::getFileAsString("raw/colours.wtf"));
 	
 	std::cout<<"All raws:\n"<<wtfManager.getAll()<<"\n\n";
@@ -51,23 +56,21 @@ void init()
 		Vector <WTFNode*>* vNode = wtfManager.getAllSub("COLOUR");
 		for (int i=0;i<vNode->size();++i)
 		{
-			std::cout<<(*vNode)(i)->toString()<<"\n";
+			Vector <std::string> * vRGB = (*vNode)(i)->getValues("RGB");
+			std::string colourName = (*vNode)(i)->getValue("NAME");
 			
-			// build colour object
+			if (vRGB->size() == 3 && colourName != "")
+			{
+				colourManager.makeColour(DataTools::toInt( (*vRGB)(0) ) ,DataTools::toInt( (*vRGB)(1) ),
+					DataTools::toInt( (*vRGB)(2) ),colourName);
+			}
+			else
+			{
+				std::cout<<"Error: Colours are wrong\n";
+			}
 		}
-		
-		// build colour object
-		
-		
+		std::cout<<"Colours built:\n"<<colourManager.toString()<<"\n";
 	}
-	
-	//std::cout<<"Value for searched node: "<<
-	
-	ColourManager <unsigned char> colourManager;
-	
-	// build colours from raws...
-	
-	Colour c(0,0,0);
 	
 	std::cout<<"   *** END RAWS ***\n";
 	

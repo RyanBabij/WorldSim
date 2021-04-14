@@ -2,6 +2,9 @@ https://www.rapidtables.com/web/color/RGB_Color.html
 https://dwarffortresswiki.org/index.php/DF2014:Color
 https://en.wikipedia.org/wiki/List_of_colors:_A%E2%80%93F
 
+In future we might create a heirarchy to cluster colours togther. For example DARK_RED could be considered
+a type of RED. For now I'll just load a bunch of various colours.
+
 [COLOUR
 	[BLACK:
 		[RGB:0,0,0]
@@ -23,11 +26,6 @@ https://en.wikipedia.org/wiki/List_of_colors:_A%E2%80%93F
 	[RED:
 		[RGB:255,0,0]
 		[NAME:"red"]
-	]
-	
-	[ORANGE:
-		[RGB:255,165,0]
-		[NAME:"orange"]
 	]
 	
 	[ORANGE:
