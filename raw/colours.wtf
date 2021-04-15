@@ -38,6 +38,26 @@ a type of RED. For now I'll just load a bunch of various colours.
 		[NAME:"yellow"]
 	]
 	
+	[BRIGHT_GREEN:
+		[RGB:0,255,0]
+		[NAME:"bright green"]
+	]
+	
+	[GREEN:
+		[RGB:0,128,0]
+		[NAME:"green"]
+	]
+
+	[DARK_GREEN:
+		[RGB:0,100,0]
+		[NAME:"dark green"]
+	]
+	
+	[OLIVE:
+		[RGB:128,128,0]
+		[NAME:"olive"]
+	]
+	
 	[BLUE:
 		[RGB:0,0,255]
 		[NAME:"blue"]

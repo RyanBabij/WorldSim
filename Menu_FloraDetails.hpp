@@ -100,8 +100,8 @@ class Menu_FloraDetails: public GUI_Interface
 				mainText+= "Biome unknown.\n";
 			}
 				
-			mainText+="\n\nIt can be harvested for its "+selectedFlora->ingredient->name+" which causes "
-			+selectedFlora->ingredient->effect->name+"\n";
+			mainText+="\n\nIt can be harvested for its "+selectedFlora->ingredient->getColour()+" "
+			+selectedFlora->ingredient->name+" which causes "+selectedFlora->ingredient->effect->name+"\n";
 			
 			mainText += "It is "+selectedFlora->getColour()+"\n";
 

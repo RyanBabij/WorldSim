@@ -71,8 +71,8 @@ void init()
 		}
 		std::cout<<"Colours built:\n"<<colourManager.toString()<<"\n";
 	}
-	Colour c (64,64,64);
-	Colour * c2 = colourManager.getClosestTo(&c);
+	ColourRGB <unsigned char> c (64,64,64);
+	ColourRGB <unsigned char> * c2 = colourManager.getClosestTo(c);
 	
 	if (c2)
 	{
@@ -81,8 +81,8 @@ void init()
 	
 	std::cout<<"   *** END RAWS ***\n";
 	
-			// CLEAN_SAVES_ON_EXIT=false;
-			// QUIT_FLAG=true;
+			CLEAN_SAVES_ON_EXIT=false;
+			QUIT_FLAG=true;
 
 	//Makes cout faster but less reliable
 	if ( FAST_COUT )

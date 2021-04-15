@@ -158,26 +158,7 @@ class EffectGenerator
 EffectGenerator effectGenerator;
 
 
-// Flora will probably refer to both instances and types, however maybe not, in which case Flora will refer to
-// types of Flora, and then Flora_Instance will refer to actual Flora instances. We can then also differentiate
-// instances into Flora_Abstract, which will probably just be a pointer to the Flora species until generated properly.
-// A Flora instance is necessary even if it simply tracks the time it was last harvested.
-
-// Wildlife simulation will be greatly simplified and therefore there will not be a need ot provide different food
-// values for flora. They can have a single caloric value per harvest, and optionally return an ingredient.
-
-class Ingredient
-{
-	public:
-	std::string name;
-	Effect * effect;
-	
-	Ingredient(std::string _name)
-	{
-		name = _name;
-		effect = effectGenerator.generate();
-	}
-};
+#include "Ingredient.hpp"
 
 class IngredientGenerator
 {
@@ -213,6 +194,8 @@ IngredientGenerator ingredientGenerator;
 
 #include "World_Biome.hpp"
 
+#include <Graphics/Colour/Colour2.hpp>
+
 class Flora: public Static, public TableInterface
 {
    // Easy food: Food which can easily be obtained/eaten such as fruit
@@ -233,7 +216,8 @@ class Flora: public Static, public TableInterface
    
    unsigned short int spawnWeight; // probability of being selected to spawn. higher = more common
 	
-	Colour colour; // The base colour of the Flora (ingredients may also have their own colour)
+	//Colour colour; // The base colour of the Flora (ingredients may also have their own colour)
+	ColourRGB <unsigned char> colour;
    
    Flora(const std::string _name = "Flora", const unsigned short int _spawnWeight=1);
 	

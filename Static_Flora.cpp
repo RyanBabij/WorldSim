@@ -19,7 +19,7 @@ Flora::Flora(const std::string _name /* = "Flora" */, const unsigned short int _
 	ingredient = ingredientGenerator.generateIngredient();
 	
 	// base flora will probably just be greenish
-	colour.setRandomRange(0,50,0,50,0,255,globalRandom);
+	colour.setRandomRange(0,64,0,255,0,64,globalRandom);
 }
 void Flora::increment(unsigned short int nDays)
 {

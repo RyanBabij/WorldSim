@@ -79,9 +79,13 @@ RandomLehmer RNG_TEST; // for testing
 #include <Game/NameGen/NameGen.hpp>
 NameGen globalNameGen;
 
-#include <Graphics/Colour/Colour.hpp> // loading raw colours
-#include <Graphics/Colour/ColourManager.hpp> // loading raw colours
-ColourManager colourManager;
+//#include <Graphics/Colour/Colour.hpp> // loading raw colours
+//#include <Graphics/Colour/ColourManager.hpp> // loading raw colours
+//ColourManager colourManager;
+
+#include <Graphics/Colour/Colour2.hpp> // loading raw colours
+//#include <Graphics/Colour/ColourManager.hpp> // loading raw colours
+ColourManager <unsigned char> colourManager;
 
 //     WINDOW        ///////////////////////////////////////////////////////////////////////////////////////////////////
 
