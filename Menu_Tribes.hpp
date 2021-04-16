@@ -18,10 +18,10 @@ class Menu_Tribes: public GUI_Interface
 	GUI_Manager guiManager;
 	
 	/* Colours / theme. */
-	Colour cNormal;
-	Colour cSelected;
-	Colour cDropPanel;
-	Colour cHighlight;
+	ColourRGB <unsigned char> cNormal;
+	ColourRGB <unsigned char> cSelected;
+	ColourRGB <unsigned char> cDropPanel;
+	ColourRGB <unsigned char> cHighlight;
 	
 	Wildcat::Font* font;
 	
@@ -65,11 +65,11 @@ class Menu_Tribes: public GUI_Interface
 		cHighlight.set(255,160,160);
 		
 		buttonClose.text="X";
-		buttonClose.setColours(&cNormal,&cHighlight,0);
+		buttonClose.setColours(cNormal,cHighlight,0);
 		buttonClose.active=true;
 		
 		buttonTribeDetails.text="Details";
-		buttonTribeDetails.setColours(&cNormal,&cHighlight,0);
+		buttonTribeDetails.setColours(cNormal,cHighlight,0);
 		buttonTribeDetails.active=true;
 		
 		guiTableTribes.clear();

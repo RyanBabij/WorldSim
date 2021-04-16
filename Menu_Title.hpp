@@ -17,10 +17,10 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 
 	
 	/* Colours / theme. */
-	Colour cNormal;
-	Colour cSelected;
-	Colour cDropPanel;
-	Colour cHighlight;
+	ColourRGB <unsigned char> cNormal;
+	ColourRGB <unsigned char> cSelected;
+	ColourRGB <unsigned char> cDropPanel;
+	ColourRGB <unsigned char> cHighlight;
 	
 	/* Button new game. */
 	GUI_Button buttonNewGame;
@@ -72,19 +72,19 @@ class Menu_Title: public GUI_Interface, public LogicTickInterface
 		cHighlight.set(170,170,170);
 	
 		buttonNewGame.text="1. New Game";
-		buttonNewGame.setColours(&cNormal,&cHighlight,0);
+		buttonNewGame.setColours(cNormal,cHighlight,0);
 		
 		buttonLoadGame.text="Load Game";
-		buttonLoadGame.setColours(&cNormal,&cHighlight,0);
+		buttonLoadGame.setColours(cNormal,cHighlight,0);
 		
 		buttonOptions.text="Options";
-		buttonOptions.setColours(&cNormal,&cHighlight,0);
+		buttonOptions.setColours(cNormal,cHighlight,0);
 
 		buttonQuit.text="Quit";
-		buttonQuit.setColours(&cNormal,&cHighlight,0);
+		buttonQuit.setColours(cNormal,cHighlight,0);
 		
 		buttonTestSomething.text="Test map";
-		buttonTestSomething.setColours(&cNormal,&cHighlight,0);
+		buttonTestSomething.setColours(cNormal,cHighlight,0);
 		buttonTestSomething.active=true;
 		
 		/* Update GUI positions. */

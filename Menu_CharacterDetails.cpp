@@ -17,10 +17,10 @@ class Menu_CharacterDetails: public GUI_Interface
 	GUI_Manager guiManager;
 	
 	/* Colours / theme. */
-	Colour cNormal;
-	Colour cSelected;
-	Colour cDropPanel;
-	Colour cHighlight;
+	ColourRGB <unsigned char> cNormal;
+	ColourRGB <unsigned char> cSelected;
+	ColourRGB <unsigned char> cDropPanel;
+	ColourRGB <unsigned char> cHighlight;
 	
 	Wildcat::Font* font;
 	
@@ -70,15 +70,15 @@ class Menu_CharacterDetails: public GUI_Interface
 		cHighlight.set(255,160,160);
 		
 		buttonClose.text="X";
-		buttonClose.setColours(&cNormal,&cHighlight,0);
+		buttonClose.setColours(cNormal,cHighlight,0);
 		buttonClose.active=true;
     
     buttonFavourite.text="Favourite";
-		buttonFavourite.setColours(&cNormal,&cHighlight,0);
+		buttonFavourite.setColours(cNormal,cHighlight,0);
 		buttonFavourite.active=true;
     
     buttonPossess.text="Control";
-		buttonPossess.setColours(&cNormal,&cHighlight,0);
+		buttonPossess.setColours(cNormal,cHighlight,0);
 		buttonPossess.active=true;
 		
 		textFatherLink.text = "Test";

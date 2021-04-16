@@ -23,10 +23,10 @@ class Menu_Characters: public GUI_Interface
 	GUI_Manager guiManager;
 	
 	/* Colours / theme. */
-	Colour cNormal;
-	Colour cSelected;
-	Colour cDropPanel;
-	Colour cHighlight;
+	ColourRGB <unsigned char> cNormal;
+	ColourRGB <unsigned char> cSelected;
+	ColourRGB <unsigned char> cDropPanel;
+	ColourRGB <unsigned char> cHighlight;
 	
 	Wildcat::Font* font;
 	
@@ -71,11 +71,11 @@ class Menu_Characters: public GUI_Interface
 		cHighlight.set(255,160,160);
 		
 		buttonClose.text="X";
-		buttonClose.setColours(&cNormal,&cHighlight,0);
+		buttonClose.setColours(cNormal,cHighlight,0);
 		buttonClose.active=true;
 		
 		buttonCharacterDetails.text="Character Sheet";
-		buttonCharacterDetails.setColours(&cNormal,&cHighlight,0);
+		buttonCharacterDetails.setColours(cNormal,cHighlight,0);
 		buttonCharacterDetails.active=true;
 		
 		guiTableCharacters.clear();
@@ -89,7 +89,7 @@ class Menu_Characters: public GUI_Interface
 		guiTableCharacters.addColumn("Strength","strength",100);
 		guiTableCharacters.addColumn("Kills","kills",100);
 		guiTableCharacters.addColumn("Favourite","favourite",120);
-    guiTableCharacters.setColours(&cNormal,&cSelected);
+    guiTableCharacters.setColours(cNormal,cSelected);
 		//guiTableTribes.addColumn("Food","food",120);
 		//guiTableTribes.addColumn("Population","population",120);
 		//guiTableTribes.addColumn("Coordinates","coordinates",120);

@@ -31,10 +31,10 @@ private:
 	Texture* backgroundTexture;
 
 	/* Colours / theme. */
-	Colour cNormal;
-	Colour cSelected;
-	Colour cDropPanel;
-	Colour cHighlight;
+	ColourRGB <unsigned char> cNormal;
+	ColourRGB <unsigned char> cSelected;
+	ColourRGB <unsigned char> cDropPanel;
+	ColourRGB <unsigned char> cHighlight;
 
 	/* Button: Resume or commence simulation of the world map. */
 	GUI_Button buttonStartSimulation;
@@ -106,7 +106,7 @@ public:
 		simulateWorld=false;
 
 		buttonExpandMap.text="Expand";
-		buttonExpandMap.setColours(&cNormal,&cHighlight,0);
+		buttonExpandMap.setColours(cNormal,cHighlight,0);
 		//buttonExpandMap.setPanel(0,0,32,32);
 		buttonExpandMap.texture = &TEX_GUI_EXPAND;
 
@@ -148,40 +148,40 @@ public:
 		cycleSimulationSpeed.addOption("10,000,000x");
 		cycleSimulationSpeed.addOption("100,000,000x");
 		cycleSimulationSpeed.texCycleButton=&TEX_GUI_DECREMENT;
-		cycleSimulationSpeed.setColours(&cNormal,&cHighlight,0);
+		cycleSimulationSpeed.setColours(cNormal,cHighlight,0);
 
 		textSimulationSpeed.text="Speed:";
-		textSimulationSpeed.setColours(&cNormal);
+		textSimulationSpeed.setColours(cNormal);
 
 		buttonIncrementDay.text = "+D";
-		buttonIncrementDay.setColours(&cNormal,&cHighlight,0);
+		buttonIncrementDay.setColours(cNormal,cHighlight,0);
 		buttonIncrementMonth.text = "+M";
-		buttonIncrementMonth.setColours(&cNormal,&cHighlight,0);
+		buttonIncrementMonth.setColours(cNormal,cHighlight,0);
 		buttonIncrementYear.text = "+Y";
-		buttonIncrementYear.setColours(&cNormal,&cHighlight,0);
+		buttonIncrementYear.setColours(cNormal,cHighlight,0);
 		buttonIncrementDecade.text = "+De";
-		buttonIncrementDecade.setColours(&cNormal,&cHighlight,0);
+		buttonIncrementDecade.setColours(cNormal,cHighlight,0);
 		buttonTribeMenu.text="Tri";
-		buttonTribeMenu.setColours(&cNormal,&cHighlight,0);
+		buttonTribeMenu.setColours(cNormal,cHighlight,0);
 		buttonWorldMenu.text="Wor";
-		buttonWorldMenu.setColours(&cNormal,&cHighlight,0);
+		buttonWorldMenu.setColours(cNormal,cHighlight,0);
 		buttonBiomeMenu.text="Bio";
-		buttonBiomeMenu.setColours(&cNormal,&cHighlight,0);
+		buttonBiomeMenu.setColours(cNormal,cHighlight,0);
 		buttonCharacterMenu.text="Cha";
-		buttonCharacterMenu.setColours(&cNormal,&cHighlight,0);
+		buttonCharacterMenu.setColours(cNormal,cHighlight,0);
 		buttonCivMenu.text="Civ";
-		buttonCivMenu.setColours(&cNormal,&cHighlight,0);
+		buttonCivMenu.setColours(cNormal,cHighlight,0);
 		buttonSubterraneanView.text = "Sub";
-		buttonSubterraneanView.setColours(&cNormal,&cHighlight,0);
+		buttonSubterraneanView.setColours(cNormal,cHighlight,0);
 		buttonTerritoryView.text="Ter";
-		buttonTerritoryView.setColours(&cNormal,&cHighlight,0);
+		buttonTerritoryView.setColours(cNormal,cHighlight,0);
 		buttonFlora.text="F";
-		buttonFlora.setColours(&cNormal,&cHighlight,0);
+		buttonFlora.setColours(cNormal,cHighlight,0);
 		buttonCreaturesMenu.text="Crt";
-		buttonCreaturesMenu.setColours(&cNormal,&cHighlight,0);
+		buttonCreaturesMenu.setColours(cNormal,cHighlight,0);
 		
-		buttonMinimapBaseTexture.init("", &TEX_GUI_MINIMAP_BASE_TEXTUREMODE, &cNormal, &cHighlight, 0, true);
-		buttonMinimapBaseLand.init("", &TEX_GUI_MINIMAP_BASE_LANDMODE, &cNormal, &cHighlight, 0, true);
+		buttonMinimapBaseTexture.init("", &TEX_GUI_MINIMAP_BASE_TEXTUREMODE, cNormal, cHighlight, 0, true);
+		buttonMinimapBaseLand.init("", &TEX_GUI_MINIMAP_BASE_LANDMODE, cNormal, cHighlight, 0, true);
 		
 		guiManager.add(&minimap);
 		

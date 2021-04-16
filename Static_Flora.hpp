@@ -194,7 +194,7 @@ IngredientGenerator ingredientGenerator;
 
 #include "World_Biome.hpp"
 
-#include <Graphics/Colour/Colour2.hpp>
+#include <Graphics/Colour/Colour.hpp>
 
 class Flora: public Static, public TableInterface
 {

@@ -418,10 +418,10 @@ class Menu_AdventureMode: public GUI_Interface
   	GUI_Manager guiManager;
     
     /* Colours / theme. */
-    Colour cNormal;
-    Colour cSelected;
-    Colour cDropPanel;
-    Colour cHighlight;
+    ColourRGB <unsigned char> cNormal;
+    ColourRGB <unsigned char> cSelected;
+    ColourRGB <unsigned char> cDropPanel;
+    ColourRGB <unsigned char> cHighlight;
     
     Wildcat::Font* font;
     
@@ -550,8 +550,8 @@ class Menu_AdventureMode: public GUI_Interface
 		buttonCenterCamera.text="";
 		buttonSneak.text="SNK";
     buttonSneak.font = font;
-		buttonCenterCamera.setColours(&cNormal,&cHighlight,0);
-		buttonSneak.setColours(&cNormal,&cHighlight,0);
+		buttonCenterCamera.setColours(cNormal,cHighlight,0);
+		buttonSneak.setColours(cNormal,cHighlight,0);
 		guiManager.add(&buttonCenterCamera);
 		guiManager.add(&buttonSneak);
 		buttonCenterCamera.active=true;
@@ -562,25 +562,25 @@ class Menu_AdventureMode: public GUI_Interface
     buttonInventory.active = true;
     buttonInventory.text = "INV";
     buttonInventory.font = font;
-		buttonInventory.setColours(&cNormal,&cHighlight,0);
+		buttonInventory.setColours(cNormal,cHighlight,0);
 		guiManager.add(&buttonInventory);
     
     buttonManual.active = true;
     buttonManual.text = "MAN";
     buttonManual.font = font;
-		buttonManual.setColours(&cNormal,&cHighlight,0);
+		buttonManual.setColours(cNormal,cHighlight,0);
 		guiManager.add(&buttonManual);
     
     buttonCharacterSheet.active = true;
     buttonCharacterSheet.text = "CHR";
     buttonCharacterSheet.font = font;
-		buttonCharacterSheet.setColours(&cNormal,&cHighlight,0);
+		buttonCharacterSheet.setColours(cNormal,cHighlight,0);
 		guiManager.add(&buttonCharacterSheet);
 
     buttonCrafting.active = true;
     buttonCrafting.text = "CFT";
     buttonCrafting.font = font;
-		buttonCrafting.setColours(&cNormal,&cHighlight,0);
+		buttonCrafting.setColours(cNormal,cHighlight,0);
 		guiManager.add(&buttonCrafting);
     
     

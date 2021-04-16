@@ -8,10 +8,10 @@ class Menu_Options: public GUI_Interface
 	//GUI_TextBox menuHeading;
 	Texture* backgroundTexture;
 	/* Colours / theme. */
-	Colour cNormal;
-	Colour cSelected;
-	Colour cDropPanel;
-	Colour cHighlight;
+	ColourRGB <unsigned char> cNormal;
+	ColourRGB <unsigned char> cSelected;
+	ColourRGB <unsigned char> cDropPanel;
+	ColourRGB <unsigned char> cHighlight;
 	/* Button: Back to main menu. */
 	GUI_Button buttonBack;
 	/* GUI manager. Manages all GUI controls. */
@@ -59,7 +59,7 @@ class Menu_Options: public GUI_Interface
 		/* Update control positions. */
 		buttonBack.setPanel(panelCenterX-60, panelY2-20, panelCenterX+60, panelY2-40);
 		buttonBack.text="Back";
-		buttonBack.setColours(&cNormal,&cHighlight,0);
+		buttonBack.setColours(cNormal,cHighlight,0);
 		
 		
 		guiManager.add(&buttonBack);

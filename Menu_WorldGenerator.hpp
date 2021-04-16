@@ -26,10 +26,10 @@ class Menu_WorldGenerator: public GUI_Interface
     GUI_Manager guiManager;
     
     /* Colours / theme. */
-    Colour cNormal;
-    Colour cSelected;
-    Colour cDropPanel;
-    Colour cHighlight;
+    ColourRGB <unsigned char> cNormal;
+    ColourRGB <unsigned char> cSelected;
+    ColourRGB <unsigned char> cDropPanel;
+    ColourRGB <unsigned char> cHighlight;
 
     /* Background image */
     Texture* backgroundTexture;
@@ -153,7 +153,7 @@ class Menu_WorldGenerator: public GUI_Interface
 			}
 
 		buttonBack.text="Back";
-		buttonBack.setColours(&cNormal,&cHighlight,0);
+		buttonBack.setColours(cNormal,cHighlight,0);
 		
 		/* WORLD SIZE */
 		worldSize.currentOption=DEFAULT_WORLD_SIZE_SLOT;
@@ -168,7 +168,7 @@ class Menu_WorldGenerator: public GUI_Interface
 		worldSize.addOption("4097");
 		worldSize.addOption("8193");
 		worldSize.texCycleButton=&TEX_GUI_DECREMENT;
-		worldSize.setColours(&cNormal,&cHighlight,0);
+		worldSize.setColours(cNormal,cHighlight,0);
 		
 		freeSteps.currentOption=0;
 		freeSteps.addOption("0");
@@ -185,14 +185,14 @@ class Menu_WorldGenerator: public GUI_Interface
 		freeSteps.addOption("11");
 		freeSteps.addOption("12");
 		freeSteps.texCycleButton=&TEX_GUI_DECREMENT;
-		freeSteps.setColours(&cNormal,&cHighlight,0);
+		freeSteps.setColours(cNormal,cHighlight,0);
 
 		/* WrapX */
 		guiWrapX.currentOption=0;
 		guiWrapX.addOption("Yes");
 		guiWrapX.addOption("No");
 		guiWrapX.texCycleButton=&TEX_GUI_DECREMENT;
-		guiWrapX.setColours(&cNormal,&cHighlight,0);
+		guiWrapX.setColours(cNormal,cHighlight,0);
 		guiWrapX.wrap=true;
 		
 		/* WrapY */
@@ -200,7 +200,7 @@ class Menu_WorldGenerator: public GUI_Interface
 		guiWrapY.addOption("Yes");
 		guiWrapY.addOption("No");
 		guiWrapY.texCycleButton=&TEX_GUI_DECREMENT;
-		guiWrapY.setColours(&cNormal,&cHighlight,0);
+		guiWrapY.setColours(cNormal,cHighlight,0);
 		guiWrapY.wrap=true;
 		
 		/* Island mode */
@@ -208,60 +208,60 @@ class Menu_WorldGenerator: public GUI_Interface
 		guiIslandMode.addOption("Yes");
 		guiIslandMode.addOption("No");
 		guiIslandMode.texCycleButton=&TEX_GUI_DECREMENT;
-		guiIslandMode.setColours(&cNormal,&cHighlight,0);
+		guiIslandMode.setColours(cNormal, cHighlight,0);
 		guiIslandMode.wrap=true;
 		
 		/* N CIV */
 		nCiv.setNumbers(0,128,DEFAULT_NUMBER_CIVS);
-		nCiv.setColours(&cNormal,&cHighlight,0);
+		nCiv.setColours(cNormal,cHighlight,0);
 		nCiv.texIncrement = &TEX_GUI_INCREMENT;
 		nCiv.texDecrement = &TEX_GUI_DECREMENT;
 		guiCaptionNCiv.text="# civs:";
-		guiCaptionNCiv.setColours(&cNormal);
+		guiCaptionNCiv.setColours(cNormal);
 		guiCaptionNCiv.centeredY=true;
 		
 		/* Ocean percent */
 		nLandPercent.setNumbers(0,100,66);
-		nLandPercent.setColours(&cNormal,&cHighlight,0);
+		nLandPercent.setColours(cNormal,cHighlight,0);
 		nLandPercent.texIncrement = &TEX_GUI_INCREMENT;
 		nLandPercent.texDecrement = &TEX_GUI_DECREMENT;
 		textOceanPercent.text="Land percent:";
-		textOceanPercent.setColours(&cNormal);
+		textOceanPercent.setColours(cNormal);
 		textOceanPercent.centeredY=true;
 		
 		/* N TRIBE */
 		nTribe.setNumbers(0,100,DEFAULT_NUMBER_TRIBES_HUMAN);
-		nTribe.setColours(&cNormal,&cHighlight,0);
+		nTribe.setColours(cNormal,cHighlight,0);
 		nTribe.texIncrement = &TEX_GUI_INCREMENT;
 		nTribe.texDecrement = &TEX_GUI_DECREMENT;
 		guiCaptionNTribe.text="# tribes:";
-		guiCaptionNTribe.setColours(&cNormal);
+		guiCaptionNTribe.setColours(cNormal);
 		guiCaptionNTribe.centeredY=true;
 		
 		/* N TRIBE DWARVEN */
 		nTribeDwarven.setNumbers(0,100,DEFAULT_NUMBER_TRIBES_DWARVEN);
-		nTribeDwarven.setColours(&cNormal,&cHighlight,0);
+		nTribeDwarven.setColours(cNormal,cHighlight,0);
 		nTribeDwarven.texIncrement = &TEX_GUI_INCREMENT;
 		nTribeDwarven.texDecrement = &TEX_GUI_DECREMENT;
 		guiCaptionNTribeDwarven.text="# Dwarven tribes:";
-		guiCaptionNTribeDwarven.setColours(&cNormal);
+		guiCaptionNTribeDwarven.setColours(cNormal);
 		guiCaptionNTribeDwarven.centeredY=true;
 		
 		/* N TRIBE ELVEN */
 		nTribeElven.setNumbers(0,100,DEFAULT_NUMBER_TRIBES_ELVEN);
-		nTribeElven.setColours(&cNormal,&cHighlight,0);
+		nTribeElven.setColours(cNormal,cHighlight,0);
 		nTribeElven.texIncrement = &TEX_GUI_INCREMENT;
 		nTribeElven.texDecrement = &TEX_GUI_DECREMENT;
 		guiCaptionNTribeElven.text="# Elven tribes:";
-		guiCaptionNTribeElven.setColours(&cNormal);
+		guiCaptionNTribeElven.setColours(cNormal);
 		guiCaptionNTribeElven.centeredY=true;
 		
 		/* GENERATE BUTTON */
 		buttonGenerate.text="1. Generate";
-		buttonGenerate.setColours(&cNormal,&cHighlight,0);
+		buttonGenerate.setColours(cNormal,cHighlight,0);
 		
 		/* WORLD NAME */
-		textEntryWorldName.setColours(&cNormal,&cHighlight);
+		textEntryWorldName.setColours(cNormal,cHighlight);
 		textEntryWorldName.fieldName="World name:";
 		textEntryWorldName.characterLimit=20;
 			/* Give the world a random name */
@@ -269,47 +269,47 @@ class Menu_WorldGenerator: public GUI_Interface
 		textEntryWorldName.input = "testworld";
 		
 		/* WORLD SEED */
-		textEntryFullSeed.setColours(&cNormal,&cHighlight);
+		textEntryFullSeed.setColours(cNormal,cHighlight);
 		textEntryFullSeed.fieldName="World seed:";
 		textEntryFullSeed.characterLimit=16	;
 		//textEntryFullSeed.input="1902830183";
 		textEntryFullSeed.input="";
 		
 		/* BIOME SEED */
-		textEntryFullBiome.setColours(&cNormal,&cHighlight);
+		textEntryFullBiome.setColours(cNormal,cHighlight);
 		textEntryFullBiome.fieldName="Biome seed:";
 		textEntryFullBiome.characterLimit=16;
 		textEntryFullBiome.input="";
 		
 		textWorldSize.text="World size:";
-		textWorldSize.setColours(&cNormal);
+		textWorldSize.setColours(cNormal);
 		
 		textFreeSteps.text="Fragmentation:";
-		textFreeSteps.setColours(&cNormal);
+		textFreeSteps.setColours(cNormal);
 		
 		textWrapX.text="Wrap X:";
-		textWrapX.setColours(&cNormal);
+		textWrapX.setColours(cNormal);
 		
 		textWrapY.text="Wrap Y:";
-		textWrapY.setColours(&cNormal);
+		textWrapY.setColours(cNormal);
 		
 		textIslandMode.text="Island mode:";
-		textIslandMode.setColours(&cNormal);
+		textIslandMode.setColours(cNormal);
 		
 		textMenuTitle.text="World Generator";
-		textMenuTitle.setColours(&cNormal);
+		textMenuTitle.setColours(cNormal);
 		
 		textMenuTitle.centeredX=true;
 		textMenuTitle.centeredY=true;
 		
 		buttonSimWorld.text="2. Simulate World";
-		buttonSimWorld.setColours(&cNormal,&cHighlight,0);
+		buttonSimWorld.setColours(cNormal,cHighlight,0);
 		
 		buttonExportData.text="Export World Data (N/A)";
-		buttonExportData.setColours(&cNormal,&cHighlight,0);
+		buttonExportData.setColours(cNormal,cHighlight,0);
 		
 		buttonLoadWorld.text="Load world (N/A)";
-		buttonLoadWorld.setColours(&cNormal,&cHighlight,0);
+		buttonLoadWorld.setColours(cNormal,cHighlight,0);
 		
 		buttonExpandPreviewWindow.texture = &TEX_GUI_EXPAND;
 		

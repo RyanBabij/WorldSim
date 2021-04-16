@@ -81,8 +81,8 @@ void init()
 	
 	std::cout<<"   *** END RAWS ***\n";
 	
-			CLEAN_SAVES_ON_EXIT=false;
-			QUIT_FLAG=true;
+			// CLEAN_SAVES_ON_EXIT=false;
+			// QUIT_FLAG=true;
 
 	//Makes cout faster but less reliable
 	if ( FAST_COUT )

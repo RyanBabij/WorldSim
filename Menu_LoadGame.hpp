@@ -11,10 +11,10 @@ class Menu_LoadGame: public GUI_Interface
 	/* Button: Back to main menu. */
 	GUI_Button buttonBack;
 	/* Colours / theme. */
-	Colour cNormal;
-	Colour cSelected;
-	Colour cDropPanel;
-	Colour cHighlight;
+	ColourRGB <unsigned char> cNormal;
+	ColourRGB <unsigned char> cSelected;
+	ColourRGB <unsigned char> cDropPanel;
+	ColourRGB <unsigned char> cHighlight;
   
   Menu_LoadGame()
   {
@@ -44,7 +44,7 @@ class Menu_LoadGame: public GUI_Interface
 		/* Update control positions. */
 		buttonBack.setPanel(panelCenterX-60, panelY2-20, panelCenterX+60, panelY2-40);
 		buttonBack.text="Back";
-		buttonBack.setColours(&cNormal,&cHighlight,0);
+		buttonBack.setColours(cNormal,cHighlight,0);
 		
 		
 		guiManager.addControl(&buttonBack);
