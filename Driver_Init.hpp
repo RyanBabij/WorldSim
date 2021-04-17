@@ -29,17 +29,18 @@ void init()
 	WTFManager wtfManager;
 	
 	// BUILD COLOURS FROM THE RAW
-	
-	// Global container for colour raws.
-	//ColourManager colourManager;
-	
+		// load colours. Used for Flora and anything else with Colour attributes
 	wtfManager.parse(FileManager::getFileAsString("raw/colours.wtf"));
+		// Load creature species.
+	wtfManager.parse(FileManager::getFileAsString("raw/creatures.wtf"));
 	
 	std::cout<<"All raws:\n"<<wtfManager.getAll()<<"\n\n";
 	
-	WTFNode* node = wtfManager.getRandom("COLOUR", globalRandom);
-
 	
+
+		// LOAD COLOURS
+	
+	WTFNode* node = wtfManager.getRandom("COLOUR", globalRandom);
 	if (node==0)
 	{
 		std::cout<<"Search returned null ptr\n";
@@ -79,6 +80,11 @@ void init()
 		std::cout<<"The closest colour to "<<c.toString()<<" is "<<c2->toString()<<"\n";
 	}
 	
+		// LOAD CREATURE SPECIES
+	// I'm not sure if we should load raws out here or let the class handle it. For now I'll leave it for the generator
+	// class but I might change it later.
+	creatureGenerator.loadRaw(FileManager::getFileAsString("raw/creatures.wtf"));
+		
 	std::cout<<"   *** END RAWS ***\n";
 	
 			// CLEAN_SAVES_ON_EXIT=false;

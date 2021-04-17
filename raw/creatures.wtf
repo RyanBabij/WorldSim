@@ -1,0 +1,67 @@
+Add Creatures (species) to game here.
+
+// sizes: tiny (rabbit), small (dog), medium (horse), large (elephant), massive (dragon)
+// size determines energy cost.
+
+// AI: determines AI package during ticks.
+
+// ATTACKS: A named attack along with a combination of blunt, slash and puncture damage.
+
+// INGREDIENTS: Whatever can be dropped, will be later defined in another raw.
+	Carcass: Basically what you'd expect from a dead creature. Pelt, meat, bone, fat, etc.
+
+[CREATURE_SPECIES
+	[WOLF:
+		[NAME_SINGULAR:"wolf"]
+		[NAME_PLURAL:"wolves"]
+		[AI:pack]
+		[SIZE:small]
+		// biomes it can be found in
+		// size
+		// speed
+		// attacks
+			// attack types: Blunt, slash, puncture
+		[ATTACKS:
+			[BITE:
+				[NAME:"bite"]
+				[PUNCTURE:2]
+			]
+		]
+		[INGREDIENTS:
+			[CARCASS_SMALL:1]
+		]
+		[TEXTURE:texture/address]
+	]
+	[DEER:
+		[NAME_SINGULAR:"deer"]
+		[NAME_PLURAL:"deer"]
+		[AI:prey]
+		[SIZE:medium]
+		// biomes it can be found in
+		// size
+		// speed
+		// attacks
+			// attack types: Blunt, slash, puncture
+		[ATTACKS:
+			[GORE:
+				[NAME:"gore"]
+				[PUNCTURE:3]
+			]
+		]
+		[INGREDIENTS:
+			[CARCASS_MEDIUM:1]
+			[ANTLER:1]
+		]
+	]
+	[BEAR:[NAME_SINGULAR:"bear"]]
+	[ELEPHANT:[NAME_SINGULAR:"elephant"]]
+	[OWL:[NAME_SINGULAR:"owl"]]
+	[EAGLE:[NAME_SINGULAR:"eagle"]]
+	[CROW:[NAME_SINGULAR:"crow"]]
+	[RABBIT:[NAME_SINGULAR:"rabbit"]]
+	[PIG:[NAME_SINGULAR:"pig"]]
+	[COW:[NAME_SINGULAR:"sheep"]]
+	[CHICKEN:[NAME_SINGULAR:"chicken"]]
+	
+	[SKELLINGTON:[NAME_SINGULAR:"skellington"]]
+]
