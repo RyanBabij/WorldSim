@@ -185,23 +185,6 @@ bool World::absoluteToRelative (const unsigned long int _absoluteX, const unsign
 	return true;
 }
 
-// Return true if the map for this tile has been generated
-bool World::isGenerated(unsigned long int _absoluteX, unsigned long int _absoluteY)
-{
-	int gX,gY,lX,lY;
-	if (absoluteToRelative(_absoluteX,_absoluteY,&gX,&gY,&lX,&lY))
-	{
-		for (int i=0;i<vWorldLocal.size();++i)
-		{
-			if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY )
-			{
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
 void World::startSimulation()
 {
 	// BIOME INIT STUFF SHOULD GO HERE NOT IN WORLDGEN
@@ -490,6 +473,27 @@ bool World::isSafe(unsigned long int _x, unsigned long int _y)
 {
 	return ( _x <= maximumX && _y <= maximumY );
 }
+
+// Return true if the map for this tile has been generated
+bool World::isGenerated(unsigned long int _absoluteX, unsigned long int _absoluteY)
+{
+	if ( isSafe (_absoluteX, _absoluteY) )
+	{
+		int gX,gY,lX,lY;
+		if (absoluteToRelative(_absoluteX,_absoluteY,&gX,&gY,&lX,&lY))
+		{
+			for (int i=0;i<vWorldLocal.size();++i)
+			{
+				if (vWorldLocal(i)->globalX == gX && vWorldLocal(i)->globalY == gY )
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
 
 Character* World::getRandomCharacter()
 {

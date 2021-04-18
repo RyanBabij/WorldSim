@@ -660,16 +660,74 @@ class Menu_AdventureMode: public GUI_Interface
       currentY-=2;
 		}
 
+	// minimap will give better situational awareness for the player
     Renderer::placeColour4a(200,200,250,250,panelX1,panelY1,panelX1+220,panelY1+220);
     font8x8.drawText("Minimap",panelX1,panelY1,panelX1+220,panelY1+220,true,true);
     
+	 // action menu contains all actions which otherwise have hotkeys
     Renderer::placeColour4a(150,150,150,250,panelX1,panelY1+220,panelX1+220,panelY1+320);
     font8x8.drawText("Action Menu",panelX1,panelY1+220,panelX1+220,panelY1+320,true,true);
+	 
+	 // tile info panel outputs information about whatever the player is hovering mouse over
+    Renderer::placeColour4a(150,150,150,250,panelX1,panelY1+320,panelX1+220,panelY1+420);
+   // font8x8.drawText("Tile info",panelX1,panelY1+320,panelX1+220,panelY1+420,true,true);
     
     // HOVERED TILE COORDINATES. BOTH ABSOLUTE AND RELATIVE. FOR DEBUGGING.
-    font8x8.drawText(DataTools::toString(worldViewer.hoveredXTile) + ", " + DataTools::toString(worldViewer.hoveredYTile),panelX1,panelY1+210,panelX1+220,panelY1+220,false,true);
-    font8x8.drawText(DataTools::toString(worldViewer.hoveredXTileLocal) + ", " + DataTools::toString(worldViewer.hoveredYTileLocal),panelX1,panelY1+200,panelX1+220,panelY1+210,false,true);
-    font8x8.drawText(DataTools::toString(worldViewer.hoveredAbsoluteX) + ", " + DataTools::toString(worldViewer.hoveredAbsoluteY),panelX1,panelY1+190,panelX1+220,panelY1+200,false,true);
+    font8x8.drawText(DataTools::toString(worldViewer.hoveredXTile) + ", " +
+	 DataTools::toString(worldViewer.hoveredYTile),panelX1,panelY1+210,panelX1+220,panelY1+220,false,true);
+    font8x8.drawText(DataTools::toString(worldViewer.hoveredXTileLocal) + ", " +
+	 DataTools::toString(worldViewer.hoveredYTileLocal),panelX1,panelY1+200,panelX1+220,panelY1+210,false,true);
+    font8x8.drawText(DataTools::toString(worldViewer.hoveredAbsoluteX) + ", " +
+	 DataTools::toString(worldViewer.hoveredAbsoluteY),panelX1,panelY1+190,panelX1+220,panelY1+200,false,true);
+	 
+	 // PRINT STUFF ON HOVERED TILE
+	 if (world.isGenerated (worldViewer.hoveredAbsoluteX,worldViewer.hoveredAbsoluteY) )
+	 {
+		 LocalTile* localSelected=world(worldViewer.hoveredAbsoluteX,worldViewer.hoveredAbsoluteY,playerCharacter->isUnderground);
+		 
+		 if (localSelected)
+		 {
+			 font8x8.drawText(localSelected->getName(),panelX1,panelY1+410,panelX1+220,panelY1+420,false,true);
+			 
+			 int nItems = localSelected->vObject.size();
+			 
+			 // todo: Collate identical items
+			 
+			 if (nItems < 7)
+			 {
+				 int yOffset = 10;
+				 for (int i=0;i<localSelected->vObject.size();++i)
+				 {
+					 font8x8.drawText(localSelected->vObject(i)->getName(),panelX1,panelY1+410-yOffset,panelX1+220,panelY1+420-yOffset,false,true);
+					 yOffset+=10;
+				 }
+			 }
+			 else
+			 {
+				 int excessItems = localSelected->vObject.size()-7;
+				 int yOffset = 10;
+				 for (int i=0;i<localSelected->vObject.size()&&i<7;++i)
+				 {
+					 font8x8.drawText(localSelected->vObject(i)->getName(),panelX1,panelY1+410-yOffset,panelX1+220,panelY1+420-yOffset,false,true);
+					 yOffset+=10;
+				 }
+				 font8x8.drawText("And "+DataTools::toString(excessItems)+" more",panelX1,panelY1+410-yOffset,panelX1+220,panelY1+420-yOffset,false,true);
+			 }
+			 
+
+		 }
+		 
+			
+		 
+	 }
+	 else
+	 {
+		 //LocalTile* localSelected=world(worldViewer.hoveredAbsoluteX,worldViewer.hoveredAbsoluteY,playerCharacter->isUnderground);
+		 font8x8.drawText("OOB",panelX1,panelY1+410,panelX1+220,panelY1+420,false,true);
+	 }
+
+	
+
     
     if (playerCharacter->thirst > MAX_THIRST - 100)
     {
