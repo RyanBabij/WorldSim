@@ -1,14 +1,15 @@
 Add Creatures (species) to game here.
 
-// sizes: tiny (rabbit), small (dog), medium (horse), large (elephant), massive (dragon)
-// size determines energy cost.
-
-// AI: determines AI package during ticks.
-
-// ATTACKS: A named attack along with a combination of blunt, slash and puncture damage.
-
-// INGREDIENTS: Whatever can be dropped, will be later defined in another raw.
-	Carcass: Basically what you'd expect from a dead creature. Pelt, meat, bone, fat, etc.
+Attributes:
+	AI - The AI package to use
+	SIZE - tiny (rabbit), small (dog), medium (horse), large (elephant), massive (dragon)
+		May determine things like energy consumption and other stats, multipliers on attacks etc.
+	ALIGNMENT - Basically determines if the creature spawns in good, neutral or evil biomes.
+	ATTACK - A named attack which is used in fight descriptions and comes with up to 3 damage types:
+		Blunt - crush damage, puncture - stab damage, slash - cut damage
+		These attacks will later determine type of injury
+	TEXTURE - Base texture to use. Probably will be expanded later for animations and whatnot.
+	INGREDIENTS - The Ingredients the Creature may provide when killed for cooking and crafting
 
 [CREATURE_SPECIES
 	[WOLF:
@@ -16,6 +17,7 @@ Add Creatures (species) to game here.
 		[NAME_PLURAL:"wolves"]
 		[AI:pack]
 		[SIZE:small]
+		[ALIGNMENT:neutral]
 		// biomes it can be found in
 		// size
 		// speed
