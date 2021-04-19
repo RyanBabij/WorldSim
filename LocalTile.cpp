@@ -355,6 +355,13 @@ std::string LocalTile::getAll(int max)
 		 vStuff.push(objStatic->name );
 		 vQuantity.push(1);
 	 }
+	 
+	 if ( footprint )
+	 {
+		 vStuff.push("evidence");
+		 vQuantity.push(1);
+	 }
+	 
 	 for (int i=0;i<vObject.size();++i)
 	 {
 		 // todo: collate objects of same name.

@@ -546,7 +546,7 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 					// put(biome->getFlora(), _x, _y);
 				// }
 				// Spawn Mobs
-				else if (rng.oneIn(1500) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
+				else if (rng.oneIn(1000) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
 				{
 					
 						Creature * c = biome->getCreature();

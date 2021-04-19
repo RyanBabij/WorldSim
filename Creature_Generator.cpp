@@ -75,23 +75,25 @@
 	std::string Creature_Generator::generateName()
 	{
 		std::string _name="";
-		if (RNG_TEST.flip()) // use colour
-		{
-			_name+=wlistFloraColour.getRandom()+" ";
-		}
 		if (RNG_TEST.flip()) // use pattern
 		{
 			_name+=wlistFloraPattern.getRandom()+" ";
 		}
-		if (RNG_TEST.flip()) // use adjective
+		if (RNG_TEST.flip() || _name.size() == 0) // use colour
 		{
-			_name+=wlistFloraAdjective.getRandom()+" ";
+			_name+=wlistFloraColour.getRandom()+" ";
 		}
-		if (RNG_TEST.flip() || _name.size() == 0) // use noun
-		{
-			_name+=wlistFloraNoun.getRandom()+" ";
-		}
-		_name+=wlistCreatureType.getRandom();
+		// biome name
+
+		// if (RNG_TEST.flip()) // use adjective
+		// {
+			// _name+=wlistFloraAdjective.getRandom()+" ";
+		// }
+		// if (RNG_TEST.flip() || _name.size() == 0) // use noun
+		// {
+			// _name+=wlistFloraNoun.getRandom()+" ";
+		// }
+		//_name+=wlistCreatureType.getRandom();
 		return _name;
 	}
 	
@@ -112,7 +114,8 @@
 			std::cout<<"Creature picked: "<<base->name<<"\n";
 		
 		
-			Creature_Species * creature = new Creature_Species(generateName(),currentPoints);
+			//Creature_Species * creature = new Creature_Species(generateName(),currentPoints);
+			Creature_Species * creature = new Creature_Species(base->name,currentPoints);
 			vSpecies2->push(creature);
 			currentPoints/=2;
 		}
@@ -120,14 +123,14 @@
 	}
 	
 	// generate and return a single creature type
-	// note this is Flora type, not object.
+	// note this is Creature type, not object.
 	Creature_Species * Creature_Generator::get(const int spawnWeighting/*=0*/)
 	{
 		// randomly pick base creature.
 		Creature_Species * base = vSpecies.getRandom(globalRandom);
 		//std::cout<<"Creature picked: "<<base->name<<"\n";
 		//base->name += " " + generateName();
-		return new Creature_Species(base->name + " " + generateName(),spawnWeighting);
+		return new Creature_Species(generateName() + base->name,spawnWeighting);
 	}
 
 #endif

@@ -13,8 +13,8 @@ Attributes:
 
 [CREATURE_SPECIES
 	[WOLF:
-		[NAME_SINGULAR:"wolf"]
-		[NAME_PLURAL:"wolves"]
+		[NAME_SINGULAR:wolf]
+		[NAME_PLURAL:wolves]
 		[AI:pack]
 		[SIZE:small]
 		[ALIGNMENT:neutral]
@@ -25,7 +25,7 @@ Attributes:
 			// attack types: Blunt, slash, puncture
 		[ATTACKS:
 			[BITE:
-				[NAME:"bite"]
+				[NAME:bite]
 				[PUNCTURE:2]
 			]
 		]
@@ -35,8 +35,8 @@ Attributes:
 		[TEXTURE:texture/address]
 	]
 	[DEER:
-		[NAME_SINGULAR:"deer"]
-		[NAME_PLURAL:"deer"]
+		[NAME_SINGULAR:deer]
+		[NAME_PLURAL:deer]
 		[AI:prey]
 		[SIZE:medium]
 		// biomes it can be found in
@@ -46,7 +46,7 @@ Attributes:
 			// attack types: Blunt, slash, puncture
 		[ATTACKS:
 			[GORE:
-				[NAME:"gore"]
+				[NAME:gore]
 				[PUNCTURE:3]
 			]
 		]
@@ -55,15 +55,15 @@ Attributes:
 			[ANTLER:1]
 		]
 	]
-	[BEAR:[NAME_SINGULAR:"bear"]]
-	[ELEPHANT:[NAME_SINGULAR:"elephant"]]
-	[OWL:[NAME_SINGULAR:"owl"]]
-	[EAGLE:[NAME_SINGULAR:"eagle"]]
-	[CROW:[NAME_SINGULAR:"crow"]]
-	[RABBIT:[NAME_SINGULAR:"rabbit"]]
-	[PIG:[NAME_SINGULAR:"pig"]]
-	[COW:[NAME_SINGULAR:"sheep"]]
-	[CHICKEN:[NAME_SINGULAR:"chicken"]]
+	[BEAR:[NAME_SINGULAR:bear]]
+	[ELEPHANT:[NAME_SINGULAR:elephant]]
+	[OWL:[NAME_SINGULAR:owl]]
+	[EAGLE:[NAME_SINGULAR:eagle]]
+	[CROW:[NAME_SINGULAR:crow]]
+	[RABBIT:[NAME_SINGULAR:rabbit]]
+	[PIG:[NAME_SINGULAR:pig]]
+	[COW:[NAME_SINGULAR:sheep]]
+	[CHICKEN:[NAME_SINGULAR:chicken]]
 	
-	[SKELLINGTON:[NAME_SINGULAR:"skellington"]]
+	[SKELLINGTON:[NAME_SINGULAR:skellington]]
 ]
