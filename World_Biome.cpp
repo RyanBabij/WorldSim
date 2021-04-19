@@ -291,6 +291,13 @@ Implementation of World_Biome.hpp
 
 		return 0;
 	}
+	// pick a creature type from the weighted list to spawn
+	Creature* World_Biome::getCreature()
+	{
+		//return new Creature_Deer;
+		return creatureManager.get()->spawn();
+	}
+	
 	
 	Vector <Flora*> * World_Biome::getAllFloraTypes()
 	{

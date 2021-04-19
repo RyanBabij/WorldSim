@@ -57,34 +57,4 @@ class Harvestable
    public:
 };
 
-
-
-// we would probably want to use a flora generator as it can handle rarity, attributes, balance etc.
-// nearby biomes could probably also share the same or similar flora
-
-// new idea: each abstract map gets a biome lookup ID.
-// biome guarantees max 255 flora types, and therefore
-// we can guarantee 1 byte to ID flora on abstract
-
-// class FloraGenerator
-// {
-   // public:
-   
-   // Vector <Flora*> vFloraType;
-   
-   // FloraGenerator()
-   // {
-   // }
-   
-   // Flora* generate(unsigned char biomeType, unsigned char floratype)
-   // {
-      // return 0;
-   // }
-   
-// };
-// FloraGenerator floraGenerator;
-
-
-
-
 #endif

@@ -160,6 +160,8 @@ EffectGenerator effectGenerator;
 
 #include "Ingredient.hpp"
 
+#include <File/FileManager.hpp>
+
 class IngredientGenerator
 {
 	public:
@@ -181,7 +183,7 @@ class IngredientGenerator
 		
 		//ingredient->name=wListIngredient.getRandom();
 		
-		std::cout<<"Generated ingredient: "<<ingredient->name<<"\n";
+		//std::cout<<"Generated ingredient: "<<ingredient->name<<"\n";
 		
 		return ingredient;
 	}
@@ -235,6 +237,8 @@ class Flora: public Static, public TableInterface
 	std::string getColumnType(std::string _column) override;
 	
 };
+
+#include "Driver_TextureList.hpp"
 
 
 // Trees will be special-case flora because they can block LOS and movement.

@@ -13,6 +13,8 @@
   WorldObjectGlobal.
 */
 
+#include <Interface/HasTexture.hpp>
+
 class WorldObject: public HasTexture
 {
 	public:

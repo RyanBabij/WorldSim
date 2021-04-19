@@ -8,7 +8,7 @@
   Container for Creature_Species, stored per-biome.
 */
 
-#include "Creature_Generator.hpp"
+class Creature_Species;
 
 class Creature_Manager
 {
@@ -24,52 +24,12 @@ class Creature_Manager
 	// All abstracted flora in the map
 	//Vector <FloraAbstract*> vFloraAbstract;
 	
-	Creature_Manager()
-	{
-		totalSpawnWeight=0;
-		rng.seed(SEEDER);
-	}
+	Creature_Manager();
 	
-	void generate (const int amount=1)
-	{
-		int currentPoints=1000;
-		for (int i=0;i<amount;++i)
-		{			
-			vSpecies.push(creatureGenerator.get(currentPoints));
-			totalSpawnWeight+=currentPoints;
-			currentPoints/=2;
-		}
-	}
+	void generate (const int amount =1);
 	
 	// return a random flora from the weighted lists
-	Creature_Species* get()
-	{
-		if (vSpecies.size() == 0 )
-		{
-			return 0;
-		}
-		if ( vSpecies.size() == 1 )
-		{
-			return vSpecies(0);
-		}
-		
-		int floraSlot = rng.rand32(totalSpawnWeight-1);
-		
-		int currentWeighting = 0;
-		for (int i=0;i<vSpecies.size();++i)
-		{
-			currentWeighting+=vSpecies(i)->spawnWeight;
-			
-			if ( currentWeighting >= floraSlot )
-			{
-				return vSpecies(i);
-			}
-		}
-		
-		return 0;
-		
-		
-	}
+	Creature_Species* get();
 };
 
 #endif

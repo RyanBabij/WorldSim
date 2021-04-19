@@ -548,9 +548,17 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 				// Spawn Mobs
 				else if (rng.oneIn(1500) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
 				{
-					auto deer = new Creature_Deer;
-					deer->init();
-					put(deer,_x,_y);
+					
+						Creature * c = biome->getCreature();
+						if (c)
+						{
+							c->init();
+							put(c, _x, _y);
+						}
+						
+					//auto deer = spawnCreature();
+					//deer->init();
+					//put(deer,_x,_y);
 				}
 				else if (rng.oneIn(50) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
 				{

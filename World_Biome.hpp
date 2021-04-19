@@ -37,6 +37,7 @@ While this is happening, the biome should be marked as "initializing" and cannot
 #include "Creature_Manager.hpp"
 
 class World_Local;
+class Creature;
 
 #include <Game/WorldGenerator/WorldGenerator2.hpp>
 #include <Container/Table/TableInterface.hpp>
@@ -45,7 +46,6 @@ class World_Local;
 class World_Biome: public TableInterface
 {
 	RandomLehmer rng;
-	//FloraGenerator floraGenerator;
 	FloraManager floraManager;
 	Creature_Manager creatureManager;
 
@@ -93,6 +93,8 @@ class World_Biome: public TableInterface
 	
 	// pick a flora type from the weighted list to spawn
 	Flora* getFlora();
+	// pick a creature type from the weighted list to spawn
+	Creature* getCreature();
 	
 	// return all flora types on this biome
 	Vector <Flora*> * getAllFloraTypes();

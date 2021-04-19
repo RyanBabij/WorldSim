@@ -23,7 +23,10 @@ GlobalSettings globalSettings;
 
 #include <iostream>
 
+#include "Creature_Generator.cpp"
+Creature_Generator creatureGenerator;
 
+#include "Creature_Species.cpp"
 
 #include <Container/Vector/Vector.hpp>
 

@@ -356,9 +356,6 @@ void World::startSimulation()
 	// and generate flora
 	for (int i=0;i<vBiome.size();++i)
 	{
-		vBiome(i)->generateFlora();
-		vBiome(i)->generateCreatures();
-
 		int biomeType = vBiome(i)->type;
 		if ( biomeType == OCEAN)
 		{
@@ -389,6 +386,10 @@ void World::startSimulation()
 		}
 		// convert biome names to all upper case for now to make sorting easier.
 		for (auto & c: vBiome(i)->name) c = toupper(c);
+		
+		std::cout<<"Generating Flora and Creatures for "<<vBiome(i)->name<<"\n";
+		vBiome(i)->generateFlora();
+		vBiome(i)->generateCreatures();
 	}
 	
 	std::cout<<"Filled "<<vBiome.size()<<" biomes.\n";

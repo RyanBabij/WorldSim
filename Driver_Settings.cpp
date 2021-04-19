@@ -83,9 +83,6 @@ NameGen globalNameGen;
 #include <Graphics/Colour/ColourManager.hpp> // loading raw colours
 ColourManager <unsigned char> colourManager;
 
-#include "Creature_Generator.hpp"
-Creature_Generator creatureGenerator;
-
 //     WINDOW        ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // SYSTEM STRINGS

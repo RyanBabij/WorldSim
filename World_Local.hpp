@@ -31,6 +31,8 @@ The second type of data is only generated when necessary. It's basically in-dept
 
 */
 
+#include "LocalTile.hpp"
+
 #include "Static.hpp"
 #include "Static_Flora.hpp"
 
@@ -301,6 +303,10 @@ private:
 	
 	void generateHeightMap(const short int c0=0, const short int c1=0, const short int c2=0, const short int c3=0,
 	const short int c4=0, const short int c5=0, const short int c6=0, const short int c7=0, const unsigned int _seed=0);
+	
+	// SPAWN FUNCTIONS
+		// spawn a random creature from Biome species list.
+	Creature* spawnCreature();
 
 	//bool saveToFile(std::string /* path */);
 

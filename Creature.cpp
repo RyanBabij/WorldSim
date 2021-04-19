@@ -8,9 +8,9 @@
   Implementation of Creature.hpp
 */
 
-#include "World.hpp"
 #include "Creature.hpp"
 
+#include "World.hpp"
 #include "Pathing.cpp"
 
 class Texture;
@@ -39,6 +39,8 @@ Creature::Creature()
   nMeat=0;
   
   fleeCounter=0;
+  
+  species=0;
 }
 
   //_sex: 0 - Roll, 1 - Male, 2 - Female.
@@ -347,6 +349,15 @@ void Creature::wander()
 Texture* Creature::currentTexture ()
 {	
 	return &TEX_CREATURE_DEER;
+}
+
+std::string Creature::getName()
+{
+	if(species)
+	{
+		return species->name;
+	}
+	return "CREATURE NO SPEC";
 }
 
 

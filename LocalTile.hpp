@@ -2,7 +2,9 @@
 #ifndef WORLDSIM_LOCALTILE_HPP
 #define WORLDSIM_LOCALTILE_HPP
 
-/*
+/* WorldSim: LocalTile
+	#include "LocalTile.hpp"
+
 LocalTile stores tile info on the local maps. Stuff like objects on that tile, etc.
 
 Basic details like heightmap are stored as a seed, to cut down on memory footprint. Tile can be constructed into an array on demand. Modifications to the world are stored seperately.

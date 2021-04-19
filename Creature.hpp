@@ -63,6 +63,8 @@ class Creature: public WorldObject, public TableInterface
   
     //Creature's knowledge of the world (optional).
   Creature_Knowledge* knowledge;
+  
+  Creature_Species* species;
 	
     // INTERACTION
     int nPelt; /* How many pelts you can harvest from the creature. */
@@ -117,6 +119,8 @@ class Creature: public WorldObject, public TableInterface
   void updateKnowledge();
   // Extra processing available
   void updateKnowledgeIdle();
+  
+  virtual std::string getName() override;
 
 	
 };
@@ -140,6 +144,6 @@ class Creature_Footprint: public WorldObject
 };
 
 #include "Creature_Generator.hpp"
-#include "Creature_Manager.hpp"
+#include "Creature_Manager.cpp"
 
 #endif

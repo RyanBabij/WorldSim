@@ -14,6 +14,7 @@
 
 #include <Container/Table/TableInterface.hpp>
 
+class Creature;
 class World_Biome;
 
 class Creature_Species: public TableInterface
@@ -21,29 +22,18 @@ class Creature_Species: public TableInterface
 	public:
 	
 	World_Biome* biome;
-	
-	Creature_Species(std::string _name, int _spawnWeight)
-	{
-		name = _name;
-		spawnWeight = _spawnWeight;
-	}
-	
+		
 	std::string name;
 	int spawnWeight;
+		
+	Creature_Species(std::string _name, int _spawnWeight);
+	
+	// return an instance of this species
+	Creature* spawn();
 	
 	// TABLE INTERFACE
-	std::string getColumn(std::string _column)
-	{
-		if ( _column=="name" )
-		{
-			return name;
-		}
-		return "?";
-	}
-	std::string getColumnType(std::string _column)
-	{
-		return "string";
-	}
+	std::string getColumn(std::string _column);
+	std::string getColumnType(std::string _column);
 	
 };
 
