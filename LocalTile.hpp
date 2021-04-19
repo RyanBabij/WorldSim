@@ -10,6 +10,12 @@ Basic details like heightmap are stored as a seed, to cut down on memory footpri
 At 1:1 scale a tile is 5km by 5km, ie, 5,000 * 5000 tiles, however we will probably end up using tiles of size 513 because anything larger will have a huge memory footprint without special code.
 
 In the future we might have polymorphic classes to distinguish simulated tiles from abstract tiles. Abstract tiles will basically be tiles that nobody has seen, and therefore they don't need data. However this may not be possible if wildlife is to be simulated.
+
+	A tile may have various things on it:
+		Terrain - All tiles have terrain. It is a fixed set of values.
+		Objects - On a set of vectors, split up to aid search performance.
+		Static - A single Static object which may block movement or line of sight
+		Evidence - Some kind of temporary marking.
 */
 
 #include <Interface/HasTexture.hpp>
@@ -85,7 +91,7 @@ public:
 
 	Static* objStatic; // Static object (max 1)
 
-	Creature_Footprint* footprint;
+	Creature_Footprint* footprint; // Creature Evidence (max 1)
 
 	// Generic add/remove automatically sorts into appropriate lists.
 
@@ -122,6 +128,7 @@ public:
 	bool canTravelSouth();
 	bool canTravelWest();
 
+	std::string getAll(int /* max */); // return string listing all objects on this tile (up to max)
 
 	std::string getSaveData();
 

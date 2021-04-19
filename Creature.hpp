@@ -124,7 +124,9 @@ class Creature: public WorldObject, public TableInterface
 // Footprints indicate the type of creature that walked here, the direction they were walking, and a rough
 // estimate of how long ago they were here. Footprints disappear over time. Footprints will generally last
 // a few hours.
-// Footprints probably won't stack.
+// Footprints probably won't stack, it is assumed one set of footprints will make the others illegible.
+// Todo: This could be updated to provide more than just footprints. For example droppings or blood.
+// Class could be renamed as Evidence.
 
 class Creature_Footprint: public WorldObject
 {

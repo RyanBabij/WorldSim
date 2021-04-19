@@ -331,6 +331,57 @@ bool LocalTile::canTravelWest()
    return false;
 }
 
+std::string LocalTile::getAll(int max)
+{
+	if (max==0)
+	{
+		return "";
+	}
+	if (max==1)
+	{
+		return getName();
+	}
+	
+	std::string strObjects=getName();
+	
+	// build vector and perform collation here
+	
+	Vector <std::string> vStuff;
+	Vector <int> vQuantity;
+	
+			 
+	 if (objStatic)
+	 {
+		 vStuff.push(objStatic->name );
+		 vQuantity.push(1);
+	 }
+	 for (int i=0;i<vObject.size();++i)
+	 {
+		 // todo: collate objects of same name.
+		 vStuff.push(vObject(i)->getName());
+		 vQuantity.push(1);
+	 }
+	 
+	 for (int i=0;i<vStuff.size()&&i<max-2;++i)
+	 {
+		 if (vQuantity(i) == 1)
+		 {
+			 strObjects+="\n"+vStuff(i);
+		 }
+		 else
+		 {
+			 strObjects+="\n"+DataTools::toString(vQuantity(i))+" "+vStuff(i);
+		 }
+	 }
+	
+	 if ( vStuff.size() >= max-2 )
+	 {
+		 strObjects+="\nAnd "+DataTools::toString(vStuff.size()-max)+" more objects";
+	 }
+	 
+	return strObjects;
+}
+
 std::string LocalTile::getSaveData()
 {
    std::string saveData = "";

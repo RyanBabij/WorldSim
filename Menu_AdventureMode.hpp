@@ -687,34 +687,8 @@ class Menu_AdventureMode: public GUI_Interface
 		 
 		 if (localSelected)
 		 {
-			 font8x8.drawText(localSelected->getName(),panelX1,panelY1+410,panelX1+220,panelY1+420,false,true);
-			 
-			 int nItems = localSelected->vObject.size();
-			 
-			 // todo: Collate identical items
-			 
-			 if (nItems < 7)
-			 {
-				 int yOffset = 10;
-				 for (int i=0;i<localSelected->vObject.size();++i)
-				 {
-					 font8x8.drawText(localSelected->vObject(i)->getName(),panelX1,panelY1+410-yOffset,panelX1+220,panelY1+420-yOffset,false,true);
-					 yOffset+=10;
-				 }
-			 }
-			 else
-			 {
-				 int excessItems = localSelected->vObject.size()-7;
-				 int yOffset = 10;
-				 for (int i=0;i<localSelected->vObject.size()&&i<7;++i)
-				 {
-					 font8x8.drawText(localSelected->vObject(i)->getName(),panelX1,panelY1+410-yOffset,panelX1+220,panelY1+420-yOffset,false,true);
-					 yOffset+=10;
-				 }
-				 font8x8.drawText("And "+DataTools::toString(excessItems)+" more",panelX1,panelY1+410-yOffset,panelX1+220,panelY1+420-yOffset,false,true);
-			 }
-			 
-
+			 // output terrain type
+			 font8x8.drawText(localSelected->getAll(10),panelX1,panelY1+420,panelX1+220,panelY1+320,false,false,false,0,0,0,255,1);
 		 }
 		 
 			
