@@ -25,6 +25,9 @@ NameGen globalNameGen;
 #include <Graphics/Colour/ColourManager.hpp> // loading raw colours
 ColourManager <unsigned char> colourManager;
 
+#include "TextureManager.hpp"
+TextureManager textureManager;
+
 	// VECTOR OF MESSAGES FOR THE PLAYER TO READ (Really should be an object)
 #include <string>
 #include <Container/Vector/Vector.hpp>
