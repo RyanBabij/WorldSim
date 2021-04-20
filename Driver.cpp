@@ -6,213 +6,66 @@
   Wildcat code is public domain.
 */
 
+// Global vars and strings (should eventually be ported into globalSettings object)
 #include "Driver_Settings.cpp"
 #include "Driver_GlobalSettings.cpp"
 GlobalSettings globalSettings;
 
+// OpenGL includes go here because some global objects depend on OpenGL defines.
 #define GLEW_STATIC // static link GLEW 
 // Need to figure out which of this is better. I think GLEW is more supported.
 #include <Graphics/OpenGL/glew.h> // THIS CURRENTLY FIXES LINKER CRAP. Also allows RGBA_COMPRESSED, it would seem.
 #define FREEGLUT_STATIC // static link freeGLUT
 #include <Graphics/OpenGL/freeglut.h> //
 
-//      GLOBAL RNG        //////////////////////////////////////////////////////////////////////////////////////////////
-
-#include <Math/Random/RandomLehmer.hpp>
-// use this to seed all RNGs instead of time(NULL)
-RandomLehmer SEEDER;
-
-RandomLehmer globalRandom; // global rng. Maybe should be replaced with static class functions.
-RandomLehmer RNG_TEST; // for testing
-
-//      MISC GLOBAL OBJECTS (SHOULD PROBABLY BE ORGANISED)        //////////////////////////////////////////////////////
-
-#include "Driver_Settings_WordLists.cpp"
-
-#include <Game/NameGen/NameGen.hpp>
-NameGen globalNameGen;
-
-#include <Graphics/Colour/Colour.hpp> // loading raw colours
-#include <Graphics/Colour/ColourManager.hpp> // loading raw colours
-ColourManager <unsigned char> colourManager;
-
-	// VECTOR OF MESSAGES FOR THE PLAYER TO READ.
-#include <string>
-Vector <std::string> vConsoleMessage;
-
-	// DYNAMICALLY GENERATED HEADER FILE WITH STRING WHICH COUNTS COMPILATIONS.
-#include "CompileCount.hpp"
-
-#include <iostream>
-
-#include "Creature_Generator.cpp"
-Creature_Generator creatureGenerator;
-
-#include "Creature_Species.cpp"
-
-#include <Container/Vector/Vector.hpp>
-
-inline void consoleMessage(std::string s)
-{
-  vConsoleMessage.push(s);
-}
-
-inline void Console (std::string s)
-{
-  vConsoleMessage.push(s);
-}
-
-#include <cstdlib>
-#include <string>
-#include <sstream>
-
-//Stolen from https://codereview.stackexchange.com/questions/226/formatter-class
-// This allows you to pass multiple datatypes as an std::string.
-// Use like this: function( Stream() << "Error Recieved" << 42 << " " << some_code << " '" << some_msg << "'");
-class Stream
-{
-  public:
-    std::stringstream ss_;
-    // Build a string by chaining << operators.
-    template<class Field> Stream& operator<<(Field f)
-    {
-      ss_ << f;
-      return *this;
-    }
-    // This is a custom typecast to std::string. (C++11)
-    operator std::string() const { return ss_.str(); }
-};
-
-#include <File/SaveFileManager.hpp>
-  // Class for managing world save files.
-SaveFileManager saveFileManager;
-
-#include <Graphics/Render/Renderer.cpp>
-#include <Graphics/Texture/Texture.hpp>
-#include <Graphics/Texture/TextureLoader.hpp>
+// Global objects declared after OpenGL because some objects depend on OpenGL defines.
+#include "Driver_GlobalObjects.hpp"
 
 
-
+// This is a huge mess and should be cleaned up by making sure headers include all files they need.
+#include "Creature_Species.cpp" // Not sure why this needs to be here.
 #include "TextureInterface.cpp"
-
 #include "Driver_LoadTextures.hpp"
-
 #include "World.hpp"
-
 #include "World_Local.hpp"
 
-#include <Graphics/Png/Png.hpp>
-#include <File/FileManager.hpp>
-
-#include <string>
-
-void printHelp()
-{
-  std::cout<<"\nWorldSim"<<VERSION<<".\n";
-  std::cout<<"  Warning: This is not a stable release.\n";
-	std::cout<<"  WorldSim is a 2D tile-based sandbox RPG with procedurally generated fantasy world.\n";
-	std::cout<<"  License: Public domain. This program uses a modified version of LodePNG.\n";
-	std::cout<<"  This is a pre-alpha release, and is not fully functional.\n";
-
-	std::cout<<"Options:\n";
-  std::cout<<"None.\n";
-
-	std::cout<<"\n";
-	std::cout<<"Version "<<VERSION<<".\n";
-	std::cout<<"Compiled: "<<__DATE__<<". "<<__TIME__<<".\n";
-	std::cout<<"Compile count: "<<COMPILE_COUNT<<".\n";
-	std::cout<<"\n";
-}
-
-void pauseGame()
-{
-	std::cout<<"pauseGame() called.\n";
-	PAUSE_LOGIC=true;
-}
-
-/* This object exploits the c++ guarantee that the destructor is always called, in order to deal with unanticipated shutdowns, such as the player clicking the X. However, it seems the destructor guarantee does not apply in some cases, such as ending the process using the task manager, or using ctrl+c from the console.
-
-It seems that threads are killed if the user uses CTRL+C on the cmd line however, which messes things up a bit.
-
-*/
-class QuitChecker
-{
-   private:
-   Timer gameTime;
-
-   public:
-   QuitChecker()
-   {
-      gameTime.init();
-      gameTime.start();
-
-      // For now we will clear the savedata on startup because it can cause some instability.
-      std::cout<<"Deleting temporary data folder ("<<globalSettings.SAVE_FOLDER_PATH<<")\n";
-      if (globalSettings.SAVE_FOLDER_PATH.length() > 0 )
-      {
-         FileManager::deleteDirectory(globalSettings.SAVE_FOLDER_PATH,true);
-      }
-   }
-   ~QuitChecker()
-   {
-      QUIT_FLAG=true;
-      std::cout<<"Waiting to shutdown.\n";
-#ifdef WILDCAT_THREADING
-      std::unique_lock lock(MUTEX_SHUTDOWN); // wait until threads are not doing anything critical.
-#endif
-      std::cout<<"Shutting down.\n";
-      gameTime.update();
-      if (gameTime.seconds > 10 )
-      {
-         std::cout<<"Time played: "<<gameTime.seconds/60<<" minutes.\n";
-      }
-
-      if (CLEAN_SAVES_ON_EXIT)
-      {
-         std::cout<<"Deleting temporary data folder ("<<globalSettings.SAVE_FOLDER_PATH<<")\n";
-         if (globalSettings.SAVE_FOLDER_PATH.length() > 0 )
-         {
-            FileManager::deleteDirectory(globalSettings.SAVE_FOLDER_PATH,true);
-         }
-      }
-   }
-};
-QuitChecker quitChecker;
-
-
-#include <stdio.h>
-#include <Math/Random/GlobalRandom.hpp>
-/* No need for a globalRandom object. Just use Random:: */
-
-
-#include <Graphics/Font/Font.hpp>
-
-// This is the global font for now.
-Wildcat::Font font8x8;
-
-#include <Device/Mouse/Mouse.hpp>
-Mouse globalMouse;
-#include <Device/Keyboard/Keyboard.hpp>
-Keyboard globalKeyboard;
-
-
-#include <System/Time/Timer.hpp>
-Timer frameRateTimer;
-Timer pollRateTimer;
-Timer logicRateTimer;
-Timer physicsRateTimer;
-Timer animationTimer;
-Timer playerKeypressTimer;
-/* Use this for checking algo speeds. */
-Timer debugTimer;
 
 /* Instead of having a global worldViewer, I think it would be better to have lots of local worldviewers, as currently I have a problem with the various menus interfering with the global worldViewer. */
 #include "World_Viewer.hpp"
 #include "World_Viewer_Minimap.hpp"
 
+#include <Graphics/Render/Renderer.cpp>
+#include <Graphics/Texture/Texture.hpp>
+#include <Graphics/Texture/TextureLoader.hpp>
+
   // Moving world to global context means that we don't need to create millions of World pointers. */
 #include "World.cpp"
 World world;
+
+// Being lazy and just having menus as global objects. These could definitely go somewhere better.
+
+/* Title Menu / Main Menu */
+#include "Menu_Title.hpp"
+Menu_Title menuTitle;
+/* Options menu */
+#include "Menu_Options.hpp"
+Menu_Options menuOptions;
+/* Load game menu */
+#include "Menu_LoadGame.hpp"
+Menu_LoadGame menuLoadGame;
+
+/* Title menu */
+#include "Menu_WorldGenerator.hpp"
+Menu_WorldGenerator menuWorldGenerator;
+
+#include "Menu_WorldSimulator.hpp"
+Menu_WorldSimulator menuWorldSimulator;
+
+#include "Menu_AdventureMode.hpp"
+Menu_AdventureMode menuAdventureMode;
+
+// Implementation headers. I think they probably should be going somewhere else, aka the headers that actually need
+// the implementations. But there's so many pointers that many of them basically don't need them.
 
 #include "World_Biome.cpp"
 
@@ -255,76 +108,49 @@ World_Local * worldLocal;
 #include "Item.cpp"
 #include "Recipe.cpp"
 
-#include <Math/Geometry/Geometry.hpp>
 
-#include <Device/Display/DisplayInterface.hpp>
-#include <Device/Display/DisplayInterfaceManager.hpp>
-/* Global display interface manager, to handle all rendering called by driver. */
-DisplayInterfaceManager displayInterfaceManager;
-
-#include <Device/Mouse/MouseInterface.hpp>
-#include <Device/Mouse/MouseInterfaceManager.hpp>
-/* Global mouse interface manager. To handle all objects that recieve mouse events. */
-MouseInterfaceManager mouseInterfaceManager;
-
-
-#include <Device/Keyboard/KeyboardInterface.hpp>
-#include <Device/Keyboard/KeyboardInterfaceManager.hpp>
-/* Global keyboard interface manager. To handle all objects that recieve keyboard events. */
-KeyboardInterfaceManager keyboardInterfaceManager;
-
-#include <Graphics/GUI/GUI_Manager.hpp>
-#include <Graphics/GUI/GUI.hpp>
-/* GUI manager. Manages all GUI controls. */
-GUI_Manager globalGuiManager;
-
-
-#include <Interface/LogicTick/LogicTickInterface.hpp>
-#include <Interface/LogicTick/LogicTickManager.hpp>
-LogicTickManager logicTickManager;
-
-#include <Interface/IdleTick/IdleTickInterface.hpp>
-#include <Interface/IdleTick/IdleTickManager.hpp>
-IdleTickManager idleManager;
-
-
-/* Title Menu / Main Menu */
-#include "Menu_Title.hpp"
-Menu_Title menuTitle;
-/* Options menu */
-#include "Menu_Options.hpp"
-Menu_Options menuOptions;
-/* Load game menu */
-#include "Menu_LoadGame.hpp"
-Menu_LoadGame menuLoadGame;
-
-/* Title menu */
-#include "Menu_WorldGenerator.hpp"
-Menu_WorldGenerator menuWorldGenerator;
-
-#include "Menu_WorldSimulator.hpp"
-Menu_WorldSimulator menuWorldSimulator;
-
-#include "Menu_AdventureMode.hpp"
-Menu_AdventureMode menuAdventureMode;
-
-/* Initialization goes here. */
+/* Game initialization goes here. */
 #include "Driver_Init.hpp"
 
+/* OpenGL function hooks go here. */
+#include "Driver_GLHooks.hpp"
+
+// Main dependencies.
+#include <Data/ArgReader.hpp>
+#include <signal.h> // for catching CTRL+C
+#include <iostream>
+
+inline void printHelp()
+{
+	std::cout<<"\nWorldSim"<<VERSION<<".\n";
+	std::cout<<"  Warning: This is not a stable release.\n";
+	std::cout<<"  WorldSim is a 2D tile-based sandbox RPG with procedurally generated fantasy world.\n";
+	std::cout<<"  License: Public domain. This program uses a modified version of LodePNG.\n";
+	std::cout<<"  This is a pre-alpha release, and is not fully functional.\n";
+
+	std::cout<<"Options:\n";
+	std::cout<<"None.\n";
+
+	std::cout<<"\n";
+	std::cout<<"Version "<<VERSION<<".\n";
+	std::cout<<"Compiled: "<<__DATE__<<". "<<__TIME__<<".\n";
+	std::cout<<"Compile count: "<<COMPILE_COUNT<<".\n";
+	std::cout<<"\n";
+}
+
+void pauseGame()
+{
+	std::cout<<"pauseGame() called.\n";
+	PAUSE_LOGIC=true;
+}
+
 /* Tidies up the game and shuts down. */
-void shutDown(int signal=0)
+void shutDown(int signal /*=0*/)
 {
 	std::cout<<"Driver::shutDown().\n";
    QUIT_FLAG=true;
 	exit(1);
 }
-
-/* OpenGL function hooks go here. */
-#include "Driver_GLHooks.hpp"
-
-#include <Data/ArgReader.hpp>
-
-#include <signal.h> // for catching CTRL+C
 
 int main(int nArgs, char ** arg)
 {

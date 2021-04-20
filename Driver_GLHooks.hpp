@@ -7,6 +7,8 @@ If DirectX support is implemented, then we would do the same thing with DX event
 */
 //void glutMouseWheelFunc(void*);
 
+void shutDown(int signal = 0); // Tidy up the game and shutdown.
+
 
 
 static void GL_mouseMove(const int mouseX, int mouseY);
