@@ -1,0 +1,13 @@
+You can define your own textures here which can then be referenced by the game.
+In future I'd like all textures to be put here.
+
+[TEXTURE
+	[TEX_WOLF
+		[NAME:TEX_WOLF]
+		[PATH:Textures/Creature/Wolf/wolf.png]
+	]
+	[TEX_WOLF2
+		[NAME:TEX_WOLF2]
+		[PATH:Textures/Creature/Wolf/wolf.png]
+	]
+]

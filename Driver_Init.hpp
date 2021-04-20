@@ -33,6 +33,8 @@ void init()
 	wtfManager.parse(FileManager::getFileAsString("raw/colours.wtf"));
 		// Load creature species.
 	wtfManager.parse(FileManager::getFileAsString("raw/creatures.wtf"));
+		// Load texture raws
+	wtfManager.parse(FileManager::getFileAsString("raw/textures.wtf"));
 	
 	std::cout<<"All raws:\n"<<wtfManager.getAll()<<"\n\n";
 	
@@ -84,6 +86,9 @@ void init()
 	// I'm not sure if we should load raws out here or let the class handle it. For now I'll leave it for the generator
 	// class but I might change it later.
 	creatureGenerator.loadRaw(FileManager::getFileAsString("raw/creatures.wtf"));
+	
+	// Load texture references
+	textureManager.loadRaw(FileManager::getFileAsString("raw/textures.wtf"));
 		
 	std::cout<<"   *** END RAWS ***\n";
 	
