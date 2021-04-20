@@ -10,13 +10,35 @@
 #include "Driver_GlobalSettings.cpp"
 GlobalSettings globalSettings;
 
-#include <string>
-
 #define GLEW_STATIC // static link GLEW 
 // Need to figure out which of this is better. I think GLEW is more supported.
 #include <Graphics/OpenGL/glew.h> // THIS CURRENTLY FIXES LINKER CRAP. Also allows RGBA_COMPRESSED, it would seem.
 #define FREEGLUT_STATIC // static link freeGLUT
 #include <Graphics/OpenGL/freeglut.h> //
+
+//      GLOBAL RNG        //////////////////////////////////////////////////////////////////////////////////////////////
+
+#include <Math/Random/RandomLehmer.hpp>
+// use this to seed all RNGs instead of time(NULL)
+RandomLehmer SEEDER;
+
+RandomLehmer globalRandom; // global rng. Maybe should be replaced with static class functions.
+RandomLehmer RNG_TEST; // for testing
+
+//      MISC GLOBAL OBJECTS (SHOULD PROBABLY BE ORGANISED)        //////////////////////////////////////////////////////
+
+#include "Driver_Settings_WordLists.cpp"
+
+#include <Game/NameGen/NameGen.hpp>
+NameGen globalNameGen;
+
+#include <Graphics/Colour/Colour.hpp> // loading raw colours
+#include <Graphics/Colour/ColourManager.hpp> // loading raw colours
+ColourManager <unsigned char> colourManager;
+
+	// VECTOR OF MESSAGES FOR THE PLAYER TO READ.
+#include <string>
+Vector <std::string> vConsoleMessage;
 
 	// DYNAMICALLY GENERATED HEADER FILE WITH STRING WHICH COUNTS COMPILATIONS.
 #include "CompileCount.hpp"
@@ -29,9 +51,6 @@ Creature_Generator creatureGenerator;
 #include "Creature_Species.cpp"
 
 #include <Container/Vector/Vector.hpp>
-
-	// VECTOR OF MESSAGES FOR THE PLAYER TO READ.
-Vector <std::string> vConsoleMessage;
 
 inline void consoleMessage(std::string s)
 {

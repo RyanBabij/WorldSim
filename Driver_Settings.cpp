@@ -5,7 +5,10 @@
 /* WorldSim: Driver_Settings.cpp
 #include "Driver_Settings.cpp"
 
-Gameplay settings and other global settings go here. Some of this stuff will probably end up in an .ini file.
+	Gameplay settings and other global settings go here. Some of this stuff will probably end up in an .ini file.
+	Should probably be encapsulated in a GlobalSettings:: object
+	Note that global objects such as RNG should be declared elsewhere to avoid dependency hell. This header should only
+	be for variables, strings and defines.
 */
 
 #include <string>
@@ -39,6 +42,8 @@ const bool RELINQUISH_CPU = true;
 const unsigned int RELINQUISH_CPU_TIMEOUT = 100; /* 10-100 seems to be okay. Maximum amount of time to relinquish */
 
 //      THREADING       ////////////////////////////////////////////////////////////////////////////////////////////////
+// Threading will not be optional in the future,
+// it's way too complex to maintain a non-threaded version of the same code.
 
 #ifdef WILDCAT_THREADING
 	// Threading libraries
@@ -66,22 +71,6 @@ const unsigned short int MAX_CORES = 4; // The number of cores will never exceed
 std::string currentSavePath = "";
 
 #define SAVE_DATA // Program will save data to file. It saves a lot of data and it can end up taking up a lot of space, not good for your SSD.
-
-//      RNG        /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-#include <Math/Random/RandomLehmer.hpp>
-// use this to seed all RNGs instead of time(NULL)
-RandomLehmer SEEDER;
-
-RandomLehmer globalRandom; // global rng. Maybe should be replaced with static class functions.
-RandomLehmer RNG_TEST; // for testing
-
-#include <Game/NameGen/NameGen.hpp>
-NameGen globalNameGen;
-
-#include <Graphics/Colour/Colour.hpp> // loading raw colours
-#include <Graphics/Colour/ColourManager.hpp> // loading raw colours
-ColourManager <unsigned char> colourManager;
 
 //     WINDOW        ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -311,7 +300,5 @@ const char DECIMAL_DELIMITER = '.';
 std::string NYA;
 
 const std::string ADVENTURE_MODE_MANUAL = "Adventure mode manual. Click MAN again or press ESC to close it.\nWelcome to Adventure Mode. This manual will be used to explain some basic stuff you can do in the game.\n\nButtons:\nINV - Access inventory and equipment. (not currently implemented)\n SNK - Sneak. Your line of sight will increase and allow you to see around corners. However your movement speed will be halved. Sneaking will also reduce your visibility so that if you are next to fog (from the NPC's view), you can't be seen.\nSPT - Sprint (not implemented). You will travel twice as fast but will have low view distance.\n\nHotkeys:\nE - use equipped item. Click on a tile to use your item there. Use mousewheel to scroll through options. Left click to select an option. Right-click to exit menu.\nSPACE - Talk to adjacent NPC.";
-
-#include "Driver_Settings_WordLists.cpp"
 
 #endif
