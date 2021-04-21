@@ -380,6 +380,7 @@ private:
 
 	HasXY* getRandomTile();
 	HasXY* getRandomNeighbor(HasXY*);
+	//Vector <HasXY*> ge
 
 	Vector <HasXY*> * getRandomWalk(int /* nSteps */);
 

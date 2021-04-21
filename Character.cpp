@@ -636,6 +636,56 @@ void Character::initialiseKnowledge()
     
     return ( knowledge->hasSeen(_map,_x,_y,isSubterranean) );
   }
+  
+  
+  // reveal the map within the given area, mostly for debugging
+  // setting it too high probably does bad things
+  void Character::revealMap(unsigned int _range)
+  {
+    if ( knowledge == 0 ) { return; }
+    if ( tribe == 0 ) { return; }
+    
+    idleCounter=0;
+	 
+	 unsigned long int startX = fullX;
+	 unsigned long int endX = fullX+_range;
+	 
+	 unsigned long int startY = fullY;
+	 unsigned long int endY = fullY+_range;
+	 
+	 if ( startX < _range )
+	 {
+		 startX = 0;
+	 }
+	 else
+	 {
+		 startX = fullX-_range;
+	 }
+	 
+	 
+	 if ( startY < _range )
+	 {
+		 startY = 0;
+	 }
+	 else
+	 {
+		 startY = fullY-_range;
+	 }
+	 
+	 
+	 if (map)
+	 {
+		 
+		 for (unsigned long int y=startY;y<endY;++y)
+		 {
+			 for (unsigned long int x=startX;x<endX;++x)
+			 {
+				 knowledge->addTile(x,y);
+			 }
+		 }
+	 }
+
+  }
 
     //Update knowledge with current instance.
   void Character::updateKnowledge()

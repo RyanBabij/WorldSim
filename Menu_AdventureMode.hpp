@@ -438,6 +438,10 @@ class Menu_AdventureMode: public GUI_Interface
   
       /* Button to view inventory */
     GUI_Button buttonInventory;
+	 
+  
+      /* Button to reveal map (debug) */
+    GUI_Button buttonRevealMap;
     
       /* Button to view manual */
     // Very basic manual for now. Future manual should have stuff like bestiary, alchemy instructions,
@@ -564,6 +568,12 @@ class Menu_AdventureMode: public GUI_Interface
     buttonInventory.font = font;
 		buttonInventory.setColours(cNormal,cHighlight,0);
 		guiManager.add(&buttonInventory);
+		
+    buttonRevealMap.active = true;
+    buttonRevealMap.text = "RVL";
+    buttonRevealMap.font = font;
+		buttonRevealMap.setColours(cNormal,cHighlight,0);
+		guiManager.add(&buttonRevealMap);
     
     buttonManual.active = true;
     buttonManual.text = "MAN";
@@ -1696,7 +1706,14 @@ class Menu_AdventureMode: public GUI_Interface
 			buttonCrafting.unclick();
 		}
     
-    
+      
+      // reveal the map
+		if (buttonRevealMap.clicked==true)
+		{
+			std::cout<<"REVEAL MAP\n";
+			playerCharacter->revealMap(LOCAL_MAP_SIZE/2);
+			buttonRevealMap.unclick();
+		}
     
     
       // Toggle the inventory view.
@@ -1768,11 +1785,12 @@ class Menu_AdventureMode: public GUI_Interface
 		buttonManual.setPanel(panelX1+99,panelY1+304,panelX1+131,panelY1+320);
 		buttonCharacterSheet.setPanel(panelX1+132,panelY1+304,panelX1+164,panelY1+320);
 		buttonCrafting.setPanel(panelX1+165,panelY1+304,panelX1+197,panelY1+320);
-    
+		buttonRevealMap.setPanel(panelX1+33,panelY1+287,panelX1+66,panelY1+303);
+
 		worldViewer.setPanel(panelX1,panelY1,panelX2,panelY2);
 
-    interactManager.setPanel(panelX1,panelY1,panelX2,panelY2);
-    menuCrafting.setPanel(panelX1,panelY1,panelX2,panelY2);
+		interactManager.setPanel(panelX1,panelY1,panelX2,panelY2);
+		menuCrafting.setPanel(panelX1,panelY1,panelX2,panelY2);
 
 	}
 	

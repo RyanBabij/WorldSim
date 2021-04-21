@@ -337,8 +337,6 @@ void Creature::wander()
     
   }
   
-
-  
   bool Creature::hasSeen( World_Local* _map, int _x, int _y )
   {
     return false;

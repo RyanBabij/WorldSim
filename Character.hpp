@@ -203,6 +203,11 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   char hasSeen( World_Local* /* _map */, int /* _x */, int /* _y */, bool isSubterranean = false );
   
   
+  // Debug functions
+	// reveal all of current map
+  void revealMap(unsigned int _range);
+  
+  
 	/* TABLE INTERFACE */
 	std::string getColumn(std::string _column);
 	std::string getColumnType(std::string _column);
