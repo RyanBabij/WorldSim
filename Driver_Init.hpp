@@ -82,13 +82,15 @@ void init()
 		std::cout<<"The closest colour to "<<c.toString()<<" is "<<c2->toString()<<"\n";
 	}
 	
+	
+	// Load texture references
+	textureManager.loadRaw(FileManager::getFileAsString("raw/textures.wtf"));
+	
 		// LOAD CREATURE SPECIES
 	// I'm not sure if we should load raws out here or let the class handle it. For now I'll leave it for the generator
 	// class but I might change it later.
 	creatureGenerator.loadRaw(FileManager::getFileAsString("raw/creatures.wtf"));
-	
-	// Load texture references
-	textureManager.loadRaw(FileManager::getFileAsString("raw/textures.wtf"));
+
 		
 	std::cout<<"   *** END RAWS ***\n";
 	

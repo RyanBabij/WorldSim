@@ -10,6 +10,7 @@
 */
 
 #include <Graphics/Texture/Texture.hpp>
+#include <Graphics/Texture/TextureLoader.hpp>
 
 #include <File/WTFManager.hpp> // loading raws
 
@@ -29,6 +30,14 @@ class TextureManager
 	Texture * get (std::string name)
 	{
 		return 0;
+	}
+	
+	void loadTextureVerbose(const std::string _path, Texture* _texture)
+	{
+		std::cout<<"Loading: "<<_path<<".\n";
+
+		if(loadTextureNearestNeighbour(_path,_texture)==false)
+		{ std::cout<<"Error loading "<<_path<<".\n"; }
 	}
 	
 	void loadRaw(std::string strRaw)
@@ -53,8 +62,29 @@ class TextureManager
 			std::string texName = (*vNode)(i)->getValue("NAME");
 			std::string texPath = (*vNode)(i)->getValue("PATH");
 			
+			Texture * tex = new Texture();
+			loadTextureVerbose(texPath,tex);
+			vTexName.push(texName);
+			vTexture.push(tex);
+			
+			
 			std::cout<<"Loaded tex: "<<texName<<", "<<texPath<<"\n";
 		}
+	}
+	
+	Texture * getTextureByName(std::string _texName)
+	{
+		for (int i=0;i<vTexName.size();++i)
+		{
+			if (vTexName(i) == _texName)
+			{
+				if (vTexture.isSafe(i))
+				{
+					return vTexture(i);
+				}
+			}
+		}
+		return 0;
 	}
 };
 

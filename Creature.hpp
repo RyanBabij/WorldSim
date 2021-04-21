@@ -76,6 +76,8 @@ class Creature: public WorldObject, public TableInterface
       // A dragon might slash you with its claws or breathe fire.
       // Creatures may pick these attacks randomly or intelligently, depending on the creature.
     Vector <Creature_Attack*> vAttack;
+	 
+	 Texture * baseTexture;
       
     // short int baseAtkSlash;
     // short int baseAtkStab;

@@ -61,10 +61,14 @@
 			// }
 			
 			std::string speciesName = (*vNode)(i)->getValue("NAME_SINGULAR");
+			std::string textureName = (*vNode)(i)->getValue("BASE_TEXTURE");
 			
 			std::cout<<"Adding creature: "<<speciesName<<"\n";
+			std::cout<<"Base texture: "<<textureName<<"\n";
 			
 			Creature_Species * species = new Creature_Species(speciesName,1);
+			species->setBaseTexture(textureManager.getTextureByName(textureName));
+			std::cout<<"base texture: "<<species->baseTexture<<"\n";
 			vSpecies.push(species);
 			
 			
@@ -100,6 +104,8 @@
 	// Flora generation.
 	// Name is randomly generated from wordlists.
 	// Current system makes each additional Flora half as common as the previous.
+	
+	// Generate a species from a base species. We're kinda generating subspecies here tbh.
 	Vector <Creature_Species*> * Creature_Generator::generate(int amount)
 	{		
 		std::cout<<"Generate creature\n";
@@ -111,11 +117,12 @@
 			
 			// randomly pick base creature.
 			Creature_Species * base = vSpecies.getRandom(globalRandom);
-			std::cout<<"Creature picked: "<<base->name<<"\n";
+			//std::cout<<"Creature picked: "<<base->name<<"\n";
 		
 		
 			//Creature_Species * creature = new Creature_Species(generateName(),currentPoints);
 			Creature_Species * creature = new Creature_Species(base->name,currentPoints);
+			creature->setBaseTexture(base->baseTexture);
 			vSpecies2->push(creature);
 			currentPoints/=2;
 		}
@@ -128,9 +135,14 @@
 	{
 		// randomly pick base creature.
 		Creature_Species * base = vSpecies.getRandom(globalRandom);
+		//base->setBaseTexture(0);
 		//std::cout<<"Creature picked: "<<base->name<<"\n";
 		//base->name += " " + generateName();
-		return new Creature_Species(generateName() + base->name,spawnWeighting);
+		
+		Creature_Species * subspecies = new Creature_Species(generateName() + base->name,spawnWeighting);
+		subspecies->baseTexture = base->baseTexture;
+		
+		return subspecies;
 	}
 
 #endif

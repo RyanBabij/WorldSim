@@ -39,5 +39,16 @@
 	{
 		return "string";
 	}
+	
+	void Creature_Species::setBaseTexture(Texture* texture)
+	{
+		baseTexture = texture;
+	}
+	
+	// HASTEXTURE
+	Texture* Creature_Species::currentTexture ()
+	{
+		return 0;
+	}
 
 #endif

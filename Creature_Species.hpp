@@ -14,10 +14,13 @@
 
 #include <Container/Table/TableInterface.hpp>
 
+#include <Interface/HasTexture.hpp>
+
+
 class Creature;
 class World_Biome;
 
-class Creature_Species: public TableInterface
+class Creature_Species: public TableInterface, public HasTexture
 {
 	public:
 	
@@ -25,15 +28,22 @@ class Creature_Species: public TableInterface
 		
 	std::string name;
 	int spawnWeight;
+	
+	Texture* baseTexture;
 		
 	Creature_Species(std::string _name, int _spawnWeight);
 	
 	// return an instance of this species
 	Creature* spawn();
 	
+	void setBaseTexture(Texture* _texture);
+	
 	// TABLE INTERFACE
-	std::string getColumn(std::string _column);
-	std::string getColumnType(std::string _column);
+	std::string getColumn(std::string _column) override;
+	std::string getColumnType(std::string _column) override;
+	
+	// HASTEXTURE
+	Texture* currentTexture () override;
 	
 };
 

@@ -41,6 +41,7 @@ Creature::Creature()
   fleeCounter=0;
   
   species=0;
+  baseTexture=0;
 }
 
   //_sex: 0 - Roll, 1 - Male, 2 - Female.
@@ -347,7 +348,14 @@ void Creature::wander()
 
 
 Texture* Creature::currentTexture ()
-{	
+{
+	if (species)
+	{
+		if (species->baseTexture)
+		{
+			return species->baseTexture;
+		}
+	}
 	return &TEX_CREATURE_DEER;
 }
 
