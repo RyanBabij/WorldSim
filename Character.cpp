@@ -676,11 +676,14 @@ void Character::initialiseKnowledge()
 	 if (map)
 	 {
 		 
-		 for (unsigned long int y=startY;y<endY;++y)
+		 for (unsigned long int _y=startY;_y<endY;++_y)
 		 {
-			 for (unsigned long int x=startX;x<endX;++x)
+			 for (unsigned long int _x=startX;_x<endX;++_x)
 			 {
-				 knowledge->addTile(x,y);
+				 if (world.isSafe(_x,_y))
+				 {
+					knowledge->addTile(_x,_y);
+				 }
 			 }
 		 }
 	 }

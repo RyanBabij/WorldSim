@@ -470,45 +470,45 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 
 			if ( baseBiome != OCEAN )
 			{
-				int baseTreeChance = 40;
+				//int baseTreeChance = 40;
 				int basePlantChance = 20;
 
 				if ( baseBiome == FOREST )
 				{
 					data->aLocalTile(_x,_y).baseTerrain = GRASSLAND;
-					baseTreeChance=9;
+					//baseTreeChance=9;
 				}
 				else if ( baseBiome == JUNGLE )
 				{
 					data->aLocalTile(_x,_y).baseTerrain = GRASSLAND;
-					baseTreeChance=5;
+					//baseTreeChance=5;
 				}
 				else if ( baseBiome == DESERT )
 				{
 					data->aLocalTile(_x,_y).baseTerrain = DESERT;
-					baseTreeChance=200;
+					//baseTreeChance=200;
 				}
 				else if (baseBiome == STEPPES )
 				{
 					data->aLocalTile(_x,_y).baseTerrain = STEPPES;
-					baseTreeChance=100;
+					//baseTreeChance=100;
 				}
 				else if (baseBiome == SNOW )
 				{
 					data->aLocalTile(_x,_y).baseTerrain = SNOW;
-					baseTreeChance=100;
+					//baseTreeChance=100;
 				}
 				else if (baseBiome == WETLAND )
 				{
 					data->aLocalTile(_x,_y).baseTerrain = WETLAND;
-					baseTreeChance=9;
+					//baseTreeChance=9;
 				}
 				
 				// make high-altitude tiles into snow tiles.
 				if ( data->aLocalTile(_x,_y).height > LOCAL_MAP_SIZE / 2 )
 				{
 					data->aLocalTile(_x,_y).baseTerrain = SNOW;
-					baseTreeChance=100;
+					//baseTreeChance=100;
 				}
 
 				//Put down some water for drinking
