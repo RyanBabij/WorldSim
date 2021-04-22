@@ -560,6 +560,18 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 					//deer->init();
 					//put(deer,_x,_y);
 				}
+				else if (baseBiome == JUNGLE && rng.oneIn(8) )
+				{
+					put (new Static_Tree(), _x, _y);
+				}
+				else if (baseBiome == FOREST && rng.oneIn(12) )
+				{
+					put (new Static_Tree(), _x, _y);
+				}
+				else if (baseBiome == GRASSLAND && rng.oneIn(25) )
+				{
+					put (new Static_Tree(), _x, _y);
+				}
 				else if (rng.oneIn(50) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
 				{
 					//auto tree = new Static_Tree();
