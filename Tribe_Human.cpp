@@ -362,6 +362,7 @@ void Tribe_Human::combat (Tribe* _target)
 
 void Tribe_Human::incrementTicks ( int nTicks )
 {
+	std::cout<<"Tribe : "<<name<<" increments "<<nTicks<<" ticks\n";
 	for (auto & v: vCharacter)
 	{
 		if(v->isAlive==false)

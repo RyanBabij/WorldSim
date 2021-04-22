@@ -114,6 +114,7 @@ void Tribe::degradeInfluence()
 
 void Tribe::incrementTicks ( int nTicks )
 {
+	std::cout<<"INCREMENT TRIBE\n";
   return;
 }
 

@@ -74,6 +74,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	int queryWorldXLocal, queryWorldYLocal; 
 
 	long long unsigned int ticksBacklog; /* World will simulate these ticks whenever it can, while still relinquishing for input etc. */
+	bool incrementContinuous;
 	Timer relinquishTimer;
 
 	// This array stores the base terrain data.

@@ -68,6 +68,8 @@ World::World(): SaveFileInterface(),/* mapManager(this),*/ seaLevel(0), mountain
 
 	calendar.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
 	calendar.secondsPerMinute = 2;
+	
+	incrementContinuous=false;
 
 	//mapManager.main();
 }
@@ -1079,8 +1081,20 @@ void World::updateMaps()
 
 bool World::handleTickBacklog()
 {
+	
+	// In this mode we just keep ticking in the background in idle time until interrupted by clicking the button again
+	// or pressing escape.
+	if (incrementContinuous)
+	{
+		incrementTicks(1);
+		return true;
+	}
+	
+	
 	if (ticksBacklog<=0)
 	{ return false; }
+
+
 
 	unsigned long long int MAXIMUM_TICKS_AT_ONCE = 2592000;
 

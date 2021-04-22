@@ -48,7 +48,10 @@ private:
 	GUI_Button buttonIncrementDay;
 	GUI_Button buttonIncrementMonth;
 	GUI_Button buttonIncrementYear;
-	GUI_Button buttonIncrementDecade;
+	GUI_Button buttonIncrementContinuous;
+	
+	//GUI_Button buttonIncrementContinuous;
+	
 	/* Menu for investigating an individual tribe */
 	GUI_Button buttonTribeMenu;
 	/* Menu for seeing info about the world. */
@@ -159,8 +162,8 @@ public:
 		buttonIncrementMonth.setColours(cNormal,cHighlight,0);
 		buttonIncrementYear.text = "+Y";
 		buttonIncrementYear.setColours(cNormal,cHighlight,0);
-		buttonIncrementDecade.text = "+De";
-		buttonIncrementDecade.setColours(cNormal,cHighlight,0);
+		buttonIncrementContinuous.text = "+++";
+		buttonIncrementContinuous.setColours(cNormal,cHighlight,0);
 		buttonTribeMenu.text="Tri";
 		buttonTribeMenu.setColours(cNormal,cHighlight,0);
 		buttonWorldMenu.text="Wor";
@@ -190,7 +193,7 @@ public:
 		guiManager.add(&buttonIncrementDay);
 		guiManager.add(&buttonIncrementMonth);
 		guiManager.add(&buttonIncrementYear);
-		guiManager.add(&buttonIncrementDecade);
+		guiManager.add(&buttonIncrementContinuous);
 
 		guiManager.add(&buttonTribeMenu);
 		guiManager.add(&buttonWorldMenu);
@@ -221,7 +224,7 @@ public:
 		buttonIncrementDay.active=true;
 		buttonIncrementMonth.active=true;
 		buttonIncrementYear.active=true;
-		buttonIncrementDecade.active=true;
+		buttonIncrementContinuous.active=true;
 
 		buttonTribeMenu.active=true;
 		buttonWorldMenu.active=true;
@@ -475,6 +478,8 @@ public:
 
 			//Clear the backlog so time stops progressing.
 			world.ticksBacklog=0;
+			buttonIncrementContinuous.text = "+++";
+			world.incrementContinuous=false;
 
 			_keyboard->keyUp(Keyboard::ESCAPE);
 		}
@@ -568,10 +573,22 @@ public:
 			buttonIncrementYear.unclick();
 			world.ticksBacklog+=31104000;
 		}
-		if (buttonIncrementDecade.clicked==true)
+		if (buttonIncrementContinuous.clicked==true)
 		{
-			buttonIncrementDecade.unclick();
-			world.ticksBacklog+=311040000;
+			buttonIncrementContinuous.unclick();
+			//world.ticksBacklog+=311040000;
+			world.incrementContinuous=!world.incrementContinuous;
+			
+			if (world.incrementContinuous)
+			{
+				buttonIncrementContinuous.text = "---";
+			}
+			else
+			{
+				buttonIncrementContinuous.text = "+++";
+			}
+			
+			std::cout<<"Incrementing continuously: "<<world.incrementContinuous<<".\n";
 		}
 
 		if (buttonTribeMenu.clicked==true)
@@ -731,7 +748,7 @@ public:
 		buttonIncrementDay.setPanel(panelX2-120, panelY2-40, panelX2-160, panelY2-30);
 		buttonIncrementMonth.setPanel(panelX2-80, panelY2-40, panelX2-120, panelY2-30);
 		buttonIncrementYear.setPanel(panelX2-40, panelY2-40, panelX2-80, panelY2-30);
-		buttonIncrementDecade.setPanel(panelX2, panelY2-40, panelX2-40, panelY2-30);
+		buttonIncrementContinuous.setPanel(panelX2, panelY2-40, panelX2-40, panelY2-30);
 
 		buttonTribeMenu.setPanel(panelX2-180, panelY2-40, panelX2-220, panelY2-30);
 		buttonWorldMenu.setPanel(panelX2-220, panelY2-40, panelX2-260, panelY2-30);
