@@ -191,6 +191,10 @@ class Item: public WorldObject
   {
     return 0;
   }
+   virtual Vector <std::string>* getInteractNames(Static* _w)
+  {
+    return 0;
+  }
 
   
     // Useful for checking recipe requirements.
@@ -240,6 +244,7 @@ class Item_Hand: public Item
   std::string getName() override { return "Hand"; }
   
   virtual Vector <std::string>* getInteractNames(WorldObject*) override;
+  virtual Vector <std::string>* getInteractNames(Static*) override;
     // virtual Vector <std::string>* getInteractNames(Item* _w) override;
     // virtual Vector <std::string>* getInteractNames(Character* _w) override;
     // virtual Vector <std::string>* getInteractNames(Creature* _w) override;

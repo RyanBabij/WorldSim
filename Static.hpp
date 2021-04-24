@@ -44,7 +44,37 @@ class Static: public HasTexture
 	{
 		return name;
 	}
+	
+    // OBJECT INTERACTION
+    // In future these functions might need to be expanded to return multiple possibilities, for example
+    // "Stab target" and "Slash target". Or "Chop down door" and "Pry open door".
+    // The good thing about this approach is that it can list out all possible interactions between objects,
+    // which I think is better than making the player guess what everything does.
+    // There are different types of objects, such as Items, WorldObjects and LocalTiles.
+  virtual void interact (WorldObject* obj, int interactionType=0)
+  {
+    std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
+  }
+  // virtual void interact (LocalTile* obj, int interactionType=0)
+  // {
+    // std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
+  // }
+  // virtual void interact (Item* obj, int interactionType=0)
+  // {
+    // std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
+  // }
+  // virtual void interact (Character* obj, int interactionType=0)
+  // {
+    // std::cout<<"Char interact\n";
+    // //std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
+  // }
+  // virtual void interact (Creature* obj, int interactionType=0)
+  // {
+    // std::cout<<"Creature interact\n";
+    // //std::cout<<"The "<<getName()<<" interacts with the "<<obj->getName()<<".\n";
+  // }
    
+	/* HASTEXTURE */
    virtual Texture* currentTexture()
    {
       return 0;

@@ -144,6 +144,7 @@ class InteractManager: public GUI_Interface
   
   unsigned long int x,y; /* Tile which the player wants to interact on */
   LocalTile* localSelected;
+	Static* objStaticSelected; /* If the tile has a Static on it */
   
   Item * sourceItem; /* Item the player is using. 0 = unarmed */
   
@@ -172,8 +173,8 @@ class InteractManager: public GUI_Interface
   {
     x=ABSOLUTE_COORDINATE_NULL;
     y=ABSOLUTE_COORDINATE_NULL;
-    localSelected=0;
-    sourceItem=0;
+    //localSelected=0;
+    //sourceItem=0;
     selectedInteraction = 0;
   }
   
@@ -223,14 +224,20 @@ class InteractManager: public GUI_Interface
           itemHand.owner = playerCharacter;
         }
         
+		  
 
         std::cout<<"Using interaction: "<<vInteraction(selectedInteraction)->description<<".\n";
-        
-        
+        std::cout<<"Using item: "<<sourceItem->getName()<<".\n";
+
         Interaction* _interaction = vInteraction(selectedInteraction);
         int selectedVector = _interaction->vType;
         int selectedIndex = _interaction->vIndex;
         int interactionType = _interaction->interactID;
+		  
+		  if (localSelected == 0 )
+		  {
+			  consoleMessage("Error: No local selected");
+		  }
         
         if ( selectedVector == 0 ) /* generic */
         {
@@ -250,7 +257,7 @@ class InteractManager: public GUI_Interface
         }
         else if ( selectedVector == 4 ) /* Terrain */
         {
-          std::cout<<"Terrain interaction\n";
+          //std::cout<<"Terrain interaction\n";
           sourceItem->interact(localSelected,interactionType);
         }
         
@@ -322,6 +329,16 @@ class InteractManager: public GUI_Interface
         vGeneric.push(localSelected->vCreature(i));
         vInteraction.push( new Interaction ("Punch "+localSelected->vCreature(i)->getName(),0,i,0) );
       }
+		
+      if(localSelected->objStatic)
+      {
+			std::cout<<"STATIC\n";
+            vInteraction.push( new Interaction ("Pick "+localSelected->objStatic->getName(),0,0,0) );
+      }
+		else
+		{
+			std::cout<<"NO STATIC\n";
+		}
       
     }
     else  
@@ -389,6 +406,23 @@ class InteractManager: public GUI_Interface
           }
         }
       }
+      if(localSelected->objStatic)
+      {
+			std::cout<<"STATIC\n";
+        auto vInteract = sourceItem->getInteractNames(localSelected->objStatic);
+
+        if ( vInteract !=0 )
+        {
+          for (int i2=0;i2<vInteract->size();++i2)
+          {
+            vInteraction.push( new Interaction ((*vInteract)(i2),3,0,i2) );
+          }
+        }
+      }
+		else
+		{
+			std::cout<<"NO STATIC\n";
+		}
     }
 
 
@@ -1070,21 +1104,21 @@ class Menu_AdventureMode: public GUI_Interface
     }
     
       // Pay respects
-    if(_keyboard->isPressed(Keyboard::F) || _keyboard->isPressed(Keyboard::f))
-    {
-      if (playerCharacter != 0)
-      {
-        LocalTile* wl = world(playerCharacter->fullX,playerCharacter->fullY);
-        if ( wl != 0 )
-        {
-          wl->shotOverlay=true;
-        }
-      }
+    // if(_keyboard->isPressed(Keyboard::F) || _keyboard->isPressed(Keyboard::f))
+    // {
+      // if (playerCharacter != 0)
+      // {
+        // LocalTile* wl = world(playerCharacter->fullX,playerCharacter->fullY);
+        // if ( wl != 0 )
+        // {
+          // wl->shotOverlay=true;
+        // }
+      // }
 
 
-      _keyboard->keyUp(Keyboard::F);
-      _keyboard->keyUp(Keyboard::f);
-    }
+      // _keyboard->keyUp(Keyboard::F);
+      // _keyboard->keyUp(Keyboard::f);
+    // }
     
       // Disable keyboard if we're in a menu.
     if (itemSelectionActive || subItemSelectionActive || manualActive || conversationActive || inventoryActive)

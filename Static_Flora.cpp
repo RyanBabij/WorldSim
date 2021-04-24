@@ -57,6 +57,10 @@ std::string Flora::getColour()
 	return colourManager.getNameOfColour(colour);
 }
 
+std::string Flora::getName()
+{
+	return name;
+}
 
 Texture* Flora::currentTexture()
 {

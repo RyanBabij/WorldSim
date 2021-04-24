@@ -25,6 +25,23 @@ Vector <std::string>* Item_Hand::getInteractNames(WorldObject* _target)
       vInteract->push("Punch "+_target->getName());
       return vInteract;
 }
+
+Vector <std::string>* Item_Hand::getInteractNames(Static* _target)
+{
+      if (_target==0) { return 0; }
+      
+      auto vInteract = new Vector <std::string>;
+        // // // Temporary cheat using getName().
+      // // if ( _target->getName() == "Plant" )
+      // // {
+        // // vInteract->push("Harvest plant fibres");
+      // // }
+      
+      vInteract->push("Pick "+_target->getName());
+      return vInteract;
+}
+
+
 void Item_Hand::interact(WorldObject* _target, int interactType /* =0 */)
 {
   if (_target==0 || owner==0)

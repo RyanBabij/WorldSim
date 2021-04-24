@@ -231,6 +231,8 @@ class Flora: public Static, public TableInterface
 	
    virtual Texture* currentTexture() override;
 	
+	std::string getName() override;
+	
 	// TableInterface
 	std::string getColumn(std::string _column) override;
 	// TableInterface
