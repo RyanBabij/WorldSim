@@ -212,8 +212,26 @@ std::string Character::getBiography()
 	return getFullName();
 }
 
+void Character::aiManager()
+{
+	// assess situation and decide current ai state
+	std::cout<<"AI manager for: "<<getFullName()<<"\n";
+}
+
 void Character::incrementTicks(int nTicks)
 {
+	aiManager();
+	
+	// character ai goes here
+	// character could be doing one of several things:
+	// crafting, making useful equipment
+	// gathering resources
+	// hunting
+	//looking after family
+	// combat
+	// research
+	
+	
 	secondsCounter+=nTicks;
 	
   hunger+=nTicks;
@@ -245,10 +263,72 @@ void Character::incrementTicks(int nTicks)
 			// }
 		// }
 	}
+	
+	wander();
 }
 
 void Character::wander()
 {
+	//int currentX = x;
+	//int currentY = y;
+	
+	if (map==0)
+	{
+		return;
+	}
+	
+	map->remove(this);
+	
+	if (globalRandom.flip())
+	{
+		// do nothing (50% chance)
+	}
+	else if (globalRandom.flip())
+	{
+		// alter x (25% chance)
+		if (globalRandom.flip())
+		{
+			if (x<LOCAL_MAP_SIZE-1)
+			{
+				map->put(this,x+1,y);
+				// ++x;
+				// ++fullX;
+			}
+		}
+		else
+		{
+			if (x > 0)
+			{
+				map->put(this,x-1,y);
+				// --x;
+				// --fullX;
+			}
+		}
+	}
+	else
+	{
+		// alter y (25% chance)
+		if (globalRandom.flip())
+		{
+			if (y<LOCAL_MAP_SIZE-1)
+			{
+				map->put(this,x,y+1);
+				// ++y;
+				// ++fullY;
+			}
+		}
+		else
+		{
+			if (y > 0)
+			{
+				map->put(this,x,y-1);
+				// --y;
+				// --fullY;
+			}
+		}
+	}
+	
+
   return;
   if ( map==0 ) { return; }
   

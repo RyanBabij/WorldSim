@@ -207,9 +207,7 @@ class Flora: public Static, public TableInterface
    // Increment is per 24 hours
    // 1 food = 1 day of food for 1 herbivore
    unsigned char easyFood, mediumFood, hardFood;
-	
-	
-   
+
    //Vector <unsigned char> vAllowedBiomeTypes;
    
    public:

@@ -94,7 +94,7 @@ class Creature: public WorldObject, public TableInterface
 		*/
 	virtual void incrementTicks(int = 1);
 	
-  virtual void wander();
+  virtual void wander() override;
   
 	Texture* currentTexture () override;
 	

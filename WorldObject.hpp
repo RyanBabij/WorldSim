@@ -59,6 +59,8 @@ class WorldObject: public HasTexture
 	virtual std::string getName();
 	virtual std::string getExtendedInfo() { return "N/A"; }
 	
+	// move object 1 tile in random direction, confined to local map
+	virtual void wander();
 	
     // DISTANCES
     // We should add manhattan and normal

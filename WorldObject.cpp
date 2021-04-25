@@ -34,6 +34,54 @@ std::string WorldObject::getName()
 	return "WorldObject";
 }
 
+void WorldObject::wander()
+{
+	if (globalRandom.flip())
+	{
+		// do nothing (50% chance)
+	}
+	else if (globalRandom.flip())
+	{
+		// alter x (25% chance)
+		if (globalRandom.flip())
+		{
+			if (x<LOCAL_MAP_SIZE-1)
+			{
+				++x;
+				++fullX;
+			}
+		}
+		else
+		{
+			if (x > 0)
+			{
+				--x;
+				--fullX;
+			}
+		}
+	}
+	else
+	{
+		// alter y (25% chance)
+		if (globalRandom.flip())
+		{
+			if (y<LOCAL_MAP_SIZE-1)
+			{
+				++y;
+				++fullY;
+			}
+		}
+		else
+		{
+			if (y > 0)
+			{
+				--y;
+				--fullY;
+			}
+		}
+	}
+}
+
 int WorldObject::distanceTo (WorldObject* _obj) 
 {
 	return std::max(abs(x-_obj->x),abs(y-_obj->y));

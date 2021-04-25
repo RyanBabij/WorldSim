@@ -207,6 +207,20 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	// reveal all of current map
   void revealMap(unsigned int _range);
   
+  // main AI manager, defines current AI state based on situation
+  void aiManager();
+  
+  // AI STATES
+  // HUNTING
+  // CRAFTING
+  // COMBAT
+  // CULTURE
+  
+  // aiCrafting() - Has chance of creating advancement points
+  // aiCulture() - has chance of creating advancement points
+  // aiHunting()
+  
+  
   
 	/* TABLE INTERFACE */
 	std::string getColumn(std::string _column);
