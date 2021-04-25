@@ -347,14 +347,16 @@ bool World_Local::isSafe(WorldObject* _object)
 bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local* c1, World_Local* c2,
 	World_Local *c3, World_Local* c4, World_Local* c5, World_Local* c6, World_Local* c7)
 {
-	std::cout<<"Generate called for map: "<<globalX<<", "<<globalY<<".\n";
+	//std::cout<<"Generate called for map: "<<globalX<<", "<<globalY<<".\n";
 	
-	std::cout<<"Maps recieved: "<<c0<<", "<<c1<<", "<<c2<<", "<<c3<<", "<<c4<<", "<<c5<<", "<<c6<<", "<<c7<<"\n";
+	//std::cout<<"Maps recieved: "<<c0<<", "<<c1<<", "<<c2<<", "<<c3<<", "<<c4<<", "<<c5<<", "<<c6<<", "<<c7<<"\n";
+
+	//return false;
 
 	// World is already loaded and running
 	if ( active )
 	{
-		std::cout<<"Already active\n";
+		//std::cout<<"Already active\n";
 		return true;
 	}
 
@@ -408,10 +410,14 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 	//abstractData->bfFlora.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 	//abstractData->bfStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 	//abstractData->bfMob.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+	
+		
 
 	// nulls must be passed as 1, because 0 will be overwritten by the midpoint displacement algorithm.
 	generateHeightMap(c0?c0->centerHeight:1,c1?c1->centerHeight:1,c2?c2->centerHeight:1,c3?c3->centerHeight:1,
 	c4?c4->centerHeight:1,c5?c5->centerHeight:1,c6?c6->centerHeight:1,c7?c7->centerHeight:1,0);
+	
+
 
 #ifdef FAST_EXIT
 	if (QUIT_FLAG) { return false; }
@@ -421,6 +427,8 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 	rng.seed(seed);
 
 	int midX = LOCAL_MAP_SIZE/2;
+	
+	//return false;
 
 	for ( int _y=0;_y<LOCAL_MAP_SIZE;++_y)
 	{
@@ -467,6 +475,7 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 			}
 
 			data->aLocalTile(_x,_y).baseTerrain = baseBiome;
+			
 
 			if ( baseBiome != OCEAN )
 			{
@@ -548,13 +557,13 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 				// Spawn Mobs
 				else if (rng.oneIn(1000) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
 				{
-					
-						Creature * c = biome->getCreature();
-						if (c)
-						{
-							c->init();
-							put(c, _x, _y);
-						}
+					//std::cout<<"bug here\n";
+						//Creature * c = biome->getCreature();
+						// if (c)
+						// {
+							// c->init();
+							// put(c, _x, _y);
+						// }
 						
 					//auto deer = spawnCreature();
 					//deer->init();
@@ -633,7 +642,7 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 					}
 					
 				}
-				
+								
 				
 				// if the tile is mostly cliffs, or cliffs on opposite sides, make it inaccessible.
 				if ( data->aLocalTile(_x,_y).bWall == 0b11111111
@@ -660,6 +669,8 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 			}
 		}
 	}
+	
+	//return false;
 
 	//generateSubterranean();
 
@@ -675,6 +686,8 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 		auto sign = new WorldObject_Sign;
 		data->aLocalTile(21,21).add(sign);
 	}
+	
+		//return false;
 	
 	//Generate global objects
 	Vector <Tribe * > * vTribesHere = world.getTribesOn(globalX,globalY);

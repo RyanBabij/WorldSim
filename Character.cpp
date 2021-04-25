@@ -215,7 +215,7 @@ std::string Character::getBiography()
 void Character::aiManager()
 {
 	// assess situation and decide current ai state
-	std::cout<<"AI manager for: "<<getFullName()<<"\n";
+	//std::cout<<"AI manager for: "<<getFullName()<<"\n";
 }
 
 void Character::incrementTicks(int nTicks)
@@ -272,9 +272,19 @@ void Character::wander()
 	//int currentX = x;
 	//int currentY = y;
 	
-	if (map==0)
+	if (playerCharacter == this)
 	{
 		return;
+	}
+	
+	if (map==0)
+	{
+		//std::cout<<"Error, character has no map.\n";
+		return;
+	}
+	else
+	{
+		//std::cout<<"CHARMAP\n";
 	}
 	
 	map->remove(this);

@@ -52,6 +52,11 @@ bool Tribe_Human::spawn()
 
 	world->vTribe.push(this);
 	world->putObject(this,worldX,worldY);
+	
+	for (int i=0;i<vCharacter.size();++i)
+	{
+		vCharacter(i)->map = (*world)(spawnTile->x,spawnTile->y);
+	}
 
 	return true;
 }
@@ -73,8 +78,8 @@ void Tribe_Human::wander()
 		return;
 	}
 
-	int destinationX = worldX + random.randomIntRange(-1,1);
-	int destinationY = worldY + random.randomIntRange(-1,1);
+	// int destinationX = worldX + random.randomIntRange(-1,1);
+	// int destinationY = worldY + random.randomIntRange(-1,1);
 
 
 	// Sometimes drop an artifact on the map. (max 3)
@@ -115,6 +120,12 @@ void Tribe_Human::wander()
 
 					worldX=xy->x;
 					worldY=xy->y;
+					
+					for (int i=0;i<vCharacter.size();++i)
+					{
+						vCharacter(i)->map = getCurrentMap();
+					}
+					
 					combat(world->combatCheck(this));
 					return;
 				}

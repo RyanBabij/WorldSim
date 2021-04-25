@@ -389,7 +389,7 @@ void World::startSimulation()
 		// convert biome names to all upper case for now to make sorting easier.
 		for (auto & c: vBiome(i)->name) c = toupper(c);
 		
-		std::cout<<"Generating Flora and Creatures for "<<vBiome(i)->name<<"\n";
+		//std::cout<<"Generating Flora and Creatures for "<<vBiome(i)->name<<"\n";
 		vBiome(i)->generateFlora();
 		vBiome(i)->generateCreatures();
 	}
@@ -1635,15 +1635,20 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 //This makes the local map visible.
 void World::generateLocal(const int _localX, const int _localY)
 {
-	std::cout<<"Generate local: "<<_localX<<", "<<_localY<<"\n";
-	if ( isSafe(_localX,_localY) == false || active == false )
-	{ return; }
+	//std::cout<<"Generate local: "<<_localX<<", "<<_localY<<"\n";
+	//if ( isSafe(_localX,_localY) == false || active == false )
+	if ( isSafe(_localX,_localY) == false )
+	{
+		//std::cout<<"notsafe or inactive\n";
+		return;
+	}
 
 	// Only generate this local map if it isn't already in memory.
 	for ( int i=0;i<vWorldLocal.size();++i)
 	{
 		if ( vWorldLocal(i)->globalX == _localX && vWorldLocal(i)->globalY == _localY )
 		{
+			//std::cout<<"Already in vector\n";
 			return;
 		}
 	}
@@ -1653,7 +1658,7 @@ void World::generateLocal(const int _localX, const int _localY)
 	short int gX = _localX;
 	short int gY = _localY;
 
-	std::cout<<"global coords: "<<gX<<", "<<gY<<"\n";
+	//std::cout<<"global coords: "<<gX<<", "<<gY<<"\n";
 	World_Local* wl0 = 0;
 	if (aWorldTile.isSafe(gX-1,gY+1))
 	{
@@ -1696,12 +1701,20 @@ void World::generateLocal(const int _localX, const int _localY)
 	{
 		wl7 = &aWorldTile(gX+1,gY-1);
 	}
+
 	// vMap(i)->generate(false,wl0,wl1,wl2,wl3,wl4,wl5,wl6,wl7);
 	// vMap(i)->active=true;
 	// vMap(i)->initialized=true;
+	
+	//std::cout<<"tile: "<<&aWorldTile(_localX,_localY)<<"\n";
+	//return;
 
 	// don't cache the generated map because the map manager does it
 	aWorldTile(_localX,_localY).generate(false,wl0,wl1,wl2,wl3,wl4,wl5,wl6,wl7);
+	
+	//return;
+
+	
 	//aWorldTile(_localX,_localY).generateSubterranean();
 	aWorldTile(_localX,_localY).active=true;
 	aWorldTile(_localX,_localY).initialized=true;
@@ -1709,6 +1722,7 @@ void World::generateLocal(const int _localX, const int _localY)
 	// and potentially three neighboring maps. Additional maps will likely need to be loaded in
 	// the background, therefore I'll set it to 5 for now.
 	// I'll need to make an algorithm to decide which maps to purge.
+	
 
 	if ( vWorldLocal.size() > MAX_LOCAL_MAPS_IN_MEMORY )
 	//if ( false )
@@ -1763,6 +1777,7 @@ void World::generateLocal(const int _localX, const int _localY)
 			}
 		}
 	}
+	std::cout<<"Pushing local map: "<<&aWorldTile(_localX,_localY)<<"\n";
 	vWorldLocal.push(&aWorldTile(_localX,_localY));
 
 }

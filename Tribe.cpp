@@ -501,22 +501,17 @@ void Tribe::generateCouples(int amount)
 	{
 		Character * cMan = new Character;
 		cMan->init(1); //Roll a male.
-		//cMan->isMale = true;
 		cMan->age = 18+random.randomInt(18);
-		cMan->tribe = this;
+		add(*cMan);
+		
 		Character * cWoman = new Character;
 		cWoman->init(2); //Roll a female.
-		//cWoman->isMale = false;
 		cWoman->age = 16+random.randomInt(12);
-		cWoman->tribe=this;
-
+		add(*cWoman);
+		
 		cMan->marry(cWoman);
-
 		cMan->lastName = name;
 		cWoman->lastName = name;
-
-		vCharacter.push(cMan);
-		vCharacter.push(cWoman);
 	}
 }
 
@@ -537,6 +532,14 @@ void Tribe::kill()
 		vCharacter(i)->die();
 	}
 
+}
+
+void Tribe::add(Character& c)
+{
+	c.tribe = this;
+	std::cout<<"Adding map: "<<getCurrentMap()<<"\n";
+	c.map = getCurrentMap();
+	vCharacter.push(&c);
 }
 
 Character* Tribe::getDefender()

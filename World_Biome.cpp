@@ -178,7 +178,7 @@ Implementation of World_Biome.hpp
 		// only additional flora will be randomly generated.
 		// Flora are all statics, therefore there is max 1 flora per tile.
 		
-		std::cout<<"Generating flora\n";
+		//std::cout<<"Generating flora\n";
 		floraManager.generate(floraAmount);
 
 		// // assign local ids to the flora (1-255)
@@ -294,8 +294,15 @@ Implementation of World_Biome.hpp
 	// pick a creature type from the weighted list to spawn
 	Creature* World_Biome::getCreature()
 	{
+		//return 0;
 		//return new Creature_Deer;
-		return creatureManager.get()->spawn();
+		Creature_Species* c = creatureManager.get();
+		if ( c )
+		{
+			return c->spawn();
+		}
+		return 0;
+		
 	}
 	
 	
