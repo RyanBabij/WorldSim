@@ -149,6 +149,7 @@ void Character::init(const int _sex /* =0 */)
 
 	//knowledge = new Character_Knowledge;
 	//knowledge->init();
+	initialiseKnowledge();
 }
 
 //ITEM FUNCTIONS
@@ -301,7 +302,7 @@ void Character::wander()
 		//std::cout<<"CHARMAP\n";
 	}
 
-	map->remove(this);
+	
 
 	if (globalRandom.flip())
 	{
@@ -309,6 +310,7 @@ void Character::wander()
 	}
 	else if (globalRandom.flip())
 	{
+		map->remove(this);
 		// alter x (25% chance)
 		if (globalRandom.flip())
 		{
@@ -331,6 +333,7 @@ void Character::wander()
 	}
 	else
 	{
+		map->remove(this);
 		// alter y (25% chance)
 		if (globalRandom.flip())
 		{
@@ -351,6 +354,7 @@ void Character::wander()
 			}
 		}
 	}
+	updateKnowledge();
 
 
 	return;
@@ -761,15 +765,6 @@ void Character::initialiseKnowledge()
 	{
 		knowledge = new Character_Knowledge;
 		knowledge->init();
-
-		if ( tribe != 0 )
-		{
-			worldX = tribe->worldX;
-			worldY = tribe->worldY;
-
-			fullX = tribe->worldX * LOCAL_MAP_SIZE;
-			fullY = tribe->worldY * LOCAL_MAP_SIZE;
-		}
 	}
 }
 
@@ -864,6 +859,11 @@ void Character::updateKnowledge()
 
 	//std::cout<<"Adding tile: "<<fullX<<", "<<fullY<<"\n";
 	knowledge->addTile(fullX,fullY,isUnderground);
+
+	if (playerCharacter!=this)
+	{
+		return;
+	}
 
 	// knowledge->addTile(tribe->getCurrentMap(), x-1,y);
 	// knowledge->addTile(tribe->getCurrentMap(), x+1,y);

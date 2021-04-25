@@ -525,6 +525,20 @@ void Tribe::addCharacter( Character* _character)
 	vCharacter.add(_character);
 }
 
+void Tribe::add(Character& c)
+{
+	c.tribe = this;
+	//std::cout<<"Adding map: "<<getCurrentMap()<<"\n";
+	c.map = getCurrentMap();
+	vCharacter.push(&c);
+
+	c.worldX = worldX;
+	c.worldY = worldY;
+
+	c.fullX = worldX * LOCAL_MAP_SIZE;
+	c.fullY = worldY * LOCAL_MAP_SIZE;
+}
+
 void Tribe::kill()
 {
 	for (int i=0; i<vCharacter.size(); ++i)
@@ -532,14 +546,6 @@ void Tribe::kill()
 		vCharacter(i)->die();
 	}
 
-}
-
-void Tribe::add(Character& c)
-{
-	c.tribe = this;
-	std::cout<<"Adding map: "<<getCurrentMap()<<"\n";
-	c.map = getCurrentMap();
-	vCharacter.push(&c);
 }
 
 Character* Tribe::getDefender()
