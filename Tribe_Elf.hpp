@@ -3,10 +3,11 @@
 #define WORLDSIM_TRIBE_ELF_HPP
 
 /* WorldSim: Tribe_Elf.hpp
-	#include "Tribe_Elf.hpp"
+#include "Tribe_Elf.hpp"
 
 	Description:
-	Tribes are nomadic groups. They wander the map trying to survive until they develop enough to become a civilization. Elven tribes live in forests and jungles. They know a lot about the magic arts.
+	Tribes are nomadic groups. They wander the map trying to survive until they develop enough to become a civilization.
+	Elven tribes live in forests and jungles. They know a lot about the magic arts.
 
 */
 
@@ -21,19 +22,19 @@ class World;
 
 class Tribe_Elf: public Tribe
 {
-	public:
-  
-  //RandomNonStatic random;
-	
+public:
+
+	//RandomNonStatic random;
+
 	Tribe_Elf();
 
 	bool spawn();
-  
-    /* SIMULATE X TURNS OF THE CIV. */
-  void incrementTicks ( int /* nTicks */ );
-  
-  void wander();
-	
+
+	/* SIMULATE X TURNS OF THE CIV. */
+	void incrementTicks ( int /* nTicks */ );
+
+	void wander();
+
 	Texture* currentTexture();
 };
 

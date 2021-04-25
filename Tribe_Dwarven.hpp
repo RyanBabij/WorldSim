@@ -21,19 +21,19 @@ class World;
 
 class Tribe_Dwarven: public Tribe
 {
-	public:
-  
-  //RandomNonStatic random;
-	
+public:
+
+	//RandomNonStatic random;
+
 	Tribe_Dwarven();
 
 	bool spawn();
-  
-    /* SIMULATE X TURNS OF THE CIV. */
-  void incrementTicks ( int /* nTicks */ );
-  
-  void wander();
-	
+
+	/* SIMULATE X TURNS OF THE CIV. */
+	void incrementTicks ( int /* nTicks */ );
+
+	void wander();
+
 	Texture* currentTexture();
 };
 #endif
