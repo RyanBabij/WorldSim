@@ -362,11 +362,21 @@ std::string LocalTile::getAll(int max)
 		 vQuantity.push(1);
 	 }
 	 
+	 for (int i=0;i<vCharacter.size();++i)
+	 {
+		 vStuff.push(vCharacter(i)->getFullName());
+		 vQuantity.push(1);
+	 }
+	 
 	 for (int i=0;i<vObject.size();++i)
 	 {
 		 // todo: collate objects of same name.
-		 vStuff.push(vObject(i)->getName());
-		 vQuantity.push(1);
+		 
+		 if (vObject(i)->getName() != "Character" )
+		 {
+			 vStuff.push(vObject(i)->getName());
+			 vQuantity.push(1);
+		 }
 	 }
 	 
 	 for (int i=0;i<vStuff.size()&&i<max-2;++i)
