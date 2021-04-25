@@ -503,12 +503,12 @@ void Tribe::generateCouples(int amount)
 		cMan->init(1); //Roll a male.
 		cMan->age = 18+random.randomInt(18);
 		add(*cMan);
-		
+
 		Character * cWoman = new Character;
 		cWoman->init(2); //Roll a female.
 		cWoman->age = 16+random.randomInt(12);
 		add(*cWoman);
-		
+
 		cMan->marry(cWoman);
 		cMan->lastName = name;
 		cWoman->lastName = name;

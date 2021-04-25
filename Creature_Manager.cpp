@@ -22,8 +22,8 @@ Creature_Manager::Creature_Manager()
 void Creature_Manager::generate (const int amount /*=1*/)
 {
 	int currentPoints=1000;
-	for (int i=0;i<amount;++i)
-	{			
+	for (int i=0; i<amount; ++i)
+	{
 		vSpecies.push(creatureGenerator.get(currentPoints));
 		totalSpawnWeight+=currentPoints;
 		currentPoints/=2;
@@ -50,20 +50,20 @@ Creature_Species* Creature_Manager::get()
 	{
 		floraSlot = rng.rand32(totalSpawnWeight-1);
 	}
-	
-	
+
+
 	int currentWeighting = 0;
-	for (int i=0;i<vSpecies.size();++i)
+	for (int i=0; i<vSpecies.size(); ++i)
 	{
 		currentWeighting+=vSpecies(i)->spawnWeight;
-		
+
 		if ( currentWeighting >= floraSlot )
 		{
 			return vSpecies(i);
 		}
 	}
-	
+
 	return 0;
 }
-	
+
 #endif

@@ -52,8 +52,8 @@ bool Tribe_Human::spawn()
 
 	world->vTribe.push(this);
 	world->putObject(this,worldX,worldY);
-	
-	for (int i=0;i<vCharacter.size();++i)
+
+	for (int i=0; i<vCharacter.size(); ++i)
 	{
 		vCharacter(i)->map = (*world)(spawnTile->x,spawnTile->y);
 	}
@@ -120,12 +120,12 @@ void Tribe_Human::wander()
 
 					worldX=xy->x;
 					worldY=xy->y;
-					
-					for (int i=0;i<vCharacter.size();++i)
+
+					for (int i=0; i<vCharacter.size(); ++i)
 					{
 						vCharacter(i)->map = getCurrentMap();
 					}
-					
+
 					combat(world->combatCheck(this));
 					return;
 				}

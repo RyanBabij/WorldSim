@@ -115,7 +115,7 @@ public:
 
 	// Return a Character capable of combat. If there is none, return 0.
 	Character* getDefender ();
-	
+
 	void add (Character& c);
 
 	// LOCATION
