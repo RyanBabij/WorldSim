@@ -483,6 +483,14 @@ public:
 
 			_keyboard->keyUp(Keyboard::ESCAPE);
 		}
+		// Increment world by 1 tick by pressing period
+		if(_keyboard->isPressed(Keyboard::PERIOD))
+		{
+			world.incrementTicks(1);
+
+			_keyboard->keyUp(Keyboard::PERIOD);
+		}
+		
 
 		// TAB will switch between adventure mode and god mode.
 		if(_keyboard->isPressed(Keyboard::TAB))
