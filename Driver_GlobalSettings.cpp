@@ -11,6 +11,9 @@
 
 #include <File/WTFManager.hpp> // loading raws
 
+#include <algorithm> // replace
+#include <string>
+
 class GlobalSettings
 {
 	public:
@@ -31,14 +34,17 @@ class GlobalSettings
 		WTFManager iniManager;
 		iniManager.parse(settingsData);
 		
-		const std::string strSavePath = iniManager.getValue("INI.SAVE_FOLDER_PATH");
+		std::string strSavePath = iniManager.getValue("INI.SAVE_FOLDER_PATH");
+		// the WTF spec is currently broken and doesn't allow colons, so I'll just use a semicolon and replace it here
+		// for now
+		std::replace( strSavePath.begin(), strSavePath.end(), ';', ':'); // replace all semicolons with colon
 		
 		if ( strSavePath != "" )
 		{
 			SAVE_FOLDER_PATH=strSavePath;
 		}
 		std::cout<<"SAVE_FOLDER_PATH set to "<<SAVE_FOLDER_PATH<<"\n";
-		
+
 		std::cout<<"   *** END Loading ini data ***\n\n";
 
 	}
