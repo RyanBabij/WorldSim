@@ -53,7 +53,11 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 
 	public:
 
-	bool active; /* Whether or not the world should be simulated. */
+	// This flips to true once the player has entered the world simulator, which calls startSimulation().
+	// some functionality shouldn't work if the world isn't active, especially something like generating
+	// local maps.
+	bool active; 
+
 
 	#if defined WILDCAT_THREADING
 	std::atomic <bool> generated;
@@ -140,7 +144,9 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	// CHECK ALL CIV LOS ARRAYS, AND IF ANY OVERLAP, THEN MAKE THEM DISCOVER EACH OTHER.
 	//void updateCivContacts();
 
-	// Return a World_Local object for this local map. Will generate a local map if necessary. Returns null pointer for invalid request.
+	// Return a World_Local object for this local map. Will generate a local map if necessary. Returns null pointer for
+	// invalid request. Also returns null pointer if world is not ready yet. Do not call this function until you are in
+	// World Simulator mode unless you like hard-to-track crashes.
 	inline World_Local* operator() (const int _x, const int _y);
 
 	//New operator: Gets tiles using global coordinates.
@@ -158,9 +164,13 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 
 	// Returns true if the tile is in a map that is loaded.
 	bool isGenerated(unsigned long int _absoluteX, unsigned long int _absoluteY);
-
+	
+	
+	// STATE CHANGES
 	// Transition from generation to simulation.
 	void startSimulation();
+	// Load up the required local map, do any required logic, center map on character. Return false if error.
+	bool prepareAdventureMode( Character * );
 
 	/* TICK LOGIC */
 	/* I want this to be the new method of incrementing time in the world. It will dynamically abstract things based on the amount of turns to simulate. Each tick is one second. */
@@ -185,10 +195,6 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	void generateLocal(HasXY*);
 	//Unload a local map from RAM and into a save file.
 	void unloadLocal(const int /* worldX */, const int /* worldY */);
-
-	/* ADVENTURE MODE */
-	// Load up the required local map, do any required logic, center map on character. Return false if error.
-	bool prepareAdventureMode( Character * );
 
 	void buildArrays(WorldGenerator2& wg);
 	// Find all unique areas and give them names.

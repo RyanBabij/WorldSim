@@ -66,6 +66,7 @@ World_Local::World_Local()
 	vObjectGeneric.reserve(0);
 
 	data=0;
+	abstractData=0;
 	dataSubterranean=0;
 
 	centerHeight=0;
@@ -365,8 +366,7 @@ bool World_Local::isSafe(WorldObject* _object)
 bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local* c1, World_Local* c2,
                            World_Local *c3, World_Local* c4, World_Local* c5, World_Local* c6, World_Local* c7)
 {
-	//std::cout<<"Generate called for map: "<<globalX<<", "<<globalY<<".\n";
-
+	std::cout<<"Generate called for map: "<<globalX<<", "<<globalY<<".\n";
 	//std::cout<<"Maps recieved: "<<c0<<", "<<c1<<", "<<c2<<", "<<c3<<", "<<c4<<", "<<c5<<", "<<c6<<", "<<c7<<"\n";
 
 	//return false;
@@ -401,13 +401,23 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 	// Create data struct if necessary.
 	if (data==0)
 	{
+		std::cout<<"Creating data struct\n";
 		data = new Data;
+	}
+	else
+	{
+		std::cout<<"Data already exists\n";
 	}
 
 	// Create abstract struct if necessary
 	if (abstractData==0)
 	{
+		std::cout<<"Creating abstract data\n";
 		abstractData = new AbstractData;
+	}
+	else
+	{
+		std::cout<<"Abstract already exists\n";
 	}
 
 #ifdef FAST_EXIT
@@ -416,7 +426,7 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 	}
 #endif
 
-	std::cout<<"Generating\n";
+	//std::cout<<"Generating\n";
 
 	localDate.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
 
@@ -425,12 +435,13 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 
 	texFar.create(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0,false);
 
-
+	//std::cout<<"allocating data.alocaltile\n";
 	data->aLocalTile.initClass(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
-	//data->aStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
-	//data->aStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
+	data->aStatic.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
 
+	//std::cout<<"allocating bfcollision\n";
 	abstractData->bfCollision.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
+	//std::cout<<"allocating astaticid\n";
 	abstractData->aStaticID.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE,0);
 
 	//abstractData->bfFlora.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
@@ -438,7 +449,7 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 	//abstractData->bfMob.init(LOCAL_MAP_SIZE,LOCAL_MAP_SIZE);
 
 
-
+	//std::cout<<"Genning heightmap\n";
 	// nulls must be passed as 1, because 0 will be overwritten by the midpoint displacement algorithm.
 	generateHeightMap(c0?c0->centerHeight:1,c1?c1->centerHeight:1,c2?c2->centerHeight:1,c3?c3->centerHeight:1,
 	                  c4?c4->centerHeight:1,c5?c5->centerHeight:1,c6?c6->centerHeight:1,c7?c7->centerHeight:1,0);
@@ -458,8 +469,10 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 
 	//return false;
 
+	//std::cout<<"populating\n";
 	for ( int _y=0; _y<LOCAL_MAP_SIZE; ++_y)
 	{
+		//std::cout<<".";
 		for ( int _x=0; _x<LOCAL_MAP_SIZE; ++_x)
 		{
 			data->aLocalTile(_x,_y).seed = rng.rand32(USHRT_MAX-1);
@@ -586,7 +599,7 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 				else if (rng.oneIn(1000) && (baseBiome == FOREST || baseBiome == GRASSLAND) )
 				{
 					//std::cout<<"bug here\n";
-					//Creature * c = biome->getCreature();
+					// Creature * c = biome->getCreature();
 					// if (c)
 					// {
 					// c->init();
@@ -698,6 +711,8 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 		}
 	}
 
+	std::cout<<"finished populating\n";
+
 	//return false;
 
 	//generateSubterranean();
@@ -745,7 +760,7 @@ bool World_Local::generate(bool cache /* =true */, World_Local* c0, World_Local*
 		}
 	}
 	delete vTribesHere;
-
+	
 	//This generates a distance texture of the map where 1 local tile = 1 pixel,
 	// to allow fast rendering of local maps from a distance.
 	// textures are upside-down for some reason
@@ -1040,7 +1055,7 @@ void World_Local::generateHeightMap(const short int c0, const short int c1, cons
 		std::cout<<aBorderLeft[i]<<", ";
 	}
 
-
+	//std::cout<<"setting border values\n";
 	// set the border values now.
 	for (int x=0; x<LOCAL_MAP_SIZE; ++x)
 	{
@@ -1057,8 +1072,7 @@ void World_Local::generateHeightMap(const short int c0, const short int c1, cons
 		//aFullHeight(0,y) = aBorderLeft[y];
 		//aFullHeight(LOCAL_MAP_SIZE-1,y) =  aBorderLeft[y];
 	}
-
-
+	//std::cout<<"end setting border values\n";
 
 
 	// determine cliff values here

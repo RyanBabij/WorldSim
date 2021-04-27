@@ -141,7 +141,7 @@ long long int INITIAL_YEARS_SIMULATE = 0;
 const int DEFAULT_WORLD_SIZE_SLOT = 1; /* 0 = 33, 1 = 65, 129, 257, 513, 1025. Set it lower for easier debugging. */
 
 const int DEFAULT_NUMBER_TRIBES_DWARVEN = 0;
-const int DEFAULT_NUMBER_TRIBES_HUMAN = 6;
+const int DEFAULT_NUMBER_TRIBES_HUMAN = 12;
 const int DEFAULT_NUMBER_TRIBES_ELVEN = 0;
 const int DEFAULT_NUMBER_CIVS = 0;
 

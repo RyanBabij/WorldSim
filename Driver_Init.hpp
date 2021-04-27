@@ -103,6 +103,10 @@ void init()
 		std::ios_base::sync_with_stdio(false);
 		std::cin.tie(NULL);
 	}
+	else
+	{
+		std::ios_base::sync_with_stdio(true);
+	}
 
 	consoleMessage("GAME STARTED");
 
