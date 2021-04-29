@@ -860,7 +860,7 @@ void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int 
 		}
 		else
 		{
-			t->generateCouples(100);
+			t->generateCouples(1);
 		}
 	}
 	std::cout<<"\n";
@@ -1099,7 +1099,7 @@ bool World::handleTickBacklog()
 	// or pressing escape.
 	if (incrementContinuous)
 	{
-		incrementTicks(1);
+		incrementTicks(86400);
 		return true;
 	}
 	
@@ -1736,11 +1736,12 @@ void World::generateLocal(const int _localX, const int _localY)
 	aWorldTile(_localX,_localY).initialized=true;
 	
 	// Local Map management.
-	//There needs to be a minimum of 3 maps active at any time. (1 map the player is currently in,
+	//There needs to be a minimum of 4 maps active at any time. (1 map the player is currently in,
 	// and potentially three neighboring maps. Additional maps will likely need to be loaded in
-	// the background, therefore I'll set it to 5 for now.
+	// the background in the same way, therefore I'll set it to 5 for now.
 	// I'll need to make an algorithm to decide which maps to purge.
 	// For now we can disable it if we need to for debugging.
+	// I am not sure how well this works currently. may need a lot of testing.
 	//if ( vWorldLocal.size() > MAX_LOCAL_MAPS_IN_MEMORY )
 	if ( false )
 	{

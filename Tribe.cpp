@@ -528,8 +528,13 @@ void Tribe::addCharacter( Character* _character)
 void Tribe::add(Character& c)
 {
 	c.tribe = this;
+	
+	
+	// This function is generating Local Maps implicitly and may be causing some kind of crash.
+	// Need to look into it.
+	
 	//std::cout<<"Adding map: "<<getCurrentMap()<<"\n";
-	c.map = getCurrentMap();
+	//c.map = getCurrentMap();
 	vCharacter.push(&c);
 
 	c.worldX = worldX;
@@ -564,9 +569,11 @@ Character* Tribe::getDefender()
 // LOCATION
 
 //Return the local map the tribe is on.
+// Note that this can implicitly generate a local map.
 World_Local* Tribe::getCurrentMap ()
 {
-	return (*world)(worldX,worldY);
+	return 0;
+	//return (*world)(worldX,worldY);
 }
 
 

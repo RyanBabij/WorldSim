@@ -141,7 +141,7 @@ long long int INITIAL_YEARS_SIMULATE = 0;
 const int DEFAULT_WORLD_SIZE_SLOT = 1; /* 0 = 33, 1 = 65, 129, 257, 513, 1025. Set it lower for easier debugging. */
 
 const int DEFAULT_NUMBER_TRIBES_DWARVEN = 0;
-const int DEFAULT_NUMBER_TRIBES_HUMAN = 12;
+const int DEFAULT_NUMBER_TRIBES_HUMAN = 6;
 const int DEFAULT_NUMBER_TRIBES_ELVEN = 0;
 const int DEFAULT_NUMBER_CIVS = 0;
 
@@ -165,8 +165,30 @@ Right now I'm thinking 1025 might be a good balanced value, making each local ma
 */
 //const int LOCAL_MAP_SIZE = 65;
 // 129 is good for testing, but we will probably want to go much higher for release.
+// ideally I would like a decent-sized town to fit in a single local map.
+// but large cities might spill into multiple tiles.
+// Initial plan was each tile to be 4,097 but I think this is simply not going to be workable, and even
+// 1,025 might make travelling too boring.
 const int LOCAL_MAP_SIZE = 257;
-int TIME_SCALE = 10; /* How many seconds of gametime pass per logic tick. */
+
+	// The main time scale variable, this determines how many seconds pass per logic tick
+	// This does not alter how many seconds in a minute, only how quickly the world simulates.
+int TIME_SCALE = 0; /* How many seconds of gametime pass per logic tick. */
+
+	// How many seconds pass per standard game turn. Realtime will be 60.
+	// Realistically it'll probably end up around 10-20.
+	// This should be the main and only way of timescaling the game.
+	// Another option is reducing the number of hours in the day, we could even make a single hour correspond to a time
+	// of day: hour 1 = dawn, hour 2 = morning, etc. And could make night 1 hour.
+	// Dawn, morning, day, afternoon, dusk, night.
+	// we could also shorten years to 4 seasons.
+int TICKS_PER_MINUTE = 4;
+const int TICKS_PER_HOUR = TICKS_PER_MINUTE*60;
+const int TICKS_PER_DAY = TICKS_PER_HOUR*24;
+const int TICKS_PER_MONTH = TICKS_PER_DAY*28; // 4 months of 7 days each is neatest and best for gameplay I think.
+const int TICKS_PER_YEAR = TICKS_PER_MONTH*4; // yes there's 360 days per year in this game.
+
+
 // Timescale should be based on distances between cells.
 // At 1:1 scale a cell is 5km*5km. Such a cell should take about 1 hour to walk across.
 // Final local map size will probably be 513, and therefore timescale is 3600/512, or 7 seconds per tile.
@@ -231,7 +253,7 @@ const bool COMPRESS_TEXTURES = false; /* May save graphics memory. Seems to sign
 // Not currently functional
 
 // For rippling we'll probably want a minimum of 25 cells around the player permanently loaded.
-const int MAX_LOCAL_MAPS_IN_MEMORY = 3;
+const int MAX_LOCAL_MAPS_IN_MEMORY = 20;
 const int MAX_LOCAL_MAPS_IN_BACKGROUND_MEMORY = 3;
 
 // Coordinates of the map loaded for debugging.
