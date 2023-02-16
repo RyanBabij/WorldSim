@@ -924,6 +924,7 @@ void World::evolveToCiv( Tribe * _tribe )
 
 		Settlement_Dwarven * s = new Settlement_Dwarven;
 		s->world = this;
+		s->parentCiv = civ;
 		s->vCharacter.copy(&_tribe->vCharacter);
 		putObject(s, _tribe->worldX, _tribe->worldY);
 		removeObject(_tribe);
@@ -982,7 +983,7 @@ void World::incrementTicks(int nTicks)
 
 	for ( int i=0;i<vCiv.size();++i)
 	{
-		//vCiv(i)->incrementTicks(nTicks);
+		vCiv(i)->incrementTicks(nTicks);
 	}
 
 

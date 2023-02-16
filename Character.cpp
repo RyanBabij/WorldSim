@@ -1060,6 +1060,15 @@ std::string Character::getColumn(std::string _column)
 		}
 		return "";
 	}
+	if ( _column=="race" )
+	{
+		if (tribe==0)
+		{
+			return "?";
+		}
+		return tribe->getColumn("race");
+	}
+	
 	// if ( _column=="coordinates" )
 	// {
 	// return DataTools::toString(worldX)+","+DataTools::toString(worldY);

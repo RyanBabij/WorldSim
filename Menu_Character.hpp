@@ -86,10 +86,11 @@ class Menu_Characters: public GUI_Interface
 		guiTableCharacters.addColumn("Last name","lastname",120);
 		guiTableCharacters.addColumn("Age","age",60);
 		guiTableCharacters.addColumn("Sex","sex",60);
+		guiTableCharacters.addColumn("Race","race",100);
 		guiTableCharacters.addColumn("Strength","strength",100);
-		guiTableCharacters.addColumn("Kills","kills",100);
+		guiTableCharacters.addColumn("Kills","kills",60);
 		guiTableCharacters.addColumn("Favourite","favourite",120);
-    guiTableCharacters.setColours(cNormal,cSelected);
+		guiTableCharacters.setColours(cNormal,cSelected);
 		//guiTableTribes.addColumn("Food","food",120);
 		//guiTableTribes.addColumn("Population","population",120);
 		//guiTableTribes.addColumn("Coordinates","coordinates",120);

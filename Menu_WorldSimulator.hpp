@@ -15,6 +15,7 @@ The player can then select one of the inhabitants to play as.
 
 #include "Menu_Tribes.hpp"
 #include "Menu_Civs.hpp"
+#include "Menu_Settlements.hpp"
 #include "Menu_World.hpp"
 #include "Menu_Character.hpp"
 #include "Menu_Biome.hpp"
@@ -73,6 +74,8 @@ private:
 	GUI_Button buttonFlora;
 	/* Button to view list of all Creatures in the World */
 	GUI_Button buttonCreaturesMenu;
+	/* Button to view list of all Settlements in the World */
+	GUI_Button buttonSettlementsMenu;
 	
 		// Base world view modes
 		// Toggle Textures
@@ -92,6 +95,7 @@ private:
 	Menu_Biome menuBiome;
 	Menu_Flora menuFlora;
 	Menu_Creatures menuCreatures;
+	Menu_Settlements menuSettlements;
 	
 public:
 
@@ -121,6 +125,7 @@ public:
 		menuBiome.active=false;
 		menuFlora.active=false;
 		menuCreatures.active=false;
+		menuSettlements.active=false;
 		minimap.active=true;
 	}
 
@@ -182,6 +187,9 @@ public:
 		buttonFlora.setColours(cNormal,cHighlight,0);
 		buttonCreaturesMenu.text="Crt";
 		buttonCreaturesMenu.setColours(cNormal,cHighlight,0);
+		buttonSettlementsMenu.text="Cit";
+		buttonSettlementsMenu.setColours(cNormal,cHighlight,0);
+		
 		
 		buttonMinimapBaseTexture.init("", &TEX_GUI_MINIMAP_BASE_TEXTUREMODE, cNormal, cHighlight, 0, true);
 		buttonMinimapBaseLand.init("", &TEX_GUI_MINIMAP_BASE_LANDMODE, cNormal, cHighlight, 0, true);
@@ -202,6 +210,7 @@ public:
 		guiManager.add(&buttonCivMenu);
 		guiManager.add(&buttonFlora);
 		guiManager.add(&buttonCreaturesMenu);
+		guiManager.add(&buttonSettlementsMenu);
 		guiManager.add(&buttonTerritoryView);
 		guiManager.add(&buttonSubterraneanView);
 		
@@ -217,6 +226,7 @@ public:
 		guiManager.add(&menuBiome);
 		guiManager.add(&menuFlora);
 		guiManager.add(&menuCreatures);
+		guiManager.add(&menuSettlements);
 
 		textSimulationSpeed.active=true;
 		cycleSimulationSpeed.active=true;
@@ -233,6 +243,7 @@ public:
 		buttonCivMenu.active=true;
 		buttonFlora.active=true;
 		buttonCreaturesMenu.active=true;
+		buttonSettlementsMenu.active=true;
 		buttonTerritoryView.active=true;
 		buttonSubterraneanView.active=true;
 
@@ -247,6 +258,7 @@ public:
 		menuBiome.init();
 		menuFlora.init();
 		menuCreatures.init();
+		menuSettlements.init();
 		//minimap.init();
 
 		worldViewer.centerView();
@@ -469,6 +481,7 @@ public:
 			menuFlora.menuFloraDetails.active = false;
 			menuCreatures.active = false;
 			menuCreatures.menuCreatureDetails.active = false;
+			menuSettlements.active = false;
 			menuWorld.active = false;
 			menuCharacter.active = false;
 			menuBiome.active = false;
@@ -514,6 +527,7 @@ public:
 					menuCivs.active = false;
 					menuFlora.active = false;
 					menuCreatures.active = false;
+					menuSettlements.active = false;
 					menuWorld.active = false;
 					menuCharacter.active = false;
 					menuBiome.active = false;
@@ -646,6 +660,13 @@ public:
 			buttonCreaturesMenu.unclick();
 		}
 		
+		if (buttonSettlementsMenu.clicked==true)
+		{
+			std::cout<<"Settlments menu\n";
+			menuSettlements.init();
+			menuSettlements.active=true;
+			buttonSettlementsMenu.unclick();
+		}
 		
 		
 
@@ -768,6 +789,7 @@ public:
 		
 		buttonFlora.setPanel(panelX2-460, panelY2-40, panelX2-500, panelY2-30);
 		buttonCreaturesMenu.setPanel(panelX2-500, panelY2-40, panelX2-540, panelY2-30);
+		buttonSettlementsMenu.setPanel(panelX2-540, panelY2-40, panelX2-580, panelY2-30);
 		
 		buttonMinimapBaseTexture.setPanel(panelX1,panelY1,panelX1+32,panelY1+16);
 		buttonMinimapBaseLand.setPanel(panelX1+32,panelY1,panelX1+64,panelY1+16);
@@ -779,6 +801,7 @@ public:
 		menuBiome.setPanel(panelX1,panelY1+5,panelX2,panelY2-40);
 		menuFlora.setPanel(panelX1,panelY1+5,panelX2,panelY2-40);
 		menuCreatures.setPanel(panelX1,panelY1+5,panelX2,panelY2-40);
+		menuSettlements.setPanel(panelX1,panelY1+5,panelX2,panelY2-40);
 		minimap.setPanel(panelX1,panelY1+16,panelX1+220,panelY1+236);
 
 		if (fullScreenWorldView==true)

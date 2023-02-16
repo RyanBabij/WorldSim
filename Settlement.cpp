@@ -14,6 +14,7 @@ Settlement::Settlement()
   colourBlue = 0;
   
   race = NONE;
+  parentCiv = 0;
   
 }
 
@@ -25,7 +26,7 @@ Texture* Settlement::currentTexture()
   /* SIMULATE X TURNS OF THE SETTLEMENT. */
 void Settlement::incrementTicks ( int /* nTicks */ )
 {
-  
+  std::cout<<"Incrementing settlement\n";
 
   return;
 }
@@ -79,6 +80,14 @@ std::string Settlement::getColumn(std::string _column)
 	if ( _column=="territory" )
 	{
 		//return DataTools::toString(vTerritory.size());
+	}
+	if ( _column=="civilization" )
+	{
+		if (parentCiv == 0)
+		{
+			return "?";
+		}
+		return parentCiv->name;
 	}
 	// else if ( _column=="id" )
 	// {

@@ -29,6 +29,8 @@ Texture* Settlement_Dwarven::currentTexture()
   /* SIMULATE X TURNS OF THE SETTLEMENT. */
 void Settlement_Dwarven::incrementTicks ( int nTicks )
 {
+	std::cout<<"Incrementing Dwarven settlement.\n";
+	
 	dailyCounter+=nTicks;
 	monthlyCounter+=nTicks;
 

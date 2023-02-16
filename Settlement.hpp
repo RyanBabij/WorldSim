@@ -9,7 +9,7 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 
 
 	public:
-	
+		Civ* parentCiv;
 		Vector <Character*> vCharacter;
 
 		//std::string name;

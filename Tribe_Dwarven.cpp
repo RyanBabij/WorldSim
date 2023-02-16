@@ -85,7 +85,7 @@ void Tribe_Dwarven::incrementTicks ( int nTicks )
 				}
 				else
 				{
-					wander();
+					//wander();
 				}
 			}
 
@@ -107,7 +107,7 @@ void Tribe_Dwarven::incrementTicks ( int nTicks )
 			}
 			else
 			{
-				wander();
+				//wander();
 			}
 		}
 		dailyCounter-=86400;
