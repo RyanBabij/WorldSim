@@ -218,6 +218,21 @@ class Menu_Characters: public GUI_Interface
 						++totalIndex;
 					}
 				}
+				for (int i=0;i<world.vCiv.size();++i)
+				{
+					std::cout<<"looping civ\n";
+					for (int j=0;j<world.vCiv(i)->vCharacter.size();++j)
+					{
+						if ( totalIndex == lastRowClicked )
+						{
+							selectedCharacter = world.vCiv(i)->vCharacter(j);
+						}
+						
+						++totalIndex;
+					}
+					
+
+				}
 		
 				guiTableCharacters.lastClickedIndex = -1;
 			}
