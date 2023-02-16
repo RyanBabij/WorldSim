@@ -16,6 +16,7 @@ Settlement::Settlement()
   race = NONE;
   parentCiv = 0;
   
+  random.seed(Random::randInt(99999));
 }
 
 Texture* Settlement::currentTexture()

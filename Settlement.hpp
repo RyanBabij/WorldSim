@@ -7,10 +7,13 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 {
 	private:
 
+protected:
+	RandomNonStatic random;
 
 	public:
 		Civ* parentCiv;
 		Vector <Character*> vCharacter;
+		Vector <Character*> vDeceased;
 
 		//std::string name;
 

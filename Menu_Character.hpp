@@ -103,7 +103,17 @@ class Menu_Characters: public GUI_Interface
 			{
 				tCharacters.addRow(world.vTribe(i)->vCharacter(i2));
 			}
-			//tTribes.addRow(world.vTribe(i));
+		}
+		// Add Civ characters
+		for (int i=0;i<world.vCiv.size();++i)
+		{
+			for (int i2=0;i2<world.vCiv(i)->vCharacter.size();++i2)
+			{
+				if (world.vCiv(i)->vCharacter(i2)->isAlive)
+				{
+					tCharacters.addRow(world.vCiv(i)->vCharacter(i2));
+				}
+			}
 		}
 		
 		guiManager.clear();

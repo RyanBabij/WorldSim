@@ -399,6 +399,12 @@ public:
 		{
 			worldPop+=world.vTribe(i)->vCharacter.size();
 		}
+		
+		for (int i=0;i<world.vCiv.size();++i)
+		{
+			//Todo: Remove dead civ members from vector.
+			worldPop+=world.vCiv(i)->vCharacter.size();
+		}
 
 		//Population
 		Renderer::placeColour4a(150,150,150,255,panelX2-380,panelY2-20,panelX2-208,panelY2-10);
