@@ -142,6 +142,8 @@ void Character::init(const int _sex /* =0 */)
 	thirst=0;
 
 	tribe=0;
+	civ=0;
+	settlement=0;
 
 	isSneaking=false;
 

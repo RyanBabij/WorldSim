@@ -36,6 +36,7 @@ void Civ::incrementTicks ( int nTicks )
 	{
 		vSettlement(i)->incrementTicks(nTicks);
 	}
+	rebuildCharacterList();
 }
 
 void Civ::setColour( const int r, const int g, const int b)
@@ -43,6 +44,21 @@ void Civ::setColour( const int r, const int g, const int b)
 	colourRed=r;
 	colourGreen=g;
 	colourBlue=b;
+}
+
+void Civ::rebuildCharacterList()
+{
+	vCharacter.clear();
+	for (int i=0;i<vSettlement.size();++i)
+	{
+		for (int j=0;j<vSettlement(i)->vCharacter.size();++j)
+		{
+			if(vSettlement(i)->vCharacter(j)->isAlive)
+			{
+				vCharacter.push(vSettlement(i)->vCharacter(j));
+			}
+		}
+	}
 }
 
 /* TABLE INTERFACE */

@@ -19,6 +19,8 @@
 
 class Tribe;
 class Item;
+class Civ;
+class Settlement;
 
 class Character_Knowledge;
 class World_Local;
@@ -106,6 +108,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	HasXY deathLocation;
 	
 	Tribe* tribe;
+	Civ* civ;
+	Settlement* settlement;
   
   //int worldX, worldY;
   
