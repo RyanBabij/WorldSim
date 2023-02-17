@@ -37,7 +37,9 @@ protected:
 		
 			/* SIMULATE X TURNS OF THE SETTLEMENT. */
 		virtual void incrementTicks ( int /* nTicks */ );
-
+		
+	bool removeCharacter( Character* /* _character */ );
+	
     // WorldObjectGlobal virtual.
   Texture* currentTexture();
   

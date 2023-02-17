@@ -145,6 +145,10 @@ const int DEFAULT_NUMBER_TRIBES_HUMAN = 1;
 const int DEFAULT_NUMBER_TRIBES_ELVEN = 0;
 const int DEFAULT_NUMBER_CIVS = 0;
 
+const int STARTING_TRIBE_SIZE_HUMAN = 1;
+const int STARTING_TRIBE_SIZE_DWARVEN = 200;
+const int STARTING_TRIBE_SIZE_ELVEN = 1;
+
 /* Calendar setting when new game is started. */
 const int CALENDAR_INITIAL_HOUR = 8;
 const int CALENDAR_INITIAL_MINUTE = 0;

@@ -19,6 +19,11 @@ Settlement::Settlement()
   random.seed(Random::randInt(99999));
 }
 
+bool Settlement::removeCharacter( Character* _character)
+{
+	return vCharacter.erase(_character);
+}
+
 Texture* Settlement::currentTexture()
 {
 	return &TEX_TEST_404;

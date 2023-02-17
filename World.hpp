@@ -307,6 +307,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 
 	int getHighestInfluence(const int, const int);
 	int getHighestInfluence(HasXY*);
+	
+	bool hasSettlement(const int, const int);
 
 /** This function builds a minimap texture which is later rendered in the world simulator. */
 	void buildMinimap();

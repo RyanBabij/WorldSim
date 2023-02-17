@@ -44,6 +44,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 	{
 		// Settlement is wiped out
 		//isAlive = false;
+		//std::cout<<"ret\n";
 		return;
 
 	}
@@ -51,15 +52,120 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 	dailyCounter+=nTicks;
 	monthlyCounter+=nTicks;
 
-
-
-
 	while (monthlyCounter >= 2592000)
 	{
 		if ( world->aWorldTile(worldX,worldY).baseMetal > 0 )
 		{
 			nMetalStockpile+=30;
 		}
+		
+		// NEW SETTLEMENT CALCULATIONS
+		// OCCURS IF: TOO MANY PEOPLE IN SETTLEMENT, THERE IS A VIABLE AMOUNT OF FREE SPACE, RANDOM ELEMENT.
+		// ONLY SPLIT INTO EMPTY TERRITORY.
+		int landmassID = world->aWorldTile(worldX,worldY).landID;
+		// WHAT LANDMASS ARE WE ON?
+		// DOES THE LANDMASS HAVE A SPARE TILE?
+		// NEW IDEA: Only split if there are at least 3 free tiles. This will reduce requirement
+		// To check entire landmass. And prevent tribes from splitting into single free tiles.
+		int nFreeTiles = 0;
+
+		Vector <HasXY*> * vXY  = world->aWorldTile.getNeighbors(worldX, worldY, false, true /* shuffle */);
+
+		if (vXY==0) {
+			return;
+		}
+
+		bool canExpand = false;
+		for (auto xy : *vXY)
+		{
+			if (world->aWorldTile.isSafe(xy) && world->isLand(xy))
+			{
+				nFreeTiles++;
+			}
+		}
+
+		if (nFreeTiles >= 3 && landmassID >=0 && vCharacter.size() > 150 && random.oneIn(12) )
+		{
+
+
+
+			// CHECK TO SEE IF THERE'S A TILE TO SPLIT INTO.
+			for (auto xy : *vXY)
+			{
+				if (world->aWorldTile.isSafe(xy) && world->isLand(xy) )
+				{
+					if ( world->getHighestInfluence(xy) == 0 )
+					{
+						// WHO WILL LEAVE THE TRIBE? FOR NOW LET'S RANDOMLY PICK UNMARRIED INDIVIDUALS.
+						// ONLY FORM NEW TRIBE IF THERE ARE AT LEAST 20 CANDIDATES.
+						// NOTE THAT WE MUST SHUFFLE VECTOR FOR NOW. THE VECTOR SHOULD BE SHUFFLED EXTERNALLY AT A SET TIME PERIOD.
+
+						// UPDATE. THERE IS NO LIMIT TO HOW MANY PEOPLE MAY LEAVE THE ORIGINAL TRIBE.
+						vCharacter.shuffle();
+						Vector <Character*> vNewTribeCharacter;
+
+						for (int i=0; i<vCharacter.size(); ++i)
+						{
+							if ( vCharacter(i)->isMarried == false && Random::oneIn(3))
+							{
+								vNewTribeCharacter.push(vCharacter(i));
+							}
+
+						}
+						if (vNewTribeCharacter.size() >= 20)
+						{
+							// FORM THE NEW TRIBE AND BREAK.
+							Console ("SETTLEMENT SPLIT");
+							std::cout<<"Settlement split\n";
+							
+							Tribe_Dwarven* splitTribe = new Tribe_Dwarven;
+							splitTribe->world = world;
+							splitTribe->name = globalNameGen.generateName();
+							splitTribe->nFood = 10;
+							splitTribe->worldX = xy->x;
+							splitTribe->worldY = xy->y;
+							splitTribe->setColour(random.randomInt(255),random.randomInt(255),random.randomInt(255));
+							world->putObject(splitTribe);
+							world->vTribe.push(splitTribe);
+							
+							//splitTribe->generateCouples(12);
+
+							for (int i2=0; i2<vNewTribeCharacter.size(); ++i2)
+							{
+								splitTribe->vCharacter.push(vNewTribeCharacter(i2));
+								removeCharacter(vNewTribeCharacter(i2));
+							}
+
+
+							break;
+						}
+						break;
+					}
+				}
+			}
+
+		}
+
+		vXY->clearData();
+		delete vXY;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		for (int i=0; i<vCharacter.size(); ++i)
 		{
@@ -190,8 +296,9 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 				c->die();
 			}
 
-			monthlyCounter-=2592000;
+			
 		}
+		monthlyCounter-=2592000;
 	}
 
 	while ( dailyCounter >= 86400 )

@@ -220,7 +220,6 @@ class Menu_Characters: public GUI_Interface
 				}
 				for (int i=0;i<world.vCiv.size();++i)
 				{
-					std::cout<<"looping civ\n";
 					for (int j=0;j<world.vCiv(i)->vCharacter.size();++j)
 					{
 						if ( totalIndex == lastRowClicked )

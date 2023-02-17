@@ -860,7 +860,7 @@ void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int 
 		}
 		else
 		{
-			t->generateCouples(1);
+			t->generateCouples(STARTING_TRIBE_SIZE_HUMAN);
 		}
 	}
 	std::cout<<"\n";
@@ -878,7 +878,7 @@ void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int 
 		}
 		else
 		{
-			t->generateCouples(7);
+			t->generateCouples(STARTING_TRIBE_SIZE_DWARVEN);
 		}
 	}
 	std::cout<<"\n";
@@ -896,7 +896,7 @@ void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int 
 		}
 		else
 		{
-			t->generateCouples(7);
+			t->generateCouples(STARTING_TRIBE_SIZE_ELVEN);
 		}
 	}
 	std::cout<<"\n";
@@ -2314,6 +2314,22 @@ World_Local * World::getTile (const int x, const int y )
 	if (isSafe(x,y) )
 	{ return &aWorldTile(x,y); }
 	return 0;
+}
+
+bool World::hasSettlement(const int _x, const int _y)
+{
+	for (int i=0;i<vCiv.size();++i)
+	{
+		for (int j=0;j<vCiv(i)->vSettlement.size();++j)
+		{
+			if (vCiv(i)->vSettlement(j)->worldX == _x && vCiv(i)->vSettlement(j)->worldY == _y)
+			{
+				return true;
+			}
+		}
+	}
+	
+	return false;
 }
 
 // This should be merged with control character.

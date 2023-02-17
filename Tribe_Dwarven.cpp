@@ -79,13 +79,18 @@ void Tribe_Dwarven::incrementTicks ( int nTicks )
 			{
 				if ( world->getTileType(worldX,worldY) == "mountain"  && random.oneIn(10) )
 				{
-					foundSettlement = true;
-					world->evolveToCiv(this);
-					break;
+					// make sure there isn't already a settlement here...
+					if ( world->hasSettlement(worldX,worldY) == false )
+					{
+						foundSettlement = true;
+						world->evolveToCiv(this);
+						std::cout<<"founding settlement on: "<<worldX<<", "<<worldY<<"\n";
+						break;
+					}
 				}
 				else
 				{
-					//wander();
+					wander();
 				}
 			}
 
