@@ -171,7 +171,7 @@ public:
 		buttonIncrementContinuous.setColours(cNormal,cHighlight,0);
 		buttonTribeMenu.text="Tri";
 		buttonTribeMenu.setColours(cNormal,cHighlight,0);
-		buttonWorldMenu.text="Wor";
+		buttonWorldMenu.text="Leg";
 		buttonWorldMenu.setColours(cNormal,cHighlight,0);
 		buttonBiomeMenu.text="Bio";
 		buttonBiomeMenu.setColours(cNormal,cHighlight,0);

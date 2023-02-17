@@ -5,7 +5,11 @@
 /* WorldSim: Menu_World.hpp
 
 	This menu shows a database of all tribes in the world. The player can click a tribe to get a detailed view of the tribe.
+	
+	This will be changed to legends. Could also be called annals.
 */
+
+#include "Menu_CharacterDetails.cpp"
 
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
@@ -27,6 +31,19 @@ class Menu_World: public GUI_Interface
 
 	/* Menu for investigating an individual tribe */
 	GUI_Button buttonClose;
+	
+	// View notable events
+	GUI_Button buttonEvents;
+	// View notable characters living and deceased.
+	GUI_Button buttonCharacters;
+	// View notable Tribes
+	// View notable Civilizations
+	// View notable Cities
+	// View notable Artifacts
+	// View notable locations
+	
+	//Submenu for events
+	Menu_CharacterDetails menuEvents;
 
 	// TABLE FOR LANDMASSES
 	Table2 tLandmass;
@@ -46,6 +63,7 @@ class Menu_World: public GUI_Interface
 	{
 		font = _font;
 		guiManager.setFont(_font);
+		menuEvents.setFont(_font);
 	}
 	
 	void init()
@@ -59,6 +77,10 @@ class Menu_World: public GUI_Interface
 		buttonClose.text="X";
 		buttonClose.setColours(cNormal,cHighlight,0);
 		buttonClose.active=true;
+		
+		buttonEvents.text="Events";
+		buttonEvents.setColours(cNormal,cHighlight,0);
+		buttonEvents.active=true;
 
 		active = false;
 
@@ -78,17 +100,26 @@ class Menu_World: public GUI_Interface
 
 		guiManager.clear();
 		guiManager.add(&buttonClose);
-		guiManager.add(&guiTableLandmass);
-
+		guiManager.add(&buttonEvents);
+		//guiManager.add(&guiTableLandmass);
+		
+		menuEvents.init();
+		menuEvents.active=false;
+		
 		eventResize();
+		menuEvents.eventResize();
 	}
 
 	void render()
 	{
-		if ( active )
+		if ( menuEvents.active )
+		{
+			menuEvents.render();
+		}
+		else if ( active )
 		{
 			Renderer::placeColour4a(150,150,150,200,panelX1,panelY1,panelX2,panelY2);
-			font8x8.drawText("World Info",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
+			font8x8.drawText("Legends of "+world.name,panelX1,panelY2-20,panelX2,panelY2-5, true, true);
 			
 			std::string strWorldInfo = "The planet "+world.name+" is in the "+world.astronomy.sunName+" system, with "+
 			DataTools::toString(world.astronomy.vPlanet.size())+" planets. ";
@@ -126,7 +157,11 @@ class Menu_World: public GUI_Interface
 
 	bool mouseEvent (Mouse* _mouse)
 	{
-		if ( active )
+		if ( menuEvents.active )
+		{
+			menuEvents.mouseEvent(_mouse);
+		}
+		else if ( active )
 		{
 				/* If the guiManager did something with the mouse event. */
 			if(guiManager.mouseEvent(_mouse)==true)
@@ -139,6 +174,16 @@ class Menu_World: public GUI_Interface
 				active=false;
 				buttonClose.unclick();
 			}
+			if  (buttonEvents.clicked==true)
+			{
+				std::cout<<"Events\n";
+				active=false;
+				buttonEvents.unclick();
+				
+				//menuEvents here
+				// menuCharacterDetails.init(selectedCharacter);
+				// menuCharacterDetails.active=true;
+			}			
 			
 			if ( guiTableLandmass.lastClickedIndex != -1 )
 			{
@@ -162,6 +207,13 @@ class Menu_World: public GUI_Interface
 	
 		guiTableLandmass.setPanel(panelX1,panelY1,panelX2,panelY2-80);
 		buttonClose.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
+		
+		int midX = panelNX/2+panelX1;
+		
+		buttonEvents.setPanel(midX-80,panelY2-100,midX+80,panelY2-120);
+		
+		menuEvents.setPanel(panelX1,panelY1,panelX2,panelY2);
+		menuEvents.eventResize();
 	}
 	
 };
