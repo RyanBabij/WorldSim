@@ -10,6 +10,7 @@
 */
 
 #include "Menu_CharacterDetails.cpp"
+#include "Menu_Events.cpp"
 
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
@@ -43,7 +44,7 @@ class Menu_World: public GUI_Interface
 	// View notable locations
 	
 	//Submenu for events
-	Menu_CharacterDetails menuEvents;
+	Menu_Events menuEvents;
 
 	// TABLE FOR LANDMASSES
 	Table2 tLandmass;
@@ -181,8 +182,8 @@ class Menu_World: public GUI_Interface
 				buttonEvents.unclick();
 				
 				//menuEvents here
-				// menuCharacterDetails.init(selectedCharacter);
-				// menuCharacterDetails.active=true;
+				menuEvents.init(0);
+				menuEvents.active=true;
 			}			
 			
 			if ( guiTableLandmass.lastClickedIndex != -1 )
