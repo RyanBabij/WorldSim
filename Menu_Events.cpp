@@ -65,13 +65,6 @@ class Menu_Events: public GUI_Interface
 	
 	void init(Character* _character)
 	{
-		EventsManager eventsManager;
-		eventsManager.addEvent("EVENT1");
-		eventsManager.addEvent("EVENT2");
-		eventsManager.addEvent("EVENT3");
-		
-		
-		
 		// init and populate table
 		guiTableEvents.clear();
 		guiTableEvents.table = &tEvents;
@@ -82,9 +75,9 @@ class Menu_Events: public GUI_Interface
 		guiTableEvents.addColumn("Description","description",240);
 		tEvents.clear();
 		
-		for (int i=0;i<eventsManager.size();++i)
+		for (int i=0;i<world.events.size();++i)
 		{
-			tEvents.addRow(eventsManager.get(i));
+			tEvents.addRow(world.events.get(i));
 		}
 		
 

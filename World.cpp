@@ -1638,6 +1638,12 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	//std::cout<<"Filled "<<currentID<<" biomes in "<<timerBiomeFill.fullSeconds<<" seconds.\n";
 
 	buildMinimap();
+	
+	events.clear();
+	events.addEvent("WORLD CREATED");
+	events.addEvent("EVENT1");
+	events.addEvent("EVENT2");
+	events.addEvent("EVENT3");
 
 	generated = true;
 	worldGenTimer.update();

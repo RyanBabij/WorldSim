@@ -13,6 +13,7 @@ Local Map data is stored in World_Local.
 
 */
 
+#include "World_Events.cpp"
 #include "World_Astronomy.hpp"
 #include "LocalTile.hpp"
 #include "World_Local.hpp"
@@ -134,6 +135,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 
 	Calendar calendar;
 	Calendar lastDate; /* The date on the last logic tick. */
+
+	EventsManager events;
 
 	// STATES
 	bool isRaining;

@@ -56,11 +56,15 @@ class EventsManager
 	EventsManager()
 	{
 	}
+	
+	void clear()
+	{
+		vEvent.clearPtr();
+	}
 
 	void addEvent(std::string eventDescription)
 	{
-		//vEvent.push("EVENT");
-		vEvent.push(new Event("EVENT"));
+		vEvent.push(new Event(eventDescription));
 	}
 	
 	Event* get(int i)
@@ -69,7 +73,6 @@ class EventsManager
 		{
 			return vEvent(i);
 		}
-		//return Event();
 		return 0;
 	}
 	
