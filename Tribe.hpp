@@ -9,6 +9,8 @@
 
 */
 
+#include "CharacterManager.cpp"
+
 #include "Character.hpp"
 
 class World;
@@ -22,6 +24,7 @@ class Tribe: public WorldObjectGlobal, public TableInterface
 {
 private:
 	Vector <std::string> familyNamePool;
+	CharacterManager characterManager;
 
 protected:
 	RandomNonStatic random;
@@ -84,6 +87,8 @@ public:
 	void eat();
 	// The tribe will develop its crafting and technology.
 	void develop();
+	
+	void updateGovernment();
 
 	// The tribe will lose influence over tiles it hasn't visited for a while.
 	void degradeInfluence();

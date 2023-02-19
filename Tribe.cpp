@@ -353,6 +353,16 @@ void Tribe::develop()
 	}
 }
 
+void Tribe::updateGovernment()
+{
+	if (world==0) { return; }
+	if ( characterManager.hasLeader() == false)
+	{
+		characterManager.chooseLeader();
+		world->events.addEvent("New leader");
+	}
+}
+
 void Tribe::setColour( const unsigned char r, const unsigned char g, const unsigned char b)
 {
 	colourRed=r;
@@ -523,6 +533,7 @@ bool Tribe::removeCharacter( Character* _character)
 void Tribe::addCharacter( Character* _character)
 {
 	vCharacter.add(_character);
+	characterManager.add(_character);
 }
 
 void Tribe::add(Character& c)

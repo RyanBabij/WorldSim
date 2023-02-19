@@ -57,6 +57,8 @@ bool Tribe_Dwarven::spawn()
 
 	world->putObject(this,worldX,worldY);
 	world->vTribe.push(this);
+	
+	updateGovernment();
 
 	return true;
 
