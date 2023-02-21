@@ -130,6 +130,9 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 					// Who created it
 					// Where it was created
 					// Any additional info
+					
+					info->creator = character;
+					info->locationMade = this;
 				}
 				
 				nMetalStockpile-=10;

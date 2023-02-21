@@ -9,11 +9,15 @@
 
 */
 
+class Settlement;
+
 class Item_Information
 {
 	public:
 	Character * creator;
 	Character * owner;
+	Settlement* locationMade;
+	unsigned char quality; // 0-5. Items without information are assumed to be level 0.
 	
 	Item_Information()
 	{

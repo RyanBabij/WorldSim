@@ -41,6 +41,7 @@ class Menu_World: public GUI_Interface
 	// View notable Civilizations
 	// View notable Cities
 	// View notable Artifacts
+	GUI_Button buttonItems;
 	// View notable locations
 	
 	//Submenu for events
@@ -82,6 +83,10 @@ class Menu_World: public GUI_Interface
 		buttonEvents.text="Events";
 		buttonEvents.setColours(cNormal,cHighlight,0);
 		buttonEvents.active=true;
+		
+		buttonItems.text="Items";
+		buttonItems.setColours(cNormal,cHighlight,0);
+		buttonItems.active=true;
 
 		active = false;
 
@@ -102,6 +107,7 @@ class Menu_World: public GUI_Interface
 		guiManager.clear();
 		guiManager.add(&buttonClose);
 		guiManager.add(&buttonEvents);
+		guiManager.add(&buttonItems);
 		//guiManager.add(&guiTableLandmass);
 		
 		menuEvents.init();
@@ -184,7 +190,17 @@ class Menu_World: public GUI_Interface
 				//menuEvents here
 				menuEvents.init(0);
 				menuEvents.active=true;
-			}			
+			}
+			if  (buttonItems.clicked==true)
+			{
+				std::cout<<"Events\n";
+				active=false;
+				buttonItems.unclick();
+				
+				//menuEvents here
+				menuEvents.init(0);
+				menuEvents.active=true;
+			}					
 			
 			if ( guiTableLandmass.lastClickedIndex != -1 )
 			{
@@ -212,6 +228,7 @@ class Menu_World: public GUI_Interface
 		int midX = panelNX/2+panelX1;
 		
 		buttonEvents.setPanel(midX-80,panelY2-100,midX+80,panelY2-120);
+		buttonItems.setPanel(midX-80,panelY2-120,midX+80,panelY2-140);
 		
 		menuEvents.setPanel(panelX1,panelY1,panelX2,panelY2);
 		menuEvents.eventResize();

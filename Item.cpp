@@ -12,6 +12,8 @@
 
 Item::Item()
 {
+	information=0;
+	
   count = 0;
   type = 0;
   meleeDamage = 0;

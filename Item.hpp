@@ -64,6 +64,8 @@ class Item: public WorldObject
   int consumeTime; /* How long it takes to eat this. 0 = no time cost. -1 = you can't consume it. */
   int hungerRestore; /* -1 = you can't eat it. 0 = you can eat it but get no hunger restored */
   
+  Item_Information* information;
+  
     // INTERACTION PROPERTIES (currently Item specialisation isn't implemented,
     // so Items can only interact with WorldObject).
 
@@ -222,6 +224,10 @@ class Item: public WorldObject
   
   virtual void addToRecipeManager();
 
+	virtual void attachInformation(Item_Information* _information)
+	{
+		information = _information;
+	}
     
 
 	virtual Texture* currentTexture();
