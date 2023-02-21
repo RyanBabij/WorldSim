@@ -19,6 +19,8 @@
 
 */
 
+#include "Item_Information.cpp"
+
 class Ammo
 {
   public:

@@ -15,6 +15,7 @@ Settlement_Dwarven::Settlement_Dwarven()
 
 	race = DWARVEN;
 
+	nFoodStockpile=10;
 	nMetalStockpile=0;
 	monthlyCounter=0;
 	dailyCounter=0;
@@ -30,6 +31,12 @@ Texture* Settlement_Dwarven::currentTexture()
 void Settlement_Dwarven::incrementTicks ( int nTicks )
 {
 	//std::cout<<"Incrementing Dwarven settlement.\n";
+	
+	// Abstract logic flow should be:
+	// Food
+	// Mining
+	// Manufacture
+	// Tech should improve outputs
 	
 	for (auto & v: vCharacter)
 	{
@@ -54,6 +61,88 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 
 	while (monthlyCounter >= 2592000)
 	{
+		// Produce and deduct food
+		nFoodStockpile -= vCharacter.size();
+		std::cout<<"nfood: "<<nFoodStockpile<<"\n";
+		// Add metal
+		nMetalStockpile+=(vCharacter.size()/2);
+		// Research
+		// Manufacture
+		
+		// For now we will turn the metal into weapons for use and export.
+		vCharacter.shuffle();
+		
+		for (int i=0;i<vCharacter.size();++i)
+		{
+			Character* character = vCharacter(i);
+		
+			if (nMetalStockpile > 10 )
+			{
+				// produce an item
+				// item value is dependent on character stats and randomness.
+				
+				// determine quality
+				
+				// intelligence modifier 
+				int specialChance = 500;
+				int intelligenceModifier = character->intelligence * 25;
+				int totalChance = specialChance - intelligenceModifier;
+				if ( totalChance < 2 )
+				{
+					totalChance = 2;
+				}
+				
+				int qualityLevel = 0;
+				
+				if (random.oneIn(totalChance) )
+				{
+					std::cout<<"SPECIAL ITEM produced by "<<vCharacter(i)->getFullName()<<".\n";
+					
+					qualityLevel = 1;
+					
+					while (qualityLevel < 6 )
+					{
+						if ( random.flip() )
+						{
+							++qualityLevel;
+						}
+						else
+						{
+							break;
+						}
+					}
+					std::cout<<"Quality level is "<<qualityLevel<<"\n";
+					
+				}
+				else
+				{
+					// normal item
+					std::cout<<"Item produced by "<<vCharacter(i)->getFullName()<<".\n";
+				}
+				
+				Item_Sword * sword = new Item_Sword();
+				vItem.push(sword);
+				
+				if ( qualityLevel > 0 )
+				{				
+					// if the item is special, create an Item_Information attachment for it.
+					Item_Information* info = new Item_Information();
+					// Who created it
+					// Where it was created
+					// Any additional info
+				}
+				
+				nMetalStockpile-=10;
+			}
+			else
+			{
+				break;
+			}
+		
+		}
+		
+		
+		
 		if ( world->aWorldTile(worldX,worldY).baseMetal > 0 )
 		{
 			nMetalStockpile+=30;
