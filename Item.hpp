@@ -19,6 +19,8 @@
 
 */
 
+#include <Container/Table/TableInterface.hpp>
+
 #include "Item_Information.cpp"
 
 class Ammo
@@ -39,7 +41,7 @@ class Recipe;
 class Creature;
 //class Creature_Deer;
 
-class Item: public WorldObject
+class Item: public WorldObject, public TableInterface
 {
 	public:
 	//int x, y;
@@ -100,6 +102,8 @@ class Item: public WorldObject
   
 	virtual std::string getName();
 	virtual std::string getExtendedInfo();
+	
+	virtual std::string getQuality();
 	
   
   /* ITEM INTERACTIONS
@@ -212,28 +216,32 @@ class Item: public WorldObject
   }
   
   
-  virtual std::string getInteractName(WorldObject* _w)
-  {
-    return "Interact with "+_w->getName();
-  }
-  virtual std::string getInteractName(LocalTile* _w)
-  {
-    return "Interact with "+_w->getName();
-  }
-  
-  
-  virtual void addToRecipeManager();
+	virtual std::string getInteractName(WorldObject* _w)
+	{
+		return "Interact with "+_w->getName();
+	}
+	virtual std::string getInteractName(LocalTile* _w)
+	{
+		return "Interact with "+_w->getName();
+	}
+
+
+	virtual void addToRecipeManager();
 
 	virtual void attachInformation(Item_Information* _information)
 	{
 		information = _information;
 	}
-    
+
 
 	virtual Texture* currentTexture();
-  
-  std::string getSaveData();
-  void loadData(std::string);
+
+	/* TABLE INTERFACE */
+	std::string getColumn(std::string _column);
+	std::string getColumnType(std::string _column);
+
+	std::string getSaveData();
+	void loadData(std::string);
 };
 
 // So it has come to this

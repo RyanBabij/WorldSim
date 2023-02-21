@@ -133,6 +133,8 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 					
 					info->creator = character;
 					info->locationMade = this;
+					info->quality = qualityLevel;
+					sword->information = info;
 				}
 				
 				nMetalStockpile-=10;

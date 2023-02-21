@@ -23,6 +23,8 @@ class Item_Information
 	{
 		creator=0;
 		owner=0;
+		locationMade=0;
+		quality=0;
 	}
 };
 

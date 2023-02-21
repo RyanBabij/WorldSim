@@ -53,6 +53,34 @@ void Item::loadData(std::string _saveData)
 {
 }
 
+/* TABLE INTERFACE */
+
+std::string Item::getColumn(std::string _column)
+{
+	if ( _column == "name" )
+	{
+		return getName();
+	}
+	if ( _column == "quality" )
+	{
+		return getQuality();
+	}
+
+	return "?";
+}
+std::string Item::getColumnType(std::string _column)
+{
+	return "string";
+}
+
+std::string Item::getQuality()
+{
+	if (information==0)
+	{
+		return "Normal";
+	}
+	return "Fine";
+}
 
 #include "Item_All.cpp"
 

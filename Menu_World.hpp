@@ -11,6 +11,7 @@
 
 #include "Menu_CharacterDetails.cpp"
 #include "Menu_Events.cpp"
+#include "Menu_Items.cpp"
 
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
@@ -32,7 +33,7 @@ class Menu_World: public GUI_Interface
 
 	/* Menu for investigating an individual tribe */
 	GUI_Button buttonClose;
-	
+
 	// View notable events
 	GUI_Button buttonEvents;
 	// View notable characters living and deceased.
@@ -43,9 +44,11 @@ class Menu_World: public GUI_Interface
 	// View notable Artifacts
 	GUI_Button buttonItems;
 	// View notable locations
-	
+
 	//Submenu for events
 	Menu_Events menuEvents;
+	//Submenu for items
+	Menu_Items menuItems;
 
 	// TABLE FOR LANDMASSES
 	Table2 tLandmass;
@@ -66,6 +69,7 @@ class Menu_World: public GUI_Interface
 		font = _font;
 		guiManager.setFont(_font);
 		menuEvents.setFont(_font);
+		menuItems.setFont(_font);
 	}
 	
 	void init()
@@ -112,9 +116,12 @@ class Menu_World: public GUI_Interface
 		
 		menuEvents.init();
 		menuEvents.active=false;
+		menuItems.init();
+		menuItems.active=false;
 		
 		eventResize();
 		menuEvents.eventResize();
+		menuItems.eventResize();
 	}
 
 	void render()
@@ -122,6 +129,10 @@ class Menu_World: public GUI_Interface
 		if ( menuEvents.active )
 		{
 			menuEvents.render();
+		}
+		else if ( menuItems.active )
+		{
+			menuItems.render();
 		}
 		else if ( active )
 		{
@@ -168,6 +179,10 @@ class Menu_World: public GUI_Interface
 		{
 			menuEvents.mouseEvent(_mouse);
 		}
+		else if ( menuItems.active )
+		{
+			menuItems.mouseEvent(_mouse);
+		}
 		else if ( active )
 		{
 				/* If the guiManager did something with the mouse event. */
@@ -193,13 +208,13 @@ class Menu_World: public GUI_Interface
 			}
 			if  (buttonItems.clicked==true)
 			{
-				std::cout<<"Events\n";
+				std::cout<<"Items\n";
 				active=false;
 				buttonItems.unclick();
 				
 				//menuEvents here
-				menuEvents.init(0);
-				menuEvents.active=true;
+				menuItems.init(0);
+				menuItems.active=true;
 			}					
 			
 			if ( guiTableLandmass.lastClickedIndex != -1 )
@@ -221,19 +236,21 @@ class Menu_World: public GUI_Interface
 	
 	void eventResize()
 	{
-	
 		guiTableLandmass.setPanel(panelX1,panelY1,panelX2,panelY2-80);
 		buttonClose.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
-		
+
 		int midX = panelNX/2+panelX1;
-		
+
 		buttonEvents.setPanel(midX-80,panelY2-100,midX+80,panelY2-120);
 		buttonItems.setPanel(midX-80,panelY2-120,midX+80,panelY2-140);
-		
+
 		menuEvents.setPanel(panelX1,panelY1,panelX2,panelY2);
 		menuEvents.eventResize();
+
+		menuItems.setPanel(panelX1,panelY1,panelX2,panelY2);
+		menuItems.eventResize();
 	}
-	
+
 };
 
 
