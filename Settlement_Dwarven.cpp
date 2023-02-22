@@ -134,6 +134,8 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 					info->creator = character;
 					info->locationMade = this;
 					info->quality = qualityLevel;
+					info->yearMade = world->calendar.year;
+					info->monthMade = world->calendar.month;
 					sword->information = info;
 				}
 				

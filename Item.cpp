@@ -61,15 +61,44 @@ std::string Item::getColumn(std::string _column)
 	{
 		return getName();
 	}
-	if ( _column == "quality" )
+	else if ( _column == "quality" )
 	{
 		return getQuality();
+	}
+	else if ( _column == "year" )
+	{
+		if (information==0)
+		{
+			return "-1";
+		}
+		return DataTools::toString(information->yearMade);
+	}
+	else if ( _column == "month" )
+	{
+		if (information==0)
+		{
+			return "-1";
+		}
+		return DataTools::toString(information->monthMade);
+	}
+	else if ( _column == "creation" )
+	{
+		if (information==0)
+		{
+			return "Unknown";
+		}
+		return "Y " + DataTools::toString(information->yearMade)+" M "+
+		DataTools::toString(information->monthMade);
 	}
 
 	return "?";
 }
 std::string Item::getColumnType(std::string _column)
 {
+	if ( _column == "year" || _column == "month" )
+	{
+		return "number";
+	}
 	return "string";
 }
 

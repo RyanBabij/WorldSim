@@ -60,7 +60,7 @@ class Menu_Items: public GUI_Interface
 		guiTableItems.table = &tItems;
 		guiTableItems.alpha=0;
 		guiTableItems.active=true;
-		guiTableItems.addColumn("Date","date",120);
+		guiTableItems.addColumn("Created","creation",120);
 		guiTableItems.addColumn("Quality","quality",120);
 		guiTableItems.addColumn("Type","name",120);
 		guiTableItems.addColumn("Description","description",240);
@@ -118,6 +118,8 @@ class Menu_Items: public GUI_Interface
 			font8x8.drawText("Items",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
 			guiManager.render();
 		}
+		
+
 	}
 
 	bool keyboardEvent (Keyboard* _keyboard)

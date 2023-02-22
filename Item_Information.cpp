@@ -19,12 +19,17 @@ class Item_Information
 	Settlement* locationMade;
 	unsigned char quality; // 0-5. Items without information are assumed to be level 0.
 	
+	int yearMade;
+	int monthMade;
+	
 	Item_Information()
 	{
 		creator=0;
 		owner=0;
 		locationMade=0;
 		quality=0;
+		yearMade=0;
+		monthMade=0;
 	}
 };
 
