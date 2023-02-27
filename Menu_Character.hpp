@@ -89,6 +89,7 @@ class Menu_Characters: public GUI_Interface
 		guiTableCharacters.addColumn("Race","race",100);
 		guiTableCharacters.addColumn("Strength","strength",100);
 		guiTableCharacters.addColumn("Kills","kills",60);
+		guiTableCharacters.addColumn("Smithing","skillMetalsmithing",120);
 		guiTableCharacters.addColumn("Favourite","favourite",120);
 		guiTableCharacters.setColours(cNormal,cSelected);
 		//guiTableTribes.addColumn("Food","food",120);

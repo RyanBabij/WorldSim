@@ -83,13 +83,16 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 				
 				// determine quality
 				
-				// intelligence modifier 
-				int specialChance = 500;
-				int intelligenceModifier = character->intelligence * 25;
-				int totalChance = specialChance - intelligenceModifier;
-				if ( totalChance < 2 )
+				// skill modifier 
+				// base chance of special item is 1 in 1000. 0.1%
+				// each level of metalsmithing skill can improve it by 1%
+				// which means that 100 skill means 100% chance of making special item.
+				int specialChance = 1000;
+				int skillModifier = character->skillMetalsmithing.level * 10;
+				int totalChance = specialChance - skillModifier;
+				if ( totalChance < 1 )
 				{
-					totalChance = 2;
+					totalChance = 1;
 				}
 				
 				int qualityLevel = 0;
@@ -117,7 +120,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 				else
 				{
 					// normal item
-					std::cout<<"Item produced by "<<vCharacter(i)->getFullName()<<".\n";
+					//std::cout<<"Item produced by "<<vCharacter(i)->getFullName()<<".\n";
 				}
 				
 				Item_Sword * sword = new Item_Sword();
@@ -137,9 +140,13 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 					info->yearMade = world->calendar.year;
 					info->monthMade = world->calendar.month;
 					sword->information = info;
+					// engravings should be done seperately as it's a different skillset.
+					// Player should be able to pick the engraving if they are having it done.
+					
 				}
 				
 				nMetalStockpile-=10;
+				character->skillMetalsmithing.addExp(10);
 			}
 			else
 			{

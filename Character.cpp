@@ -53,6 +53,11 @@ Character::Character()
 	perception=0;
 	endurance=0;
 	courage=0;
+	
+	skillFishing=0;
+	skillMarksmanship=0;
+	skillMining=0;
+	skillMetalsmithing.init("metalsmithing",100);
 
 	health=0;
 	maxHealth=0;
@@ -1070,6 +1075,10 @@ std::string Character::getColumn(std::string _column)
 		}
 		return tribe->getColumn("race");
 	}
+	if ( _column == "skillMetalsmithing" )
+	{
+		return DataTools::toString(skillMetalsmithing.level);
+	}
 	
 	// if ( _column=="coordinates" )
 	// {
@@ -1088,7 +1097,7 @@ std::string Character::getColumn(std::string _column)
 }
 std::string Character::getColumnType(std::string _column)
 {
-	if ( _column == "age" || _column == "territory" || _column == "food" || _column == "strength" || _column == "kills" )
+	if ( _column == "age" || _column == "territory" || _column == "food" || _column == "strength" || _column == "kills" || _column == "skillMetalsmithing" )
 	{
 		return "number";
 	}
