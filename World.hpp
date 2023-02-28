@@ -13,6 +13,8 @@ Local Map data is stored in World_Local.
 
 */
 
+#include "Mythology.cpp"
+
 #include "World_Events.cpp"
 #include "World_Astronomy.hpp"
 #include "LocalTile.hpp"
@@ -51,6 +53,9 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	World_MapManager mapManager;
 	// We could remove this later by using a pointer.
 	ArrayS2 <enumBiome> aTerrain;
+	
+	Vector <Mythology_Deity*> vDeity;
+	Mythology mythology;
 
 	public:
 
@@ -167,6 +172,8 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 
 	// Returns true if the tile is in a map that is loaded.
 	bool isGenerated(unsigned long int _absoluteX, unsigned long int _absoluteY);
+	
+	bool generateMythology(); // Generate the base mythology
 	
 	
 	// STATE CHANGES

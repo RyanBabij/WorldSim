@@ -198,6 +198,17 @@ bool World::absoluteToRelative (const unsigned long int _absoluteX, const unsign
 	return true;
 }
 
+bool World::generateMythology()
+{
+	//Mythology mythology;
+	
+	std::cout<<"Generating mythology\n";
+	
+	//mythology.addDeity("Creator", Mythology::none);
+	
+	return true;
+}
+
 // This should be called ONCE when transitioning from worldgen into World Simulator.
 // Some World functionality won't work until this has been called... Use the "active" flag to check for this.
 void World::startSimulation()
