@@ -40,6 +40,8 @@ Tribe::Tribe()
 	race = NONE;
 
 	isAlive = true;
+	
+	mythology=0;
 
 }
 

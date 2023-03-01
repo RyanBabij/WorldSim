@@ -10,6 +10,9 @@ Implementation of "World.hpp".
 
 #include "World.hpp"
 
+#include "Mythology.cpp"
+#include "Mythology_Deity.cpp"
+
 #include "Civ.hpp"
 	#include "Civ_Dwarven.hpp"
 #include "Tribe.hpp"
@@ -284,7 +287,7 @@ void World::startSimulation()
 	//int currentID = 0;
 
 	// Here I am spawning 1 thread for every possible biome. Each thread then processes biomes that have that type.
-	// Performance is significantly improved and I'm getting solid 100% CPU on my quad core. It's important to spawn
+	// Performance is significantly improved and I'm getting solid 100% CPU on my quad core. It's important to `
 	// a small number of large threads, rather than a large number of small threads. I tried the latter and I only gained
 	// a few seconds on large maps, and small maps generated slower. This new approach is more than 3x faster.
 	// threaded - cb - 2049 - seed 12345: 6.61 7.15 6.98        Biome time: 2.48, 2.46, 2.44
@@ -875,24 +878,8 @@ void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int 
 		}
 	}
 	std::cout<<"\n";
-
-	std::cout<<"Generate dwarves: ";
-	for (int i=0;i<nTribesDwarven;++i)
-	{
-		std::cout<<".";
-		Tribe_Dwarven * t = new Tribe_Dwarven;
-		t->init(this);
-		if (t->spawn() == false)
-		{
-			std::cout<<" FAIL ";
-			delete t;
-		}
-		else
-		{
-			t->generateCouples(STARTING_TRIBE_SIZE_DWARVEN);
-		}
-	}
-	std::cout<<"\n";
+	
+	generateDwarves(nTribesDwarven);
 
 	std::cout<<"Generate elves: ";
 	for (int i=0;i<nTribesElven;++i)
@@ -915,6 +902,50 @@ void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int 
 	std::cout<<"END Generate tribes\n";
 }
 
+// Dwarves start out as Civs for the sake of simplicity, as they all eventually end up dwelling in mountains.
+// Later on I might add back the Dwarven tribes.
+// Dwarves have only a single mythology, though minor variations may be introduced later.
+void World::generateDwarves(int _nCivs )
+{
+	
+	if (_nCivs < 0 )
+	{ _nCivs = 0; }
+
+	if (_nCivs > 100)
+	{ std::cout<<"WARNING: Excessive number of Dwarven tribes. Execution continuing.\n"; }
+
+
+	std::cout<<"Generating "<<_nCivs<<" Dwarven civilizations.\n";
+	for (int i=0;i<_nCivs;++i)
+	{
+		std::cout<<".";
+		Tribe_Dwarven * t = new Tribe_Dwarven;
+		t->init(this);
+		if (t->spawn() == false)
+		{
+			std::cout<<" FAIL ";
+			delete t;
+		}
+		else
+		{
+			t->generateCouples(STARTING_TRIBE_SIZE_DWARVEN);
+			t->mythology=&mythologyDwarven;
+			evolveToCiv(t);
+		}
+	}
+	std::cout<<"\n";
+	
+
+
+
+}
+void World::generateElves(int _nTribes )
+{
+}
+void World::generateHumans(int _nTribes )
+{
+}
+
 
 // Remove tribe object and replace it with a Civ and Settlement (whereever the Tribe is standing.
 void World::evolveToCiv( Tribe * _tribe )
@@ -932,6 +963,7 @@ void World::evolveToCiv( Tribe * _tribe )
 		civ->world = this;
 		civ->setColour(_tribe->colourRed,_tribe->colourGreen,_tribe->colourBlue);
 		civ->vCharacter.copy(&_tribe->vCharacter);
+		civ->mythology = _tribe->mythology;
 
 		Settlement_Dwarven * s = new Settlement_Dwarven;
 		s->world = this;
@@ -2011,10 +2043,10 @@ HasXY* World::getRandomLandTile()
 	return 0;
 }
 
-// UPDATE: This now actually returns a random distribution.
+// Return a random tile of given type
+// Note: In some cases it would be more ideal to get a list of all such tiles to prevent excessive re-rolling.
 HasXY* World::getRandomTileOfType(enumBiome _type)
 {
-	std::cout<<"Getrandom vect size: "<<vAllTiles2.size()<<"\n";
 	vAllTiles2.shuffle();
 	for (auto xy : vAllTiles2)
 	{

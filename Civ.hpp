@@ -29,6 +29,8 @@ class Civ: public TableInterface
 
 
 	public:
+	
+		Mythology* mythology;
 		
 			// EACH TILE MAY ONLY BE OWNED BY ONE CIV, THEREFORE THIS ARRAY IS SHARED BETWEEN ALL CIVS.
 		static ArrayS2 <Civ*> aOwnership;

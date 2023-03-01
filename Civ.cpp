@@ -14,6 +14,7 @@ Civ::Civ()
 	name="N/A";
 	money=100;
 	world=0;
+	mythology=0;
 }
 
 void Civ::init(World* _world)

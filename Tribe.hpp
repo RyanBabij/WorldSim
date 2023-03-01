@@ -31,6 +31,8 @@ protected:
 
 public:
 
+	Mythology * mythology;
+
 	/* Identifying  colour of the tribe so you can see who it is quickly. */
 	unsigned char colourRed;
 	unsigned char colourGreen;

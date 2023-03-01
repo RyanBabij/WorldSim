@@ -12,61 +12,6 @@
 
 
 
-// The deities of the world (non-mortal characters)
-class Mythology_Deity
-{
-	public:
-	// The balance of these 2 variables should be enough.
-	int benevolence;
-	int malevolence;
-	int sanity;
-	
-	// The type of deity. Shouldn't need to be too complex for now.
-	enum mythology_deity_type { benevolent, evil, chaotic };
-	enum mythology_deity_subtype { creator, alien, observer };
-	
-	mythology_deity_type type;
-	mythology_deity_subtype subtype;
-	
-	
-	Mythology_Deity()
-	{
-	}
-	
-	Vector <Character*> vObservedCharacters;
-	
-	// Deity can access the world and act in it.
-	// Generally this should take the form of "favouring" somebody, which could turn them into a saint
-	
-	// What actions could deities make?
-	// * Favour an individual - Give them items, stat increase, give them knowledge, make them a saint/prophet.
-	void act()
-	{
-	}
-	
-	void createRace(enumRace _race)
-	{
-		
-		//void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int nTribesDwarven = DEFAULT_NUMBER_TRIBES_DWARVEN, int nTribesElven = DEFAULT_NUMBER_TRIBES_ELVEN)
-		
-		//world.generateTribes(0,1,0);
-		
-		
-		if (_race == NONE)
-		{
-		}
-		else if (_race == DWARVEN)
-		{
-		}
-		else if (_race == ELVEN)
-		{
-		}
-		else if (_race == HUMAN)
-		{
-		}
-		
-	}
-};
 
 // The saints of the world (notable mortal characters). Maybe prophet as well.
 // It is not required that the saint/prophet be genuine. False prophets can be included.
@@ -102,6 +47,7 @@ class Mythology_Event
 
 
 class World;
+#include "Mythology_Deity.hpp"
 
 // changes should be made by gradual steps, like government in a Paradox game
 // at least for now, the initial creation myth should be hardcoded. Only later details should mutate.
@@ -124,6 +70,7 @@ class Mythology
 	// the race which created the mythology. Other races can still follow it.
 	enum mythology_race { mixed, dwarven, elven, human };
 	mythology_type type; // The base type of mythology.
+	mythology_race race; // The base type of mythology.
 
 	
 	// Name of the World. For now hardcoded.
@@ -134,6 +81,10 @@ class Mythology
 	// Mythological stories - The deities and sub-deities interact.
 	
 	Mythology();
+	
+	void generateBaseDwarven();
+	void generateBaseElven();
+	void generateBaseHuman();
 	
 	void addDeity(std::string /* _name */, Mythology_Deity::mythology_deity_type /* _type */ );
 	

@@ -13,7 +13,8 @@ Local Map data is stored in World_Local.
 
 */
 
-#include "Mythology.cpp"
+#include "Mythology.hpp"
+#include "Mythology_Deity.hpp"
 
 #include "World_Events.cpp"
 #include "World_Astronomy.hpp"
@@ -55,7 +56,11 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	ArrayS2 <enumBiome> aTerrain;
 	
 	Vector <Mythology_Deity*> vDeity;
-	Mythology mythology;
+	
+	// There are 3 hardcoded base mythologies, one for each race. However they can mutate in a dynamic way.
+	Mythology mythologyDwarven;
+	Mythology mythologyElven;
+	Mythology mythologyHuman;
 
 	public:
 
@@ -214,6 +219,12 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	bool addRace (int /* nTribes */, std::string /* name */);
 	//bool addElvenTribe(int nTribes);
 	//bool addHumanTribe(int nTribes);
+	
+	
+	// Since the races are hardcoded, they should be their own functions.
+	void generateDwarves(int /* nCivs */ ); // Dwarves spawn directly into mountain tiles
+	void generateElves(int /* nTribes */ );
+	void generateHumans(int /* nTribes */ );
 
 	// Ensure conditions are set up for this character to be controlled.
 	// For example generate the local map.
