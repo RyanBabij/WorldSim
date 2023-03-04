@@ -19,15 +19,18 @@ class Event: public TableInterface
 	public:
 	
 	std::string eventDescription;
-	enum type { EVENT_NONE, EVENT_WORLD_CREATED, EVENT_ITEM_CREATED };
+	enum EVENT_TYPE { EVENT_NONE, EVENT_WORLD_CREATED, EVENT_ITEM_CREATED };
+	EVENT_TYPE eventType;
 	
 	Event()
 	{
 		eventDescription="?EVENT?";
+		eventType=EVENT_NONE;
 	}
-	Event(std::string _eventDescription)
+	Event(std::string _eventDescription, EVENT_TYPE _eventType)
 	{
 		eventDescription = _eventDescription;
+		eventType = _eventType;
 	}
 	virtual ~Event()
 	{
@@ -46,6 +49,15 @@ class Event: public TableInterface
 		// }
 		return "string";
 	}
+	
+	std::string getLongDescription()
+	{
+		if (eventType==EVENT_WORLD_CREATED)
+		{
+			return "On the year 0 the world was created. This has made a lot of people very angry and been widely regarded as a bad move.";
+		}
+		return "EVENT DESCRIPTION";
+	}
 };
 
 class EventsManager
@@ -63,9 +75,9 @@ class EventsManager
 		vEvent.clearPtr();
 	}
 
-	void addEvent(std::string eventDescription)
+	void addEvent(std::string eventDescription, Event::EVENT_TYPE _eventType)
 	{
-		vEvent.push(new Event(eventDescription));
+		vEvent.push(new Event(eventDescription, _eventType));
 	}
 	
 	Event* get(int i)

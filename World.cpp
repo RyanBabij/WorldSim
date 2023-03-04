@@ -1123,7 +1123,7 @@ void World::incrementDeities(int nTicks)
 		//std::cout<<"Deity actions here\n";
 		if (random.oneIn(12))
 		{
-			events.addEvent("DEITY ACT");
+			events.addEvent("DEITY ACT",Event::EVENT_NONE);
 		}
 		deityTicks-=2592000;
 	}
@@ -1710,10 +1710,10 @@ void World::generateWorld(const std::string _worldName, const int x=127, const i
 	buildMinimap();
 	
 	events.clear();
-	events.addEvent("WORLD CREATED");
-	events.addEvent("EVENT1");
-	events.addEvent("EVENT2");
-	events.addEvent("EVENT3");
+	events.addEvent("WORLD CREATED",Event::EVENT_WORLD_CREATED);
+	events.addEvent("EVENT1",Event::EVENT_NONE);
+	events.addEvent("EVENT2",Event::EVENT_NONE);
+	events.addEvent("EVENT3",Event::EVENT_NONE);
 
 	generated = true;
 	worldGenTimer.update();

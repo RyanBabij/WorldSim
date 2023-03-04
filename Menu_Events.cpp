@@ -10,6 +10,7 @@
 */
 
 #include "World_Events.cpp"
+#include "Menu_EventDetails.hpp"
 
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
@@ -37,9 +38,14 @@ class Menu_Events: public GUI_Interface
 	Table2 tEvents;
 	GUI_Table guiTableEvents;
 	
+	int lastRowClicked;
+	
+	Menu_EventDetails menuEventDetails;
+	
 	Menu_Events()
 	{	
 		selectedEvent=0;
+		lastRowClicked=-1;
 	}
 
 	
@@ -47,6 +53,7 @@ class Menu_Events: public GUI_Interface
 	{
 		font = _font;
 		guiManager.setFont(_font);
+		menuEventDetails.setFont(_font);
 	}
   
   
@@ -101,16 +108,23 @@ class Menu_Events: public GUI_Interface
 
 		guiManager.setFont(font);
 	
+		menuEventDetails.init();
+		menuEventDetails.active=false;
+		
 		eventResize();
+		menuEventDetails.eventResize();
 	}
 	
 	void render()
 	{
-		Renderer::placeColour4a(150,150,150,200,panelX1,panelY1,panelX2,panelY2);
-		//if (selectedCharacter==0) { return; }
-		
-		if ( active )
+		if ( menuEventDetails.active )
 		{
+			menuEventDetails.render();
+		}
+		else if ( active )
+		{
+			Renderer::placeColour4a(150,150,150,200,panelX1,panelY1,panelX2,panelY2);
+			//if (selectedCharacter==0) { return; }
 			font8x8.drawText("Events",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
 			guiManager.render();
 		}
@@ -118,16 +132,25 @@ class Menu_Events: public GUI_Interface
 
 	bool keyboardEvent (Keyboard* _keyboard)
 	{
-		if ( active )
+		if ( menuEventDetails.active )
+		{
+			return menuEventDetails.keyboardEvent(_keyboard);
+		}
+		else if ( active )
 		{
 			return guiManager.keyboardEvent(_keyboard);
 		}
 		return false;
 	}
 
+
 	bool mouseEvent (Mouse* _mouse)
 	{
-		if ( active )
+		if ( menuEventDetails.active )
+		{
+			menuEventDetails.mouseEvent(_mouse);
+		}
+		else if ( active )
 		{
 				/* If the guiManager did something with the mouse event. */
 			if(guiManager.mouseEvent(_mouse)==true)
@@ -143,9 +166,39 @@ class Menu_Events: public GUI_Interface
       
 			if (buttonEventDetails.clicked==true)
 			{
-				std::cout<<"Put event details menu here\n";
-				active=false;
+				if ( selectedEvent != 0 )
+				{
+					std::cout<<"Event details\n";
+					menuEventDetails.init(selectedEvent);
+					menuEventDetails.active=true;
+					//active=false;
+				}
+				else
+				{
+					std::cout<<"Select an event first.\n";
+				}
+
 				buttonEventDetails.unclick();
+			}
+			
+			
+			if ( guiTableEvents.lastClickedIndex != -1 )
+			{
+				lastRowClicked=guiTableEvents.lastClickedIndex;
+
+				int totalIndex = 0;
+				for (int i=0;i<world.events.vEvent.size();++i)
+				{
+					if ( lastRowClicked == i )
+					{
+						selectedEvent = world.events.vEvent(i);
+						
+						std::cout<<"Event selected: "<<selectedEvent->eventDescription<<"\n";
+					}
+
+				}
+		
+				guiTableEvents.lastClickedIndex = -1;
 			}
 		
 		}
@@ -158,6 +211,8 @@ class Menu_Events: public GUI_Interface
 		buttonClose.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
 		buttonEventDetails.setPanel(panelX2-140, panelY1+40, panelX2-20, panelY1+20);
 		guiTableEvents.setPanel(panelX1,panelY1,panelX2,panelY2-120);
+		menuEventDetails.setPanel(panelX1,panelY1,panelX2,panelY2);
+		menuEventDetails.eventResize();
 	}
 	
 };

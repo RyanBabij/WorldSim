@@ -152,7 +152,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 					std::cout<<"*** ARTIFACT CREATED ***\n";
 					if (world!=0)
 					{
-						world->events.addEvent("ARTIFACT");
+						world->events.addEvent("ARTIFACT",Event::EVENT_NONE);
 					}
 				}
 				

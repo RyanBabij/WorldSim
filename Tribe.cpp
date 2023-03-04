@@ -361,7 +361,7 @@ void Tribe::updateGovernment()
 	if ( characterManager.hasLeader() == false)
 	{
 		characterManager.chooseLeader();
-		world->events.addEvent("New leader");
+		world->events.addEvent("New leader",Event::EVENT_NONE);
 	}
 }
 
