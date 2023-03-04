@@ -19,6 +19,7 @@ class Event: public TableInterface
 	public:
 	
 	std::string eventDescription;
+	enum type { EVENT_NONE, EVENT_WORLD_CREATED, EVENT_ITEM_CREATED };
 	
 	Event()
 	{

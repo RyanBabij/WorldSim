@@ -13,6 +13,8 @@
 
 
 
+
+
 // The saints of the world (notable mortal characters). Maybe prophet as well.
 // It is not required that the saint/prophet be genuine. False prophets can be included.
 class Mythology_Saint
@@ -82,6 +84,9 @@ class Mythology
 	
 	Mythology();
 	
+	// generate the base mythology
+	void generateBase();
+	
 	void generateBaseDwarven();
 	void generateBaseElven();
 	void generateBaseHuman();
@@ -91,6 +96,27 @@ class Mythology
 	// do some stuff
 	void increment();
 	
+};
+
+class Mythology_Manager
+{
+	
+	Mythology mythologyDwarven;
+	Mythology mythologyElven;
+	Mythology mythologyHuman;
+	
+	Mythology_Deity deity1;
+	Mythology_Deity deity2;
+	
+	//Vector <Mythology_Deity*> vDeity;
+	
+	Mythology_Manager()
+	{
+	}
+	
+	void init()
+	{
+	}
 };
 
 #endif

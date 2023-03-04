@@ -31,14 +31,7 @@ class Menu_Events: public GUI_Interface
 
 	GUI_Button buttonEventDetails;
 
-	Character* selectedCharacter;
-	
-	GUI_Link textFatherLink;
-	GUI_Link textMotherLink;
-	GUI_Link textSpouseLink;
-	Vector <GUI_Link*> textChildLink;
-  
-	Vector <GUI_Link*> textKillLink;
+	Event* selectedEvent;
 	
 	// Table of Events
 	Table2 tEvents;
@@ -46,7 +39,7 @@ class Menu_Events: public GUI_Interface
 	
 	Menu_Events()
 	{	
-		selectedCharacter=0;
+		selectedEvent=0;
 	}
 
 	
@@ -63,7 +56,7 @@ class Menu_Events: public GUI_Interface
     init(0);
   }
 	
-	void init(Character* _character)
+	void init(Event* _event)
 	{
 		// init and populate table
 		guiTableEvents.clear();
@@ -81,9 +74,9 @@ class Menu_Events: public GUI_Interface
 		}
 		
 
-		if ( _character != 0 || selectedCharacter== 0)
+		if ( _event != 0 || selectedEvent== 0)
 		{
-			selectedCharacter=_character;
+			selectedEvent=_event;
 		}
 		
 		/* Initialise theme. */
@@ -100,37 +93,10 @@ class Menu_Events: public GUI_Interface
 		buttonEventDetails.setColours(cNormal,cHighlight,0);
 		buttonEventDetails.active=true;
 
-		textFatherLink.text = "Test";
-		textMotherLink.text = "Test";
-		textSpouseLink.text = "Test";
-		
-		//std::cout<<"Clearing children vector\n";
-		for (int i=0;i<textChildLink.size();++i)
-		{
-			delete textChildLink(i);
-		}
-		textChildLink.clear();
-		
-		//std::cout<<"Clearing children vector2\n";
-		
 		guiManager.clear();
-		if ( selectedCharacter != 0)
-		{
-			for (int i=0;i<selectedCharacter->vChildren.size();++i)
-			{
-				GUI_Link * childLink = new GUI_Link;
-				childLink->text = selectedCharacter->vChildren(i)->getFullName();
-				textChildLink.push(childLink);
-				guiManager.add(childLink);
-			}
-		}
-//std::cout<<"Clearing children vector 3\n";
 
 		guiManager.add(&buttonClose);
 		guiManager.add(&buttonEventDetails);
-		guiManager.add(&textFatherLink);
-		guiManager.add(&textMotherLink);
-		guiManager.add(&textSpouseLink);
 		guiManager.add(&guiTableEvents);
 
 		guiManager.setFont(font);
@@ -180,52 +146,6 @@ class Menu_Events: public GUI_Interface
 				std::cout<<"Put event details menu here\n";
 				active=false;
 				buttonEventDetails.unclick();
-			}
-			
-			if (textFatherLink.clicked==true)
-			{
-				std::cout<<"Clicked father\n";
-				textFatherLink.unclick();
-				
-				if ( selectedCharacter->father != 0)
-				{
-					selectedCharacter=selectedCharacter->father;
-					init();
-					_mouse->isLeftClick=false;
-				}
-			}
-			if (textMotherLink.clicked==true)
-			{
-				std::cout<<"Clicked mother\n";
-				textMotherLink.unclick();
-				
-				if ( selectedCharacter->mother != 0)
-				{
-					selectedCharacter=selectedCharacter->mother;
-					init();
-					_mouse->isLeftClick=false;
-				}
-			}
-			if (textSpouseLink.clicked==true)
-			{
-				std::cout<<"Clicked spouse\n";
-				textSpouseLink.unclick();
-				
-				if ( selectedCharacter->spouse != 0)
-				{
-					selectedCharacter=selectedCharacter->spouse;
-					init();
-					_mouse->isLeftClick=false;
-				}
-			}
-			for (int i=0;i<textChildLink.size();++i)
-			{
-				if ( textChildLink(i)->clicked==true)
-				{
-					selectedCharacter = selectedCharacter->vChildren(i);
-					init();
-					_mouse->isLeftClick=false;
-				}
 			}
 		
 		}

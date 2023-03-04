@@ -150,6 +150,9 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 
 	// STATES
 	bool isRaining;
+	
+	// keep track of how many ticks for deity actions
+	int deityTicks;
 
 	World();
 	~World();
@@ -321,6 +324,9 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	int nFreeTerritory (int landmassID);
 
 	void evolveToCiv( Tribe * );
+	
+	// Allow deities to act
+	void incrementDeities(int /* nTicks */ );
 
 	// Return the nearest tribe to the passed tribe which is on the same landmass.
 	// Return 0 if none. Only check same race by default.

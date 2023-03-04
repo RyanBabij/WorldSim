@@ -73,6 +73,8 @@ World::World(): SaveFileInterface(),/* mapManager(this),*/ seaLevel(0), mountain
 	calendar.secondsPerMinute = 2;
 	
 	incrementContinuous=false;
+	
+	deityTicks=0;
 
 	//mapManager.main();
 }
@@ -988,6 +990,8 @@ void World::incrementTicksBacklog(long long unsigned int nTicks)
 }
 
 // Increments the world by nTicks ticks. Higher values may lead to abstraction.
+// This seems to be badly designed right now. Each Tribe and Civ should increment by a month then let
+// others increment.
 void World::incrementTicks(int nTicks)
 {
 	worldViewer.rainManager.updateRain();
@@ -1034,6 +1038,9 @@ void World::incrementTicks(int nTicks)
 	{
 		//std::cout<<"Degrade influence.\n";
 		degradeInfluence();
+		
+		incrementDeities(nTicks);
+		
 		monthlyCounter-=2592000;
 		nTicks-=2592000;
 	}
@@ -1102,6 +1109,26 @@ void World::logicTick()
 {
 	//std::cout<<"logic tick\n";
 	//handleTickBacklog();
+}
+
+void World::incrementDeities(int nTicks)
+{
+	// I think we should let deities act once a month.
+	
+	deityTicks+=nTicks;
+	
+	// increment monthly
+	while (deityTicks >= 2592000)
+	{
+		//std::cout<<"Deity actions here\n";
+		if (random.oneIn(12))
+		{
+			events.addEvent("DEITY ACT");
+		}
+		deityTicks-=2592000;
+	}
+	
+	
 }
 
 void World::updateMaps()

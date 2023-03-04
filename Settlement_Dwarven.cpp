@@ -87,7 +87,9 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 				// base chance of special item is 1 in 1000. 0.1%
 				// each level of metalsmithing skill can improve it by 1%
 				// which means that 100 skill means 100% chance of making special item.
-				int specialChance = 1000;
+				//int specialChance = 1000;
+				// DEBUG SETTING:
+				int specialChance = 100;
 				int skillModifier = character->skillMetalsmithing.level * 10;
 				int totalChance = specialChance - skillModifier;
 				if ( totalChance < 1 )
@@ -143,6 +145,15 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 					// engravings should be done seperately as it's a different skillset.
 					// Player should be able to pick the engraving if they are having it done.
 					
+				}
+				
+				if (qualityLevel == 6)
+				{
+					std::cout<<"*** ARTIFACT CREATED ***\n";
+					if (world!=0)
+					{
+						world->events.addEvent("ARTIFACT");
+					}
 				}
 				
 				nMetalStockpile-=10;
