@@ -71,8 +71,8 @@ class Menu_Events: public GUI_Interface
 		guiTableEvents.alpha=0;
 		guiTableEvents.active=true;
 		guiTableEvents.addColumn("Date","date",120);
-		guiTableEvents.addColumn("Type","type",120);
-		guiTableEvents.addColumn("Description","description",240);
+		guiTableEvents.addColumn("Type","type",320);
+		guiTableEvents.addColumn("Description","description",320);
 		tEvents.clear();
 		
 		for (int i=0;i<world.events.size();++i)

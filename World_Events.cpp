@@ -19,7 +19,7 @@ class Event: public TableInterface
 	public:
 	
 	std::string eventDescription;
-	enum EVENT_TYPE { EVENT_NONE, EVENT_WORLD_CREATED, EVENT_ITEM_CREATED };
+	enum EVENT_TYPE { EVENT_NONE, EVENT_WORLD_CREATED, EVENT_ITEM_CREATED, EVENT_TRIBAL_SPLIT, EVENT_TRIBE_BECOME_CIV, EVENT_SETTLEMENT_SPLIT, EVENT_NEW_LEADER, EVENT_DEITY_ACT };
 	EVENT_TYPE eventType;
 	
 	Event()
@@ -36,9 +36,47 @@ class Event: public TableInterface
 	{
 	}
 	
+	std::string getEventTypeStr()
+	{
+		if (eventType==EVENT_NONE)
+		{
+			return "NONE (PLACEHOLDER)";
+		}
+		if (eventType==EVENT_SETTLEMENT_SPLIT)
+		{
+			return "SETTLEMENT SPLIT";
+		}
+		else if (eventType==EVENT_WORLD_CREATED)
+		{
+			return "WORLD CREATED";
+		}
+		else if (eventType==EVENT_NEW_LEADER)
+		{
+			return "NEW LEADER";
+		}
+		else if (eventType==EVENT_DEITY_ACT)
+		{
+			return "DEITY ACT";
+		}
+		
+		return "??? EVENT TYPE ???";
+	}
+	
 	/* TABLE INTERFACE */
 	std::string getColumn(std::string _column)
 	{
+		if (_column=="date")
+		{
+			return "date";
+		}
+		else if (_column=="type")
+		{
+			return getEventTypeStr();
+		}
+		else if (_column=="description")
+		{
+			return eventDescription;
+		}
 		return eventDescription;
 	}
 	std::string getColumnType(std::string _column)
@@ -56,7 +94,11 @@ class Event: public TableInterface
 		{
 			return "On the year 0 the world was created. This has made a lot of people very angry and been widely regarded as a bad move.";
 		}
-		return "EVENT DESCRIPTION";
+		else if (eventType==EVENT_SETTLEMENT_SPLIT)
+		{
+			return "On the year X some Dwarves from the settlement of Y decided to leave and attempt to create their own settlement.";
+		}
+		return "??? EVENT DESCRIPTION GOES HERE ???";
 	}
 };
 

@@ -1123,7 +1123,7 @@ void World::incrementDeities(int nTicks)
 		//std::cout<<"Deity actions here\n";
 		if (random.oneIn(12))
 		{
-			events.addEvent("DEITY ACT",Event::EVENT_NONE);
+			events.addEvent("DEITY ACT",Event::EVENT_DEITY_ACT);
 		}
 		deityTicks-=2592000;
 	}

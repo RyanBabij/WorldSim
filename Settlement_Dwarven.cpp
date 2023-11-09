@@ -228,7 +228,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 						}
 						if (vNewTribeCharacter.size() >= 20)
 						{
-							// FORM THE NEW TRIBE AND BREAK.
+							// FORM THE NEW SETTLEMENT AND BREAK.
 							Console ("SETTLEMENT SPLIT");
 							std::cout<<"Settlement split\n";
 							
@@ -251,6 +251,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 							}
 
 
+							world->events.addEvent("SETTLEMENT SPLIT",Event::EVENT_SETTLEMENT_SPLIT);
 							break;
 						}
 						break;
