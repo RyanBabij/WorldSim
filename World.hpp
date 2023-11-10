@@ -146,7 +146,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	Calendar calendar;
 	Calendar lastDate; /* The date on the last logic tick. */
 
-	EventsManager events;
+	EventManager eventManager;
 
 	// STATES
 	bool isRaining;

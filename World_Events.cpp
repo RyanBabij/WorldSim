@@ -9,106 +9,123 @@
 	
 */
 
+#include "World_Event.hpp"
+
+#include "Settlement.hpp"
+
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
 
-#include <Container/Table/TableInterface.hpp>
+Event::Event(): eventType(EVENT_NONE), eventDescription("?EVENT?")
+{}
 
-class Event: public TableInterface
+Event::Event(std::string _eventDescription, EVENT_TYPE _eventType):
+eventType(_eventType), eventDescription(std::move(_eventDescription))
+{}
+
+Event::~Event()
 {
-	public:
-	
-	std::string eventDescription;
-	enum EVENT_TYPE { EVENT_NONE, EVENT_WORLD_CREATED, EVENT_ITEM_CREATED, EVENT_TRIBAL_SPLIT, EVENT_TRIBE_BECOME_CIV, EVENT_SETTLEMENT_SPLIT, EVENT_NEW_LEADER, EVENT_DEITY_ACT };
-	EVENT_TYPE eventType;
-	
-	Event()
+    // Proper cleanup of vEvent if necessary
+}
+
+std::string Event::getEventTypeStr() const
+{
+	switch (eventType)
 	{
-		eventDescription="?EVENT?";
-		eventType=EVENT_NONE;
-	}
-	Event(std::string _eventDescription, EVENT_TYPE _eventType)
-	{
-		eventDescription = _eventDescription;
-		eventType = _eventType;
-	}
-	virtual ~Event()
-	{
-	}
-	
-	std::string getEventTypeStr()
-	{
-		if (eventType==EVENT_NONE)
-		{
+		case EVENT_NONE:
 			return "NONE (PLACEHOLDER)";
-		}
-		if (eventType==EVENT_SETTLEMENT_SPLIT)
-		{
+		case EVENT_SETTLEMENT_SPLIT:
 			return "SETTLEMENT SPLIT";
-		}
-		else if (eventType==EVENT_WORLD_CREATED)
-		{
+		case EVENT_WORLD_CREATED:
 			return "WORLD CREATED";
-		}
-		else if (eventType==EVENT_NEW_LEADER)
-		{
+		case EVENT_NEW_LEADER:
 			return "NEW LEADER";
-		}
-		else if (eventType==EVENT_DEITY_ACT)
-		{
+		case EVENT_DEITY_ACT:
 			return "DEITY ACT";
-		}
-		
-		return "??? EVENT TYPE ???";
+		default:
+			return "??? EVENT TYPE ???";
 	}
-	
-	/* TABLE INTERFACE */
-	std::string getColumn(std::string _column)
+}
+
+std::string Event::getColumn(std::string _column)
+{
+	if (_column == "date")
 	{
-		if (_column=="date")
-		{
-			return "date";
-		}
-		else if (_column=="type")
-		{
-			return getEventTypeStr();
-		}
-		else if (_column=="description")
-		{
-			return eventDescription;
-		}
+		return "date"; // Placeholder for actual date handling
+	}
+	else if (_column == "type")
+	{
+		return getEventTypeStr();
+	}
+	else if (_column == "description")
+	{
 		return eventDescription;
 	}
-	std::string getColumnType(std::string _column)
+	return eventDescription; // This might be a mistake; consider handling unknown columns
+}
+
+std::string Event::getColumnType(std::string _column)
+{
+	// Placeholder for actual type handling
+	return "string";
+}
+
+std::string Event::getLongDescription()
+{
+	switch (eventType)
 	{
-		// if ( _column == "age" || _column == "territory" || _column == "food" || _column == "strength" || _column == "kills" )
-		// {
-			// return "number";
-		// }
-		return "string";
+		case EVENT_WORLD_CREATED:
+			return "On the year 0 the world was created. This has made a lot of people very angry and been widely regarded as a bad move.";
+		case EVENT_SETTLEMENT_SPLIT:
+			return "On the year X some Dwarves from the settlement of Y decided to leave and attempt to create their own settlement.";
+		default:
+			return "??? EVENT DESCRIPTION GOES HERE ???";
 	}
+}
+
+class Event_Settlement_Split: public Event
+{
+	// Reasons for Settlement Split:
+	// * Overpopulation
+	// * etc
 	
+	Settlement* baseSettlement;
+	Tribe* splittingTribe;
+	
+	public:
+	
+	Event_Settlement_Split(std::string _eventDescription, EVENT_TYPE _eventType, Settlement* _baseSettlement, Tribe* _splittingTribe): Event(_eventDescription, _eventType), baseSettlement(_baseSettlement), splittingTribe(_splittingTribe)
+	{
+	}
 	std::string getLongDescription()
 	{
-		if (eventType==EVENT_WORLD_CREATED)
-		{
-			return "On the year 0 the world was created. This has made a lot of people very angry and been widely regarded as a bad move.";
-		}
-		else if (eventType==EVENT_SETTLEMENT_SPLIT)
-		{
-			return "On the year X some Dwarves from the settlement of Y decided to leave and attempt to create their own settlement.";
-		}
-		return "??? EVENT DESCRIPTION GOES HERE ???";
+		return "On the year X some Dwarves from the settlement of " + baseSettlement->getName() + " decided to leave and attempt to create their own settlement.";
 	}
 };
 
-class EventsManager
+class Event_World_Created: public Event
+{
+	// Event when a Deity creates the world.
+	
+	public:
+	
+	Event_World_Created()
+	{
+	}
+	
+	
+	
+	
+	
+};
+
+class EventManager
 {
 	public:
 	
 	Vector <Event*> vEvent;
 
-	EventsManager()
+	EventManager()
 	{
 	}
 	
@@ -120,6 +137,11 @@ class EventsManager
 	void addEvent(std::string eventDescription, Event::EVENT_TYPE _eventType)
 	{
 		vEvent.push(new Event(eventDescription, _eventType));
+	}
+	
+	void addEvent(Event* _event)
+	{
+		vEvent.push(_event);
 	}
 	
 	Event* get(int i)

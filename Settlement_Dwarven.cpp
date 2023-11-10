@@ -7,7 +7,7 @@
 Settlement_Dwarven::Settlement_Dwarven()
 {
 
-	name = "Dwarven Settlement";
+	name = "<Dwarven Settlement>";
 	world = 0;
 	colourRed = 0;
 	colourGreen = 0;
@@ -152,7 +152,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 					std::cout<<"*** ARTIFACT CREATED ***\n";
 					if (world!=0)
 					{
-						world->events.addEvent("ARTIFACT",Event::EVENT_NONE);
+						world->eventManager.addEvent("ARTIFACT",Event::EVENT_NONE);
 					}
 				}
 				
@@ -251,7 +251,9 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 							}
 
 
-							world->events.addEvent("SETTLEMENT SPLIT",Event::EVENT_SETTLEMENT_SPLIT);
+							// Add legends event
+							Event_Settlement_Split * eventSplit = new Event_Settlement_Split("SETTLEMENT SPLIT FROM "+getName(),Event::EVENT_SETTLEMENT_SPLIT,this,splitTribe);
+							world->eventManager.addEvent(eventSplit);
 							break;
 						}
 						break;

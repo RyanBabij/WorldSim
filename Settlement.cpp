@@ -37,6 +37,11 @@ void Settlement::incrementTicks ( int /* nTicks */ )
   return;
 }
 
+std::string Settlement::getName()
+{
+	return name;
+}
+
 
 /* TABLE INTERFACE */
 

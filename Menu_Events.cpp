@@ -70,14 +70,14 @@ class Menu_Events: public GUI_Interface
 		guiTableEvents.table = &tEvents;
 		guiTableEvents.alpha=0;
 		guiTableEvents.active=true;
-		guiTableEvents.addColumn("Date","date",120);
-		guiTableEvents.addColumn("Type","type",320);
-		guiTableEvents.addColumn("Description","description",320);
+		guiTableEvents.addColumn("Date","date",100);
+		guiTableEvents.addColumn("Type","type",160);
+		guiTableEvents.addColumn("Description","description",480);
 		tEvents.clear();
 		
-		for (int i=0;i<world.events.size();++i)
+		for (int i=0;i<world.eventManager.size();++i)
 		{
-			tEvents.addRow(world.events.get(i));
+			tEvents.addRow(world.eventManager.get(i));
 		}
 		
 
@@ -187,11 +187,11 @@ class Menu_Events: public GUI_Interface
 				lastRowClicked=guiTableEvents.lastClickedIndex;
 
 				int totalIndex = 0;
-				for (int i=0;i<world.events.vEvent.size();++i)
+				for (int i=0;i<world.eventManager.vEvent.size();++i)
 				{
 					if ( lastRowClicked == i )
 					{
-						selectedEvent = world.events.vEvent(i);
+						selectedEvent = world.eventManager.vEvent(i);
 						
 						std::cout<<"Event selected: "<<selectedEvent->eventDescription<<"\n";
 					}

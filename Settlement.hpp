@@ -2,6 +2,8 @@
 #ifndef WORLDSIM_SETTLEMENT_HPP
 #define WORLDSIM_SETTLEMENT_HPP
 
+#include "WorldObjectGlobal.hpp"
+#include "Civ.hpp"
 
 class Settlement: public WorldObjectGlobal, public TableInterface
 {
@@ -17,7 +19,7 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		
 		Vector <Item*> vItem;
 
-		//std::string name;
+		//std::string name; // WorldObjectGlobal
 
 		//World* world;
 
@@ -42,13 +44,15 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		virtual void incrementTicks ( int /* nTicks */ );
 
 		bool removeCharacter( Character* /* _character */ );
+		
+		virtual std::string getName() override;
 
 		// WorldObjectGlobal virtual.
-		Texture* currentTexture();
+		Texture* currentTexture() override;
 
 		/* TABLE INTERFACE */
-		std::string getColumn(std::string _column);
-		std::string getColumnType(std::string _column);
+		std::string getColumn(std::string _column) override;
+		std::string getColumnType(std::string _column) override;
 };
 
 #endif
