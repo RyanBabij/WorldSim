@@ -10,12 +10,10 @@
 */
 
 #include "Tribe.hpp"
-
 #include "World.hpp"
 
 #include <Graphics/Texture/Texture.hpp>
-
-#include <Game/NameGen/NameGen.hpp>
+#include <Game/NameGenerator/NameGenerator.cpp>
 
 Tribe::Tribe()
 {
