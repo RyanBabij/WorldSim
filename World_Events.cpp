@@ -61,7 +61,7 @@ std::string Event::getColumn(std::string _column)
 	{
 		return eventDescription;
 	}
-	return eventDescription; // This might be a mistake; consider handling unknown columns
+	return "<EVENT UNKNOWN COLUMN>";
 }
 
 std::string Event::getColumnType(std::string _column)

@@ -50,16 +50,15 @@ class Mythology_Event
 
 class World;
 #include "Mythology_Deity.hpp"
+#include <Container/Table/TableInterface.hpp>
 
 // changes should be made by gradual steps, like government in a Paradox game
 // at least for now, the initial creation myth should be hardcoded. Only later details should mutate.
-class Mythology
+class Mythology: public TableInterface
 {
 	private:
 	
 	World* world;
-	
-	std::string name; // what the mythology calls itself
 	
 	Vector <Mythology*> vChildMythology; // Mythologies derived from this one.
 	
@@ -68,7 +67,9 @@ class Mythology
 	
 	public:
 	
-	enum mythology_type { none, spiritual, monotheistic, polytheistic, pagan };
+	std::string name; // what the mythology calls itself
+	
+	enum mythology_type { MYTHOLOGY_NONE, MYTHOLOGY_SPIRITUAL, MYTHOLOGY_MONOTHEISTIC, MYTHOLOGY_POLYTHEISTIC, MYTHOLOGY_PAGAN };
 	// the race which created the mythology. Other races can still follow it.
 	enum mythology_race { mixed, dwarven, elven, human };
 	mythology_type type; // The base type of mythology.
@@ -96,10 +97,19 @@ class Mythology
 	// do some stuff
 	void increment();
 	
+	std::string getMythologyType();
+	std::string getMythologyDescription();
+	
+	std::string getColumn(std::string _column) override;
+	std::string getColumnType(std::string _column) override;
+	 
+	virtual std::string getLongDescription();
+	
 };
 
 class Mythology_Manager
 {
+	public:
 	
 	Mythology mythologyDwarven;
 	Mythology mythologyElven;
@@ -108,10 +118,29 @@ class Mythology_Manager
 	Mythology_Deity deity1;
 	Mythology_Deity deity2;
 	
-	//Vector <Mythology_Deity*> vDeity;
+	Vector <Mythology*> vMythology;
 	
 	Mythology_Manager()
 	{
+	}
+	
+	void add(Mythology* _mythology)
+	{
+		vMythology.add(_mythology);
+	}
+	
+	Mythology* get(int i)
+	{
+		if (vMythology.isSafe(i))
+		{
+			return vMythology(i);
+		}
+		return 0;
+	}
+	
+	int size()
+	{
+		return vMythology.size();
 	}
 	
 	void init()

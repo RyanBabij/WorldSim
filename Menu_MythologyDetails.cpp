@@ -1,18 +1,18 @@
 #pragma once
-#ifndef WORLDSIM_MENU_EVENT_DETAILS_CPP
-#define WORLDSIM_MENU_EVENT_DETAILS_CPP
+#ifndef WORLDSIM_MENU_MYTHOLOGY_DETAILS_CPP
+#define WORLDSIM_MENU_MYTHOLOGY_DETAILS_CPP
 
-/* WorldSim: Menu_EventDetails.cpp
-	#include "Menu_EventDetails.cpp"
+/* WorldSim: Menu_MythologyDetails.cpp
+	#include "Menu_MythologyDetails.cpp"
 
-	Menu listing the details of the particular event.
+	Menu listing the details of the particular mythology.
 	
 */
 
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
 
-class Menu_EventDetails: public GUI_Interface
+class Menu_MythologyDetails: public GUI_Interface
 {
 	public:
 	GUI_Manager guiManager;
@@ -27,12 +27,12 @@ class Menu_EventDetails: public GUI_Interface
 	
 	GUI_Button buttonClose;
 
-	Event* selectedEvent;
+	Mythology* selectedMythology;
 
 	
-	Menu_EventDetails()
+	Menu_MythologyDetails()
 	{	
-		selectedEvent=0;
+		selectedMythology=0;
 	}
 	
 	void setFont(Wildcat::Font* _font)
@@ -48,11 +48,11 @@ class Menu_EventDetails: public GUI_Interface
     init(0);
   }
 	
-	void init(Event* _event)
+	void init(Mythology* _mythology)
 	{
-		if ( _event != 0 || selectedEvent== 0)
+		if ( _mythology != 0 || selectedMythology== 0)
 		{
-			selectedEvent=_event;
+			selectedMythology=_mythology;
 		}
 		
 		/* Initialise theme. */
@@ -76,8 +76,9 @@ class Menu_EventDetails: public GUI_Interface
 	
 	void render()
 	{
-		if (selectedEvent==0)
+		if (selectedMythology==0)
 		{
+			std::cout<<"No selected mythology\n";
 			active=false;
 			return;
 		}
@@ -85,13 +86,13 @@ class Menu_EventDetails: public GUI_Interface
 		if ( active )
 		{
 			Renderer::placeColour4a(150,150,150,220,panelX1,panelY1,panelX2,panelY2);
-			font8x8.drawText("Event details",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
+			font8x8.drawText("Mythology details",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
 
 			int yOffset=35;
 			int vSpacing=12;
 			int xBuffer = 50;
 
-			font8x8.drawText(selectedEvent->getLongDescription(),panelX1+xBuffer,panelY2-yOffset,panelX2-xBuffer,panelY1, false, false);
+			font8x8.drawText("<MYTH DETAILS GO HERE>",panelX1+xBuffer,panelY2-yOffset,panelX2-xBuffer,panelY1, false, false);
 			yOffset+=vSpacing;
 
 			guiManager.render();

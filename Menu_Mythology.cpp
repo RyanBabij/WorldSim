@@ -9,13 +9,17 @@
 	
 */
 
+#include "Mythology.hpp"
+#include "Menu_MythologyDetails.cpp"
+
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
 
-#include "Mythology.hpp"
 
 class Menu_Mythology: public GUI_Interface
 {
+	Menu_MythologyDetails menuMythologyDetails;
+	
 	public:
 	GUI_Manager guiManager;
 	
@@ -31,21 +35,25 @@ class Menu_Mythology: public GUI_Interface
 
 	GUI_Button buttonMythologyDetails;
 	
-	Item* selectedMythology;
+	Mythology* selectedMythology;
 	
-	// Table of items
-	Table2 tItems;
+	// Table of mythologies
+	Table2 tMythologies;
 	GUI_Table guiTableMythologies;
+	
+	int lastRowClicked;
 	
 	Menu_Mythology()
 	{	
 		selectedMythology=0;
+		lastRowClicked=-1;
 	}
 
 	void setFont(Wildcat::Font* _font)
 	{
 		font = _font;
 		guiManager.setFont(_font);
+		menuMythologyDetails.setFont(_font);
 	}
   
   
@@ -57,36 +65,26 @@ class Menu_Mythology: public GUI_Interface
 	
 	void init(Mythology* _selectedMythology)
 	{
-		std::cout<<"\n**********MYTH INIT*****\n";
 		// init and populate table
 		guiTableMythologies.clear();
-		guiTableMythologies.table = &tItems;
+		guiTableMythologies.table = &tMythologies;
 		guiTableMythologies.alpha=0;
 		guiTableMythologies.active=true;
-		guiTableMythologies.addColumn("AYAYA","creation",120);
-		guiTableMythologies.addColumn("Quality","quality",120);
-		guiTableMythologies.addColumn("Type","name",120);
-		guiTableMythologies.addColumn("Description","description",240);
-		tItems.clear();
+		guiTableMythologies.addColumn("Date","date",100);
+		guiTableMythologies.addColumn("Type","type",160);
+		guiTableMythologies.addColumn("Description","description",480);
+		tMythologies.clear();
 		
-		// for (int i=0;i<world.vCiv.size();++i)
-		// {
-			// for (int j=0;j<world.vCiv(i)->vSettlement.size();++j)
-			// {
-				// Settlement * settlement = world.vCiv(i)->vSettlement(j);
-				
-				// for (int k=0;k<settlement->vItem.size();++k)
-				// {
-					// tItems.addRow(settlement->vItem(k));
-				// }
-			// }
-		// }
-		
+		for (int i=0;i<world.mythologyManager.size();++i)
+		{
+			tMythologies.addRow(world.mythologyManager.get(i));
+		}
 
-		// if ( _selectedMythology != 0 || selectedMythology== 0)
-		// {
-			// selectedMythology=_selectedMythology;
-		// }
+
+		if ( _selectedMythology != 0 || selectedMythology== 0)
+		{
+			selectedMythology=_selectedMythology;
+		}
 		
 		/* Initialise theme. */
 		cNormal.set(220,220,220);
@@ -102,32 +100,42 @@ class Menu_Mythology: public GUI_Interface
 		buttonMythologyDetails.setColours(cNormal,cHighlight,0);
 		buttonMythologyDetails.active=true;
 		
+		guiManager.clear();
+
 		guiManager.add(&buttonClose);
 		guiManager.add(&buttonMythologyDetails);
 		guiManager.add(&guiTableMythologies);
 
 		guiManager.setFont(font);
+		
+		menuMythologyDetails.init();
+		menuMythologyDetails.active=false;
 	
 		eventResize();
+		menuMythologyDetails.eventResize();
 	}
 	
 	void render()
 	{
-		Renderer::placeColour4a(150,150,150,200,panelX1,panelY1,panelX2,panelY2);
-		//if (selectedMythology==0) { return; }
-		
-		if ( active )
+		if ( menuMythologyDetails.active )
 		{
+			menuMythologyDetails.render();
+		}
+		else if ( active )
+		{
+			Renderer::placeColour4a(150,150,150,200,panelX1,panelY1,panelX2,panelY2);
 			font8x8.drawText("Mythologies",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
 			guiManager.render();
 		}
-		
-
 	}
-
+	
 	bool keyboardEvent (Keyboard* _keyboard)
 	{
-		if ( active )
+		if ( menuMythologyDetails.active )
+		{
+			return menuMythologyDetails.keyboardEvent(_keyboard);
+		}
+		else if ( active )
 		{
 			return guiManager.keyboardEvent(_keyboard);
 		}
@@ -136,7 +144,11 @@ class Menu_Mythology: public GUI_Interface
 
 	bool mouseEvent (Mouse* _mouse)
 	{
-		if ( active )
+		if ( menuMythologyDetails.active )
+		{
+			menuMythologyDetails.mouseEvent(_mouse);
+		}
+		else if ( active )
 		{
 				/* If the guiManager did something with the mouse event. */
 			if(guiManager.mouseEvent(_mouse)==true)
@@ -152,10 +164,44 @@ class Menu_Mythology: public GUI_Interface
       
 			if (buttonMythologyDetails.clicked==true)
 			{
-				std::cout<<"Put mythology details menu here\n";
-				active=false;
+				if ( selectedMythology != 0 )
+				{
+					std::cout<<"Mythology details\n";
+					menuMythologyDetails.init(selectedMythology);
+					menuMythologyDetails.active=true;
+					// Keep the parent menu active so we go back to it when closing submenu
+					//active=false;
+				}
+				else
+				{
+					std::cout<<"Select a mythology first.\n";
+				}
+
 				buttonMythologyDetails.unclick();
 			}
+			
+			if ( guiTableMythologies.lastClickedIndex != -1 )
+			{
+				lastRowClicked=guiTableMythologies.lastClickedIndex;
+
+				int totalIndex = 0;
+				for (int i=0;i<world.mythologyManager.vMythology.size();++i)
+				{
+					if ( lastRowClicked == i )
+					{
+						selectedMythology = world.mythologyManager.vMythology(i);
+						
+						std::cout<<"Mythology selected: "<<selectedMythology->name<<"\n";
+					}
+
+				}
+		
+				guiTableMythologies.lastClickedIndex = -1;
+			}
+			
+			
+			
+			
 		}
 		
 		return false;
@@ -166,6 +212,8 @@ class Menu_Mythology: public GUI_Interface
 		buttonClose.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
 		buttonMythologyDetails.setPanel(panelX2-140, panelY1+40, panelX2-20, panelY1+20);
 		guiTableMythologies.setPanel(panelX1,panelY1,panelX2,panelY2-120);
+		menuMythologyDetails.setPanel(panelX1,panelY1,panelX2,panelY2);
+		menuMythologyDetails.eventResize();
 	}
 	
 };

@@ -55,12 +55,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	// We could remove this later by using a pointer.
 	ArrayS2 <enumBiome> aTerrain;
 	
-	Vector <Mythology_Deity*> vDeity;
-	
-	// There are 3 hardcoded base mythologies, one for each race. However they can mutate in a dynamic way.
-	Mythology mythologyDwarven;
-	Mythology mythologyElven;
-	Mythology mythologyHuman;
+	//Vector <Mythology_Deity*> vDeity;
 
 	public:
 
@@ -147,6 +142,7 @@ class World: public LogicTickInterface, public IdleTickInterface, public SaveFil
 	Calendar lastDate; /* The date on the last logic tick. */
 
 	EventManager eventManager;
+	Mythology_Manager mythologyManager;
 
 	// STATES
 	bool isRaining;

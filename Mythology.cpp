@@ -23,6 +23,9 @@ void Mythology::generateBaseDwarven()
 	std::cout<<"Generating base Dwarven mythology.\n";
 	
 	race=dwarven;
+	type = Mythology::MYTHOLOGY_MONOTHEISTIC;
+	
+	
 }
 void Mythology::generateBaseElven()
 {
@@ -48,5 +51,45 @@ void Mythology::increment()
 	}
 	
 }
+
+std::string Mythology::getMythologyType()
+{
+	return "<MYTH TYPE>";
+}
+
+std::string Mythology::getMythologyDescription()
+{
+	return "<MYTH DESC>";
+}
+
+std::string Mythology::getColumn(std::string _column)
+{
+	if (_column == "date")
+	{
+		return "date"; // Placeholder for actual date handling
+	}
+	// else if (_column == "type")
+	// {
+		// return getEventTypeStr();
+	// }
+	// else if (_column == "description")
+	// {
+		// return eventDescription;
+	// }
+	// return eventDescription; // This might be a mistake; consider handling unknown columns
+	return "<DATA>";
+}
+
+std::string Mythology::getColumnType(std::string _column)
+{
+	// Placeholder for actual type handling
+	return "string";
+}
+
+std::string Mythology::getLongDescription()
+{
+	return "<MYTHOLOGY DESC>";
+}
+
 
 #endif

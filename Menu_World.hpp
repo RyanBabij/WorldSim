@@ -260,7 +260,6 @@ class Menu_World: public GUI_Interface
 				std::cout<<"Mythology\n";
 				active=false;
 				buttonMythology.unclick();
-				
 				menuMythologies.init(0);
 				menuMythologies.active=true;
 			}

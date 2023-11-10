@@ -57,11 +57,11 @@ class Menu_Events: public GUI_Interface
 	}
   
   
-  // This is some bad overloading.
-  void init()
-  {
-    init(0);
-  }
+	// This is some bad overloading.
+	void init()
+	{
+		init(0);
+	}
 	
 	void init(Event* _event)
 	{
