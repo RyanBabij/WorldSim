@@ -13,7 +13,7 @@
 #include "World.hpp"
 
 #include <Graphics/Texture/Texture.hpp>
-#include <Game/NameGenerator/NameGenerator.cpp>
+#include <Game/Language/NameGenerator.cpp>
 
 Tribe::Tribe()
 {

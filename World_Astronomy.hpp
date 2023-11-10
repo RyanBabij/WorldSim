@@ -29,7 +29,7 @@
 	To solve the constellation problem they could be pre-made and placed randomly in the sky. All constellation stars are maximum magnitude, and all normal stars are dimmer.
 */
 
-#include <Game/NameGenerator/NameGenerator.cpp>
+#include <Game/Language/NameGenerator.cpp>
 #include <Container/Vector/Vector.hpp>
 
 

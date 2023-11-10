@@ -33,7 +33,7 @@ Local Map data is stored in World_Local.
 #include <System/Time/Calendar.hpp>
 #include <File/SaveFileManager.hpp>
 #include <Math/Random/GlobalRandom.hpp>
-#include <Game/NameGenerator/NameGenerator.cpp>
+#include <Game/Language/NameGenerator.cpp>
 
 #include <atomic>
 #include <map>

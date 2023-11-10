@@ -18,7 +18,7 @@ RandomLehmer RNG_TEST; // for testing
 
 #include "Driver_Settings_WordLists.cpp"
 
-#include <Game/NameGenerator/NameGenerator.cpp>
+#include <Game/Language/NameGenerator.cpp>
 NameGenerator globalNameGen;
 
 #include <Graphics/Colour/Colour.hpp> // loading raw colours

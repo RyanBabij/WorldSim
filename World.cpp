@@ -31,7 +31,7 @@ Implementation of "World.hpp".
 #include "World_MapManager.cpp"
 
 #include <Game/WorldGenerator/Biome.hpp>
-#include <Game/NameGenerator/NameGenerator.cpp>
+#include <Game/Language/NameGenerator.cpp>
 #include <Game/WorldGenerator/WorldGenerator2.hpp>
 #include <File/FileLog.hpp>
 #include <System/Time/Timer.hpp> // To manage work chunks and benchmark worldgen time.
