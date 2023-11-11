@@ -44,7 +44,7 @@ bool Tribe_Human::spawn()
 		return false;
 	}
 
-	name = globalNameGen.generateName();
+	name = globalNameGen.generate();
 	nFood = 10;
 
 	worldX=spawnTile->x;
@@ -482,7 +482,7 @@ void Tribe_Human::incrementTicks ( int nTicks )
 							// FORM THE NEW TRIBE AND BREAK.
 							Tribe_Human* splitTribe = new Tribe_Human;
 							splitTribe->world = world;
-							splitTribe->name = globalNameGen.generateName();
+							splitTribe->name = globalNameGen.generate();
 							splitTribe->nFood = 10;
 							splitTribe->worldX = xy->x;
 							splitTribe->worldY = xy->y;

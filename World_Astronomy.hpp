@@ -50,19 +50,19 @@ class World_Astronomy
 	
 	void generateSystem (int nMoon, int nPlanet)
 	{
-		sunName = globalNameGen.generateName();
+		sunName = globalNameGen.generate();
 		
 		vMoon.clear();
 		vPlanet.clear();
 		
 		for (int i=0;i<nMoon;++i)
 		{
-			vMoon.push(globalNameGen.generateName());
+			vMoon.push(globalNameGen.generate());
 		}
 		
 		for (int i=0;i<nPlanet;++i)
 		{
-			vPlanet.push(globalNameGen.generateName());
+			vPlanet.push(globalNameGen.generate());
 		}
 	}
 

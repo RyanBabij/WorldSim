@@ -234,7 +234,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 							
 							Tribe_Dwarven* splitTribe = new Tribe_Dwarven;
 							splitTribe->world = world;
-							splitTribe->name = globalNameGen.generateName();
+							splitTribe->name = globalNameGen.generate();
 							splitTribe->nFood = 10;
 							splitTribe->worldX = xy->x;
 							splitTribe->worldY = xy->y;

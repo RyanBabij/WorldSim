@@ -108,8 +108,8 @@ void Character::init(const int _sex /* =0 */)
 		isMale = Random::flip();
 	}
 
-	firstName = globalNameGen.generateName();
-	lastName = globalNameGen.generateName();
+	firstName = globalNameGen.generate();
+	lastName = globalNameGen.generate();
 	age=0;
 
 	// There will be some differences in stats between genders, but

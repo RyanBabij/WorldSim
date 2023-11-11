@@ -49,7 +49,7 @@ bool Tribe_Dwarven::spawn()
 		return false;
 	}
 
-	name = globalNameGen.generateName();
+	name = globalNameGen.generate();
 	nFood = 10;
 
 	worldX=spawnTile->x;

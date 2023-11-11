@@ -256,7 +256,7 @@ void World::startSimulation()
 					}
 
 					World_Landmass* landmass = new World_Landmass;
-					landmass->name = globalNameGen.generateName();
+					landmass->name = globalNameGen.generate();
 					landmass->size = vFill->size();
 					landmass->getAverageCoordinates(vFill);
 					vLandmass.push(landmass);
@@ -392,27 +392,27 @@ void World::startSimulation()
 		{
 			if ( vBiome(i)->size < LOCAL_MAP_SIZE )
 			{
-				vBiome(i)->name = "Lake " + globalNameGen.generateName();
+				vBiome(i)->name = "Lake " + globalNameGen.generate();
 			}
 			else
 			{
-				vBiome(i)->name = "Ocean of "+globalNameGen.generateName();
+				vBiome(i)->name = "Ocean of "+globalNameGen.generate();
 			}
 		}
 		else
 		{
-			vBiome(i)->name = globalNameGen.generateName();
+			vBiome(i)->name = globalNameGen.generate();
 		}
 
 		if ( biomeType == MOUNTAIN)
 		{
 			if ( vBiome(i)->size == 1 )
 			{
-				vBiome(i)->name = "Mount " + globalNameGen.generateName();
+				vBiome(i)->name = "Mount " + globalNameGen.generate();
 			}
 			else
 			{
-				vBiome(i)->name = globalNameGen.generateName() + " Mountains";
+				vBiome(i)->name = globalNameGen.generate() + " Mountains";
 			}
 		}
 		// convert biome names to all upper case for now to make sorting easier.

@@ -21,6 +21,9 @@ RandomLehmer RNG_TEST; // for testing
 #include <Game/Language/NameGenerator.cpp>
 NameGenerator globalNameGen;
 
+#include <Game/Language/NameGeneratorWord.cpp>
+NameGeneratorWord gNameGeneratorWord;
+
 #include <Graphics/Colour/Colour.hpp> // loading raw colours
 #include <Graphics/Colour/ColourManager.hpp> // loading raw colours
 ColourManager <unsigned char> colourManager;
