@@ -75,6 +75,23 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		for (int i=0;i<vCharacter.size();++i)
 		{
 			Character* character = vCharacter(i);
+			
+			// Research
+			bool breakthrough = character->abstractResearchMonth();
+			
+			if (breakthrough)
+			{
+				
+				Technology::TECHNOLOGY_TYPE techAdvance = technology.advance();
+				Console ("Tech up: "+technology.techToString(techAdvance));
+				
+				Event_Tech_Breakthrough * eventTech = new Event_Tech_Breakthrough
+				("BREAKTHROUGH IN "+technology.techToString(techAdvance),Event::EVENT_TECH_BREAKTHROUGH);
+				
+				world->eventManager.addEvent(eventTech);
+				//world->eventManager.addEvent("TECH ADVANCE",Event::EVENT_TECH_BREAKTHROUGH);
+			}
+			
 		
 			if (nMetalStockpile > 10 )
 			{

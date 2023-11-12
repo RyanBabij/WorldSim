@@ -13,6 +13,7 @@
 #include "Menu_Events.cpp"
 #include "Menu_Items.cpp"
 #include "Menu_Mythology.cpp"
+#include "Menu_Races.cpp"
 
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
@@ -48,6 +49,8 @@ class Menu_World: public GUI_Interface
 	// View notable locations
 	// View Mythologies
 	GUI_Button buttonMythology;
+	// View races
+	GUI_Button buttonRaces;
 
 	//Submenu for events
 	Menu_Events menuEvents;
@@ -55,6 +58,8 @@ class Menu_World: public GUI_Interface
 	Menu_Items menuItems;
 	//Submenu for mythologies
 	Menu_Mythology menuMythologies;
+	//Submenu for races
+	Menu_Mythology menuRaces;
 
 	// TABLE FOR LANDMASSES
 	Table2 tLandmass;
@@ -77,6 +82,7 @@ class Menu_World: public GUI_Interface
 		menuEvents.setFont(_font);
 		menuItems.setFont(_font);
 		menuMythologies.setFont(_font);
+		menuRaces.setFont(_font);
 	}
 	
 	void init()
@@ -106,6 +112,10 @@ class Menu_World: public GUI_Interface
 		buttonMythology.text="Mythologies";
 		buttonMythology.setColours(cNormal,cHighlight,0);
 		buttonMythology.active=true;
+		
+		buttonRaces.text="Races";
+		buttonRaces.setColours(cNormal,cHighlight,0);
+		buttonRaces.active=true;
 
 		active = false;
 
@@ -129,6 +139,7 @@ class Menu_World: public GUI_Interface
 		guiManager.add(&buttonItems);
 		guiManager.add(&buttonCivilizations);
 		guiManager.add(&buttonMythology);
+		guiManager.add(&buttonRaces);
 		//guiManager.add(&guiTableLandmass);
 		
 		menuEvents.init();
@@ -137,11 +148,14 @@ class Menu_World: public GUI_Interface
 		menuItems.active=false;
 		menuMythologies.init();
 		menuMythologies.active=false;
+		menuRaces.init();
+		menuRaces.active=false;
 		
 		eventResize();
 		menuEvents.eventResize();
 		menuItems.eventResize();
 		menuMythologies.eventResize();
+		menuRaces.eventResize();
 	}
 
 	void render()
@@ -157,6 +171,10 @@ class Menu_World: public GUI_Interface
 		else if ( menuMythologies.active )
 		{
 			menuMythologies.render();
+		}
+		else if ( menuRaces.active )
+		{
+			menuRaces.render();
 		}
 		else if ( active )
 		{
@@ -211,6 +229,10 @@ class Menu_World: public GUI_Interface
 		{
 			menuMythologies.mouseEvent(_mouse);
 		}
+		else if ( menuRaces.active )
+		{
+			menuRaces.mouseEvent(_mouse);
+		}
 		
 		else if ( active )
 		{
@@ -263,6 +285,14 @@ class Menu_World: public GUI_Interface
 				menuMythologies.init(0);
 				menuMythologies.active=true;
 			}
+			if  (buttonRaces.clicked==true)
+			{
+				std::cout<<"Races\n";
+				active=false;
+				buttonRaces.unclick();
+				menuRaces.init(0);
+				buttonRaces.active=true;
+			}
 			
 			
 			if ( guiTableLandmass.lastClickedIndex != -1 )
@@ -293,6 +323,7 @@ class Menu_World: public GUI_Interface
 		buttonItems.setPanel(midX-80,panelY2-120,midX+80,panelY2-140);
 		buttonCivilizations.setPanel(midX-80,panelY2-140,midX+80,panelY2-160);
 		buttonMythology.setPanel(midX-80,panelY2-160,midX+80,panelY2-180);
+		buttonRaces.setPanel(midX-80,panelY2-180,midX+80,panelY2-200);
 
 		menuEvents.setPanel(panelX1,panelY1,panelX2,panelY2);
 		menuEvents.eventResize();
@@ -301,7 +332,11 @@ class Menu_World: public GUI_Interface
 		menuItems.eventResize();
 		
 		menuMythologies.setPanel(panelX1,panelY1,panelX2,panelY2);
-		menuMythologies.eventResize();
+		menuMythologies.eventResize();		
+		
+		menuRaces.setPanel(panelX1,panelY1,panelX2,panelY2);
+		menuRaces.eventResize();
+		
 	}
 
 };

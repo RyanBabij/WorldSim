@@ -255,6 +255,11 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   void updateKnowledge();
   // Extra processing available
   bool updateKnowledgeIdle();
+  
+  
+  
+	// ABSTRACT FUNCTIONS
+  bool abstractResearchMonth();
 
 	
 };

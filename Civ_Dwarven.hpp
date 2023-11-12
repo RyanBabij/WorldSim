@@ -17,15 +17,7 @@ class Civ_Dwarven: public Civ
 
 
 	public:
-	
-
-		
 		Civ_Dwarven();
-		
-
-	
 };
-
-
 
 #endif

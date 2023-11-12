@@ -8,6 +8,8 @@
   Civs are an evolution of Tribes. They manage multiple Cities and can raise Armies and do other advanced things.
 */
 
+#include "Technology.cpp"
+
 class Character;
 class Settlement;
 
@@ -31,6 +33,7 @@ class Civ: public TableInterface
 	public:
 	
 		Mythology* mythology;
+		Technology technology;
 		
 			// EACH TILE MAY ONLY BE OWNED BY ONE CIV, THEREFORE THIS ARRAY IS SHARED BETWEEN ALL CIVS.
 		static ArrayS2 <Civ*> aOwnership;

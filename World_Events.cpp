@@ -42,6 +42,8 @@ std::string Event::getEventTypeStr() const
 			return "NEW LEADER";
 		case EVENT_DEITY_ACT:
 			return "DEITY ACT";
+		case EVENT_TECH_BREAKTHROUGH:
+			return "TECH BREAKTHROUGH";
 		default:
 			return "??? EVENT TYPE ???";
 	}
@@ -99,7 +101,8 @@ class Event_Settlement_Split: public Event
 	}
 	std::string getLongDescription()
 	{
-		return "On the year X some Dwarves from the settlement of " + baseSettlement->getName() + " decided to leave and attempt to create their own settlement.";
+		return "On the year X some Dwarves from the settlement of " + baseSettlement->getName() + " decided to leave "
+		"and attempt to create their own settlement.";
 	}
 };
 
@@ -115,6 +118,31 @@ class Event_World_Created: public Event
 	
 	
 	
+	
+	
+};
+
+class Event_Tech_Breakthrough: public Event
+{
+	// Event when a character makes a tech breakthrough
+	
+	Character* character; //character which discovered the tech breakthrough
+	// The type of discovery
+	Technology::TECHNOLOGY_TYPE type;
+	// The level of the discovery, this ties in with flavour text
+	int techLevel;
+	
+	public:
+	Event_Tech_Breakthrough(std::string _eventDescription, EVENT_TYPE _eventType): Event(_eventDescription, _eventType)
+	{
+		techLevel=0;
+		character=0;
+	}
+	
+	std::string getLongDescription()
+	{
+		return "On the year X, Y discovered a technological breakthrough.";
+	}
 	
 	
 };

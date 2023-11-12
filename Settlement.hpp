@@ -2,13 +2,14 @@
 #ifndef WORLDSIM_SETTLEMENT_HPP
 #define WORLDSIM_SETTLEMENT_HPP
 
+#include "Resource.cpp"
 #include "WorldObjectGlobal.hpp"
 #include "Civ.hpp"
 
 class Settlement: public WorldObjectGlobal, public TableInterface
 {
 	private:
-
+		
 	protected:
 		RandomNonStatic random;
 
@@ -18,6 +19,10 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		Vector <Character*> vDeceased;
 		
 		Vector <Item*> vItem;
+		
+		ResourceManager resourceManager;
+		Technology technology;
+
 
 		//std::string name; // WorldObjectGlobal
 

@@ -1001,6 +1001,24 @@ bool Character::updateKnowledgeIdle()
 	return false;
 }
 
+
+// ABSTRACT FUNCTIONS MONTHLY
+
+// Research is based partially on intelligence. More people = more research.
+// Chance of breakthrough = 0.001% per intelligence level per month
+// Return true if a breakthrough occurs and the civ/settlement will determine outcome.
+// There should probably be a system for diminishing returns as pop gets larger.
+// Yes this could be ported out to the Settlement to manage, but for now I'll keep it per-Character to see how it goes
+
+bool Character::abstractResearchMonth()
+{
+	unsigned int breakthroughChance = intelligence;
+	//return globalRandom.rand(100) < breakthroughChance;
+	return globalRandom.rand(1000) < breakthroughChance;
+	//return globalRandom.rand(100000) < breakthroughChance;
+}
+
+
 // INHERITED FUNCTIONS
 
 
