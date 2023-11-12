@@ -22,7 +22,7 @@ void Mythology::generateBaseDwarven()
 {
 	std::cout<<"Generating base Dwarven mythology.\n";
 	
-	race=dwarven;
+	race=DWARVEN;
 	type = Mythology::MYTHOLOGY_MONOTHEISTIC;
 	
 	
@@ -36,7 +36,7 @@ void Mythology::generateBaseHuman()
 	std::cout<<"Generating base Human mythology.\n";
 }
 
-void Mythology::addDeity(std::string _name, Mythology_Deity::mythology_deity_type _type)
+void Mythology::addDeity(std::string _name, Mythology_Deity::PERSONALITY _type)
 {
 }
 

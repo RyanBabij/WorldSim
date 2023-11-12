@@ -29,32 +29,6 @@ void Mythology_Deity::act()
 {
 }
 
-void Mythology_Deity::createRace(enumRace _race)
-{
-	if (world==0)
-	{
-		return;
-	}
-	
-	//void World::generateTribes( int nTribesHuman = DEFAULT_NUMBER_TRIBES_HUMAN, int nTribesDwarven = DEFAULT_NUMBER_TRIBES_DWARVEN, int nTribesElven = DEFAULT_NUMBER_TRIBES_ELVEN)
-	
-	world->generateTribes(0,1,0);
-	
-	
-	if (_race == NONE)
-	{
-	}
-	else if (_race == DWARVEN)
-	{
-	}
-	else if (_race == ELVEN)
-	{
-	}
-	else if (_race == HUMAN)
-	{
-	}
-	
-}
 
 
 #endif

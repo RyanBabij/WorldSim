@@ -20,21 +20,15 @@ class Mythology_Deity
 	int malevolence;
 	int sanity;
 	
-	// The type of deity. Shouldn't need to be too complex for now.
-	enum mythology_deity_type { benevolent, evil, chaotic };
-	enum mythology_deity_subtype { creator, alien, observer };
+	enum PERSONALITY { PHYSICAL, MYSTERIOUS, BUILDER, TRICKSTER };
+	enum ALIGNMENT { GOOD, FLAWED, EVIL };
 	
-	mythology_deity_type type;
-	mythology_deity_subtype subtype;
-	
+	// A god can have a certain number of people it looks after.
 	Vector <Character*> vObservedCharacters;
 	
 	World* world;
 	
-	
 	Mythology_Deity();
-	
-
 	
 	// Deity can access the world and act in it.
 	// Generally this should take the form of "favouring" somebody, which could turn them into a saint
@@ -42,8 +36,7 @@ class Mythology_Deity
 	// What actions could deities make?
 	// * Favour an individual - Give them items, stat increase, give them knowledge, make them a saint/prophet.
 	void act();
-	
-	void createRace(enumRace /* _race */ );
+
 };
 
 #endif

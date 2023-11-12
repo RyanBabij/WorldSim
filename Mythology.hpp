@@ -70,10 +70,9 @@ class Mythology: public TableInterface
 	std::string name; // what the mythology calls itself
 	
 	enum mythology_type { MYTHOLOGY_NONE, MYTHOLOGY_SPIRITUAL, MYTHOLOGY_MONOTHEISTIC, MYTHOLOGY_POLYTHEISTIC, MYTHOLOGY_PAGAN };
-	// the race which created the mythology. Other races can still follow it.
-	enum mythology_race { mixed, dwarven, elven, human };
 	mythology_type type; // The base type of mythology.
-	mythology_race race; // The base type of mythology.
+	// the race which created the mythology. Other races can still follow it.
+	enumRace race; // The base type of mythology.
 
 	
 	// Name of the World. For now hardcoded.
@@ -92,7 +91,7 @@ class Mythology: public TableInterface
 	void generateBaseElven();
 	void generateBaseHuman();
 	
-	void addDeity(std::string /* _name */, Mythology_Deity::mythology_deity_type /* _type */ );
+	void addDeity(std::string /* _name */, Mythology_Deity::PERSONALITY /* _type */ );
 	
 	// do some stuff
 	void increment();
@@ -110,42 +109,65 @@ class Mythology: public TableInterface
 class Mythology_Manager
 {
 	public:
+		Vector <Mythology*> vMythology;
 	
-	Mythology mythologyDwarven;
-	Mythology mythologyElven;
-	Mythology mythologyHuman;
-	
-	Mythology_Deity deity1;
-	Mythology_Deity deity2;
-	
-	Vector <Mythology*> vMythology;
-	
-	Mythology_Manager()
-	{
-	}
-	
-	void add(Mythology* _mythology)
-	{
-		vMythology.add(_mythology);
-	}
-	
-	Mythology* get(int i)
-	{
-		if (vMythology.isSafe(i))
+		Mythology_Manager()
 		{
-			return vMythology(i);
 		}
-		return 0;
+		
+		void add(Mythology* _mythology)
+		{
+			vMythology.add(_mythology);
+		}
+		
+		Mythology* get(int i)
+		{
+			if (vMythology.isSafe(i))
+			{
+				return vMythology(i);
+			}
+			return 0;
+		}
+		
+		int size()
+		{
+			return vMythology.size();
+		}
+		
+		void init()
+		{
+		}
+};
+Mythology_Manager mythologyManager;
+
+// Dwarven and Elven mythology are to be mostly hardcoded and not too subject to change.
+
+class Mythology_Dwarven: public Mythology
+{
+	public:
+	
+	Mythology_Dwarven()
+	{
+		type = Mythology::MYTHOLOGY_MONOTHEISTIC;
+		race = DWARVEN;
+		
+		Mythology_Deity* deity = new Mythology_Deity();
+		
+		mythologyManager.add(this);
 	}
 	
-	int size()
+	std::string getLongDescription()
 	{
-		return vMythology.size();
-	}
-	
-	void init()
-	{
+		std::string description = "The Dwarven religion is monotheistic, believing in a single Architect God who \
+		designed the universe according to mathematical laws. The Architect generally does not concern itself with \
+		human affairs, but may sometimes provide assistance to a particularly gifted individual in the form of madness. \
+		The main goal of their religion is to elevate themselves beyond their mortality, using knowledge and technology \
+		to do so.";
+		return description;
 	}
 };
 
+Mythology_Dwarven mythologyDwarven;
+
 #endif
+
