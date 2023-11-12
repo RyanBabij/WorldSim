@@ -92,7 +92,7 @@ class Menu_MythologyDetails: public GUI_Interface
 			int vSpacing=12;
 			int xBuffer = 50;
 
-			font8x8.drawText("<MYTH DETAILS GO HERE>",panelX1+xBuffer,panelY2-yOffset,panelX2-xBuffer,panelY1, false, false);
+			font8x8.drawText(selectedMythology->getLongDescription(),panelX1+xBuffer,panelY2-yOffset,panelX2-xBuffer,panelY1, false, false);
 			yOffset+=vSpacing;
 
 			guiManager.render();

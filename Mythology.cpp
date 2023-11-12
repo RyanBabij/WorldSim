@@ -52,12 +52,19 @@ void Mythology::increment()
 	
 }
 
-std::string Mythology::getMythologyType()
+std::string Mythology::getType()
 {
+	if (type == Mythology::MYTHOLOGY_MONOTHEISTIC)
+	{
+		return "Monotheistic";
+	}
+	
+	//MYTHOLOGY_NONE, MYTHOLOGY_SPIRITUAL, MYTHOLOGY_MONOTHEISTIC, MYTHOLOGY_POLYTHEISTIC, MYTHOLOGY_PAGAN
+	
 	return "<MYTH TYPE>";
 }
 
-std::string Mythology::getMythologyDescription()
+std::string Mythology::getDescription()
 {
 	return "<MYTH DESC>";
 }
@@ -66,18 +73,22 @@ std::string Mythology::getColumn(std::string _column)
 {
 	if (_column == "date")
 	{
-		return "date"; // Placeholder for actual date handling
+		return "<DATE>";
 	}
-	// else if (_column == "type")
-	// {
-		// return getEventTypeStr();
-	// }
-	// else if (_column == "description")
-	// {
-		// return eventDescription;
-	// }
+	if (_column == "name")
+	{
+		return name;
+	}
+	else if (_column == "type")
+	{
+		return getType();
+	}
+	else if (_column == "description")
+	{
+		return getDescription();
+	}
 	// return eventDescription; // This might be a mistake; consider handling unknown columns
-	return "<DATA>";
+	return "<UNKNOWN COLUMN>";
 }
 
 std::string Mythology::getColumnType(std::string _column)

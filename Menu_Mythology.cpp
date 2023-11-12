@@ -71,6 +71,7 @@ class Menu_Mythology: public GUI_Interface
 		guiTableMythologies.alpha=0;
 		guiTableMythologies.active=true;
 		guiTableMythologies.addColumn("Date","date",100);
+		guiTableMythologies.addColumn("Name","name",160);
 		guiTableMythologies.addColumn("Type","type",160);
 		guiTableMythologies.addColumn("Description","description",480);
 		tMythologies.clear();

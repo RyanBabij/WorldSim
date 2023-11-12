@@ -15,13 +15,11 @@ class World;
 class Mythology_Deity
 {
 	public:
-	// The balance of these 2 variables should be enough.
-	int benevolence;
-	int malevolence;
-	int sanity;
+	std::string name; // The name of the Deity
 	
 	enum PERSONALITY { PHYSICAL, MYSTERIOUS, BUILDER, TRICKSTER };
 	enum ALIGNMENT { GOOD, FLAWED, EVIL };
+	// There could potentially also be a sanity option
 	
 	// A god can have a certain number of people it looks after.
 	Vector <Character*> vObservedCharacters;

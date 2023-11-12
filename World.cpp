@@ -934,9 +934,8 @@ void World::generateDwarves(int _nCivs )
 			
 			// Generate mythology. If it's a fresh tribe from worldgen, generate mythology from scratch, otherwise generate it from the parent.
 			
-			Mythology * myth = new Mythology();
-			myth->name = "<DWARVEN MYTHOLOGY>";
-			t->mythology=myth;
+			Mythology_Dwarven * myth = new Mythology_Dwarven();
+			t->mythology = myth;
 			mythologyManager.add(myth);
 			evolveToCiv(t);
 		}

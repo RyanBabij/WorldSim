@@ -58,12 +58,14 @@ class Mythology: public TableInterface
 {
 	private:
 	
-	World* world;
-	
 	Vector <Mythology*> vChildMythology; // Mythologies derived from this one.
 	
 	Vector <Mythology_Deity*> vDeity;
 	Vector <Mythology_Event*> vEvent; // List of events which happened in this Mythology.
+	
+	protected:
+	
+		World* world;
 	
 	public:
 	
@@ -96,8 +98,8 @@ class Mythology: public TableInterface
 	// do some stuff
 	void increment();
 	
-	std::string getMythologyType();
-	std::string getMythologyDescription();
+	std::string getType();
+	std::string getDescription();
 	
 	std::string getColumn(std::string _column) override;
 	std::string getColumnType(std::string _column) override;
@@ -150,19 +152,19 @@ class Mythology_Dwarven: public Mythology
 	{
 		type = Mythology::MYTHOLOGY_MONOTHEISTIC;
 		race = DWARVEN;
+		name = "Dwarven mythology";
 		
 		Mythology_Deity* deity = new Mythology_Deity();
-		
-		mythologyManager.add(this);
+		deity->name = globalNameGen.generate();
 	}
 	
 	std::string getLongDescription()
 	{
-		std::string description = "The Dwarven religion is monotheistic, believing in a single Architect God who \
-		designed the universe according to mathematical laws. The Architect generally does not concern itself with \
-		human affairs, but may sometimes provide assistance to a particularly gifted individual in the form of madness. \
-		The main goal of their religion is to elevate themselves beyond their mortality, using knowledge and technology \
-		to do so.";
+		std::string description = "The Dwarven religion is monotheistic, believing in a single Architect God who "
+		"designed the universe according to mathematical laws. The Architect generally does not concern itself with "
+		"human affairs, but may sometimes provide assistance to a particularly gifted individual in the form of madness. "
+		"The main goal of their religion is to elevate themselves beyond their mortality, using knowledge and technology "
+		"to do so.";
 		return description;
 	}
 };
