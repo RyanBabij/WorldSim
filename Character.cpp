@@ -1059,17 +1059,22 @@ bool Character::updateKnowledgeIdle()
 // ABSTRACT FUNCTIONS MONTHLY
 
 // Research is based partially on intelligence. More people = more research.
-// Chance of breakthrough = 0.001% per intelligence level per month
+// Base chance of success is 1% for level 10 intelligence, and it halves for each level below.
 // Return true if a breakthrough occurs and the civ/settlement will determine outcome.
 // There should probably be a system for diminishing returns as pop gets larger.
 // Yes this could be ported out to the Settlement to manage, but for now I'll keep it per-Character to see how it goes
 
 bool Character::abstractResearchMonth()
 {
-	unsigned int breakthroughChance = baseSkill.intelligence;
-	//return globalRandom.rand(100) < breakthroughChance;
-	return globalRandom.rand(1000) < breakthroughChance;
-	//return globalRandom.rand(100000) < breakthroughChance;
+	// Base chance for level 1 (1% / 2^9)
+	double baseChance = 0.01 / 512; // Approximately 0.0000195
+
+	// Calculate the chance for the current intelligence level
+	// The maximum value for rand is 4294967294, so we scale the base chance accordingly
+	unsigned long long breakthroughChance = static_cast<unsigned long long>(baseChance * std::pow(2, baseSkill.intelligence - 1) * 4294967294);
+
+	// Check for breakthrough
+	return globalRandom.rand32() < breakthroughChance;
 }
 
 
