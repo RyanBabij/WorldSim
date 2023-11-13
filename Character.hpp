@@ -11,6 +11,7 @@
 */
 
 #include "Character_Skill.cpp"
+#include "Skill.cpp"
 
 #include <System/Time/Calendar.hpp>
 #include <Container/Table/TableInterface.hpp>
@@ -62,14 +63,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	short int hunger; /* 500 = MAX_HUNGER */
 	short int thirst;
 
-	/* Governing attributes 0-100  (Might remove later) */
-	short int strength; // should govern carry capacity
-	short int agility; // governs movement, dodge
-	short int charisma; // governs relationships
-	short int intelligence; // should govern exp gain
-	short int perception; // governs line of sight and traps
-	short int endurance; // should govern energy level and expenditure
-	short int courage; // governs morale
+	// Base skills 0-10.
+	BaseSkillManager baseSkill;
 
 	/* Skills */
 

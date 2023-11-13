@@ -45,14 +45,6 @@ Character::Character()
 	father=0;
 	mother=0;
 	spouse = 0;
-
-	strength=0;
-	agility=0;
-	charisma=0;
-	intelligence=0;
-	perception=0;
-	endurance=0;
-	courage=0;
 	
 	skillFishing=0;
 	skillMarksmanship=0;
@@ -119,27 +111,7 @@ void Character::init(const int _sex /* =0 */)
 	// TODO: Stats should be affected by age. However that will be calculated
 	// by using age as a modifier. Not by modifying the base stat.
 
-	if ( isMale )
-	{
-		strength=Random::multiRoll(8,10,true)+20;
-		agility=Random::multiRoll(10,10,true);
-		charisma=Random::multiRoll(10,10,true);
-		intelligence=Random::multiRoll(10,10,true);
-		perception=Random::multiRoll(10,10,true);
-		endurance=Random::multiRoll(10,10,true);
-		courage=Random::multiRoll(10,10,true);
-	}
-	else
-	{
-		strength=Random::multiRoll(10,10,true);
-		agility=Random::multiRoll(8,10,true)+20;
-		charisma=Random::multiRoll(10,10,true);
-		intelligence=Random::multiRoll(10,10,true);
-		perception=Random::multiRoll(10,10,true);
-		endurance=Random::multiRoll(10,10,true);
-		courage=Random::multiRoll(10,10,true);
-	}
-
+	baseSkill.roll(isMale);
 
 	health=10;
 	maxHealth=10;
@@ -696,7 +668,7 @@ void Character::attack(Character* target)
 	}
 	//For now we will just use strength to calculate outcome.
 
-	if ( strength >= target->strength && Random::flip() )
+	if ( baseSkill.strength >= target->baseSkill.strength && Random::flip() )
 	{
 
 
@@ -705,7 +677,7 @@ void Character::attack(Character* target)
 		vKills.add(target);
 		return;
 	}
-	else if ( strength < target->strength )
+	else if ( baseSkill.strength < target->baseSkill.strength )
 	{
 		if ( Random::flip() )
 		{
@@ -1012,7 +984,7 @@ bool Character::updateKnowledgeIdle()
 
 bool Character::abstractResearchMonth()
 {
-	unsigned int breakthroughChance = intelligence;
+	unsigned int breakthroughChance = baseSkill.intelligence;
 	//return globalRandom.rand(100) < breakthroughChance;
 	return globalRandom.rand(1000) < breakthroughChance;
 	//return globalRandom.rand(100000) < breakthroughChance;
@@ -1070,7 +1042,7 @@ std::string Character::getColumn(std::string _column)
 
 	if ( _column=="strength" )
 	{
-		return DataTools::toString(strength);
+		return DataTools::toString(baseSkill.strength);
 	}
 
 	if ( _column=="kills" )

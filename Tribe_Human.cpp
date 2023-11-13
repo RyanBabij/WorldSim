@@ -297,7 +297,7 @@ void Tribe_Human::combat (Tribe* _target)
 			//{
 			// Weak/pregnant/young people will be less likely to fight.
 			// But they will also not get the spoils.
-			if ( c->age == 15 || c-> age == 16 || c->age == 17 || c->isPregnant || c->strength < 50)
+			if ( c->age == 15 || c-> age == 16 || c->age == 17 || c->isPregnant || c->baseSkill.strength < 5)
 			{
 				if ( random.oneIn(10) )
 				{
@@ -305,7 +305,7 @@ void Tribe_Human::combat (Tribe* _target)
 				}
 			}
 			// Strong people will always fight, because they want the spoils.
-			else if ( c->age > 17 && c->strength >= 50 )
+			else if ( c->age > 17 && c->baseSkill.strength >= 5 )
 			{
 				vAttackingForce.push(c);
 			}
