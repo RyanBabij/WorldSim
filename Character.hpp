@@ -10,6 +10,8 @@
 	Characters may be either human, elven, or dwarven.
 */
 
+#include "Social.cpp"
+
 #include "Character_Skill.cpp"
 #include "Skill.cpp"
 
@@ -125,6 +127,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	//Character's knowledge of the world (optional).
 	Character_Knowledge* knowledge;
 
+
+	Social social;
 
 	/* INITIALIZATION */
 	Character();
