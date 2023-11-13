@@ -130,28 +130,33 @@ class Menu_CharacterDetails: public GUI_Interface
 			
 			int yOffset=35;
 			int vSpacing=12;
+			int leftMargin=5;
 			
 			std::string characterName = "Name: " + selectedCharacter->getFullName() + ".";
-			font8x8.drawText(characterName,panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing, false, true);
+			font8x8.drawText
+			(characterName,panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
 			yOffset+=vSpacing;
-			font8x8.drawText("Age: "+DataTools::toString(selectedCharacter->age),panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing, false, true);
+			font8x8.drawText
+			("Age: "+DataTools::toString(selectedCharacter->age)
+			,panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
 			yOffset+=vSpacing;
+			
 			std::string strSex;
 			if ( selectedCharacter->isMale ) { strSex="Male"; }
 			else { strSex="Female"; }
-			font8x8.drawText("Sex: "+strSex,panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing, false, true);
+			font8x8.drawText("Sex: "+strSex,panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
 			yOffset+=vSpacing;
 			
 			if ( selectedCharacter->father != 0 )
 			{
 				//font8x8.drawText("Father: " + selectedCharacter->father->getFullName() + ".",panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing, false, true);
-				textFatherLink.setPanel(panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+				textFatherLink.setPanel(panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
 				textFatherLink.text = "Father: " + selectedCharacter->father->getFullName() + ".";
 			}
 			else
 			{
 				//font8x8.drawText("No father.",panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing, false, true);
-				textFatherLink.setPanel(panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+				textFatherLink.setPanel(panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
 				textFatherLink.text = "No father.";
 			}
 			yOffset+=vSpacing;
@@ -159,13 +164,13 @@ class Menu_CharacterDetails: public GUI_Interface
 			if ( selectedCharacter->mother != 0 )
 			{
 				//font8x8.drawText("Father: " + selectedCharacter->father->getFullName() + ".",panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing, false, true);
-				textMotherLink.setPanel(panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+				textMotherLink.setPanel(panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
 				textMotherLink.text = "Mother: " + selectedCharacter->mother->getFullName() + ".";
 			}
 			else
 			{
 				//font8x8.drawText("No father.",panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing, false, true);
-				textMotherLink.setPanel(panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+				textMotherLink.setPanel(panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
 				textMotherLink.text = "No mother.";
 			}
 			yOffset+=vSpacing;
@@ -173,13 +178,13 @@ class Menu_CharacterDetails: public GUI_Interface
 			if ( selectedCharacter->spouse != 0 )
 			{
 				//font8x8.drawText("Father: " + selectedCharacter->father->getFullName() + ".",panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing, false, true);
-				textSpouseLink.setPanel(panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+				textSpouseLink.setPanel(panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
 				textSpouseLink.text = "Spouse: " + selectedCharacter->spouse->getFullName() + ".";
 			}
 			else
 			{
 				//font8x8.drawText("No father.",panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing, false, true);
-				textSpouseLink.setPanel(panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+				textSpouseLink.setPanel(panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
 				textSpouseLink.text = "No spouse.";
 			}
 			yOffset+=vSpacing;
@@ -189,11 +194,11 @@ class Menu_CharacterDetails: public GUI_Interface
 			
 			if ( textChildLink.size()==0)
 			{
-				font8x8.drawText("No children.",panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing, false, true);
+				font8x8.drawText("No children.",panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
 			}
 			else
 			{
-				font8x8.drawText("Children:",panelX1,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing, false, true);
+				font8x8.drawText("Children:",panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
 			}
 			yOffset+=vSpacing;
 			
@@ -203,67 +208,8 @@ class Menu_CharacterDetails: public GUI_Interface
 				yOffset+=vSpacing;
 			}
 			
-			std::string gender1;
-			std::string gender2;
-			if ( selectedCharacter->isMale ) { gender1 = "He"; gender2 = "he"; }
-			else { gender1 = "She"; gender2 = "she"; }
-			
-			std::string tense;
-			if (selectedCharacter->isAlive) { tense="is"; }
-			else { tense="was"; }
-			
-			std::string strMarriageBio;
-			
-			if (selectedCharacter->isMarried)
-			{
-				strMarriageBio=gender1+" "+tense+" married to X.";
-			}
-			else
-			{
-				strMarriageBio=gender1+" "+tense+" not married.";
-			}
-			
-			std::string sentence1 = selectedCharacter->getFullName();
-			
-			if (selectedCharacter->isAlive==false)
-			{
-				sentence1+= " ("+DataTools::toString(selectedCharacter->dateOfBirth.year)+"-"+DataTools::toString(selectedCharacter->dateOfDeath.year)+")";
-			}
-			else
-			{
 
-			}
-
-			std::string strDeathLocation = "";
-			if ( selectedCharacter->isAlive == false)
-			{
-				strDeathLocation = gender1 + " died in " + world.getLandmassName(&selectedCharacter->deathLocation) + ".";
-			}
-			else
-			{
-				strDeathLocation = gender1 + " currently lives in " + world.getLandmassName(selectedCharacter->tribe->worldX,selectedCharacter->tribe->worldY) + ".";
-			}
-      
-      std::string strKillList = "";
-      if ( selectedCharacter->vKills.size() == 0 )
-      {
-        strKillList = "Kills: 0.";
-      }
-      else
-      {
-        strKillList = "Kills: "+DataTools::toString(selectedCharacter->vKills.size())+"\n";
-        
-        for ( int i=0;i<selectedCharacter->vKills.size(); ++i)
-        {
-          strKillList += "   "+selectedCharacter->vKills(i)->getFullName();
-          strKillList+="\n";
-          
-        }
-        
-      }
-			
-			//father
-			font8x8.drawText("Biography:\n"+sentence1+" was born in BIOME, in the land of LAND. "+strMarriageBio + " " + strDeathLocation + "\n\n" + strKillList,panelX1+5,panelY2-yOffset,panelX2,panelY1, false, false);
+			font8x8.drawText(selectedCharacter->getBiography(),panelX1+5,panelY2-yOffset,panelX2,panelY1);
 
 			
 			guiManager.render();

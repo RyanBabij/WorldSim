@@ -178,29 +178,50 @@ std::string Character::getFullName() const
 	return firstName + " " + lastName;
 }
 
+#include <sstream>
+
 std::string Character::getBiography()
 {
+	std::ostringstream biography;
 
-	std::string biography;
+	const std::string gender1 = isMale ? "He" : "She";
+	const std::string tense = isAlive ? "is" : "was";
 
-	biography = getFullName();
+	biography << getFullName();
 
-	if ( father == 0 || mother == 0 )
+	if (father == nullptr || mother == nullptr)
 	{
-		biography += " was divinely concieved.\n\n";
+		biography << " was divinely conceived.";
 	}
 	else
 	{
-		biography += " was the RELATION of " + father->getFullName() + " and " + mother->getFullName() + ".\n\n";
+		biography << " was the child of " << father->getFullName() << " and " << mother->getFullName() << ".";
+		biography << " was born in BIOME, in the land of LAND.";
 	}
 
+	biography << " " << gender1 << " " << tense << (isMarried ? " married to X." : " not married.");
 
-	// The character parents
-	//
+	if (!isAlive)
+	{
+		biography << " " << gender1 << " died in " << world.getLandmassName(&deathLocation) << ".";
+	}
+	else
+	{
+		biography << " " << gender1 << " currently lives in " << world.getLandmassName(tribe->worldX, tribe->worldY) << ".";
+	}
 
+	if (!vKills.empty())
+	{
+		biography << "\n\nKills: " << vKills.size() << "\n";
+		for (const auto& kill : vKills)
+		{
+			biography << "   " << kill->getFullName() << "\n";
+		}
+	}
 
-	return getFullName();
+	return biography.str();
 }
+
 
 void Character::aiManager()
 {
