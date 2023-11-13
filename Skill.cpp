@@ -77,16 +77,33 @@ class BaseSkillManager
 			std::cout<<"Courage:\t"<<(int)courage<<"\n";
 		}
 		
-		std::string toString() const
+		std::string toString(bool showStars = true) const
 		{
 			std::ostringstream oss;
-			oss << "Strength:_____" << static_cast<int>(strength) << "\n";
-			oss << "Agility:______" << static_cast<int>(agility) << "\n";
-			oss << "Charisma:_____" << static_cast<int>(charisma) << "\n";
-			oss << "Intelligence:_" << static_cast<int>(intelligence) << "\n";
-			oss << "Perception:___" << static_cast<int>(perception) << "\n";
-			oss << "Endurance:____" << static_cast<int>(endurance) << "\n";
-			oss << "Courage:______" << static_cast<int>(courage);
+			auto formatSkill = [&oss, showStars](const std::string& skillName, char skillLevel)
+			{
+				oss << skillName;
+				if (showStars)
+				{
+					for (int i = 0; i < 10; ++i)
+					{
+						oss << (i < skillLevel ? '*' : '_');
+					}
+					oss << " (" << static_cast<int>(skillLevel) << ")\n";
+				}
+				else
+				{
+					oss << std::string(10 - skillName.length(), '_') << static_cast<int>(skillLevel) << "\n";
+				}
+			};
+
+			formatSkill("Strength:     ", strength);
+			formatSkill("Agility:      ", agility);
+			formatSkill("Charisma:     ", charisma);
+			formatSkill("Intelligence: ", intelligence);
+			formatSkill("Perception:   ", perception);
+			formatSkill("Endurance:    ", endurance);
+			formatSkill("Courage:      ", courage);
 
 			return oss.str();
 		}

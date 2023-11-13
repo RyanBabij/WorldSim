@@ -208,6 +208,10 @@ class Menu_CharacterDetails: public GUI_Interface
 				yOffset+=vSpacing;
 			}
 			
+			font8x8.drawText(selectedCharacter->baseSkill.toString(),panelX1+leftMargin,panelY2-yOffset,panelX2,panelY1);
+			
+			yOffset+=vSpacing*8;
+			
 
 			font8x8.drawText(selectedCharacter->getBiography(),panelX1+5,panelY2-yOffset,panelX2,panelY1);
 
