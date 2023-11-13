@@ -209,6 +209,8 @@ std::string Character::getBiography()
 	{
 		biography << " " << gender1 << " currently lives in " << world.getLandmassName(tribe->worldX, tribe->worldY) << ".";
 	}
+	
+	biography<<"\n\n"<<getBestSkills()<<"\n";
 
 	if (!vKills.empty())
 	{
@@ -220,6 +222,65 @@ std::string Character::getBiography()
 	}
 
 	return biography.str();
+}
+
+std::string Character::getBestSkills()
+{
+	std::vector<std::string> notableSkills;
+	auto addSkillDescription = [&notableSkills](const std::string& skillName, char skillLevel)
+	{
+		if (skillLevel > 6)
+		{
+			std::string description;
+			if (skillLevel == 10)
+			{
+				description = "legendary for their " + skillName;
+			}
+			else if (skillLevel == 9)
+			{
+				description = "renowned for their " + skillName;
+			}
+			else
+			{
+				description = "admired for their " + skillName;
+			}
+			notableSkills.push_back(description);
+		}
+	};
+
+	addSkillDescription("strength", baseSkill.strength);
+	addSkillDescription("agility", baseSkill.agility);
+	addSkillDescription("charisma", baseSkill.charisma);
+	addSkillDescription("intelligence", baseSkill.intelligence);
+	addSkillDescription("perception", baseSkill.perception);
+	addSkillDescription("endurance", baseSkill.endurance);
+	addSkillDescription("courage", baseSkill.courage);
+
+	if (notableSkills.empty())
+	{
+		return "This character has no notable skills.";
+	}
+	else
+	{
+		std::string description = "This character is ";
+		for (size_t i = 0; i < notableSkills.size(); ++i)
+		{
+			if (i > 0)
+			{
+				if (i == notableSkills.size() - 1)
+				{
+					description += " and ";
+				}
+				else
+				{
+					description += ", ";
+				}
+			}
+			description += notableSkills[i];
+		}
+		description += ".";
+		return description;
+	}
 }
 
 

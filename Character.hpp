@@ -197,7 +197,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	std::string getBiography();
 	std::string getFullName() const;
 	std::string getName();
-
+	std::string getBestSkills();
   
     // LOCATION
     
