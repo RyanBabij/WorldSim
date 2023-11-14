@@ -930,7 +930,11 @@ void World::generateDwarves(int _nCivs )
 		}
 		else
 		{
-			t->generateCouples(STARTING_TRIBE_SIZE_DWARVEN);
+			
+			// Generate legendary couples.
+			t->generateCouples(STARTING_TRIBE_SIZE_DWARVEN/2);
+			
+			// Pick one couple for each stat to set as legendary.
 			
 			// Generate mythology. If it's a fresh tribe from worldgen, generate mythology from scratch, otherwise generate it from the parent.
 			

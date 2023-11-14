@@ -129,6 +129,19 @@ void Character::init(const int _sex /* =0 */)
 	//knowledge = new Character_Knowledge;
 	//knowledge->init();
 	initialiseKnowledge();
+	
+	social.setCompatibility(globalRandom.rand8());
+	
+}
+
+char Character::getBaseSkill(BaseSkillManager::SKILL_TYPE skill)
+{
+	return baseSkill.getSkillValue(skill);
+}
+
+void Character::setBaseSkill(BaseSkillManager::SKILL_TYPE skill, char value)
+{
+	baseSkill.setSkillValue(skill,value);
 }
 
 //ITEM FUNCTIONS
@@ -543,6 +556,11 @@ void Character::die(enumCauseOfDeath _causeOfDeath /* =UNKNOWN */)
 	{
 		std::cout<<"no tribe...\n";
 	}
+}
+
+void Character::socialise(Character*)
+{
+	return;
 }
 
 bool Character::marry(Character* c)
@@ -1075,6 +1093,14 @@ bool Character::abstractResearchMonth()
 
 	// Check for breakthrough
 	return globalRandom.rand32() < breakthroughChance;
+}
+
+// Assume one new social interaction per month.
+void abstractSocialiseMonth()
+{
+	for (int i=0;i<30;++i)
+	{
+	}
 }
 
 

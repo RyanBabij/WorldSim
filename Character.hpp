@@ -11,6 +11,8 @@
 */
 
 #include "Social.cpp"
+#include "Idea.cpp"
+
 
 #include "Character_Skill.cpp"
 #include "Skill.cpp"
@@ -127,13 +129,25 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	//Character's knowledge of the world (optional).
 	Character_Knowledge* knowledge;
 
-
+	//Manage social connections
 	Social social;
+	
+	// Any potential idea the person has.
+	Idea idea;
+	
+	// Events relevant to this character
+	Vector <Event*> vEvent;
+	
 
 	/* INITIALIZATION */
 	Character();
 	// Initialise, including roll for stats. 0 - Roll gender. 1 - Male. 2 - Female.
 	void init( int _sex = 0);
+	
+	/* GETTER AND SETTER */
+	
+	char getBaseSkill(BaseSkillManager::SKILL_TYPE skill);
+	void setBaseSkill(BaseSkillManager::SKILL_TYPE skill, char value);
 
 	/* AI FUNCTIONS
 
@@ -171,10 +185,14 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 
 
 		*/
+		
+	// Characters will learn about each other and spread Ideas.
+	void socialise(Character*);
 	
 	bool marry(Character* );
 		/* Checks that the couple is not closely related, and several other conditions. */
 	bool canMarry (Character*);
+	
 	
 	Character* giveBirth();
 	

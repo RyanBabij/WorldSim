@@ -153,6 +153,60 @@ class BaseSkillManager
 			return bestSkill;
 		}
 		
+		char getSkillValue(SKILL_TYPE skillType) const
+		{
+			switch (skillType)
+			{
+				case SKILL_STRENGTH:
+					return strength;
+				case SKILL_AGILITY:
+					return agility;
+				case SKILL_CHARISMA:
+					return charisma;
+				case SKILL_INTELLIGENCE:
+					return intelligence;
+				case SKILL_PERCEPTION:
+					return perception;
+				case SKILL_ENDURANCE:
+					return endurance;
+				case SKILL_COURAGE:
+					return courage;
+				default:
+					// Handle invalid skill type if necessary
+					return 0;
+			}
+		}
+		
+		void setSkillValue(SKILL_TYPE skillType, char value)
+		{
+			switch (skillType)
+			{
+				case SKILL_STRENGTH:
+					strength = value;
+					break;
+				case SKILL_AGILITY:
+					agility = value;
+					break;
+				case SKILL_CHARISMA:
+					charisma = value;
+					break;
+				case SKILL_INTELLIGENCE:
+					intelligence = value;
+					break;
+				case SKILL_PERCEPTION:
+					perception = value;
+					break;
+				case SKILL_ENDURANCE:
+					endurance = value;
+					break;
+				case SKILL_COURAGE:
+					courage = value;
+					break;
+				default:
+					return;
+			}
+		}
+
 };
 
 #endif // WORLDSIM_SKILL_CPP

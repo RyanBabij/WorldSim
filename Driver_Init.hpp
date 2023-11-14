@@ -13,7 +13,6 @@ Initialize main menus, start timers, initialise any important data.
 
 #include <File/WTFManager.hpp> // loading raws
 
-
 void init()
 {
 	std::cout<<"\n*** INIT ***\n";
@@ -21,6 +20,7 @@ void init()
 	Random::seed();
 	globalRandom.seed(SEEDER);
 	globalNameGen.seed(SEEDER);
+	gNameGeneratorWord.seed(SEEDER);
 	
 	// load globalSettings
 	globalSettings.load(FileManager::getFileAsString("raw/ini.wtf"));
@@ -137,6 +137,8 @@ void init()
 		{ std::cout<<"ERROR: Font did not load.\n"; }
 		delete [] fileData;
 	}
+	
+	font8x8.ySpacing=2;
 
 	logicTickManager.add(&menuTitle);
 	idleManager.add(&world);

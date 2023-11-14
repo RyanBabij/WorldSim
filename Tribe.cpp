@@ -517,11 +517,53 @@ void Tribe::generateCouples(int amount)
 		Character * cWoman = new Character;
 		cWoman->init(2); //Roll a female.
 		cWoman->age = 16+random.randomInt(12);
+		// Initialize them as fully compatible.
+		cWoman->social.setCompatibility(&cMan->social);
 		add(*cWoman);
 
 		cMan->marry(cWoman);
-		cMan->lastName = name;
-		cWoman->lastName = name;
+	}
+	// Generate legendary couples.
+	setLegendaryCouple(BaseSkillManager::SKILL_STRENGTH);
+	setLegendaryCouple(BaseSkillManager::SKILL_CHARISMA);
+	setLegendaryCouple(BaseSkillManager::SKILL_INTELLIGENCE);
+
+}
+
+Character* Tribe::getMostSkilledAt(BaseSkillManager::SKILL_TYPE skill)
+{
+	if (vCharacter.empty())
+	{
+		return nullptr; // Return null if there are no characters in the tribe
+	}
+
+	Character* mostSkilledCharacter = vCharacter(0);
+	for (Character* character : vCharacter)
+	{
+		if (character->getBaseSkill(skill) > mostSkilledCharacter->getBaseSkill(skill))
+		{
+			mostSkilledCharacter = character;
+		}
+	}
+
+	return mostSkilledCharacter;
+}
+// Set one tribe member as legendary at this skill.
+void Tribe::setLegendaryCouple(BaseSkillManager::SKILL_TYPE skill)
+{
+	// find the couple with the highest of this skill, and set it to legendary. This should help tribes starting out
+	// and establish a family history and reputation.
+	
+	Character * legend = getMostSkilledAt(skill);
+	
+	if (legend!=0)
+	{
+		legend->setBaseSkill(skill,10);
+		// for now we will just attempt to find a spouse otherwise we don't bother
+		if (legend->spouse!=0)
+		{
+			legend->spouse->setBaseSkill(skill,10);
+		}
 	}
 }
 

@@ -124,6 +124,11 @@ public:
 	Character* getDefender ();
 
 	void add (Character& c);
+	
+	// Set one couple as legendary at this skill.
+	void setLegendaryCouple(BaseSkillManager::SKILL_TYPE);
+	
+	Character* getMostSkilledAt(BaseSkillManager::SKILL_TYPE skill);
 
 	// LOCATION
 
