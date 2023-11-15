@@ -163,6 +163,7 @@ Vector <Character*> Character::getAllKnownCharacters()
 void Character::updateSocial()
 {
 	social.updateLists(getBaseSkill(BaseSkillManager::SKILL_CHARISMA));
+	//social.updateLists(1);
 }
 
 //ITEM FUNCTIONS
@@ -1120,9 +1121,7 @@ void Character::abstractSocial(Character* character)
 	{
 		return;
 	}
-	std::cout<<"INTERACTION\n";
 	social.interact(character);
-	//social.abstractMonth();
 	
 	return;
 }

@@ -72,9 +72,11 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		// For now we will turn the metal into weapons for use and export.
 		vCharacter.shuffle();
 		
+		//std::cout<<"Abstracting: "<<vCharacter.size()<<" characters\n";
 		for (int i=0;i<vCharacter.size();++i)
 		{
 			Character* character = vCharacter(i);
+			//std::cout<<"Abstracting "<<character->getFullName()<<"\n";
 			
 			// Research
 			bool breakthrough = character->abstractResearchMonth();
@@ -82,8 +84,9 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			// Do 30 random social interactions
 			for (int i2=0;i2<30;++i2)
 			{
+				//std::cout<<".";
 				character->abstractSocial(getRandomCharacter());
-			}
+			} //std::cout<<"\n";
 			character->updateSocial();
 			
 			if (breakthrough)
@@ -137,7 +140,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 						}
 						else
 						{
-							break;
+							continue;
 						}
 					}
 					std::cout<<"Quality level is "<<qualityLevel<<"\n";
@@ -185,7 +188,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			}
 			else
 			{
-				break;
+				continue;
 			}
 		
 		}

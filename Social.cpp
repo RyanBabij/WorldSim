@@ -2,19 +2,6 @@
 #ifndef WORLDSIM_SOCIAL_CPP
 #define WORLDSIM_SOCIAL_CPP
 
-/* WorldSim: Social.cpp
-	#include "Social.cpp"
-
-	Manage social standings and interactions. Each character has a Social object.
-	A person can have X friends and X enemies, where X is their charisma. A person is always able to know their
-	immediate family.
-
-	Compatibility determines whether a person becomes a friend more than anything else. This is not a perfect system
-	as it could create a long circuit of relationships but it should work well enough. It also adds an element of
-	chance beyond just charisma detemining who will like you.
-
-*/
-
 #include "Social.hpp"
 
 Relationship::Relationship(Character* _sourceCharacter, Character* _destinationCharacter, char _relationshipLevel,
@@ -23,10 +10,41 @@ relationshipLevel(_relationshipLevel), compatibility(_compatibility)
 {
 }
 
+bool Relationship::operator==(Relationship& other)
+{
+	return this->compatibility == other.compatibility;
+}
+
+bool Relationship::operator>(Relationship& other)
+{
+	return this->compatibility > other.compatibility;
+}
+
+bool Relationship::operator<(Relationship& other)
+{
+	return this->compatibility < other.compatibility;
+}
+
 Social::Social(Character* _thisCharacter)
 : thisCharacter(_thisCharacter)
 {
 }
+
+// Operator Overloads
+// bool Social::operator==(Social& other)
+// {
+	// return (this->compatibility == other.compatibility);
+// }
+
+// bool Social::operator>(Social& other)
+// {
+	// return (this->compatibility > other.compatibility);
+// }
+
+// bool Social::operator<(Social& other)
+// {
+	// return (this->compatibility < other.compatibility);
+// }
 
 unsigned char Social::compatibilityWith(Social* social)
 {
@@ -108,7 +126,12 @@ int Social::isAcquaintance(Character* c)
 
 void Social::interact(Character* c)
 {
-	if (isFamily(c)!=-1)
+	if ( c==thisCharacter )
+	{
+		// idk meditate or something
+		return;
+	}
+	else if (isFamily(c)!=-1)
 	{
 		return;
 	}
@@ -130,15 +153,144 @@ void Social::interact(Character* c)
 	
 }
 
+Relationship* Social::getBestFriend()
+{
+	if (vFriend.empty())
+	{
+		return nullptr;
+	}
+
+	Relationship* bestFriend = &vFriend(0);
+	unsigned char bestCompatibility = vFriend(0).compatibility;
+
+	for (int i = 1; i < vFriend.size(); ++i)
+	{
+		unsigned char thisCompatibility = vFriend(i).compatibility;
+		
+		if (thisCompatibility < bestCompatibility)
+		{
+			bestCompatibility = thisCompatibility;
+			bestFriend = &vFriend(i);
+		}
+	}
+
+	return bestFriend;
+}
+
+Relationship* Social::getWorstFriend()
+{
+	if (vFriend.empty())
+	{
+		return nullptr; // Return nullptr if there are no friends
+	}
+
+	Relationship* worstFriend = nullptr;
+	unsigned char worstCompatibility = 0; // Start with the lowest possible compatibility
+
+	for (int i = 0; i < vFriend.size(); ++i)
+	{
+		unsigned char thisCompatibility = vFriend(i).compatibility;
+
+		if (thisCompatibility > worstCompatibility)
+		{
+			worstCompatibility = thisCompatibility;
+			worstFriend = &vFriend(i);
+		}
+	}
+
+	return worstFriend; // Return the pointer to the worst friend
+}
+
+int Social::getWorstFriendSlot()
+{
+	if (vFriend.empty())
+	{
+		return -1; // Return -1 if there are no friends
+	}
+
+	int worstFriend = -1;
+	int worstCompatibility = -1; // Start with the lowest possible compatibility
+
+	for (int i = 0; i < vFriend.size(); ++i)
+	{
+		unsigned char thisCompatibility = vFriend(i).compatibility;
+
+		if (thisCompatibility > worstCompatibility)
+		{
+			worstCompatibility = thisCompatibility;
+			worstFriend = i;
+		}
+	}
+	return worstFriend; // Return the index to the worst friend
+}
+
 // Move most compatible acquaintances into friendship vector.
 void Social::updateLists(int maxFriends)
 {
-	unsigned char bestCompatibility = 255;
+	if (maxFriends==0)
+	{
+		return;
+	}
+	
+	//std::cout<<"Update lists for: "<<thisCharacter->getFullName()<<"\n";
+	
+	int bestCompatibility = 666;
+	int bestAcquaintance = -1;
 	// find best acquaintance
 	for (int i=0;i<vAcquaintance.size();++i)
 	{
-		//unsigned char thisCompatibility = compatibilityWith
+		unsigned char thisCompatibility = vAcquaintance(i).compatibility;
+		
+		if (thisCompatibility < bestCompatibility)
+		{
+			bestCompatibility = thisCompatibility;
+			bestAcquaintance = i;
+		}
 	}
+	
+	int worstFriend = getWorstFriendSlot();
+	
+	int worstFriendCompatibility = 666;
+	if ( worstFriend!=-1)
+	{
+		worstFriendCompatibility = vFriend(worstFriend).compatibility;
+	}
+	
+	if(bestAcquaintance==-1)
+	{
+		//std::cout<<"No new acquaintances found.\n";
+		return;
+	}
+	
+	//std::cout<<"Worst friend / alternative compat is: "<<worstFriendCompatibility<<" / "<<bestCompatibility<<"\n";
+
+	if ( bestCompatibility < worstFriendCompatibility )
+	{
+		if (vFriend.size()<maxFriends)
+		{
+			//std::cout<<"Adding friend\n";
+			vFriend.add(vAcquaintance(bestAcquaintance));
+			vAcquaintance.removeSlot(bestAcquaintance);
+		}
+		else
+		{
+			//std::cout<<"Replacing friend\n";
+			if (worstFriend!=-1)
+			{
+				vFriend.removeSlot(worstFriend);
+			}
+			else
+			{
+				//std::cout<<"Worstfriend returning -1\n";
+			}
+			vFriend.add(vAcquaintance(bestAcquaintance));
+		}
+	}
+	else
+	{
+		//std::cout<<"No better friend found\n";
+	}
+
 	
 }
 		
