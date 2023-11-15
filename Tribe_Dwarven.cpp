@@ -102,7 +102,7 @@ void Tribe_Dwarven::incrementTicks ( int nTicks )
 		monthlyCounter-=TICKS_PER_MONTH;
 	}
 
-	while ( dailyCounter >= 86400 )
+	while ( dailyCounter >= TICKS_PER_DAY )
 	{
 		if ( foundSettlement == false )
 		{
@@ -117,7 +117,7 @@ void Tribe_Dwarven::incrementTicks ( int nTicks )
 				//wander();
 			}
 		}
-		dailyCounter-=86400;
+		dailyCounter-=TICKS_PER_DAY;
 	}
 
 

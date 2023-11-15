@@ -59,7 +59,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 	dailyCounter+=nTicks;
 	monthlyCounter+=nTicks;
 
-	while (monthlyCounter >= 2592000)
+	while (monthlyCounter >= TICKS_PER_MONTH)
 	{
 		// Produce and deduct food
 		nFoodStockpile -= vCharacter.size();
@@ -447,16 +447,16 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 
 			
 		}
-		monthlyCounter-=2592000;
+		monthlyCounter-=TICKS_PER_MONTH;
 	}
 
-	while ( dailyCounter >= 86400 )
+	while ( dailyCounter >= TICKS_PER_DAY )
 	{
 		if ( world->aWorldTile(worldX,worldY).baseMetal > 0 )
 		{
 			++nMetalStockpile;
 		}
-		dailyCounter-=86400;
+		dailyCounter-=TICKS_PER_DAY;
 	}
 	
 	

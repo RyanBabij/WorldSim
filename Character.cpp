@@ -191,11 +191,11 @@ void Character::updateSocial()
 
 void Character::shareIdeas(Character* c)
 {
-	std::cout<<"Sharing ideas\n";
+	//std::cout<<"Sharing ideas\n";
 	
 	if (vIdea.empty())
 	{
-		std::cout<<"No ideas to share\n";
+		//std::cout<<"No ideas to share\n";
 		return;
 	}
 	
@@ -210,10 +210,10 @@ void Character::shareIdeas(Character* c)
 	
 	if ( c->hasIdea(vIdea(ideaToShare)))
 	{
-		std::cout<<"Already knows\n";
+		//std::cout<<"Already knows\n";
 		return;
 	}
-	std::cout<<"Idea shared\n";
+	//std::cout<<"Idea shared\n";
 	c->giveIdea(vIdea(ideaToShare));
 	
 }

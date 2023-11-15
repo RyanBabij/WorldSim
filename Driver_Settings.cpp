@@ -146,16 +146,10 @@ const int DEFAULT_NUMBER_TRIBES_ELVEN = 0;
 const int DEFAULT_NUMBER_CIVS = 0;
 
 const int STARTING_TRIBE_SIZE_HUMAN = 1;
-const int STARTING_TRIBE_SIZE_DWARVEN = 200;
+const int STARTING_TRIBE_SIZE_DWARVEN = 20;
 const int STARTING_TRIBE_SIZE_ELVEN = 1;
 
-/* Calendar setting when new game is started. */
-const int CALENDAR_INITIAL_HOUR = 8;
-const int CALENDAR_INITIAL_MINUTE = 0;
-/* Determines speed of day/night cycle and other time scaling */
-/* In future there might just be some time speed multiplier */
-/* Or less hours in a day */
-const int CALENDAR_SECONDS_PER_MINUTE = 2;
+
 
 // SCALING
 
@@ -186,12 +180,19 @@ int TIME_SCALE = 0; /* How many seconds of gametime pass per logic tick. */
 	// of day: hour 1 = dawn, hour 2 = morning, etc. And could make night 1 hour.
 	// Dawn, morning, day, afternoon, dusk, night.
 	// we could also shorten years to 4 seasons.
-int TICKS_PER_MINUTE = 4;
+int TICKS_PER_MINUTE = 1;
 const int TICKS_PER_HOUR = TICKS_PER_MINUTE*60;
 const int TICKS_PER_DAY = TICKS_PER_HOUR*24;
 const int TICKS_PER_MONTH = TICKS_PER_DAY*28; // 4 months of 7 days each is neatest and best for gameplay I think.
 const int TICKS_PER_YEAR = TICKS_PER_MONTH*4; // yes there's 360 days per year in this game.
 
+/* Calendar setting when new game is started. */
+const int CALENDAR_INITIAL_HOUR = 8;
+const int CALENDAR_INITIAL_MINUTE = 0;
+/* Determines speed of day/night cycle and other time scaling */
+/* In future there might just be some time speed multiplier */
+/* Or less hours in a day */
+const int CALENDAR_SECONDS_PER_MINUTE = TICKS_PER_MINUTE;
 
 // Timescale should be based on distances between cells.
 // At 1:1 scale a cell is 5km*5km. Such a cell should take about 1 hour to walk across.
