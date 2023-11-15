@@ -30,7 +30,7 @@ class Relationship
 		Character* sourceCharacter;
 		Character* destinationCharacter;
 		char relationshipLevel;
-		unsigned char compatibility;
+		unsigned char compatibility; // lower is better
 
 		Relationship(Character* _sourceCharacter, Character* _destinationCharacter, char _relationshipLevel,
 		unsigned char _compatibility);
@@ -39,12 +39,16 @@ class Relationship
 		bool operator==(Relationship& other);
 		bool operator>(Relationship& other);
 		bool operator<(Relationship& other);
+		
+		/// cout
+		friend std::ostream& operator<<(std::ostream& os, const Relationship& r);
 };
 
 class Social
 {
 	private:
-		WrappingUChar compatibility; 
+		WrappingUChar personality; // Character's personalituy
+		WrappingUChar desiredPersonality; // Personality that the Character likes
 		Vector<Relationship> vFamily;
 		Vector<Relationship> vAcquaintance;
 		Vector<Relationship> vFriend;
@@ -59,13 +63,21 @@ class Social
 		// bool operator==(Social& other);
 		// bool operator>(Social& other);
 		// bool operator<(Social& other);
+		/// cout
+		friend std::ostream& operator<<(std::ostream& os, const Social& r);
 
 		unsigned char compatibilityWith(Social* social);
 		unsigned char compatibilityWith(Social& social);
-		WrappingUChar getCompatibility();
+		WrappingUChar getPersonality();
+		WrappingUChar getDesiredPersonality();
+		
 		void setCompatibility(unsigned char _compatibility);
+		void setCompatibility(unsigned char _compatibility, unsigned char _desiredPersonality);
 		void setCompatibility(Social* compatible);
 		void setCompatibility(Social& compatible);
+		
+		void setFullyCompatible(Social * compatible);
+		void setFullyCompatible(Social & compatible);
 		
 		Relationship* getBestFriend();
 		Relationship* getWorstFriend();
@@ -80,6 +92,8 @@ class Social
 		void updateLists(int maxFriends);
 
 		Vector<Relationship>& getAcquaintances();
+		
+		void print();
 };
 
 #endif // WORLDSIM_SOCIAL_HPP

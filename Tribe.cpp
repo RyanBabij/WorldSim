@@ -518,7 +518,8 @@ void Tribe::generateCouples(int amount)
 		cWoman->init(2); //Roll a female.
 		cWoman->age = 16+random.randomInt(12);
 		// Initialize them as fully compatible.
-		cWoman->social.setCompatibility(&cMan->social);
+		cWoman->social.setFullyCompatible(&cMan->social);
+		cMan->social.setFullyCompatible(&cWoman->social);
 		add(*cWoman);
 
 		cMan->marry(cWoman);

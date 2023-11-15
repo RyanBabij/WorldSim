@@ -25,6 +25,12 @@ bool Relationship::operator<(Relationship& other)
 	return this->compatibility < other.compatibility;
 }
 
+// Implementation of the << operator
+std::ostream& operator<<(std::ostream& os, const Relationship& r)
+{
+	return os << r.sourceCharacter->social << ", " << r.destinationCharacter->social << ": "<< static_cast<int>(r.compatibility);
+}
+
 Social::Social(Character* _thisCharacter)
 : thisCharacter(_thisCharacter)
 {
@@ -46,34 +52,61 @@ Social::Social(Character* _thisCharacter)
 	// return (this->compatibility < other.compatibility);
 // }
 
+// Implementation of the << operator
+std::ostream& operator<<(std::ostream& os, const Social& s)
+{
+	return os << s.thisCharacter->getFullName()<<": "<<s.personality<<", "<<s.desiredPersonality;
+}
+
 unsigned char Social::compatibilityWith(Social* social)
 {
-	return compatibility.distanceTo(social->compatibility);
+	return desiredPersonality.distanceTo(social->personality);
 }
 
 unsigned char Social::compatibilityWith(Social& social)
 {
-	return compatibility.distanceTo(social.compatibility);
+	return desiredPersonality.distanceTo(social.personality);
 }
 
-WrappingUChar Social::getCompatibility()
+WrappingUChar Social::getPersonality()
 {
-	return compatibility;
+	return personality;
 }
 
-void Social::setCompatibility(unsigned char _compatibility)
+WrappingUChar Social::getDesiredPersonality()
 {
-	compatibility = _compatibility;
+	return desiredPersonality;
+}
+
+
+void Social::setCompatibility(unsigned char _personality, unsigned char _desiredPersonality)
+{
+	personality = _personality;
+	desiredPersonality = _desiredPersonality;
 }
 
 void Social::setCompatibility(Social* compatible)
 {
-	compatibility = compatible->getCompatibility();
+	personality = compatible->getPersonality();
+	desiredPersonality = compatible->getDesiredPersonality();
 }
 
 void Social::setCompatibility(Social& compatible)
 {
-	compatibility = compatible.getCompatibility();
+	personality = compatible.getPersonality();
+	desiredPersonality = compatible.getDesiredPersonality();
+}
+
+void Social::setFullyCompatible(Social* compatible)
+{
+	personality = compatible->getDesiredPersonality();
+	desiredPersonality = compatible->getPersonality();
+}
+
+void Social::setFullyCompatible(Social& compatible)
+{
+	personality = compatible.getDesiredPersonality();
+	desiredPersonality = compatible.getPersonality();
 }
 
 int Social::isFamily(Character* c)
@@ -297,6 +330,22 @@ void Social::updateLists(int maxFriends)
 Vector<Relationship>& Social::getAcquaintances()
 {
 	return vAcquaintance;
+}
+
+void Social::print()
+{
+	std::cout<<"   Deets for "<<thisCharacter->getFullName()<<":\n";
+	
+	std::cout<<" Acquaintances:\n";
+	for (int i=0;i<vAcquaintance.size();++i)
+	{
+		std::cout<<vAcquaintance(i)<<"\n";
+	}
+	std::cout<<" Friends:\n";
+	for (int i=0;i<vFriend.size();++i)
+	{
+		std::cout<<vFriend(i)<<"\n";
+	}
 }
 
 #endif // WORLDSIM_SOCIAL_CPP

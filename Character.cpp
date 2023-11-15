@@ -133,7 +133,7 @@ void Character::init(const int _sex /* =0 */)
 	//knowledge->init();
 	initialiseKnowledge();
 	
-	social.setCompatibility(globalRandom.rand8());
+	social.setCompatibility(globalRandom.rand8(),globalRandom.rand8());
 	
 }
 
