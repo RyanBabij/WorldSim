@@ -20,6 +20,8 @@ class Character;
 class Idea
 {
 	public:
+		static int lastID; // Static variable to keep track of the last assigned ID
+		int id;
 		Character* originator;
 		
 		enum IDEA_TYPE
@@ -32,11 +34,31 @@ class Idea
 		};
 		
 		IDEA_TYPE type;
+		
+
 
 		// Constructor with initialization list
 		Idea(Character* _originator, IDEA_TYPE _type) 
-		: originator(_originator), type(_type) 
+		: id(++lastID), originator(_originator), type(_type) // Increment lastID for each new instance
 		{
+		}
+
+		// Copy constructor
+		Idea(const Idea& other)
+		: id(other.id), originator(other.originator), type(other.type)
+		{
+		}
+
+		// Assignment operator
+		Idea& operator=(const Idea& other)
+		{
+			if (this != &other)
+			{
+				originator = other.originator;
+				// Do not change the ID
+				type = other.type;
+			}
+			return *this;
 		}
 		
 		std::string ideaToString(IDEA_TYPE idea)
@@ -51,6 +73,9 @@ class Idea
 			}
 		}
 };
+
+// Initialize the static variable
+int Idea::lastID = 0;
 
 // Special idea
 // Will be reached once minimum requirements of levels have been met, with random chance on levelup.

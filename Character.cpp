@@ -147,6 +147,11 @@ void Character::setBaseSkill(BaseSkillManager::SKILL_TYPE skill, char value)
 	baseSkill.setSkillValue(skill,value);
 }
 
+char Character::getCharisma()
+{
+	return baseSkill.getSkillValue(BaseSkillManager::SKILL_CHARISMA);
+}
+
 Vector <Character*> Character::getAllKnownCharacters()
 {
 	Vector <Relationship> vRelation = social.getAcquaintances();
@@ -160,10 +165,57 @@ Vector <Character*> Character::getAllKnownCharacters()
 	return vChar;
 }
 
+bool Character::hasIdea(Idea idea)
+{
+	for (int i=0;i<vIdea.size();++i)
+	{
+		if (vIdea(i).id == idea.id)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+void Character::giveIdea(Idea idea)
+{
+	Idea copyIdea = idea;
+	vIdea.push(copyIdea);
+}
+
 void Character::updateSocial()
 {
 	social.updateLists(getBaseSkill(BaseSkillManager::SKILL_CHARISMA));
 	//social.updateLists(1);
+}
+
+void Character::shareIdeas(Character* c)
+{
+	std::cout<<"Sharing ideas\n";
+	
+	if (vIdea.empty())
+	{
+		std::cout<<"No ideas to share\n";
+		return;
+	}
+	
+	// pick random idea to share
+	
+	int ideaToShare=0;
+	
+	if (vIdea.size()>1)
+	{
+		ideaToShare=globalRandom.rand(vIdea.size()-1);
+	}
+	
+	if ( c->hasIdea(vIdea(ideaToShare)))
+	{
+		std::cout<<"Already knows\n";
+		return;
+	}
+	std::cout<<"Idea shared\n";
+	c->giveIdea(vIdea(ideaToShare));
+	
 }
 
 //ITEM FUNCTIONS
@@ -1104,11 +1156,12 @@ bool Character::updateKnowledgeIdle()
 
 
 
+const double RESEARCH_SPEED_MODIFIER = 1000;
 
 bool Character::abstractResearchMonth()
 {
 	// Base chance for level 1 (1% / 2^9)
-	double baseChance = 0.01 / 512; // Approximately 0.0000195
+	double baseChance = (0.01 / 512) * RESEARCH_SPEED_MODIFIER; // Approximately 0.0000195
 
 	// Calculate the chance for the current intelligence level
 	// The maximum value for rand is 4294967294, so we scale the base chance accordingly

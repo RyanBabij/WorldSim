@@ -72,37 +72,40 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		// For now we will turn the metal into weapons for use and export.
 		vCharacter.shuffle();
 		
-		//std::cout<<"Abstracting: "<<vCharacter.size()<<" characters\n";
 		for (int i=0;i<vCharacter.size();++i)
 		{
 			Character* character = vCharacter(i);
 			//std::cout<<"Abstracting "<<character->getFullName()<<"\n";
 			
-			// Research
-			bool breakthrough = character->abstractResearchMonth();
+			// Social
 			
-			// Do 30 random social interactions
-			for (int i2=0;i2<30;++i2)
+			const char cSocialSize = character->getCharisma();
+			
+			// Number of social interactions is dependant on charisma
+			for (int i2=0;i2<cSocialSize;++i2)
 			{
-				//std::cout<<".";
 				character->abstractSocial(getRandomCharacter());
-			} //std::cout<<"\n";
+			}
 			character->updateSocial();
 			
-			character->social.print();
+			//character->social.print();
 			
-			if (breakthrough)
-			{
+			// Research
+			
+			bool breakthrough = character->abstractResearchMonth();
+			
+			// if (breakthrough)
+			// {
 				
-				Technology::TECHNOLOGY_TYPE techAdvance = technology.advance();
-				Console ("Tech up: "+technology.techToString(techAdvance));
+				// Technology::TECHNOLOGY_TYPE techAdvance = technology.advance();
+				// Console ("Tech up: "+technology.techToString(techAdvance));
 				
-				Event_Tech_Breakthrough * eventTech = new Event_Tech_Breakthrough
-				("BREAKTHROUGH IN "+technology.techToString(techAdvance),Event::EVENT_TECH_BREAKTHROUGH);
+				// Event_Tech_Breakthrough * eventTech = new Event_Tech_Breakthrough
+				// ("BREAKTHROUGH IN "+technology.techToString(techAdvance),Event::EVENT_TECH_BREAKTHROUGH);
 				
-				world->eventManager.addEvent(eventTech);
-				//world->eventManager.addEvent("TECH ADVANCE",Event::EVENT_TECH_BREAKTHROUGH);
-			}
+				// world->eventManager.addEvent(eventTech);
+				// //world->eventManager.addEvent("TECH ADVANCE",Event::EVENT_TECH_BREAKTHROUGH);
+			// }
 			
 		
 			if (nMetalStockpile > 10 )

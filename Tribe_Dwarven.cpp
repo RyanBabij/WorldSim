@@ -17,7 +17,7 @@
 
 class World;
 
-#include <System/Time/Calendar.hpp>
+#include <Game/Calendar/Calendar.hpp>
 #include "WorldObjectGlobal.hpp"
 
 #include <Container/Table/TableInterface.hpp>
@@ -71,7 +71,7 @@ void Tribe_Dwarven::incrementTicks ( int nTicks )
 	dailyCounter+=nTicks;
 	monthlyCounter+=nTicks;
 
-	while (monthlyCounter >= 2592000)
+	while (monthlyCounter >= TICKS_PER_MONTH)
 	{
 		for ( int i=0; i<30; ++i)
 		{
@@ -99,7 +99,7 @@ void Tribe_Dwarven::incrementTicks ( int nTicks )
 
 		}
 
-		monthlyCounter-=2592000;
+		monthlyCounter-=TICKS_PER_MONTH;
 	}
 
 	while ( dailyCounter >= 86400 )

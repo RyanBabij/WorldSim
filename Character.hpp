@@ -17,7 +17,7 @@
 #include "Character_Skill.cpp"
 #include "Skill.cpp"
 
-#include <System/Time/Calendar.hpp>
+#include <Game/Calendar/Calendar.hpp>
 #include <Container/Table/TableInterface.hpp>
 
 #include "WorldObject.hpp"
@@ -146,10 +146,19 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	
 	/* GETTER AND SETTER */
 	
+	char getCharisma();
+	
 	char getBaseSkill(BaseSkillManager::SKILL_TYPE skill);
 	void setBaseSkill(BaseSkillManager::SKILL_TYPE skill, char value);
 	
 	Vector <Character*> getAllKnownCharacters();
+	
+	bool hasIdea(Idea idea);
+	void giveIdea(Idea idea);
+	
+	// INTERACTION
+	
+	void shareIdeas(Character* c); // Share 1 new idea per call.
 	
 	/* UPDATE FUNCTIONS */
 	

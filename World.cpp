@@ -70,7 +70,7 @@ World::World(): SaveFileInterface(),/* mapManager(this),*/ seaLevel(0), mountain
 	isRaining=false;
 
 	calendar.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
-	calendar.secondsPerMinute = 2;
+	calendar.secondsPerMinute = CALENDAR_SECONDS_PER_MINUTE;
 	
 	incrementContinuous=false;
 	
@@ -1043,21 +1043,21 @@ void World::incrementTicks(int nTicks)
 	}
 
 
-	while (monthlyCounter >= 2592000)
+	while (monthlyCounter >= TICKS_PER_MONTH)
 	{
 		//std::cout<<"Degrade influence.\n";
 		degradeInfluence();
 		
 		incrementDeities(nTicks);
 		
-		monthlyCounter-=2592000;
-		nTicks-=2592000;
+		monthlyCounter-=TICKS_PER_MONTH;
+		nTicks-=TICKS_PER_MONTH;
 	}
 
-	while ( dailyCounter >= 86400 )
+	while ( dailyCounter >= TICKS_PER_DAY )
 	{
-		dailyCounter-=86400;
-		nTicks-=86400;
+		dailyCounter-=TICKS_PER_DAY;
+		nTicks-=TICKS_PER_DAY;
 	}
 
 	// FOR NOW INCREMENT INDIVIDUAL TICKS THROW AWAY SOME IF THERE'S TOO MANY
@@ -1127,14 +1127,14 @@ void World::incrementDeities(int nTicks)
 	deityTicks+=nTicks;
 	
 	// increment monthly
-	while (deityTicks >= 2592000)
+	while (deityTicks >= TICKS_PER_MONTH)
 	{
 		//std::cout<<"Deity actions here\n";
 		if (random.oneIn(12))
 		{
 			eventManager.addEvent("DEITY ACT",Event::EVENT_DEITY_ACT);
 		}
-		deityTicks-=2592000;
+		deityTicks-=TICKS_PER_MONTH;
 	}
 	
 	
@@ -1179,7 +1179,7 @@ bool World::handleTickBacklog()
 	// or pressing escape.
 	if (incrementContinuous)
 	{
-		incrementTicks(86400);
+		incrementTicks(TICKS_PER_MONTH);
 		return true;
 	}
 	
@@ -1189,7 +1189,7 @@ bool World::handleTickBacklog()
 
 
 
-	unsigned long long int MAXIMUM_TICKS_AT_ONCE = 2592000;
+	unsigned long long int MAXIMUM_TICKS_AT_ONCE = TICKS_PER_MONTH;
 
 	relinquishTimer.start();
 

@@ -589,17 +589,17 @@ public:
 		if (buttonIncrementDay.clicked==true)
 		{
 			buttonIncrementDay.unclick();
-			world.incrementTicks(86400);
+			world.incrementTicks(TICKS_PER_DAY);
 		}
 		if (buttonIncrementMonth.clicked==true)
 		{
 			buttonIncrementMonth.unclick();
-			world.incrementTicks(2592000);
+			world.incrementTicks(TICKS_PER_MONTH);
 		}
 		if (buttonIncrementYear.clicked==true)
 		{
 			buttonIncrementYear.unclick();
-			world.ticksBacklog+=31104000;
+			world.ticksBacklog+=TICKS_PER_YEAR;
 		}
 		if (buttonIncrementContinuous.clicked==true)
 		{

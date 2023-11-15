@@ -176,10 +176,12 @@ void Social::interact(Character* c)
 	}
 	else if (getFamilySlot(c)!=-1)
 	{
+		thisCharacter->shareIdeas(c);
 		return;
 	}
 	else if (getFriendSlot(c)!=-1)
 	{
+		thisCharacter->shareIdeas(c);
 		return;
 	}
 	else if (getEnemySlot(c)!=-1)
@@ -361,6 +363,11 @@ void Social::updateLists(int maxFriends)
 	int worstAcquaintance = getWorstAcquaintanceSlot();
 
 	
+}
+
+void Social::shareIdeas(Character* c)
+{
+	thisCharacter->shareIdeas(c);
 }
 		
 Vector<Relationship>& Social::getAcquaintances()

@@ -94,6 +94,8 @@ class Social
 
 		void interact(Character* c);
 		void updateLists(int maxFriends);
+		
+		void shareIdeas(Character* c);
 
 		Vector<Relationship>& getAcquaintances();
 		
