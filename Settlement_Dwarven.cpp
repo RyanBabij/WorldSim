@@ -89,7 +89,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			} //std::cout<<"\n";
 			character->updateSocial();
 			
-			//character->social.print();
+			character->social.print();
 			
 			if (breakthrough)
 			{

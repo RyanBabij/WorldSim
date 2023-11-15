@@ -109,7 +109,7 @@ void Social::setFullyCompatible(Social& compatible)
 	desiredPersonality = compatible.getPersonality();
 }
 
-int Social::isFamily(Character* c)
+int Social::getFamilySlot(Character* c)
 {
 	for (int i = 0; i < vFamily.size(); ++i)
 	{
@@ -121,7 +121,17 @@ int Social::isFamily(Character* c)
 	return -1;
 }
 
-int Social::isFriend(Character* c)
+
+void Social::addFamily(Character* c)
+{
+	if (getFamilySlot(c)!=-1)
+	{
+		return;
+	}
+	vFamily.push(Relationship(thisCharacter,c,1,compatibilityWith(c->social)));
+}
+
+int Social::getFriendSlot(Character* c)
 {
 	for (int i = 0; i < vFriend.size(); ++i)
 	{
@@ -133,7 +143,7 @@ int Social::isFriend(Character* c)
 	return -1;
 }
 
-int Social::isEnemy(Character* c)
+int Social::getEnemySlot(Character* c)
 {
 	for (int i = 0; i < vEnemy.size(); ++i)
 	{
@@ -145,7 +155,7 @@ int Social::isEnemy(Character* c)
 	return -1;
 }
 
-int Social::isAcquaintance(Character* c)
+int Social::getAcquaintanceSlot(Character* c)
 {
 	for (int i = 0; i < vAcquaintance.size(); ++i)
 	{
@@ -164,19 +174,19 @@ void Social::interact(Character* c)
 		// idk meditate or something
 		return;
 	}
-	else if (isFamily(c)!=-1)
+	else if (getFamilySlot(c)!=-1)
 	{
 		return;
 	}
-	else if (isFriend(c)!=-1)
+	else if (getFriendSlot(c)!=-1)
 	{
 		return;
 	}
-	else if (isEnemy(c)!=-1)
+	else if (getEnemySlot(c)!=-1)
 	{
 		return;
 	}
-	else if (isAcquaintance(c)!=-1)
+	else if (getAcquaintanceSlot(c)!=-1)
 	{
 		return;
 	}
@@ -257,6 +267,29 @@ int Social::getWorstFriendSlot()
 	return worstFriend; // Return the index to the worst friend
 }
 
+int Social::getWorstAcquaintanceSlot()
+{
+	if (vAcquaintance.empty())
+	{
+		return -1; // Return -1 if there are no acquaintances
+	}
+
+	int worstAcquaintance = -1;
+	int worstCompatibility = -1; // Start with the best possible compatibility
+
+	for (int i = 0; i < vAcquaintance.size(); ++i)
+	{
+		unsigned char thisCompatibility = vAcquaintance(i).compatibility;
+
+		if (thisCompatibility > worstCompatibility)
+		{
+			worstCompatibility = thisCompatibility;
+			worstAcquaintance = i;
+		}
+	}
+	return worstAcquaintance; // Return the index to the worst acquaintance
+}
+
 // Move most compatible acquaintances into friendship vector.
 void Social::updateLists(int maxFriends)
 {
@@ -289,40 +322,43 @@ void Social::updateLists(int maxFriends)
 		worstFriendCompatibility = vFriend(worstFriend).compatibility;
 	}
 	
-	if(bestAcquaintance==-1)
-	{
-		//std::cout<<"No new acquaintances found.\n";
-		return;
-	}
 	
-	//std::cout<<"Worst friend / alternative compat is: "<<worstFriendCompatibility<<" / "<<bestCompatibility<<"\n";
-
-	if ( bestCompatibility < worstFriendCompatibility )
+	
+	if(bestAcquaintance!=-1)
 	{
-		if (vFriend.size()<maxFriends)
+		//std::cout<<"Worst friend / alternative compat is: "<<worstFriendCompatibility<<" / "<<bestCompatibility<<"\n";
+
+		if ( bestCompatibility < worstFriendCompatibility )
 		{
-			//std::cout<<"Adding friend\n";
-			vFriend.add(vAcquaintance(bestAcquaintance));
-			vAcquaintance.removeSlot(bestAcquaintance);
-		}
-		else
-		{
-			//std::cout<<"Replacing friend\n";
-			if (worstFriend!=-1)
+			if (vFriend.size()<maxFriends)
 			{
-				vFriend.removeSlot(worstFriend);
+				//std::cout<<"Adding friend\n";
+				vFriend.add(vAcquaintance(bestAcquaintance));
+				vAcquaintance.removeSlot(bestAcquaintance);
 			}
 			else
 			{
-				//std::cout<<"Worstfriend returning -1\n";
+				//std::cout<<"Replacing friend\n";
+				if (worstFriend!=-1)
+				{
+					vFriend.removeSlot(worstFriend);
+				}
+				else
+				{
+					//std::cout<<"Worstfriend returning -1\n";
+				}
+				vFriend.add(vAcquaintance(bestAcquaintance));
 			}
-			vFriend.add(vAcquaintance(bestAcquaintance));
+		}
+		else
+		{
+			//std::cout<<"No better friend found\n";
 		}
 	}
-	else
-	{
-		//std::cout<<"No better friend found\n";
-	}
+	
+
+	
+	int worstAcquaintance = getWorstAcquaintanceSlot();
 
 	
 }
@@ -336,16 +372,23 @@ void Social::print()
 {
 	std::cout<<"   Deets for "<<thisCharacter->getFullName()<<":\n";
 	
-	std::cout<<" Acquaintances:\n";
-	for (int i=0;i<vAcquaintance.size();++i)
+	std::cout<<" Family:\n";
+	for (int i=0;i<vFamily.size();++i)
 	{
-		std::cout<<vAcquaintance(i)<<"\n";
+		std::cout<<vFamily(i)<<"\n";
 	}
+	
 	std::cout<<" Friends:\n";
 	for (int i=0;i<vFriend.size();++i)
 	{
 		std::cout<<vFriend(i)<<"\n";
 	}
+	std::cout<<" Acquaintances:\n";
+	for (int i=0;i<vAcquaintance.size();++i)
+	{
+		std::cout<<vAcquaintance(i)<<"\n";
+	}
+
 }
 
 #endif // WORLDSIM_SOCIAL_CPP

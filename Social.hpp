@@ -82,11 +82,15 @@ class Social
 		Relationship* getBestFriend();
 		Relationship* getWorstFriend();
 		int getWorstFriendSlot();
+		
+		int getWorstAcquaintanceSlot();
 
-		int isFamily(Character* c);
-		int isFriend(Character* c);
-		int isEnemy(Character* c);
-		int isAcquaintance(Character* c);
+		int getFamilySlot(Character* c);
+		int getFriendSlot(Character* c);
+		int getEnemySlot(Character* c);
+		int getAcquaintanceSlot(Character* c);
+		
+		void addFamily(Character* c);
 
 		void interact(Character* c);
 		void updateLists(int maxFriends);

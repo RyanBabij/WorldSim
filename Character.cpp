@@ -609,6 +609,9 @@ bool Character::marry(Character* c)
 		c->tribe->removeCharacter(c);
 		tribe->addCharacter(c);
 	}
+	
+	social.addFamily(c);
+	c->social.addFamily(this);
 
 	return true;
 }

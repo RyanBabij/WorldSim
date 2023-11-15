@@ -521,7 +521,6 @@ void Tribe::generateCouples(int amount)
 		cWoman->social.setFullyCompatible(&cMan->social);
 		cMan->social.setFullyCompatible(&cWoman->social);
 		add(*cWoman);
-
 		cMan->marry(cWoman);
 	}
 	// Generate legendary couples.
