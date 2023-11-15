@@ -132,8 +132,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	//Manage social connections
 	Social social;
 	
-	// Any potential idea the person has.
-	Idea idea;
+	// Any potential ideas the person has.
+	Vector <Idea> vIdea;
 	
 	// Events relevant to this character
 	Vector <Event*> vEvent;

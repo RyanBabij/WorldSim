@@ -15,9 +15,13 @@
 
 // Each civ has its own idea progress.
 
+class Character;
+
 class Idea
 {
 	public:
+		Character* originator;
+		
 		enum IDEA_TYPE
 		{
 			IDEA_MINING,
@@ -27,12 +31,12 @@ class Idea
 			ENUM_COUNT
 		};
 		
-		bool hasIdea;
 		IDEA_TYPE type;
-	
-		Idea()
+
+		// Constructor with initialization list
+		Idea(Character* _originator, IDEA_TYPE _type) 
+		: originator(_originator), type(_type) 
 		{
-			hasIdea=false;
 		}
 		
 		std::string ideaToString(IDEA_TYPE idea)
@@ -50,6 +54,7 @@ class Idea
 
 // Special idea
 // Will be reached once minimum requirements of levels have been met, with random chance on levelup.
+// It is an idea with a more detailed description rather than a generic improvement
 class SpecialIdea
 {
 	public:

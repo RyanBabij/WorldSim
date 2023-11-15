@@ -1115,7 +1115,15 @@ bool Character::abstractResearchMonth()
 	unsigned long long breakthroughChance = static_cast<unsigned long long>(baseChance * std::pow(2, baseSkill.intelligence - 1) * 4294967294);
 
 	// Check for breakthrough
-	return globalRandom.rand32() < breakthroughChance;
+	bool hasIdea = globalRandom.rand32() < breakthroughChance;
+	
+	
+	if (hasIdea)
+	{
+		// Give the Character an Idea which will hopefully become a tech
+	}
+	
+	return hasIdea;
 }
 
 void Character::abstractSocial(Character* character)
