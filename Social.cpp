@@ -33,6 +33,11 @@ unsigned char Social::compatibilityWith(Social* social)
 	return compatibility.distanceTo(social->compatibility);
 }
 
+unsigned char Social::compatibilityWith(Social& social)
+{
+	return compatibility.distanceTo(social.compatibility);
+}
+
 WrappingUChar Social::getCompatibility()
 {
 	return compatibility;
@@ -46,6 +51,11 @@ void Social::setCompatibility(unsigned char _compatibility)
 void Social::setCompatibility(Social* compatible)
 {
 	compatibility = compatible->getCompatibility();
+}
+
+void Social::setCompatibility(Social& compatible)
+{
+	compatibility = compatible.getCompatibility();
 }
 
 int Social::isFamily(Character* c)
@@ -98,14 +108,40 @@ int Social::isAcquaintance(Character* c)
 
 void Social::interact(Character* c)
 {
-	// Implementation of interact
+	if (isFamily(c)!=-1)
+	{
+		return;
+	}
+	else if (isFriend(c)!=-1)
+	{
+		return;
+	}
+	else if (isEnemy(c)!=-1)
+	{
+		return;
+	}
+	else if (isAcquaintance(c)!=-1)
+	{
+		return;
+	}
+	
+	// Add new acquaintance
+	vAcquaintance.push(Relationship(thisCharacter,c,1,compatibilityWith(c->social)));
+	
 }
 
+// Move most compatible acquaintances into friendship vector.
 void Social::updateLists(int maxFriends)
 {
-	// Implementation of updateLists
+	unsigned char bestCompatibility = 255;
+	// find best acquaintance
+	for (int i=0;i<vAcquaintance.size();++i)
+	{
+		//unsigned char thisCompatibility = compatibilityWith
+	}
+	
 }
-
+		
 Vector<Relationship>& Social::getAcquaintances()
 {
 	return vAcquaintance;

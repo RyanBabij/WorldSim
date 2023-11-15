@@ -33,9 +33,11 @@ public:
     Social(Character* _thisCharacter);
 
     unsigned char compatibilityWith(Social* social);
+    unsigned char compatibilityWith(Social& social);
     WrappingUChar getCompatibility();
     void setCompatibility(unsigned char _compatibility);
     void setCompatibility(Social* compatible);
+    void setCompatibility(Social& compatible);
 
     int isFamily(Character* c);
     int isFriend(Character* c);
