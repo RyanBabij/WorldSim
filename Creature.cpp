@@ -17,46 +17,44 @@ class Texture;
 
 Creature::Creature()
 {
-
 	isMale = true;
 	age = -1;
 	daysCounter=0;
 	secondsCounter=0;
-	
+
 	isAlive=true;
 
 	actionPoints = 0;
-	
+
 	health=0;
 	hunger=0;
-  
-  worldX = -1;
-  worldY = -1;
-	
-  map=0;
-  
-  nPelt=0;
-  nMeat=0;
-  
-  fleeCounter=0;
-  
-  species=0;
-  baseTexture=0;
+
+	worldX = -1;
+	worldY = -1;
+
+	map=0;
+
+	nPelt=0;
+	nMeat=0;
+
+	fleeCounter=0;
+
+	species=0;
+	baseTexture=0;
 }
 
   //_sex: 0 - Roll, 1 - Male, 2 - Female.
 void Creature::init(const int _sex /* =0 */)
 {
-  
-  if (_sex == 1) { isMale = true; }
-  else if (_sex == 2) { isMale = false; }
-  else { isMale = Random::flip(); }
-  
-	age=0;
-  map=0;
+	if (_sex == 1) { isMale = true; }
+	else if (_sex == 2) { isMale = false; }
+	else { isMale = Random::flip(); }
 
-  knowledge = new Creature_Knowledge;
-  knowledge->init();
+	age=0;
+	map=0;
+
+	knowledge = new Creature_Knowledge;
+	knowledge->init();
 }
 
 

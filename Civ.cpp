@@ -25,14 +25,13 @@ void Civ::init(World* _world)
 
 void Civ::addSettlement(Settlement * _settlement)
 {
-  _settlement->world = world;
-  vSettlement.push(_settlement);
+	_settlement->world = world;
+	vSettlement.push(_settlement);
 }
 
 void Civ::incrementTicks ( int nTicks )
 {
-	/* Update each city. */
-	
+	/* Update each city. */\
 	for ( int i=0;i<vSettlement.size();++i)
 	{
 		vSettlement(i)->incrementTicks(nTicks);
@@ -73,30 +72,30 @@ std::string Civ::getColumn(std::string _column)
 	if ( _column=="race" )
 	{
 		if (race == NONE)
-    {
-      return "None";
-    }
+		{
+			return "None";
+		}
 		if (race == HUMAN)
-    {
-      return "Human";
-    }
+		{
+			return "Human";
+		}
 		if (race == DWARVEN)
-    {
-      return "Dwarven";
-    }
+		{
+			return "Dwarven";
+		}
 		if (race == ELVEN)
-    {
-      return "Elven";
-    }
-    
+		{
+			return "Elven";
+		}
 	}
 	if ( _column=="population" )
 	{
 		return DataTools::toString(vCharacter.size());
 	}
-	
+
 	return "?";
 }
+
 std::string Civ::getColumnType(std::string _column)
 {
 	if ( _column == "population" || _column == "territory" || _column == "food" )
