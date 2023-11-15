@@ -19,6 +19,19 @@ Settlement::Settlement()
   random.seed(Random::randInt(99999));
 }
 
+std::string Settlement::getName()
+{
+	return name;
+}
+
+Character* Settlement::getRandomCharacter()
+{
+	if (vCharacter.empty())
+	{ return 0; }
+	
+	return vCharacter(globalRandom.rand(vCharacter.size()-1));
+}
+
 bool Settlement::removeCharacter( Character* _character)
 {
 	return vCharacter.erase(_character);
@@ -37,10 +50,7 @@ void Settlement::incrementTicks ( int /* nTicks */ )
   return;
 }
 
-std::string Settlement::getName()
-{
-	return name;
-}
+
 
 
 /* TABLE INTERFACE */

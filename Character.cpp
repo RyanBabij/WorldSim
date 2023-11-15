@@ -8,6 +8,8 @@
   Implementation of Character.hpp
 */
 
+#include "Social.cpp"
+
 #include "World.hpp"
 
 #include "Character.hpp"
@@ -19,7 +21,7 @@ const int MAX_CHILDREN = 5;
 //#include <Graphics/Texture/Texture.hpp>
 class Texture;
 
-Character::Character()
+Character::Character(): social(this)
 {
 	firstName="";
 	lastName="";
@@ -84,6 +86,7 @@ Character::Character()
 	map = 0;
 
 	isUnderground=false;
+	
 }
 
 //_sex: 0 - Roll, 1 - Male, 2 - Female.
@@ -142,6 +145,24 @@ char Character::getBaseSkill(BaseSkillManager::SKILL_TYPE skill)
 void Character::setBaseSkill(BaseSkillManager::SKILL_TYPE skill, char value)
 {
 	baseSkill.setSkillValue(skill,value);
+}
+
+Vector <Character*> Character::getAllKnownCharacters()
+{
+	Vector <Relationship> vRelation = social.getAcquaintances();
+	
+	Vector <Character*> vChar;
+	for (int i=0;i<vRelation.size();++i)
+	{
+		vChar.push(vRelation(i).destinationCharacter);
+	}
+	
+	return vChar;
+}
+
+void Character::updateSocial()
+{
+	social.updateLists(getBaseSkill(BaseSkillManager::SKILL_CHARISMA));
 }
 
 //ITEM FUNCTIONS
@@ -556,11 +577,6 @@ void Character::die(enumCauseOfDeath _causeOfDeath /* =UNKNOWN */)
 	{
 		std::cout<<"no tribe...\n";
 	}
-}
-
-void Character::socialise(Character*)
-{
-	return;
 }
 
 bool Character::marry(Character* c)
@@ -1082,6 +1098,9 @@ bool Character::updateKnowledgeIdle()
 // There should probably be a system for diminishing returns as pop gets larger.
 // Yes this could be ported out to the Settlement to manage, but for now I'll keep it per-Character to see how it goes
 
+
+
+
 bool Character::abstractResearchMonth()
 {
 	// Base chance for level 1 (1% / 2^9)
@@ -1095,14 +1114,18 @@ bool Character::abstractResearchMonth()
 	return globalRandom.rand32() < breakthroughChance;
 }
 
-// Assume one new social interaction per month.
-void abstractSocialiseMonth()
+void Character::abstractSocial(Character* character)
 {
-	for (int i=0;i<30;++i)
+	if (character==0 || character==this)
 	{
+		return;
 	}
+	std::cout<<"INTERACTION\n";
+	social.interact(character);
+	//social.abstractMonth();
+	
+	return;
 }
-
 
 // INHERITED FUNCTIONS
 

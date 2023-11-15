@@ -9,6 +9,8 @@
 	to the leader or a book is written about it, it will become established as a technology. The originator of the idea
 	will be the one credited.
 	
+	Ideas will later cover more than technology.
+	
 */
 
 // Each civ has its own idea progress.

@@ -44,6 +44,9 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		int nMetalStockpile;
 
 		Settlement();
+		
+		/* GETTER AND SETTER */
+		Character* getRandomCharacter();
 
 		/* SIMULATE X TURNS OF THE SETTLEMENT. */
 		virtual void incrementTicks ( int /* nTicks */ );

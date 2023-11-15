@@ -79,6 +79,13 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			// Research
 			bool breakthrough = character->abstractResearchMonth();
 			
+			// Do 30 random social interactions
+			for (int i2=0;i2<30;++i2)
+			{
+				character->abstractSocial(getRandomCharacter());
+			}
+			character->updateSocial();
+			
 			if (breakthrough)
 			{
 				

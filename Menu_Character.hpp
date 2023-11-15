@@ -191,6 +191,14 @@ class Menu_Characters: public GUI_Interface
 						
 						menuCharacterDetails.active=true;
 					//guiTableTribes.active=false;
+					
+					Vector <Character*> vKnown = selectedCharacter->getAllKnownCharacters();
+					
+					std::cout<<"Known:\n";
+					for (int i=0;i<vKnown.size();++i)
+					{
+						std::cout<<vKnown(i)->getFullName()<<"\n";
+					}
 				}
 				else
 				{

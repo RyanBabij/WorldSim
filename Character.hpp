@@ -10,7 +10,7 @@
 	Characters may be either human, elven, or dwarven.
 */
 
-#include "Social.cpp"
+#include "Social.hpp"
 #include "Idea.cpp"
 
 
@@ -148,6 +148,12 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	
 	char getBaseSkill(BaseSkillManager::SKILL_TYPE skill);
 	void setBaseSkill(BaseSkillManager::SKILL_TYPE skill, char value);
+	
+	Vector <Character*> getAllKnownCharacters();
+	
+	/* UPDATE FUNCTIONS */
+	
+	void updateSocial();
 
 	/* AI FUNCTIONS
 
@@ -185,9 +191,6 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 
 
 		*/
-		
-	// Characters will learn about each other and spread Ideas.
-	void socialise(Character*);
 	
 	bool marry(Character* );
 		/* Checks that the couple is not closely related, and several other conditions. */
@@ -277,6 +280,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   
 	// ABSTRACT FUNCTIONS
   bool abstractResearchMonth();
+	// Characters will learn about each other and spread Ideas.
+	void abstractSocial(Character*);
 
 	
 };
