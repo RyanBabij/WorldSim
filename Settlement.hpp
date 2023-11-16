@@ -2,6 +2,8 @@
 #ifndef WORLDSIM_SETTLEMENT_HPP
 #define WORLDSIM_SETTLEMENT_HPP
 
+#include "Government.cpp"
+
 #include "Resource.cpp"
 #include "WorldObjectGlobal.hpp"
 #include "Civ.hpp"
@@ -17,6 +19,8 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		Civ* parentCiv;
 		Vector <Character*> vCharacter;
 		Vector <Character*> vDeceased;
+		
+		Government government;
 		
 		Vector <Item*> vItem;
 		

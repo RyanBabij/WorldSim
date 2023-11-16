@@ -147,6 +147,13 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	/* GETTER AND SETTER */
 	
 	char getCharisma();
+	void setCharisma(char amount);
+	
+	char getIntelligence();
+	void setIntelligence(char amount);
+	
+	char getStrength();
+	void setStrength(char amount);
 	
 	char getBaseSkill(BaseSkillManager::SKILL_TYPE skill);
 	void setBaseSkill(BaseSkillManager::SKILL_TYPE skill, char value);

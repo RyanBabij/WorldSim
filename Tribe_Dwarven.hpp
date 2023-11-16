@@ -10,6 +10,8 @@
 
 */
 
+#include "Government.cpp"
+
 #include "Character.hpp"
 
 class World;
@@ -22,6 +24,7 @@ class World;
 class Tribe_Dwarven: public Tribe
 {
 public:
+	Government government;
 
 	//RandomNonStatic random;
 

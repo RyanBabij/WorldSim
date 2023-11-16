@@ -507,7 +507,10 @@ Texture* Tribe::currentTexture()
 
 void Tribe::generateCouples(int amount)
 {
-	while (amount-- > 0)
+	if (amount < 3) 
+	{ amount=3; }
+	
+	for (int i=0; i<amount; ++i)
 	{
 		Character * cMan = new Character;
 		cMan->init(1); //Roll a male.
@@ -520,14 +523,62 @@ void Tribe::generateCouples(int amount)
 		// Initialize them as fully compatible.
 		cWoman->social.setFullyCompatible(&cMan->social);
 		cMan->social.setFullyCompatible(&cWoman->social);
+		
 		add(*cWoman);
 		cMan->marry(cWoman);
+		
+		if ( i==0 )
+		{
+			cMan->setStrength(10);
+			cWoman->setStrength(10);
+			// Set all initial government as compatible to prevent early drama
+			cWoman->social.setCompatibility(0,0);
+			cMan->social.setCompatibility(0,0);
+			if (globalRandom.flip())
+			{
+				government.setCaptain(cMan);
+			}
+			else
+			{
+				government.setCaptain(cWoman);
+			}
+		}
+		else if (i==1)
+		{
+			cMan->setCharisma(10);
+			cWoman->setCharisma(10);
+			// Set all initial government as compatible to prevent early drama
+			cWoman->social.setCompatibility(0,0);
+			cMan->social.setCompatibility(0,0);
+			if (globalRandom.flip())
+			{
+				government.setLeader(cMan);
+			}
+			else
+			{
+				government.setLeader(cWoman);
+			}
+		}
+		else if (i==2)
+		{
+			cMan->setIntelligence(10);
+			cWoman->setIntelligence(10);
+			// Set all initial government as compatible to prevent early drama
+			cWoman->social.setCompatibility(0,0);
+			cMan->social.setCompatibility(0,0);
+			if (globalRandom.flip())
+			{
+				government.setScribe(cMan);
+			}
+			else
+			{
+				government.setScribe(cWoman);
+			}
+			
+			cMan->social.setFullyCompatible(vCharacter(0)->social);
+			cWoman->social.setFullyCompatible(vCharacter(0)->social);
+		}
 	}
-	// Generate legendary couples.
-	setLegendaryCouple(BaseSkillManager::SKILL_STRENGTH);
-	setLegendaryCouple(BaseSkillManager::SKILL_CHARISMA);
-	setLegendaryCouple(BaseSkillManager::SKILL_INTELLIGENCE);
-
 }
 
 Character* Tribe::getMostSkilledAt(BaseSkillManager::SKILL_TYPE skill)
@@ -549,7 +600,7 @@ Character* Tribe::getMostSkilledAt(BaseSkillManager::SKILL_TYPE skill)
 	return mostSkilledCharacter;
 }
 // Set one tribe member as legendary at this skill.
-void Tribe::setLegendaryCouple(BaseSkillManager::SKILL_TYPE skill)
+Character* Tribe::setLegendaryCouple(BaseSkillManager::SKILL_TYPE skill)
 {
 	// find the couple with the highest of this skill, and set it to legendary. This should help tribes starting out
 	// and establish a family history and reputation.
@@ -564,7 +615,9 @@ void Tribe::setLegendaryCouple(BaseSkillManager::SKILL_TYPE skill)
 		{
 			legend->spouse->setBaseSkill(skill,10);
 		}
+		return legend;
 	}
+	return nullptr;
 }
 
 

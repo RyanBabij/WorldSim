@@ -31,6 +31,8 @@ protected:
 
 public:
 
+	Government government;
+
 	Mythology * mythology;
 
 	/* Identifying  colour of the tribe so you can see who it is quickly. */
@@ -126,7 +128,7 @@ public:
 	void add (Character& c);
 	
 	// Set one couple as legendary at this skill.
-	void setLegendaryCouple(BaseSkillManager::SKILL_TYPE);
+	Character* setLegendaryCouple(BaseSkillManager::SKILL_TYPE);
 	
 	Character* getMostSkilledAt(BaseSkillManager::SKILL_TYPE skill);
 

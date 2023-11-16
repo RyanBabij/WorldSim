@@ -152,6 +152,31 @@ char Character::getCharisma()
 	return baseSkill.getSkillValue(BaseSkillManager::SKILL_CHARISMA);
 }
 
+void Character::setCharisma(char amount)
+{
+	baseSkill.setSkillValue(BaseSkillManager::SKILL_CHARISMA,amount);
+}
+
+char Character::getIntelligence()
+{
+	return baseSkill.getSkillValue(BaseSkillManager::SKILL_INTELLIGENCE);
+}
+
+void Character::setIntelligence(char amount)
+{
+	baseSkill.setSkillValue(BaseSkillManager::SKILL_INTELLIGENCE,amount);
+}
+
+char Character::getStrength()
+{
+	return baseSkill.getSkillValue(BaseSkillManager::SKILL_STRENGTH);
+}
+
+void Character::setStrength(char amount)
+{
+	baseSkill.setSkillValue(BaseSkillManager::SKILL_STRENGTH,amount);
+}
+
 Vector <Character*> Character::getAllKnownCharacters()
 {
 	Vector <Relationship> vRelation = social.getAcquaintances();

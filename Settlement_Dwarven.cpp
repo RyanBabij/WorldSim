@@ -61,6 +61,14 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 
 	while (monthlyCounter >= TICKS_PER_MONTH)
 	{
+		if (government.needsLeader())
+		{
+			std::cout<<"We need a leader\n";
+		}
+		
+		government.govern();
+		
+		
 		// Produce and deduct food
 		nFoodStockpile -= vCharacter.size();
 		std::cout<<"nfood: "<<nFoodStockpile<<"\n";
@@ -88,7 +96,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			}
 			character->updateSocial();
 			
-			//character->social.print();
+			character->social.print();
 			
 			// Research
 			
