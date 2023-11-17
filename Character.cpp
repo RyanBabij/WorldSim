@@ -312,6 +312,33 @@ std::string Character::getBiography()
 	}
 
 	biography << " " << gender1 << " " << tense << (isMarried ? " married to X." : " not married.");
+	
+	if (tribe!=0)
+	{
+		biography<<" "<<gender1<<" is a member of a tribe.\n";
+	}
+	if (settlement!=0)
+	{
+		if ( settlement->government.leader == this )
+		{
+			biography<<" "<<gender1<<" is the leader of a settlement.\n";
+		}
+		else if ( settlement->government.scribe == this )
+		{
+			biography<<" "<<gender1<<" is the head scribe of a settlement.\n";
+		}
+		else if ( settlement->government.captain == this )
+		{
+			biography<<" "<<gender1<<" is the military captain of a settlement.\n";
+		}
+		else
+		{
+			biography<<" "<<gender1<<" is a member of a settlement.\n";
+		}
+		
+	}
+	
+	
 
 	if (!isAlive)
 	{

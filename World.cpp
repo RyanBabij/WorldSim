@@ -991,6 +991,12 @@ void World::evolveToCiv( Tribe * _tribe )
 
 		// Move all characters into the first Settlement
 		s->vCharacter.copy(&_tribe->vCharacter);
+		
+		for (int i=0;i<_tribe->vCharacter.size();++i)
+		{
+			_tribe->vCharacter(i)->settlement=s;
+		}
+		
 	}
 }
 

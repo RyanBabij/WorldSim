@@ -38,6 +38,11 @@ class Government_Position
 		return *this;
 	}
 
+	// Does the passed Character have this job?
+	bool operator==(const Character* otherCharacter) const
+	{
+		return character == otherCharacter;
+	}
 	
 	virtual void govern()=0;
 	

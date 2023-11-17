@@ -38,6 +38,8 @@ class Menu_SettlementDetails: public GUI_Interface
 	Settlement* selectedSettlement;
 	
 	GUI_Link textLeaderLink;
+	GUI_Link textCaptainLink;
+	GUI_Link textScribeLink;
 	// GUI_Link textMotherLink;
 	// GUI_Link textSpouseLink;
 	// Vector <GUI_Link*> textChildLink;
@@ -48,7 +50,7 @@ class Menu_SettlementDetails: public GUI_Interface
 	{	
 		selectedSettlement=0;
 		
-		textLeaderLink.setRGB(255,255,0);
+		//textLeaderLink.setRGB(255,255,0);
 		
 		menuCharacterDetails=0;
 	}
@@ -100,6 +102,8 @@ class Menu_SettlementDetails: public GUI_Interface
 		// guiManager.add(&buttonFavourite);
 		// guiManager.add(&buttonPossess);
 		guiManager.add(&textLeaderLink);
+		guiManager.add(&textCaptainLink);
+		guiManager.add(&textScribeLink);
 		// guiManager.add(&textMotherLink);
 		// guiManager.add(&textSpouseLink);
 
@@ -132,19 +136,47 @@ class Menu_SettlementDetails: public GUI_Interface
 			yOffset+=vSpacing;
 			
 			Character * leader = selectedSettlement->government.leader.character;
+			Character * captain = selectedSettlement->government.captain.character;
+			Character * scribe = selectedSettlement->government.scribe.character;
 			
-			textLeaderLink.setFont(&font8x8White);
-			textLeaderLink.setRGB(255,255,0);
+			//textLeaderLink.setFont(&font8x8White);
+			//textLeaderLink.setRGB(255,255,0);
 			
 			if ( leader != 0 )
 			{
 				textLeaderLink.setPanel(panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
-				textLeaderLink.text = "Leader: " + leader->getFullName() + ".";
+				textLeaderLink.text = "Leader:      " + leader->getFullName() + ".";
 			}
 			else
 			{
 				textLeaderLink.setPanel(panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
 				textLeaderLink.text = "No leader.";
+			}
+			
+			yOffset+=vSpacing;
+			
+			if ( leader != 0 )
+			{
+				textCaptainLink.setPanel(panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+				textCaptainLink.text = "Captain:     " + captain->getFullName() + ".";
+			}
+			else
+			{
+				textCaptainLink.setPanel(panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+				textCaptainLink.text = "No captain.";
+			}
+			
+			yOffset+=vSpacing;
+			
+			if ( leader != 0 )
+			{
+				textScribeLink.setPanel(panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+				textScribeLink.text = "Head scribe: " + scribe->getFullName() + ".";
+			}
+			else
+			{
+				textScribeLink.setPanel(panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+				textScribeLink.text = "No scribe.";
 			}
 			
 			// if ( leader != 0 )
@@ -202,6 +234,40 @@ class Menu_SettlementDetails: public GUI_Interface
 				if ( leader != 0)
 				{
 					menuCharacterDetails->init(leader);
+					menuCharacterDetails->active=true;
+					active=false;
+					_mouse->isLeftClick=false;
+				}
+			}
+			
+			if (textCaptainLink.clicked==true)
+			{
+				std::cout<<"Clicked military captain\n";
+				textCaptainLink.unclick();
+				
+				Character * captain = selectedSettlement->government.captain.character;
+				
+				
+				if ( captain != 0)
+				{
+					menuCharacterDetails->init(captain);
+					menuCharacterDetails->active=true;
+					active=false;
+					_mouse->isLeftClick=false;
+				}
+			}
+			
+			if (textScribeLink.clicked==true)
+			{
+				std::cout<<"Clicked head scribe\n";
+				textScribeLink.unclick();
+				
+				Character * scribe = selectedSettlement->government.scribe.character;
+				
+				
+				if ( scribe != 0)
+				{
+					menuCharacterDetails->init(scribe);
 					menuCharacterDetails->active=true;
 					active=false;
 					_mouse->isLeftClick=false;
