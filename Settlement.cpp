@@ -66,11 +66,22 @@ bool Settlement::hasIdea(Idea idea)
 	return false;
 }
 
+bool Settlement::isSpecialIdea(Idea idea)
+{
+	return technology.isSpecialIdea(idea);
+}
+
 void Settlement::giveIdea(Idea idea)
 {
 	vIdea.push(idea);
 	
+	if ( technology.isSpecialIdea(idea) )
+	{
+		std::cout<<"SPECIAL IDEA\n";
+	}
+	
 	// convert it to tech here
+	technology.addIdea(idea);
 }
 
 /* TABLE INTERFACE */

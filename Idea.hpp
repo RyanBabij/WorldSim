@@ -21,6 +21,7 @@ public:
 	static int lastID; // Static variable to keep track of the last assigned ID
 	int id;
 	Character* originator;
+	bool isSpecialIdea;
 
 	enum IDEA_TYPE
 	{
@@ -28,6 +29,7 @@ public:
 		IDEA_SMELTING,
 		IDEA_MANUFACTURING,
 		IDEA_ASTRONOMY,
+		IDEA_MILITARY,
 		ENUM_COUNT
 	};
 
@@ -40,10 +42,19 @@ public:
 	std::string ideaToString(IDEA_TYPE idea);
 };
 
-class SpecialIdea
+
+
+class SpecialIdea: public Idea
 {
 	public:
-		SpecialIdea();
+		enum TYPE
+		{
+			ADAMANTINE,
+			ENUM_COUNT
+		};
+	
+		std::string specialText;
+		SpecialIdea(Character* originator, IDEA_TYPE type);
 		std::string discoveryText();
 };
 

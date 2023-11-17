@@ -24,6 +24,8 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		
 		Vector <Item*> vItem;
 		
+		
+		// Ideas can become technologies and also books and other things.
 		Vector <Idea> vIdea;
 		
 		ResourceManager resourceManager;
@@ -60,6 +62,7 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		bool removeCharacter( Character* /* _character */ );
 		
 		bool hasIdea(Idea);
+		bool isSpecialIdea(Idea idea); // If the idea leads to a breakthrough
 		void giveIdea(Idea);
 		
 		virtual std::string getName() override;

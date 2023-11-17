@@ -1256,6 +1256,7 @@ bool Character::abstractResearchMonth()
 		// Give the Character an Idea which will hopefully become a tech
 		Idea idea (this, Idea::IDEA_TYPE::IDEA_MINING);
 		vIdea.push(idea);
+		vOriginalIdea.push(idea);
 		//Console("IDEA");
 	}
 	

@@ -91,6 +91,18 @@ void Government_Scribe::govern()
 		return;
 	}
 	std::cout << "Scribe is scribing.\n";
+	
+	if (character->vIdea.size() > 0 && government->governedSettlement!=0)
+	{
+		if (!government->governedSettlement->hasIdea(character->vIdea(0)))
+		{
+			government->governedSettlement->giveIdea(character->vIdea(0));
+			character->vIdea.removeSlot(0);
+			std::cout<<"Scribe has implemented an idea as a tech\n";
+		}
+	}
+	
+	// book production goes here.
 }
 
 // Government_Captain definitions
@@ -106,6 +118,19 @@ void Government_Captain::govern()
 		return;
 	}
 	std::cout << "Captain is capping.\n";
+	
+	
+	if (character->vIdea.size() > 0 && government->governedSettlement!=0)
+	{
+		if (!government->governedSettlement->hasIdea(character->vIdea(0)))
+		{
+			government->governedSettlement->giveIdea(character->vIdea(0));
+			character->vIdea.removeSlot(0);
+			std::cout<<"Captain has implemented an idea as a tech\n";
+		}
+	}
+	
+	// military stuff goes here
 }
 
 // Government definitions

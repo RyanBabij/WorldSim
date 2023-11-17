@@ -531,9 +531,10 @@ void Tribe::generateCouples(int amount)
 		{
 			cMan->setStrength(10);
 			cWoman->setStrength(10);
-			// Set all initial government as compatible to prevent early drama
-			cWoman->social.setCompatibility(0,0);
-			cMan->social.setCompatibility(0,0);
+			// Ensure that leadership are reasonably compatible to prevent early drama.
+			// They should still have differences so that they can make different friends.
+			cWoman->social.setCompatibility(80,80);
+			cMan->social.setCompatibility(80,80);
 			if (globalRandom.flip())
 			{
 				government.setCaptain(cMan);
@@ -547,9 +548,10 @@ void Tribe::generateCouples(int amount)
 		{
 			cMan->setCharisma(10);
 			cWoman->setCharisma(10);
-			// Set all initial government as compatible to prevent early drama
-			cWoman->social.setCompatibility(0,0);
-			cMan->social.setCompatibility(0,0);
+			// Ensure that leadership are reasonably compatible to prevent early drama.
+			// They should still have differences so that they can make different friends.
+			cWoman->social.setCompatibility(100,100);
+			cMan->social.setCompatibility(100,100);
 			if (globalRandom.flip())
 			{
 				government.setLeader(cMan);
@@ -563,9 +565,10 @@ void Tribe::generateCouples(int amount)
 		{
 			cMan->setIntelligence(10);
 			cWoman->setIntelligence(10);
-			// Set all initial government as compatible to prevent early drama
-			cWoman->social.setCompatibility(0,0);
-			cMan->social.setCompatibility(0,0);
+			// Ensure that leadership are reasonably compatible to prevent early drama.
+			// They should still have differences so that they can make different friends.
+			cWoman->social.setCompatibility(120,120);
+			cMan->social.setCompatibility(120,120);
 			if (globalRandom.flip())
 			{
 				government.setScribe(cMan);

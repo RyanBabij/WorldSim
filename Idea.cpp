@@ -22,11 +22,13 @@ int Idea::lastID = 0;
 Idea::Idea(Character* _originator, IDEA_TYPE _type) 
 : id(++lastID), originator(_originator), type(_type)
 {
+	isSpecialIdea=false;
 }
 
 Idea::Idea(const Idea& other)
 : id(other.id), originator(other.originator), type(other.type)
 {
+		isSpecialIdea=other.isSpecialIdea;
 }
 
 Idea& Idea::operator=(const Idea& other)
@@ -57,8 +59,10 @@ std::string Idea::ideaToString(IDEA_TYPE idea)
 	}
 }
 
-SpecialIdea::SpecialIdea()
+SpecialIdea::SpecialIdea(Character* originator, IDEA_TYPE type)
+: Idea(originator, type) // Call the constructor of the base class Idea
 {
+	isSpecialIdea = true;
 }
 
 std::string SpecialIdea::discoveryText()

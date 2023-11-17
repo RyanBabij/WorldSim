@@ -14,6 +14,8 @@
 
 #include <string> // For std::string
 
+#include "Idea.hpp"
+
 class Technology
 {
 public:
@@ -23,6 +25,7 @@ public:
 		TECHNOLOGY_SMELTING,
 		TECHNOLOGY_MANUFACTURING,
 		TECHNOLOGY_ASTRONOMY,
+		TECHNOLOGY_MILITARY,
 		ENUM_COUNT
 	};
 
@@ -30,8 +33,12 @@ public:
 	int smeltingLevel;
 	int manufacturingLevel;
 	int astronomyLevel;
+	int militaryLevel;
 
 	Technology();
+	
+	void addIdea(Idea);
+	bool isSpecialIdea(Idea);
 
 	TECHNOLOGY_TYPE advance();
 	std::string techToString(TECHNOLOGY_TYPE tech);
