@@ -127,6 +127,9 @@ public:
 		menuCreatures.active=false;
 		menuSettlements.active=false;
 		minimap.active=true;
+		
+		// Link MenuSettlementDetails and MenuCharacterDetails until I can implement a MenuManager
+		menuSettlements.menuSettlementDetails.menuCharacterDetails = &menuCharacter.menuCharacterDetails;
 	}
 
 	void setFont(Wildcat::Font* _font)

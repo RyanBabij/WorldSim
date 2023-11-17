@@ -8,6 +8,8 @@
 	
 */
 
+#include "Menu_CharacterDetails.cpp"
+
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
 
@@ -15,6 +17,10 @@ class Menu_SettlementDetails: public GUI_Interface
 {
 	public:
 	GUI_Manager guiManager;
+	
+	// So we can open character details if player clicks a Character link. Temporary until I can implement a
+	// MenuManager
+	Menu_CharacterDetails* menuCharacterDetails;
 	
 	/* Colours / theme. */
 	ColourRGB <unsigned char> cNormal;
@@ -43,6 +49,8 @@ class Menu_SettlementDetails: public GUI_Interface
 		selectedSettlement=0;
 		
 		textLeaderLink.setRGB(255,255,0);
+		
+		menuCharacterDetails=0;
 	}
 	
 	void setFont(Wildcat::Font* _font)
@@ -193,8 +201,9 @@ class Menu_SettlementDetails: public GUI_Interface
 				
 				if ( leader != 0)
 				{
-					// selectedCharacter=selectedCharacter->father;
-					// init();
+					menuCharacterDetails->init(leader);
+					menuCharacterDetails->active=true;
+					active=false;
 					_mouse->isLeftClick=false;
 				}
 			}
