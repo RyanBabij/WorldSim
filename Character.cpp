@@ -315,7 +315,16 @@ std::string Character::getBiography()
 
 	if (!isAlive)
 	{
-		biography << " " << gender1 << " died in " << world.getLandmassName(&deathLocation) << ".";
+		if ( causeOfDeath == SMITED )
+		{
+			biography << " " << gender1 << " died in " << world.getLandmassName(&deathLocation) << " after saying "<<
+			"\"if God is real then may he strike me down right here\", upon which "<<gender1<<" was subsequently "<<
+			"struck dead by a bolt of lightning.";
+		}
+		else
+		{
+			biography << " " << gender1 << " died in " << world.getLandmassName(&deathLocation) << ".";
+		}
 	}
 	else
 	{

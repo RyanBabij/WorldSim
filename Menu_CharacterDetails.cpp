@@ -28,6 +28,7 @@ class Menu_CharacterDetails: public GUI_Interface
 
 	GUI_Button buttonFavourite;
 	GUI_Button buttonPossess;
+	GUI_Button buttonSmite;
 
 	Character* selectedCharacter;
 	
@@ -62,24 +63,31 @@ class Menu_CharacterDetails: public GUI_Interface
 		{
 			selectedCharacter=_character;
 		}
-		
+
 		/* Initialise theme. */
 		cNormal.set(220,220,220);
 		cSelected.set(180,180,180);
 		cDropPanel.set(170,170,170);
 		cHighlight.set(255,160,160);
-		
+
 		buttonClose.text="X";
 		buttonClose.setColours(cNormal,cHighlight,0);
 		buttonClose.active=true;
-    
-    buttonFavourite.text="Favourite";
+
+		buttonFavourite.text="Favourite";
 		buttonFavourite.setColours(cNormal,cHighlight,0);
 		buttonFavourite.active=true;
-    
-    buttonPossess.text="Control";
+
+		buttonPossess.text="Control";
 		buttonPossess.setColours(cNormal,cHighlight,0);
 		buttonPossess.active=true;
+		
+		buttonSmite.text="Smite";
+		buttonSmite.setColours(cNormal,cHighlight,0);
+		buttonSmite.active=true;
+		
+		
+		
 		
 		textFatherLink.text = "Test";
 		textMotherLink.text = "Test";
@@ -110,6 +118,7 @@ class Menu_CharacterDetails: public GUI_Interface
 		guiManager.add(&buttonClose);
 		guiManager.add(&buttonFavourite);
 		guiManager.add(&buttonPossess);
+		guiManager.add(&buttonSmite);
 		guiManager.add(&textFatherLink);
 		guiManager.add(&textMotherLink);
 		guiManager.add(&textSpouseLink);
@@ -247,25 +256,32 @@ class Menu_CharacterDetails: public GUI_Interface
       
 			if (buttonFavourite.clicked==true)
 			{
-        selectedCharacter->isFavourite=true;
+				selectedCharacter->isFavourite=true;
 				active=false;
 				buttonFavourite.unclick();
 			}
       
 			if (buttonPossess.clicked==true)
 			{
-        //std::cout<<"Yeah you can't do that yet.\n";
-        world.controlCharacter(selectedCharacter);
-        Console(Stream() << "Controlling: " << selectedCharacter->getFullName());
-        
-        world.prepareAdventureMode(selectedCharacter);
-        //Transition into the Adventure mode GUI. Transitioning back to god mode will relinquish control of the character.
-        activeMenu = MENU_ADVENTUREMODE;
-        
+				//std::cout<<"Yeah you can't do that yet.\n";
+				world.controlCharacter(selectedCharacter);
+				Console(Stream() << "Controlling: " << selectedCharacter->getFullName());
 
-        
+				world.prepareAdventureMode(selectedCharacter);
+				//Transition into the Adventure mode GUI. Transitioning back to god mode will relinquish control of the character.
+				activeMenu = MENU_ADVENTUREMODE;
+
 				active=false;
 				buttonPossess.unclick();
+			}
+			
+			if (buttonSmite.clicked==true)
+			{
+				Console(Stream() << "Smiting: " << selectedCharacter->getFullName());
+				selectedCharacter->die(SMITED);
+
+				active=false;
+				buttonSmite.unclick();
 			}
 			
 			if (textFatherLink.clicked==true)
@@ -321,11 +337,11 @@ class Menu_CharacterDetails: public GUI_Interface
 	
 	void eventResize()
 	{
-		
 		buttonClose.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
-    
-    buttonFavourite.setPanel(panelX2-100, panelY1+40, panelX2-20, panelY1+20);
-    buttonPossess.setPanel(panelX2-100, panelY1+65, panelX2-20, panelY1+45);
+
+		buttonFavourite.setPanel(panelX2-100, panelY1+40, panelX2-20, panelY1+20);
+		buttonPossess.setPanel(panelX2-100, panelY1+65, panelX2-20, panelY1+45);
+		buttonSmite.setPanel(panelX2-100, panelY1+90, panelX2-20, panelY1+70);
 	}
 	
 };
