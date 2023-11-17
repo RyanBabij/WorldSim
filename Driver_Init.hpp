@@ -122,23 +122,46 @@ void init()
 	recipeManager.addRecipe(&recipeWall);
 
 	/* Load font */
-	Png fontPng;
-	int fileSize;
-	unsigned char* fileData = FileManager::getFile("Textures/Font/8x8/8x8 Transparent v3 plus junk.png",&fileSize);	
+	{
+		Png fontPng;
+		int fileSize;
+		unsigned char* fileData = FileManager::getFile("Textures/Font/8x8/8x8 Transparent v3 plus junk.png",&fileSize);	
 
-	if ( fileData == 0 )
-	{
-		std::cout<<"ERROR: Font PNG did not load.\n";
+		if ( fileData == 0 )
+		{
+			std::cout<<"ERROR: Font PNG did not load.\n";
+		}
+		else
+		{
+			fontPng.load(fileData,fileSize);
+			if(font8x8.loadData(&fontPng,8,8)==false)
+			{ std::cout<<"ERROR: Font did not load.\n"; }
+			delete [] fileData;
+		}
 	}
-	else
+	
+	/* Load white font */
 	{
-		fontPng.load(fileData,fileSize);
-		if(font8x8.loadData(&fontPng,8,8)==false)
-		{ std::cout<<"ERROR: Font did not load.\n"; }
-		delete [] fileData;
+		Png fontPng;
+		int fileSize;
+		unsigned char* fileData = FileManager::getFile("Textures/Font/8x8/8x8 Transparent v3 plus junk.png",&fileSize);	
+
+		if ( fileData == 0 )
+		{
+			std::cout<<"ERROR: Font PNG did not load.\n";
+		}
+		else
+		{
+			fontPng.load(fileData,fileSize);
+			fontPng.makeWhite();
+			if(font8x8White.loadData(&fontPng,8,8)==false)
+			{ std::cout<<"ERROR: Font white did not load.\n"; }
+			delete [] fileData;
+		}
 	}
 	
 	font8x8.ySpacing=2;
+	font8x8White.ySpacing=2;
 
 	logicTickManager.add(&menuTitle);
 	idleManager.add(&world);

@@ -834,6 +834,7 @@ Character* Character::giveBirth()
 	babby->lastName = lastName;
 	// Inherit tribe membership from mother I guess.
 	babby->tribe = tribe;
+	babby->settlement = settlement;
 
 	vChildren.push(babby);
 	spouse->vChildren.push(babby);

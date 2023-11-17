@@ -50,6 +50,7 @@ inline void Console (std::string s)
 
 // This is the global font for now.
 Wildcat::Font font8x8;
+Wildcat::Font font8x8White; // My code currently only allows colour on white font.
 
 #include <Device/Mouse/Mouse.hpp>
 Mouse globalMouse;

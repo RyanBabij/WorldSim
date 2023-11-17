@@ -31,7 +31,7 @@ class Menu_SettlementDetails: public GUI_Interface
 
 	Settlement* selectedSettlement;
 	
-	// GUI_Link textFatherLink;
+	GUI_Link textLeaderLink;
 	// GUI_Link textMotherLink;
 	// GUI_Link textSpouseLink;
 	// Vector <GUI_Link*> textChildLink;
@@ -41,6 +41,8 @@ class Menu_SettlementDetails: public GUI_Interface
 	Menu_SettlementDetails()
 	{	
 		selectedSettlement=0;
+		
+		textLeaderLink.setRGB(255,255,0);
 	}
 	
 	void setFont(Wildcat::Font* _font)
@@ -89,7 +91,7 @@ class Menu_SettlementDetails: public GUI_Interface
 		guiManager.add(&buttonClose);
 		// guiManager.add(&buttonFavourite);
 		// guiManager.add(&buttonPossess);
-		// guiManager.add(&textFatherLink);
+		guiManager.add(&textLeaderLink);
 		// guiManager.add(&textMotherLink);
 		// guiManager.add(&textSpouseLink);
 
@@ -115,10 +117,41 @@ class Menu_SettlementDetails: public GUI_Interface
 			font8x8.drawText
 			(settlementName,panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
 			yOffset+=vSpacing;
-			// font8x8.drawText
-			// ("Age: "+DataTools::toString(selectedCharacter->age)
-			// ,panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
-			// yOffset+=vSpacing;
+		
+			font8x8.drawText
+			("Population: "+DataTools::toString(selectedSettlement->vCharacter.size())
+			,panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+			yOffset+=vSpacing;
+			
+			Character * leader = selectedSettlement->government.leader.character;
+			
+			textLeaderLink.setFont(&font8x8White);
+			textLeaderLink.setRGB(255,255,0);
+			
+			if ( leader != 0 )
+			{
+				textLeaderLink.setPanel(panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+				textLeaderLink.text = "Leader: " + leader->getFullName() + ".";
+			}
+			else
+			{
+				textLeaderLink.setPanel(panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+				textLeaderLink.text = "No leader.";
+			}
+			
+			// if ( leader != 0 )
+			// {
+				// font8x8.drawText
+				// ("Leader: "+leader->getFullName() ,panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+			// }
+			// else
+			// {
+				// font8x8.drawText
+				// ("Leader: None" ,panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+			// }
+			yOffset+=vSpacing;
+			
+
 			
 			
 			guiManager.render();
@@ -148,6 +181,22 @@ class Menu_SettlementDetails: public GUI_Interface
 			{
 				active=false;
 				buttonClose.unclick();
+			}
+			
+			if (textLeaderLink.clicked==true)
+			{
+				std::cout<<"Clicked leader\n";
+				textLeaderLink.unclick();
+				
+				Character * leader = selectedSettlement->government.leader.character;
+				
+				
+				if ( leader != 0)
+				{
+					// selectedCharacter=selectedCharacter->father;
+					// init();
+					_mouse->isLeftClick=false;
+				}
 			}
 		}
 		
