@@ -982,6 +982,7 @@ void World::evolveToCiv( Tribe * _tribe )
 		s->vCharacter.copy(&_tribe->vCharacter);
 		putObject(s, _tribe->worldX, _tribe->worldY);
 		s->government=_tribe->government;
+		s->government.governedSettlement=s;
 		removeObject(_tribe);
 		vTribe.remove(_tribe);  
 

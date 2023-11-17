@@ -9,188 +9,154 @@
 	
 */
 
-#include "Character.hpp"
+#include "Government.hpp"
+#include "Settlement.hpp"
 
-class Government;
-
-class Government_Position
+// Government_Position definitions
+Government_Position::Government_Position(Government* _government) : government(_government)
 {
-	public:
-	Government* government;
-	Character* character;
-	
-	Government_Position(Government* _government): government(_government)
-	{
-		character=nullptr;
-	}
-	
-	Government_Position(const Government_Position& other)
-		 : government(other.government), character(other.character)
-	{
-	}
+	character = nullptr;
+}
 
-	Government_Position& operator=(const Government_Position& other)
-	{
-		if (this != &other) // Check for self-assignment
-		{
-			government = other.government;
-			character = other.character;
-		}
-		return *this;
-	}
-
-	// Does the passed Character have this job?
-	bool operator==(const Character* otherCharacter) const
-	{
-		return character == otherCharacter;
-	}
-	
-	virtual void govern()=0;
-	
-	virtual void assign(Character* _character)
-	{
-		character=_character;
-	}
-	
-	bool empty()
-	{
-		return (character==0);
-	}
-};
-
-class Government_Leader: public Government_Position
+Government_Position::Government_Position(const Government_Position& other)
+: government(other.government), character(other.character)
 {
-	public:
+}
 
-	Government_Leader(Government* _government) : Government_Position(_government)
-	{
-	}
-	
-	virtual void govern()
-	{
-		if ( empty() )
-		{
-			std::cout<<"There is no king\n";
-			return;
-		}
-		std::cout<<"King is kinging.\n";
-		
-		if ( character->vIdea.size() > 0 )
-		{
-			//std::cout<<"King has ideas\n";
-		}
-	}
-};
-
-class Government_Scribe: public Government_Position
+Government_Position& Government_Position::operator=(const Government_Position& other)
 {
-	public:
-	
-	Government_Scribe(Government* _government) : Government_Position(_government)
+	if (this != &other)
 	{
+		government = other.government;
+		character = other.character;
 	}
-	
-	virtual void govern()
-	{
-		if ( empty() )
-		{
-			std::cout<<"There is no scribe\n";
-			return;
-		}
-		std::cout<<"Scribe is scribing.\n";
-	}
-};
+	return *this;
+}
 
-class Government_Captain: public Government_Position
+bool Government_Position::operator==(const Character* otherCharacter) const
 {
-	public:
-	
-	Government_Captain(Government* _government) : Government_Position(_government)
-	{
-	}
-	
-	virtual void govern()
-	{
-		if ( empty() )
-		{
-			std::cout<<"There is no captain\n";
-			return;
-		}
-		std::cout<<"Captain is capping.\n";
-	}
-};
+	return character == otherCharacter;
+}
 
-
-
-class Government
+void Government_Position::assign(Character* _character)
 {
-	public:
-		Settlement* governedSettlement;
-		Government_Leader leader;
-		Government_Scribe scribe;
-		Government_Captain captain;
-		
-		Vector <Government_Position> vWorkers;
-		
-		
-		// Constructor with member initializer list
-		Government() : leader(this), scribe(this), captain(this)
-		{
-		}
-		
-		// Copy constructor
-		Government(const Government& other)
-		: governedSettlement(other.governedSettlement), // Shallow copy
-		leader(this), // Reinitialize with this Government instance
-		scribe(this), // Reinitialize with this Government instance
-		captain(this) // Reinitialize with this Government instance
-		{
-		}
-		
-		Government& operator=(const Government& other)
-		{
-			if (this != &other) // Check for self-assignment
-			{
-				// Copy the simple fields
-				governedSettlement = other.governedSettlement; // Shallow copy
+	character = _character;
+}
 
-				// Reinitialize the positions with this Government instance
-				setLeader(other.leader.character);
-				setCaptain(other.captain.character);
-				setScribe(other.scribe.character);
-				// Copy the vector (assuming Vector supports assignment)
-				//vWorkers = other.vWorkers;
-			}
-			return *this;
-		}
-	 
-		void govern()
-		{
-			leader.govern();
-			scribe.govern();
-			captain.govern();
-		}
+bool Government_Position::empty()
+{
+	return (character == nullptr);
+}
 
-		bool needsLeader()
+// Government_Leader definitions
+Government_Leader::Government_Leader(Government* _government) : Government_Position(_government)
+{
+}
+
+void Government_Leader::govern()
+{
+	if (government == nullptr || government->governedSettlement == nullptr)
+	{
+		return;
+	}
+
+	if (empty())
+	{
+		std::cout << "There is no king\n";
+		return;
+	}
+	std::cout << "King is kinging.\n";
+
+	if (character->vIdea.size() > 0 && government->governedSettlement!=0)
+	{
+		if (!government->governedSettlement->hasIdea(character->vIdea(0)))
 		{
-			if (leader.empty())
-			{
-				return true;
-			}
-			return false;
+			government->governedSettlement->giveIdea(character->vIdea(0));
+			character->vIdea.removeSlot(0);
+			std::cout<<"King has implemented an idea as a tech\n";
 		}
-		void setLeader(Character* character)
-		{
-			leader.assign(character);
-		}
-		void setScribe(Character* character)
-		{
-			scribe.assign(character);
-		}
-		void setCaptain(Character* character)
-		{
-			captain.assign(character);
-		}
-};
+	}
+}
+
+// Government_Scribe definitions
+Government_Scribe::Government_Scribe(Government* _government) : Government_Position(_government)
+{
+}
+
+void Government_Scribe::govern()
+{
+	if (empty())
+	{
+		std::cout << "There is no scribe\n";
+		return;
+	}
+	std::cout << "Scribe is scribing.\n";
+}
+
+// Government_Captain definitions
+Government_Captain::Government_Captain(Government* _government) : Government_Position(_government)
+{
+}
+
+void Government_Captain::govern()
+{
+	if (empty())
+	{
+		std::cout << "There is no captain\n";
+		return;
+	}
+	std::cout << "Captain is capping.\n";
+}
+
+// Government definitions
+Government::Government() : leader(this), scribe(this), captain(this)
+{
+	governedSettlement=0;
+}
+
+Government::Government(const Government& other)
+	: governedSettlement(other.governedSettlement), leader(this), scribe(this), captain(this)
+{
+}
+
+Government& Government::operator=(const Government& other)
+{
+	if (this != &other)
+	{
+		governedSettlement = other.governedSettlement;
+		setLeader(other.leader.character);
+		setScribe(other.scribe.character);
+		setCaptain(other.captain.character);
+	}
+	return *this;
+}
+
+void Government::govern()
+{
+	leader.govern();
+	scribe.govern();
+	captain.govern();
+}
+
+bool Government::needsLeader()
+{
+	return leader.empty();
+}
+
+void Government::setLeader(Character* character)
+{
+	leader.assign(character);
+}
+
+void Government::setScribe(Character* character)
+{
+	scribe.assign(character);
+}
+
+void Government::setCaptain(Character* character)
+{
+	captain.assign(character);
+}
+
 
 #endif // WORLDSIM_GOVERNMENT_CPP

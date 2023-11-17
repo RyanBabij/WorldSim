@@ -61,6 +61,11 @@ class Idea
 			return *this;
 		}
 		
+		bool operator==(const Idea& other) const
+		{
+			return id == other.id;
+		}
+		
 		std::string ideaToString(IDEA_TYPE idea)
 		{
 			switch (idea)

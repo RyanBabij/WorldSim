@@ -4,6 +4,8 @@
 
 #include "Settlement.hpp"
 
+#include "Government.cpp"
+
 Settlement::Settlement()
 {
 	world = 0;
@@ -50,6 +52,25 @@ void Settlement::incrementTicks(int /* nTicks */)
 	std::cout << "Incrementing settlement\n";
 
 	return;
+}
+
+bool Settlement::hasIdea(Idea idea)
+{
+	for (int i=0;i<vIdea.size();++i)
+	{
+		if ( vIdea(i)==idea )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void Settlement::giveIdea(Idea idea)
+{
+	vIdea.push(idea);
+	
+	// convert it to tech here
 }
 
 /* TABLE INTERFACE */

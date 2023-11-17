@@ -1227,6 +1227,19 @@ const double RESEARCH_SPEED_MODIFIER = 100;
 
 bool Character::abstractResearchMonth()
 {
+	// Remove any ideas which the settlement already has
+	if ( settlement != 0 )
+	{
+		for (int i=0;i<vIdea.size(); ++i)
+		{
+			if ( settlement->hasIdea(vIdea(i)) )
+			{
+				vIdea.removeSlot(i);
+			}
+		}
+	}
+	
+	
 	// Base chance for level 1 (1% / 2^9)
 	double baseChance = (0.01 / 512) * RESEARCH_SPEED_MODIFIER; // Approximately 0.0000195
 

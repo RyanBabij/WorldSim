@@ -2,7 +2,7 @@
 #ifndef WORLDSIM_SETTLEMENT_HPP
 #define WORLDSIM_SETTLEMENT_HPP
 
-#include "Government.cpp"
+#include "Government.hpp"
 
 #include "Resource.cpp"
 #include "WorldObjectGlobal.hpp"
@@ -23,6 +23,8 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		Government government;
 		
 		Vector <Item*> vItem;
+		
+		Vector <Idea> vIdea;
 		
 		ResourceManager resourceManager;
 		Technology technology;
@@ -56,6 +58,9 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		virtual void incrementTicks ( int /* nTicks */ );
 
 		bool removeCharacter( Character* /* _character */ );
+		
+		bool hasIdea(Idea);
+		void giveIdea(Idea);
 		
 		virtual std::string getName() override;
 
