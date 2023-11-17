@@ -9,6 +9,7 @@
 	
 */
 
+#include "Character.hpp"
 
 class Government;
 
@@ -73,6 +74,11 @@ class Government_Leader: public Government_Position
 			return;
 		}
 		std::cout<<"King is kinging.\n";
+		
+		if ( character->vIdea.size() > 0 )
+		{
+			//std::cout<<"King has ideas\n";
+		}
 	}
 };
 

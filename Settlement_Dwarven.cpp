@@ -90,7 +90,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			}
 			character->updateSocial();
 			
-			character->social.print();
+			//character->social.print();
 			
 			// Research
 			

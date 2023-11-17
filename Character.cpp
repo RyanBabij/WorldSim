@@ -358,6 +358,11 @@ std::string Character::getBiography()
 		biography << " " << gender1 << " currently lives in " << world.getLandmassName(tribe->worldX, tribe->worldY) << ".";
 	}
 	
+	if ( vIdea.size() > 0 )
+	{
+		biography <<" "<<gender1<<" currently has "<<vIdea.size()<<" ideas.\n";
+	}
+	
 	biography<<"\n\n"<<getBestSkills()<<"\n";
 
 	if (!vKills.empty())
@@ -1218,7 +1223,7 @@ bool Character::updateKnowledgeIdle()
 
 
 
-const double RESEARCH_SPEED_MODIFIER = 1000;
+const double RESEARCH_SPEED_MODIFIER = 100;
 
 bool Character::abstractResearchMonth()
 {
@@ -1236,6 +1241,9 @@ bool Character::abstractResearchMonth()
 	if (hasIdea)
 	{
 		// Give the Character an Idea which will hopefully become a tech
+		Idea idea (this, Idea::IDEA_TYPE::IDEA_MINING);
+		vIdea.push(idea);
+		//Console("IDEA");
 	}
 	
 	return hasIdea;
