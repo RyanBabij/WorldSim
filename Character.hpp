@@ -32,7 +32,7 @@ class Settlement;
 class Character_Knowledge;
 class World_Local;
 
-enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, MASSACRE=2, COMBAT=3, OLD_AGE=4 };
+enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, MASSACRE=2, COMBAT=3, OLD_AGE=4, SMITED=5 };
 const std::string enumCauseOfDeathStr [5] = { "unknown", "starvation", "massacre", "combat", "old age" };
 
 

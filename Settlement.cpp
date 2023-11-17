@@ -6,7 +6,6 @@
 
 Settlement::Settlement()
 {
-	name = "Settlement";
 	world = 0;
 	colourRed = 0;
 	colourGreen = 0;
@@ -16,6 +15,8 @@ Settlement::Settlement()
 	parentCiv = 0;
 
 	random.seed(Random::randInt(99999));
+	
+	name=globalNameGen.generate();
 }
 
 std::string Settlement::getName()

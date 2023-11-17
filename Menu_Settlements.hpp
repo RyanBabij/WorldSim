@@ -8,10 +8,11 @@
 	The player can click a civ to get more detailed information of that particular settlement.
 */
 
+#include "Menu_SettlementDetails.cpp"
+
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
 
-//#include "Menu_CivDetails.hpp"
 
 class Menu_Settlements: public GUI_Interface
 {
@@ -36,9 +37,9 @@ class Menu_Settlements: public GUI_Interface
 	GUI_Table guiTableSettlements;
 	
 	int lastRowClicked;
-	Civ* selectedSettlement;
+	Settlement* selectedSettlement;
 	
-	Menu_CivDetails menuSettlementDetails;
+	Menu_SettlementDetails menuSettlementDetails;
 	
 	Menu_Settlements()
 	{	
@@ -109,6 +110,24 @@ class Menu_Settlements: public GUI_Interface
 	
 	void render()
 	{
+		int nSettlements = 0;
+		
+		for (int i=0;i<world.vCiv.size();++i)
+		{
+			for (int j=0;j<world.vCiv(i)->vSettlement.size();++j)
+			{
+				++nSettlements;
+				break;
+			}
+		}
+		
+		if (nSettlements==0)
+		{
+			active=false;
+			return;
+		}
+		
+		
 		if ( menuSettlementDetails.active )
 		{
 			menuSettlementDetails.render();
@@ -160,12 +179,12 @@ class Menu_Settlements: public GUI_Interface
 			{
 				if ( selectedSettlement != 0 )
 				{
-					std::cout<<"Not implemented yet.\n";
-					// active=false;
-					// //menuSettlementDetails.selectedSettlement=selectedSettlement;
-					// menuSettlementDetails.init(selectedSettlement);
-					// menuSettlementDetails.active=true;
-					// guiTableSettlements.active=false;
+					std::cout<<"Settlement details\n";
+					active=false;
+					menuSettlementDetails.selectedSettlement=selectedSettlement;
+					menuSettlementDetails.init(selectedSettlement);
+					menuSettlementDetails.active=true;
+					guiTableSettlements.active=false;
 				}
 				else
 				{
@@ -183,9 +202,21 @@ class Menu_Settlements: public GUI_Interface
 				//TableInterface
 				//worldViewer.setCenterTile();
 				lastRowClicked=guiTableSettlements.lastClickedIndex;
-				if (world.vCiv.isSafe(lastRowClicked))
+				
+				int index=0;
+				
+				for (int i=0;i<world.vCiv.size();++i)
 				{
-					selectedSettlement=world.vCiv(lastRowClicked);
+					for (int j=0;j<world.vCiv(i)->vSettlement.size();++j)
+					{
+						if (index == lastRowClicked)
+						{
+							selectedSettlement=world.vCiv(i)->vSettlement(j);
+							
+							return true;
+						}
+						++index;
+					}
 				}
 				guiTableSettlements.lastClickedIndex = -1;
 			}

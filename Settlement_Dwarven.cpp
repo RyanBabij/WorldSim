@@ -4,15 +4,8 @@
 
 #include "Settlement_Dwarven.hpp"
 
-Settlement_Dwarven::Settlement_Dwarven()
+Settlement_Dwarven::Settlement_Dwarven(): Settlement()
 {
-
-	name = "<Dwarven Settlement>";
-	world = 0;
-	colourRed = 0;
-	colourGreen = 0;
-	colourBlue = 0;
-
 	race = DWARVEN;
 
 	nFoodStockpile=10;
@@ -20,6 +13,7 @@ Settlement_Dwarven::Settlement_Dwarven()
 	monthlyCounter=0;
 	dailyCounter=0;
 
+	name.insert(0, "Fort ");
 }
 
 Texture* Settlement_Dwarven::currentTexture()
