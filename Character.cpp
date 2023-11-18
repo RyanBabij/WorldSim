@@ -363,6 +363,14 @@ std::string Character::getBiography()
 		biography <<" "<<gender1<<" currently has "<<vIdea.size()<<" ideas.\n";
 	}
 	
+	if ( vOriginalSpecialIdea.size() > 0 )
+	{
+		for (int i=0;i<vOriginalSpecialIdea.size();++i)
+		{
+			biography <<gender1<<" "<<vOriginalSpecialIdea(i).biographyText<<".\n";
+		}
+	}
+	
 	biography<<"\n\n"<<getBestSkills()<<"\n";
 
 	if (!vKills.empty())

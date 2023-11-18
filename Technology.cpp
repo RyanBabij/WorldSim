@@ -39,6 +39,37 @@ void Technology::addIdea(Idea idea)
 	}
 }
 
+SpecialIdea Technology::addSpecialIdea(Idea idea)
+{
+	if ( idea.type == Idea::IDEA_TYPE::IDEA_MINING )
+	{
+		miningLevel+=1;
+		
+		if (miningLevel == 5)
+		{
+			// this tech unlocks adamantine
+			
+			SpecialIdea special(idea.originator,Idea::IDEA_TYPE::IDEA_MINING);
+			special.biographyText = "is credited with the discovery of adamantine";
+			return special;
+		}
+	}
+	else if ( idea.type == Idea::IDEA_TYPE::IDEA_SMELTING )
+	{
+		smeltingLevel+=1;
+	}
+	else if ( idea.type == Idea::IDEA_TYPE::IDEA_MANUFACTURING )
+	{
+		manufacturingLevel+=1;
+	}
+	else if ( idea.type == Idea::IDEA_TYPE::IDEA_ASTRONOMY )
+	{
+		astronomyLevel+=1;
+	}
+	
+	return SpecialIdea(idea.originator,Idea::IDEA_TYPE::IDEA_NONE);
+}
+
 bool Technology::isSpecialIdea(Idea idea)
 {
 	if ( idea.type == Idea::IDEA_TYPE::IDEA_MINING )

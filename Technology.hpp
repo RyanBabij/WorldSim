@@ -39,6 +39,7 @@ public:
 	
 	void addIdea(Idea);
 	bool isSpecialIdea(Idea);
+	SpecialIdea addSpecialIdea(Idea);
 
 	TECHNOLOGY_TYPE advance();
 	std::string techToString(TECHNOLOGY_TYPE tech);

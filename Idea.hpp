@@ -25,6 +25,7 @@ public:
 
 	enum IDEA_TYPE
 	{
+		IDEA_NONE, // error flag
 		IDEA_MINING,
 		IDEA_SMELTING,
 		IDEA_MANUFACTURING,
@@ -53,7 +54,7 @@ class SpecialIdea: public Idea
 			ENUM_COUNT
 		};
 	
-		std::string specialText;
+		std::string biographyText;
 		SpecialIdea(Character* originator, IDEA_TYPE type);
 		std::string discoveryText();
 };

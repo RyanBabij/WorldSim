@@ -77,9 +77,12 @@ void Settlement::giveIdea(Idea idea)
 	
 	if ( technology.isSpecialIdea(idea) )
 	{
-		std::cout<<"SPECIAL IDEA\n";
+		std::cout<<"SPECIAL IDEA BY "<<idea.originator->getFullName()<<".\n";
+		SpecialIdea special = technology.addSpecialIdea(idea);
+		idea.originator->vOriginalSpecialIdea.push(special);
+		
+		return;
 	}
-	
 	// convert it to tech here
 	technology.addIdea(idea);
 }
