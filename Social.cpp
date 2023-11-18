@@ -300,6 +300,17 @@ void Social::updateLists(int maxFriends)
 		return;
 	}
 	
+	// remove dead people
+	for (int i=0;i<vFriend.size();++i)
+	{
+		if (vFriend(i).destinationCharacter->isAlive==false)
+		{
+			vFriend.removeSlot(i);
+			--i;
+		}
+	}
+	
+	
 	//std::cout<<"Update lists for: "<<thisCharacter->getFullName()<<"\n";
 	
 	int bestCompatibility = 666;

@@ -1229,10 +1229,6 @@ bool Character::updateKnowledgeIdle()
 // There should probably be a system for diminishing returns as pop gets larger.
 // Yes this could be ported out to the Settlement to manage, but for now I'll keep it per-Character to see how it goes
 
-
-
-const double RESEARCH_SPEED_MODIFIER = 100;
-
 bool Character::abstractResearchMonth()
 {
 	// Remove any ideas which the settlement already has
@@ -1262,10 +1258,20 @@ bool Character::abstractResearchMonth()
 	if (hasIdea)
 	{
 		// Give the Character an Idea which will hopefully become a tech
-		Idea idea (this, Idea::IDEA_TYPE::IDEA_MINING);
-		vIdea.push(idea);
-		vOriginalIdea.push(idea);
-		//Console("IDEA");
+		if (globalRandom.flip())
+		{
+			Idea idea (this, Idea::IDEA_TYPE::IDEA_MINING);
+			vIdea.push(idea);
+			vOriginalIdea.push(idea);
+		}
+		else
+		{
+			Idea idea (this, Idea::IDEA_TYPE::IDEA_AGRICULTURE);
+			vIdea.push(idea);
+			vOriginalIdea.push(idea);
+		}
+
+		Console("IDEA");
 	}
 	
 	return hasIdea;

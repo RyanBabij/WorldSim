@@ -206,6 +206,8 @@ const int MAX_VIEW_RANGE = 20;
 const int MAX_HUNGER = 1000;
 const int MAX_THIRST = 300;
 
+const double RESEARCH_SPEED_MODIFIER = 1000;
+
 //      RENDERING       ////////////////////////////////////////////////////////////////////////////////////////////////
 
 const bool OUTPUT_FRAMERATE = false; /* Will output the framerate. */

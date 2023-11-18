@@ -23,17 +23,21 @@ Texture* Settlement_Dwarven::currentTexture()
 
 void Settlement_Dwarven::abstractMonthFood(Character* character)
 {
+	std::cout<<character->getFullName()<<": Farming\n";
 	// for now assume the Character feeds themself plus a certain surplus
-	nFoodStockpile+=globalRandom.rand8(28);
+	nFoodStockpile+=globalRandom.rand8(14+technology.agricultureLevel);
 }
 void Settlement_Dwarven::abstractMonthMine(Character* character)
 {
+	std::cout<<character->getFullName()<<": Mining\n";
 	// Character works in the mines for the month
-	nMetalStockpile+=globalRandom.rand8(28);
+	nMetalStockpile+=globalRandom.rand8(14+technology.miningLevel);
+	//nMetalStockpile+=1000;
 }
 
 void Settlement_Dwarven::abstractMonthProduction(Character* character)
 {
+	std::cout<<character->getFullName()<<": Production\n";
 	// Character spends a month in production
 	// produce an item
 	// item value is dependent on character stats and randomness.
@@ -119,6 +123,7 @@ void Settlement_Dwarven::abstractMonthProduction(Character* character)
 
 void Settlement_Dwarven::abstractMonthResearch(Character* character)
 {
+	std::cout<<character->getFullName()<<": Research\n";
 	// Character works in the mines for the month
 	bool breakthrough = character->abstractResearchMonth();
 }
@@ -163,6 +168,9 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 
 	while (monthlyCounter >= TICKS_PER_MONTH)
 	{
+		std::cout<<"*** Monthly tick: "<<world->calendar.toString()<<"\n\n";
+		technology.print();
+		
 		vCharacter.shuffle();
 		
 		if (government.needsLeader())
@@ -182,30 +190,34 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 				abstractMonthFood(character);
 			}
 			// MINING
-			else if ( nMetalStockpile < 100 )
+			else if ( nMetalStockpile < 28 )
 			{
+				nFoodStockpile-=28;
 				abstractMonthMine(character);
 			}
 			// PRODUCTION
 			else if (globalRandom.flip())
 			{
+				nFoodStockpile-=28;
 				abstractMonthProduction(character);
 			}
 			// RESEARCH
 			else
 			{
+				nFoodStockpile-=28;
 				abstractMonthResearch(character);
 			}
 			
 			// SOCIAL
 			abstractMonthSocial(character);
+			//character->social.print();
 			
 			// POLITICS AND OTHER COMPLEX ACTIONS
 			// Includes exploration etc.
 
 		
 			
-			//character->social.print();
+			
 			
 			// Research
 			
@@ -350,8 +362,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		for (int i=0; i<vCharacter.size(); ++i)
 		{
 			Character* const c = vCharacter(i);
-
-			//std::cout<<"Incrementing: "<<c->getFullName()<<".\n";
+			
 			c->incrementTicks(nTicks);
 		
 		
@@ -483,10 +494,10 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 
 	while ( dailyCounter >= TICKS_PER_DAY )
 	{
-		if ( world->aWorldTile(worldX,worldY).baseMetal > 0 )
-		{
-			++nMetalStockpile;
-		}
+		// if ( world->aWorldTile(worldX,worldY).baseMetal > 0 )
+		// {
+			// ++nMetalStockpile;
+		// }
 		dailyCounter-=TICKS_PER_DAY;
 	}
 	

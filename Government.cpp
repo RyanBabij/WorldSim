@@ -66,15 +66,23 @@ void Government_Leader::govern()
 		return;
 	}
 	std::cout << "King is kinging.\n";
+	
+	if ( character->isAlive==false)
+	{
+		std::cout<<"King is dead\n";
+	}
 
 	if (character->vIdea.size() > 0 && government->governedSettlement!=0)
 	{
-		if (!government->governedSettlement->hasIdea(character->vIdea(0)))
+		for (int i=0;i<character->vIdea.size();++i)
 		{
-			government->governedSettlement->giveIdea(character->vIdea(0));
-			character->vIdea.removeSlot(0);
-			std::cout<<"King has implemented an idea as a tech\n";
+			if (!government->governedSettlement->hasIdea(character->vIdea(i)))
+			{
+				government->governedSettlement->giveIdea(character->vIdea(i));
+				std::cout<<"King has implemented an idea as a tech\n";
+			}
 		}
+		character->vIdea.clear();
 	}
 }
 
@@ -94,12 +102,15 @@ void Government_Scribe::govern()
 	
 	if (character->vIdea.size() > 0 && government->governedSettlement!=0)
 	{
-		if (!government->governedSettlement->hasIdea(character->vIdea(0)))
+		for (int i=0;i<character->vIdea.size();++i)
 		{
-			government->governedSettlement->giveIdea(character->vIdea(0));
-			character->vIdea.removeSlot(0);
-			std::cout<<"Scribe has implemented an idea as a tech\n";
+			if (!government->governedSettlement->hasIdea(character->vIdea(i)))
+			{
+				government->governedSettlement->giveIdea(character->vIdea(i));
+				std::cout<<"Scribe has implemented an idea as a tech\n";
+			}
 		}
+		character->vIdea.clear();
 	}
 	
 	// book production goes here.
@@ -122,12 +133,15 @@ void Government_Captain::govern()
 	
 	if (character->vIdea.size() > 0 && government->governedSettlement!=0)
 	{
-		if (!government->governedSettlement->hasIdea(character->vIdea(0)))
+		for (int i=0;i<character->vIdea.size();++i)
 		{
-			government->governedSettlement->giveIdea(character->vIdea(0));
-			character->vIdea.removeSlot(0);
-			std::cout<<"Captain has implemented an idea as a tech\n";
+			if (!government->governedSettlement->hasIdea(character->vIdea(i)))
+			{
+				government->governedSettlement->giveIdea(character->vIdea(i));
+				std::cout<<"Captain has implemented an idea as a tech\n";
+			}
 		}
+		character->vIdea.clear();
 	}
 	
 	// military stuff goes here

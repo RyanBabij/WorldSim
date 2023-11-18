@@ -26,6 +26,7 @@ public:
 		TECHNOLOGY_MANUFACTURING,
 		TECHNOLOGY_ASTRONOMY,
 		TECHNOLOGY_MILITARY,
+		TECHNOLOGY_AGRICULTURE,
 		ENUM_COUNT
 	};
 
@@ -34,6 +35,7 @@ public:
 	int manufacturingLevel;
 	int astronomyLevel;
 	int militaryLevel;
+	int agricultureLevel;
 
 	Technology();
 	
@@ -44,6 +46,8 @@ public:
 
 	TECHNOLOGY_TYPE advance();
 	std::string techToString(TECHNOLOGY_TYPE tech);
+	
+	void print();
 };
 
 class SpecialTechnology

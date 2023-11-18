@@ -10,6 +10,8 @@ Technology::Technology()
 	smeltingLevel = 0;
 	manufacturingLevel = 0;
 	astronomyLevel = 0;
+	militaryLevel = 0;
+	agricultureLevel = 0;
 }
 
 void Technology::addIdea(Idea idea)
@@ -36,6 +38,14 @@ void Technology::addIdea(Idea idea)
 	else if ( idea.type == Idea::IDEA_TYPE::IDEA_ASTRONOMY )
 	{
 		astronomyLevel+=1;
+	}
+	else if ( idea.type == Idea::IDEA_TYPE::IDEA_AGRICULTURE )
+	{
+		agricultureLevel+=1;
+	}
+	else if ( idea.type == Idea::IDEA_TYPE::IDEA_MILITARY )
+	{
+		militaryLevel+=1;
 	}
 }
 
@@ -109,6 +119,13 @@ std::string Technology::techToString(TECHNOLOGY_TYPE tech)
 		case TECHNOLOGY_ASTRONOMY:  return "astronomy";
 		default:    return "<UNKNOWN TECH>";
 	}
+}
+
+void Technology::print()
+{
+	std::cout<<"TECH:\n";
+	std::cout<<"Agriculture: "<<agricultureLevel<<"\n";
+	std::cout<<"Mining     : "<<miningLevel<<"\n";
 }
 
 SpecialTechnology::SpecialTechnology()
