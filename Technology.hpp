@@ -37,6 +37,7 @@ public:
 
 	Technology();
 	
+	// This is bad design and I will fix it later with pointers.
 	void addIdea(Idea);
 	bool isSpecialIdea(Idea);
 	SpecialIdea addSpecialIdea(Idea);

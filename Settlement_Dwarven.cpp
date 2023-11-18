@@ -21,17 +21,125 @@ Texture* Settlement_Dwarven::currentTexture()
 	return &TEX_WORLD_SETTLEMENT_DWARFFORT_01;
 }
 
+void Settlement_Dwarven::abstractMonthFood(Character* character)
+{
+	// for now assume the Character feeds themself plus a certain surplus
+	nFoodStockpile+=globalRandom.rand8(28);
+}
+void Settlement_Dwarven::abstractMonthMine(Character* character)
+{
+	// Character works in the mines for the month
+	nMetalStockpile+=globalRandom.rand8(28);
+}
+
+void Settlement_Dwarven::abstractMonthProduction(Character* character)
+{
+	// Character spends a month in production
+	// produce an item
+	// item value is dependent on character stats and randomness.
+	
+	// determine quality
+	
+	// skill modifier 
+	// base chance of special item is 1 in 1000. 0.1%
+	// each level of metalsmithing skill can improve it by 1%
+	// which means that 100 skill means 100% chance of making special item.
+	//int specialChance = 1000;
+	// DEBUG SETTING:
+	int specialChance = 100;
+	int skillModifier = character->skillMetalsmithing.level * 10;
+	int totalChance = specialChance - skillModifier;
+	if ( totalChance < 1 )
+	{
+		totalChance = 1;
+	}
+	
+	int qualityLevel = 0;
+	
+	if (random.oneIn(totalChance) )
+	{
+		std::cout<<"SPECIAL ITEM produced by "<<character->getFullName()<<".\n";
+		
+		qualityLevel = 1;
+		
+		while (qualityLevel < 6 )
+		{
+			if ( random.flip() )
+			{
+				++qualityLevel;
+			}
+			else
+			{
+				continue;
+			}
+		}
+		std::cout<<"Quality level is "<<qualityLevel<<"\n";
+		
+	}
+	else
+	{
+		// normal item
+		//std::cout<<"Item produced by "<<vCharacter(i)->getFullName()<<".\n";
+	}
+	
+	Item_Sword * sword = new Item_Sword();
+	vItem.push(sword);
+	
+	if ( qualityLevel > 0 )
+	{				
+		// if the item is special, create an Item_Information attachment for it.
+		Item_Information* info = new Item_Information();
+		// Who created it
+		// Where it was created
+		// Any additional info
+		
+		info->creator = character;
+		info->locationMade = this;
+		info->quality = qualityLevel;
+		info->yearMade = world->calendar.year;
+		info->monthMade = world->calendar.month;
+		sword->information = info;
+		// engravings should be done seperately as it's a different skillset.
+		// Player should be able to pick the engraving if they are having it done.
+		
+	}
+	
+	if (qualityLevel == 6)
+	{
+		std::cout<<"*** ARTIFACT CREATED ***\n";
+		if (world!=0)
+		{
+			world->eventManager.addEvent("ARTIFACT",Event::EVENT_NONE);
+		}
+	}
+	
+	nMetalStockpile-=10;
+	character->skillMetalsmithing.addExp(10);
+}
+
+void Settlement_Dwarven::abstractMonthResearch(Character* character)
+{
+	// Character works in the mines for the month
+	bool breakthrough = character->abstractResearchMonth();
+}
+
+void Settlement_Dwarven::abstractMonthSocial(Character* character)
+{
+	// Every month the Character does a round of socialising
+	const char cSocialSize = character->getCharisma();
+	
+	// Number of social interactions is dependant on charisma
+	for (int i2=0;i2<cSocialSize;++i2)
+	{
+		character->abstractSocial(getRandomCharacter());
+	}
+	character->updateSocial();
+}
+
+
 /* SIMULATE X TURNS OF THE SETTLEMENT. */
 void Settlement_Dwarven::incrementTicks ( int nTicks )
 {
-	//std::cout<<"Incrementing Dwarven settlement.\n";
-	
-	// Abstract logic flow should be:
-	// Food
-	// Mining
-	// Manufacture
-	// Tech should improve outputs
-	
 	for (auto & v: vCharacter)
 	{
 		if(v->isAlive==false)
@@ -55,6 +163,8 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 
 	while (monthlyCounter >= TICKS_PER_MONTH)
 	{
+		vCharacter.shuffle();
+		
 		if (government.needsLeader())
 		{
 			std::cout<<"We need a leader\n";
@@ -62,39 +172,44 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		
 		government.govern();
 		
-		
-		// Produce and deduct food
-		nFoodStockpile -= vCharacter.size();
-		std::cout<<"nfood: "<<nFoodStockpile<<"\n";
-		// Add metal
-		nMetalStockpile+=(vCharacter.size()/2);
-		// Research
-		// Manufacture
-		
-		// For now we will turn the metal into weapons for use and export.
-		vCharacter.shuffle();
-		
 		for (int i=0;i<vCharacter.size();++i)
 		{
 			Character* character = vCharacter(i);
-			//std::cout<<"Abstracting "<<character->getFullName()<<"\n";
-			
-			// Social
-			
-			const char cSocialSize = character->getCharisma();
-			
-			// Number of social interactions is dependant on charisma
-			for (int i2=0;i2<cSocialSize;++i2)
+
+			// FOOD
+			if (nFoodStockpile<28)
 			{
-				character->abstractSocial(getRandomCharacter());
+				abstractMonthFood(character);
 			}
-			character->updateSocial();
+			// MINING
+			else if ( nMetalStockpile < 100 )
+			{
+				abstractMonthMine(character);
+			}
+			// PRODUCTION
+			else if (globalRandom.flip())
+			{
+				abstractMonthProduction(character);
+			}
+			// RESEARCH
+			else
+			{
+				abstractMonthResearch(character);
+			}
+			
+			// SOCIAL
+			abstractMonthSocial(character);
+			
+			// POLITICS AND OTHER COMPLEX ACTIONS
+			// Includes exploration etc.
+
+		
 			
 			//character->social.print();
 			
 			// Research
 			
-			bool breakthrough = character->abstractResearchMonth();
+			
 			
 			// if (breakthrough)
 			// {
@@ -110,102 +225,16 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			// }
 			
 		
-			if (nMetalStockpile > 10 )
-			{
-				// produce an item
-				// item value is dependent on character stats and randomness.
-				
-				// determine quality
-				
-				// skill modifier 
-				// base chance of special item is 1 in 1000. 0.1%
-				// each level of metalsmithing skill can improve it by 1%
-				// which means that 100 skill means 100% chance of making special item.
-				//int specialChance = 1000;
-				// DEBUG SETTING:
-				int specialChance = 100;
-				int skillModifier = character->skillMetalsmithing.level * 10;
-				int totalChance = specialChance - skillModifier;
-				if ( totalChance < 1 )
-				{
-					totalChance = 1;
-				}
-				
-				int qualityLevel = 0;
-				
-				if (random.oneIn(totalChance) )
-				{
-					std::cout<<"SPECIAL ITEM produced by "<<vCharacter(i)->getFullName()<<".\n";
-					
-					qualityLevel = 1;
-					
-					while (qualityLevel < 6 )
-					{
-						if ( random.flip() )
-						{
-							++qualityLevel;
-						}
-						else
-						{
-							continue;
-						}
-					}
-					std::cout<<"Quality level is "<<qualityLevel<<"\n";
-					
-				}
-				else
-				{
-					// normal item
-					//std::cout<<"Item produced by "<<vCharacter(i)->getFullName()<<".\n";
-				}
-				
-				Item_Sword * sword = new Item_Sword();
-				vItem.push(sword);
-				
-				if ( qualityLevel > 0 )
-				{				
-					// if the item is special, create an Item_Information attachment for it.
-					Item_Information* info = new Item_Information();
-					// Who created it
-					// Where it was created
-					// Any additional info
-					
-					info->creator = character;
-					info->locationMade = this;
-					info->quality = qualityLevel;
-					info->yearMade = world->calendar.year;
-					info->monthMade = world->calendar.month;
-					sword->information = info;
-					// engravings should be done seperately as it's a different skillset.
-					// Player should be able to pick the engraving if they are having it done.
-					
-				}
-				
-				if (qualityLevel == 6)
-				{
-					std::cout<<"*** ARTIFACT CREATED ***\n";
-					if (world!=0)
-					{
-						world->eventManager.addEvent("ARTIFACT",Event::EVENT_NONE);
-					}
-				}
-				
-				nMetalStockpile-=10;
-				character->skillMetalsmithing.addExp(10);
-			}
-			else
-			{
-				continue;
-			}
+
 		
 		}
 		
 		
 		
-		if ( world->aWorldTile(worldX,worldY).baseMetal > 0 )
-		{
-			nMetalStockpile+=30;
-		}
+		// if ( world->aWorldTile(worldX,worldY).baseMetal > 0 )
+		// {
+			// nMetalStockpile+=30;
+		// }
 		
 		// NEW SETTLEMENT CALCULATIONS
 		// OCCURS IF: TOO MANY PEOPLE IN SETTLEMENT, THERE IS A VIABLE AMOUNT OF FREE SPACE, RANDOM ELEMENT.

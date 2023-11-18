@@ -180,10 +180,12 @@ int TIME_SCALE = 0; /* How many seconds of gametime pass per logic tick. */
 	// of day: hour 1 = dawn, hour 2 = morning, etc. And could make night 1 hour.
 	// Dawn, morning, day, afternoon, dusk, night.
 	// we could also shorten years to 4 seasons.
+int DAYS_PER_MONTH = 28;
+	
 int TICKS_PER_MINUTE = 1;
 const int TICKS_PER_HOUR = TICKS_PER_MINUTE*60;
 const int TICKS_PER_DAY = TICKS_PER_HOUR*24;
-const int TICKS_PER_MONTH = TICKS_PER_DAY*28; // 4 months of 7 days each is neatest and best for gameplay I think.
+const int TICKS_PER_MONTH = TICKS_PER_DAY*DAYS_PER_MONTH; // 4 weeks of 7 days each is neatest and best for gameplay I think.
 const int TICKS_PER_YEAR = TICKS_PER_MONTH*4; // yes there's 360 days per year in this game.
 
 /* Calendar setting when new game is started. */
