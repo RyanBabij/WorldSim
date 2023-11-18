@@ -1,6 +1,6 @@
 #pragma once
-#ifndef WORLDSIM_SKILL_CPP
-#define WORLDSIM_SKILL_CPP
+#ifndef WORLDSIM_ATTRIBUTE_CPP
+#define WORLDSIM_ATTRIBUTE_CPP
 
 /* WorldSim: Skill.cpp
 	#include "Skill.cpp"
@@ -9,19 +9,19 @@
 	
 */
 
-class BaseSkillManager
+class AttributeManager
 {
 	public:
 	
-		enum SKILL_TYPE
+		enum TYPE
 		{
-			SKILL_STRENGTH,
-			SKILL_AGILITY,
-			SKILL_CHARISMA,
-			SKILL_INTELLIGENCE,
-			SKILL_PERCEPTION,
-			SKILL_ENDURANCE,
-			SKILL_COURAGE,
+			STRENGTH,
+			AGILITY,
+			CHARISMA,
+			INTELLIGENCE,
+			PERCEPTION,
+			ENDURANCE,
+			COURAGE,
 			ENUM_COUNT
 		};
 	
@@ -36,7 +36,7 @@ class BaseSkillManager
 		
 		short int total;
 		
-		BaseSkillManager()
+		AttributeManager()
 		{
 			strength=0;
 			agility=0;
@@ -67,7 +67,7 @@ class BaseSkillManager
 		
 		void print()
 		{
-			std::cout<<"Skills:\n";
+			std::cout<<"Attributes:\n";
 			std::cout<<"Strength:\t"<<(int)strength<<"\n";
 			std::cout<<"Agility:\t"<<(int)agility<<"\n";
 			std::cout<<"Charisma:\t"<<(int)charisma<<"\n";
@@ -114,62 +114,62 @@ class BaseSkillManager
 			total = (short int)strength+agility+charisma+intelligence+perception+endurance+courage;
 		}
 		
-		SKILL_TYPE getBestSkill()
+		TYPE getBestSkill()
 		{
 			char maxSkillValue = strength;
-			SKILL_TYPE bestSkill = SKILL_STRENGTH;
+			TYPE bestSkill = STRENGTH;
 
 			if (agility > maxSkillValue)
 			{
 				maxSkillValue = agility;
-				bestSkill = SKILL_AGILITY;
+				bestSkill = AGILITY;
 			}
 			if (charisma > maxSkillValue)
 			{
 				maxSkillValue = charisma;
-				bestSkill = SKILL_CHARISMA;
+				bestSkill = CHARISMA;
 			}
 			if (intelligence > maxSkillValue)
 			{
 				maxSkillValue = intelligence;
-				bestSkill = SKILL_INTELLIGENCE;
+				bestSkill = INTELLIGENCE;
 			}
 			if (perception > maxSkillValue)
 			{
 				maxSkillValue = perception;
-				bestSkill = SKILL_PERCEPTION;
+				bestSkill = PERCEPTION;
 			}
 			if (endurance > maxSkillValue)
 			{
 				maxSkillValue = endurance;
-				bestSkill = SKILL_ENDURANCE;
+				bestSkill = ENDURANCE;
 			}
 			if (courage > maxSkillValue)
 			{
 				maxSkillValue = courage;
-				bestSkill = SKILL_COURAGE;
+				bestSkill = COURAGE;
 			}
 
 			return bestSkill;
 		}
 		
-		char getSkillValue(SKILL_TYPE skillType) const
+		char getSkillValue(TYPE skillType) const
 		{
 			switch (skillType)
 			{
-				case SKILL_STRENGTH:
+				case STRENGTH:
 					return strength;
-				case SKILL_AGILITY:
+				case AGILITY:
 					return agility;
-				case SKILL_CHARISMA:
+				case CHARISMA:
 					return charisma;
-				case SKILL_INTELLIGENCE:
+				case INTELLIGENCE:
 					return intelligence;
-				case SKILL_PERCEPTION:
+				case PERCEPTION:
 					return perception;
-				case SKILL_ENDURANCE:
+				case ENDURANCE:
 					return endurance;
-				case SKILL_COURAGE:
+				case COURAGE:
 					return courage;
 				default:
 					// Handle invalid skill type if necessary
@@ -177,29 +177,29 @@ class BaseSkillManager
 			}
 		}
 		
-		void setSkillValue(SKILL_TYPE skillType, char value)
+		void setSkillValue(TYPE skillType, char value)
 		{
 			switch (skillType)
 			{
-				case SKILL_STRENGTH:
+				case STRENGTH:
 					strength = value;
 					break;
-				case SKILL_AGILITY:
+				case AGILITY:
 					agility = value;
 					break;
-				case SKILL_CHARISMA:
+				case CHARISMA:
 					charisma = value;
 					break;
-				case SKILL_INTELLIGENCE:
+				case INTELLIGENCE:
 					intelligence = value;
 					break;
-				case SKILL_PERCEPTION:
+				case PERCEPTION:
 					perception = value;
 					break;
-				case SKILL_ENDURANCE:
+				case ENDURANCE:
 					endurance = value;
 					break;
-				case SKILL_COURAGE:
+				case COURAGE:
 					courage = value;
 					break;
 				default:
@@ -209,4 +209,4 @@ class BaseSkillManager
 
 };
 
-#endif // WORLDSIM_SKILL_CPP
+#endif // WORLDSIM_ATTRIBUTE_CPP

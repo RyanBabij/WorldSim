@@ -137,44 +137,44 @@ void Character::init(const int _sex /* =0 */)
 	
 }
 
-char Character::getBaseSkill(BaseSkillManager::SKILL_TYPE skill)
+char Character::getBaseSkill(AttributeManager::TYPE skill)
 {
 	return baseSkill.getSkillValue(skill);
 }
 
-void Character::setBaseSkill(BaseSkillManager::SKILL_TYPE skill, char value)
+void Character::setBaseSkill(AttributeManager::TYPE skill, char value)
 {
 	baseSkill.setSkillValue(skill,value);
 }
 
 char Character::getCharisma()
 {
-	return baseSkill.getSkillValue(BaseSkillManager::SKILL_CHARISMA);
+	return baseSkill.getSkillValue(AttributeManager::CHARISMA);
 }
 
 void Character::setCharisma(char amount)
 {
-	baseSkill.setSkillValue(BaseSkillManager::SKILL_CHARISMA,amount);
+	baseSkill.setSkillValue(AttributeManager::CHARISMA,amount);
 }
 
 char Character::getIntelligence()
 {
-	return baseSkill.getSkillValue(BaseSkillManager::SKILL_INTELLIGENCE);
+	return baseSkill.getSkillValue(AttributeManager::INTELLIGENCE);
 }
 
 void Character::setIntelligence(char amount)
 {
-	baseSkill.setSkillValue(BaseSkillManager::SKILL_INTELLIGENCE,amount);
+	baseSkill.setSkillValue(AttributeManager::INTELLIGENCE,amount);
 }
 
 char Character::getStrength()
 {
-	return baseSkill.getSkillValue(BaseSkillManager::SKILL_STRENGTH);
+	return baseSkill.getSkillValue(AttributeManager::STRENGTH);
 }
 
 void Character::setStrength(char amount)
 {
-	baseSkill.setSkillValue(BaseSkillManager::SKILL_STRENGTH,amount);
+	baseSkill.setSkillValue(AttributeManager::STRENGTH,amount);
 }
 
 Vector <Character*> Character::getAllKnownCharacters()
@@ -210,7 +210,7 @@ void Character::giveIdea(Idea idea)
 
 void Character::updateSocial()
 {
-	social.updateLists(getBaseSkill(BaseSkillManager::SKILL_CHARISMA));
+	social.updateLists(getBaseSkill(AttributeManager::CHARISMA));
 	//social.updateLists(1);
 }
 

@@ -80,9 +80,11 @@ void Government_Leader::govern()
 			{
 				government->governedSettlement->giveIdea(character->vIdea(i));
 				std::cout<<"King has implemented an idea as a tech\n";
+				character->vIdea.removeSlot(i);
+				// limit 1 idea implemented per turn.
+				return;
 			}
 		}
-		character->vIdea.clear();
 	}
 }
 
@@ -108,9 +110,11 @@ void Government_Scribe::govern()
 			{
 				government->governedSettlement->giveIdea(character->vIdea(i));
 				std::cout<<"Scribe has implemented an idea as a tech\n";
+				character->vIdea.removeSlot(i);
+				// limit 1 idea implemented per turn.
+				return;
 			}
 		}
-		character->vIdea.clear();
 	}
 	
 	// book production goes here.
@@ -139,9 +143,11 @@ void Government_Captain::govern()
 			{
 				government->governedSettlement->giveIdea(character->vIdea(i));
 				std::cout<<"Captain has implemented an idea as a tech\n";
+				character->vIdea.removeSlot(i);
+				// limit 1 idea implemented per turn.
+				return;
 			}
 		}
-		character->vIdea.clear();
 	}
 	
 	// military stuff goes here

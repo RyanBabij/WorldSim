@@ -584,7 +584,7 @@ void Tribe::generateCouples(int amount)
 	}
 }
 
-Character* Tribe::getMostSkilledAt(BaseSkillManager::SKILL_TYPE skill)
+Character* Tribe::getMostSkilledAt(AttributeManager::TYPE skill)
 {
 	if (vCharacter.empty())
 	{
@@ -603,7 +603,7 @@ Character* Tribe::getMostSkilledAt(BaseSkillManager::SKILL_TYPE skill)
 	return mostSkilledCharacter;
 }
 // Set one tribe member as legendary at this skill.
-Character* Tribe::setLegendaryCouple(BaseSkillManager::SKILL_TYPE skill)
+Character* Tribe::setLegendaryCouple(AttributeManager::TYPE skill)
 {
 	// find the couple with the highest of this skill, and set it to legendary. This should help tribes starting out
 	// and establish a family history and reputation.

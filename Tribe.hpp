@@ -128,9 +128,9 @@ public:
 	void add (Character& c);
 	
 	// Set one couple as legendary at this skill.
-	Character* setLegendaryCouple(BaseSkillManager::SKILL_TYPE);
+	Character* setLegendaryCouple(AttributeManager::TYPE);
 	
-	Character* getMostSkilledAt(BaseSkillManager::SKILL_TYPE skill);
+	Character* getMostSkilledAt(AttributeManager::TYPE skill);
 
 	// LOCATION
 

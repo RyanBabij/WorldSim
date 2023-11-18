@@ -14,8 +14,8 @@
 #include "Idea.cpp"
 
 
-#include "Character_Skill.cpp"
-#include "Skill.cpp"
+#include "Character_Skill.cpp" // Learned skills
+#include "Character_Attribute.cpp" // Base skills like Strength
 
 #include <Game/Calendar/Calendar.hpp>
 #include <Container/Table/TableInterface.hpp>
@@ -68,13 +68,14 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	short int thirst;
 
 	// Base skills 0-10.
-	BaseSkillManager baseSkill;
+	AttributeManager baseSkill;
 
 	/* Skills */
 
 	unsigned char skillFishing;
 	unsigned char skillMarksmanship;
 	unsigned char skillMining;
+	unsigned char skillFarming;
 	// skillMetalSmithing modifies chances of making high-quality items. Each level improves chances by 1%
 	//unsigned char skillMetalsmithing;
 	Skill skillMetalsmithing;
@@ -160,8 +161,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	char getStrength();
 	void setStrength(char amount);
 	
-	char getBaseSkill(BaseSkillManager::SKILL_TYPE skill);
-	void setBaseSkill(BaseSkillManager::SKILL_TYPE skill, char value);
+	char getBaseSkill(AttributeManager::TYPE skill);
+	void setBaseSkill(AttributeManager::TYPE skill, char value);
 	
 	Vector <Character*> getAllKnownCharacters();
 	
