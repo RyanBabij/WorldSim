@@ -59,6 +59,8 @@ class ResourceManager
 			nSteel=0;
 			nBronze=0;
 			nAdamantium=0;
+			
+			nFood=0;
 		}
 		
 		void addIron(int _iron)

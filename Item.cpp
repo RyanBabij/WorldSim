@@ -15,10 +15,12 @@ Item::Item()
 	information=0;
 	
   count = 0;
-  type = 0;
+  type = ITEM_NONE;
   meleeDamage = 0;
   throwDamage = 0;
   ammunitionType = 0;
+  
+  farmingValue = 0;
   
   reach = 0;
   

@@ -2,6 +2,7 @@
 #ifndef WORLDSIM_SETTLEMENT_HPP
 #define WORLDSIM_SETTLEMENT_HPP
 
+//#include "Location.hpp"
 #include "Government.hpp"
 
 #include "Resource.cpp"
@@ -48,8 +49,8 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		//enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
 		int race;
 
-		int nFoodStockpile;
-		int nMetalStockpile;
+		//int nFoodStockpile;
+		//int nMetalStockpile;
 
 		Settlement();
 		

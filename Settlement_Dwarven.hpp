@@ -4,10 +4,12 @@
 
 #include "Settlement.hpp"
 
+#include "ItemManager.hpp"
+
 class Settlement_Dwarven: public Settlement
 {
 	private:
-
+		ItemManager stockpile;
 
 	public:
 		Settlement_Dwarven();
@@ -28,6 +30,8 @@ class Settlement_Dwarven: public Settlement
 		Character* getCharacter(Vector <Character*>* vExclude);
 		
 		bool miningNeeded(); // True if any more mining resources are required.
+		
+		bool farmingEquipmentNeeded();
 		
 
 

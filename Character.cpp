@@ -267,7 +267,16 @@ void Character::giveItem(Item* _item)
 	if (_item==0) {
 		return;
 	}
-	world(worldX,worldY)->put(_item,x,y);
+	vInventory.push(_item);
+	//world(worldX,worldY)->put(_item,x,y);
+	//world(worldX,worldY)->vItem.push(_item);
+}
+
+void Character::takeItem(Item* _item)
+{
+	if (_item==nullptr)
+	{ return; }
+	vInventory.remove(_item);
 	//world(worldX,worldY)->vItem.push(_item);
 }
 
@@ -300,6 +309,34 @@ void Character::removeFromInventoryGrid(Item* _item) /* Player-only function */
 			}
 		}
 	}
+}
+
+bool Character::hasItemType(ItemType type)
+{
+	for (int i=0;i<vInventory.size();++i)
+	{
+		if ( vInventory(i)->type == type )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+Item* Character::getBestFarmingEquipment()
+{
+	Item* bestItem = nullptr;
+	int bestFarmingValue = -1;
+	
+	for (int i=0;i<vInventory.size();++i)
+	{
+		if ( vInventory(i)->farmingValue > bestFarmingValue)
+		{
+			bestItem=vInventory(i);
+			bestFarmingValue = bestItem->farmingValue;
+		}
+	}
+	return bestItem;
 }
 
 std::string Character::getFullName() const

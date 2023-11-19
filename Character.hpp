@@ -201,10 +201,15 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
     // For now this should just drop item at player's feet because
     // Inventory is not fully implemented.
   void giveItem(Item* _item);
+  void takeItem(Item* _item);
     // food or potion can be consumed.
   void consume(Item* _item);
   
   void removeFromInventoryGrid(Item* _item); /* Player-only function */
+  
+  bool hasItemType(ItemType);
+  
+  Item* getBestFarmingEquipment();
 
 	
 		/* SOCIAL FUNCTIONS

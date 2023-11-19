@@ -4,6 +4,8 @@
 
 #include "Settlement_Dwarven.hpp"
 
+#include "ItemManager.hpp"
+
 Settlement_Dwarven::Settlement_Dwarven(): Settlement()
 {
 	race = DWARVEN;
@@ -33,7 +35,46 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 	
 	// Farming equipment presence and quality should also be important.
 	
-	int maxPersonalOutput = 14+character->skillFarming;
+	// Check if we can borrow a hoe if we don't own one.
+	
+	//Item* usedItem = 0;
+	Item* bestFarmingEquipment = character->getBestFarmingEquipment();
+	
+	// // get best farming equipment from stockpile and compare
+	Item* bestStockpileFarmingEquipment = stockpile.getBestFarmingEquipment();
+	
+	if ( bestFarmingEquipment == nullptr )
+	{
+		bestFarmingEquipment = bestStockpileFarmingEquipment;
+		stockpile.take(bestStockpileFarmingEquipment);
+		character->giveItem(bestStockpileFarmingEquipment);
+	}
+	else
+	{
+		if (bestStockpileFarmingEquipment != nullptr &&
+			bestStockpileFarmingEquipment->farmingValue > bestFarmingEquipment->farmingValue )
+			{
+				// equip item from stockpile.
+				bestFarmingEquipment = bestStockpileFarmingEquipment;
+				stockpile.take(bestStockpileFarmingEquipment);
+				character->giveItem(bestStockpileFarmingEquipment);
+			}
+	}
+	
+	// if (( bestFarmingEquipment != nullptr ) && bestFarmingEquipment == bestStockpileFarmingEquipment )
+	// {
+		// // take this item from the stockpile
+		// //stockpile.take(bestFarmingEquipment);
+	// }
+	
+	int farmingItemMult=1;
+	if ( bestFarmingEquipment != nullptr )
+	{
+		farmingItemMult = bestFarmingEquipment->farmingValue+1;
+	}
+	
+	int maxPersonalOutput = (character->getStrength()*farmingItemMult)+character->skillFarming;
+	//int maxPersonalOutput = (8+character->skillFarming)*farmingItemMult;
 	if (maxPersonalOutput > 28)
 	{
 		maxPersonalOutput=28;
@@ -43,6 +84,8 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 	resourceManager.addFood(globalRandom.rand(maxTotalOutput));
 	
 	character->skillUpFarming();
+	
+
 }
 void Settlement_Dwarven::abstractMonthMine(Character* character)
 {
@@ -113,8 +156,24 @@ void Settlement_Dwarven::abstractMonthProduction(Character* character)
 		//std::cout<<"Item produced by "<<vCharacter(i)->getFullName()<<".\n";
 	}
 	
-	Item_Sword * sword = new Item_Sword();
-	vItem.push(sword);
+	Item* createdItem=0;
+	
+	if (farmingEquipmentNeeded())
+	{
+		Item_Hoe * hoe = new Item_Hoe();
+		createdItem=hoe;
+		vItem.push(hoe);
+		stockpile.add(hoe);
+	}
+	else
+	{
+	
+		Item_Sword * sword = new Item_Sword();
+		createdItem=sword;
+		stockpile.add(sword);
+		vItem.push(sword);
+	
+	}
 	
 	if ( qualityLevel > 0 )
 	{				
@@ -129,7 +188,7 @@ void Settlement_Dwarven::abstractMonthProduction(Character* character)
 		info->quality = qualityLevel;
 		info->yearMade = world->calendar.year;
 		info->monthMade = world->calendar.month;
-		sword->information = info;
+		createdItem->information = info;
 		// engravings should be done seperately as it's a different skillset.
 		// Player should be able to pick the engraving if they are having it done.
 		
@@ -206,6 +265,16 @@ bool Settlement_Dwarven::miningNeeded() // True if any more mining resources are
 		return true;
 	}
 	else if ( resourceManager.getIron() < vCharacter.size() / 2 )
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Settlement_Dwarven::farmingEquipmentNeeded()
+{
+	int nFarmingEquipment = stockpile.getNumOfType(ITEM_HOE);
+	if ( nFarmingEquipment < vCharacter.size() / 2 )
 	{
 		return true;
 	}
@@ -368,6 +437,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		abstractMonthSplit();
 		std::cout<<"End of month resources:\n";
 		resourceManager.print();
+		stockpile.print();
 		monthlyCounter-=TICKS_PER_MONTH;
 	}
 	
@@ -482,11 +552,8 @@ void Settlement_Dwarven::abstractMonthBiology()
 				else
 				{	c->marry(vEligibleWomen(randomWoman));
 				}
-
-
 			}
 		}
-	
 	
 		//Death calculations
 		if ( c->age < 50 && random.oneIn(2400))

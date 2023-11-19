@@ -19,6 +19,36 @@
 
 */
 
+enum ItemType
+{
+	ITEM_NONE,
+	ITEM_HAND,
+	ITEM_HOE,
+	ITEM_SWORD,
+	ITEM_KNIFE,
+	ITEM_LONGBOW,
+	ITEM_PICKAXE,
+	ITEM_FISHROD,
+	ITEM_SHOVEL,
+	ITEM_AXE,
+	ITEM_LOG,
+	ITEM_FISH,
+	ITEM_CAMPFIRE,
+	ITEM_PLANK,
+	ITEM_WALL,
+	ITEM_FLOOR,
+	ITEM_PLANTFIBRE,
+	ITEM_DEERPELT,
+	ITEM_DEERMEAT,
+	ITEM_HUMANSKIN,
+	ITEM_HUMANMEAT,
+	ITEM_LEATHERCLOTHES,
+	ITEM_WATERSKIN,
+	ITEM_SHELTER,
+	ITEM_MARKER_RED,
+	ITEM_MARKER_GREEN_SMALL
+};
+
 #include <Container/Table/TableInterface.hpp>
 
 #include "Item_Information.cpp"
@@ -47,7 +77,9 @@ class Item: public WorldObject, public TableInterface
 	//int x, y;
   short int count; /* How many of this object there is (for example ammo) */
   
-  short int type; /* The type of item. */
+  ItemType type; /* The type of item. */
+  
+  unsigned char farmingValue; /* How well this works as a farming implement. 0 = not possible */
   
   short int meleeDamage; /* Base damage if you hit someone with this. 0 = not possible. */
   short int throwDamage; /* Base damage if you throw this at someone. 0 = not possible */
@@ -277,11 +309,39 @@ class Item_Hand: public Item
 };
 Item_Hand itemHand;
 
+// Used for farming. Can also be improvised weapon.
+class Item_Hoe: public Item
+{
+  public:
+  
+  Item_Hoe(): Item()
+  {
+    reach=1;
+	 farmingValue=1;
+	 type=ITEM_HOE;
+  }
+  std::string getName() { return "Hoe"; }
+  
+  // virtual Vector <std::string>* getInteractNames(WorldObject* _w);
+    // virtual Vector <std::string>* getInteractNames(Item* _w);
+    // virtual Vector <std::string>* getInteractNames(Character* _w);
+    // virtual Vector <std::string>* getInteractNames(Creature* _w);
+  // virtual Vector <std::string>* getInteractNames(LocalTile* _w);
+  
+  // virtual void interact (Creature* obj, int interactionType=0);
+  // virtual void interact (Character* obj, int interactionType=0);
+
+  Texture* currentTexture()
+  {
+    return &TEX_ITEM_SWORD;
+  }
+};
+
 class Item_Sword: public Item
 {
   public:
   
-  Item_Sword()
+  Item_Sword(): Item()
   {
     reach=1;
   }
