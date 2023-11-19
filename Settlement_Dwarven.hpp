@@ -20,12 +20,16 @@ class Settlement_Dwarven: public Settlement
 		void abstractMonthProduction(Character* character);
 		void abstractMonthResearch(Character* character);
 		void abstractMonthSocial(Character* character);
+		void abstractMonthSplit(); // Settlement split
+		void abstractMonthBiology(); // Character biology
 		
 		Character* getFarmer(Vector <Character*>* vExclude);
 		Character* getMiner(Vector <Character*>* vExclude);
 		Character* getCharacter(Vector <Character*>* vExclude);
 		
 		bool miningNeeded(); // True if any more mining resources are required.
+		
+
 
 		// WorldObjectGlobal virtual.
 		Texture* currentTexture();

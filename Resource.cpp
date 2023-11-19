@@ -41,10 +41,6 @@ class ResourceManager
 	
 	public:
 	
-
-		
-		
-		
 		ResourceManager()
 		{
 			// RAW
@@ -58,7 +54,7 @@ class ResourceManager
 			nCoal=0;
 			nStone=0;
 			nWood=0;
-			nMagickaCrystal;
+			nMagickaCrystal=0;
 			// SMELTED
 			nSteel=0;
 			nBronze=0;
@@ -111,7 +107,29 @@ class ResourceManager
 			return false;
 		}
 		
+		void print()
+		{
+			// Resource names for display
+			const std::string resources[] = { "Food", "Stone", "Iron", "Copper", "Gold", "Silver", "Gems", "Diamonds",
+			"Adamantine", "Coal", "Wood", "Magicka Crystal", "Steel", "Bronze", "Adamantium" };
 
+			// Resource values for display
+			const int resourceValues[] = { nFood, nStone, nIron, nCopper, nGold, nSilver, nGems, nDiamonds, nAdamantine,
+			nCoal, nWood, nMagickaCrystal, nSteel, nBronze, nAdamantium };
+
+			const int totalResources = 15;  // Total number of resources
+
+			for (int i = 0; i < totalResources; ++i)
+			{
+				std::cout << resources[i] << ": " << resourceValues[i];
+				if (i < totalResources - 1)
+				{
+					std::cout << ", ";
+				}
+			}
+			std::cout << "\n";
+		}
+		
 };
 
 

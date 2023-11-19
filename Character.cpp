@@ -34,7 +34,7 @@ Character::Character(): social(this)
 	isMale = true;
 	age = -1;
 	daysCounter=0;
-	secondsCounter=0;
+	tickCounter=0;
 
 	isAlive=true;
 	isMarried=false;
@@ -153,6 +153,14 @@ void Character::skillUpFarming()
 	if ( skillFarming < 100 )
 	{
 		++skillFarming;
+	}
+}
+
+void Character::skillUpMining()
+{
+	if ( skillMining < 100 )
+	{
+		++skillMining;
 	}
 }
 
@@ -474,7 +482,7 @@ void Character::incrementTicks(int nTicks)
 	// research
 
 
-	secondsCounter+=nTicks;
+	tickCounter+=nTicks;
 
 	hunger+=nTicks;
 	if (hunger > MAX_HUNGER) {
@@ -486,16 +494,16 @@ void Character::incrementTicks(int nTicks)
 		thirst = MAX_THIRST; /* isAlive=false; */
 	}
 
-	while(secondsCounter>=86400)
+	while(tickCounter>=TICKS_PER_DAY)
 	{
 		++daysCounter;
-		secondsCounter-=86400;
+		tickCounter-=TICKS_PER_DAY;
 	}
 	//std::cout<<"Dayscounter: "<<daysCounter<<".\n";
-	while(daysCounter >=360)
+	while(daysCounter >= DAYS_PER_YEAR)
 	{
 		age++;
-		daysCounter-=360;
+		daysCounter-=DAYS_PER_YEAR;
 
 		// if ( hunger > 0 )
 		// {

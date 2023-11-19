@@ -181,6 +181,7 @@ int TIME_SCALE = 0; /* How many seconds of gametime pass per logic tick. */
 	// Dawn, morning, day, afternoon, dusk, night.
 	// we could also shorten years to 4 seasons.
 int DAYS_PER_MONTH = 28;
+const int DAYS_PER_YEAR = DAYS_PER_MONTH*12;
 	
 int TICKS_PER_MINUTE = 1;
 const int TICKS_PER_HOUR = TICKS_PER_MINUTE*60;

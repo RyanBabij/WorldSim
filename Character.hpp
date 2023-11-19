@@ -47,8 +47,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 
 	bool isMale;
 	int age; /* In years. (or days?) */
-	int daysCounter; /* 0-360 */
-	int secondsCounter; /* 0 - 86,400 */
+	int daysCounter; /* 0-DAYS_PER_YEAR */
+	int tickCounter; /* 0 - TICKS_PER_DAY */
 
 	int actionPoints; /* Base: 100. Points are deducted for each action. */
 
@@ -165,6 +165,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	void setBaseSkill(AttributeManager::TYPE skill, char value);
 	
 	void skillUpFarming();
+	void skillUpMining();
 	
 	Vector <Character*> getAllKnownCharacters();
 	
