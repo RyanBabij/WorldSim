@@ -18,8 +18,7 @@
 
 class ResourceManager
 {
-	public:
-	
+	private:
 		// RAW
 		int nIron;
 		int nCopper;
@@ -36,6 +35,13 @@ class ResourceManager
 		int nSteel;
 		int nBronze;
 		int nAdamantium;
+		
+		// FOOD (Should probably be somewhere else)
+		int nFood;
+	
+	public:
+	
+
 		
 		
 		
@@ -63,6 +69,49 @@ class ResourceManager
 		{
 			nIron+=_iron;
 		}
+		void addStone(int _stone)
+		{
+			nStone+=_stone;
+		}
+		void addFood(int _food)
+		{
+			nFood+=_food;
+		}
+		
+		int getIron()
+		{
+			return nIron;
+		}
+		int getStone()
+		{
+			return nStone;
+		}
+		int getFood()
+		{
+			return nFood;
+		}
+		
+		bool takeIron(int _amount)
+		{
+			if ( _amount <= nIron )
+			{
+				nIron-=_amount;
+				return true;
+			}
+			return false;
+		}
+		
+		bool takeFood(int _amount)
+		{
+			if ( _amount <= nFood )
+			{
+				nFood-=_amount;
+				return true;
+			}
+			return false;
+		}
+		
+
 };
 
 

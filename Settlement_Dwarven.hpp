@@ -24,6 +24,8 @@ class Settlement_Dwarven: public Settlement
 		Character* getFarmer(Vector <Character*>* vExclude);
 		Character* getMiner(Vector <Character*>* vExclude);
 		Character* getCharacter(Vector <Character*>* vExclude);
+		
+		bool miningNeeded(); // True if any more mining resources are required.
 
 		// WorldObjectGlobal virtual.
 		Texture* currentTexture();

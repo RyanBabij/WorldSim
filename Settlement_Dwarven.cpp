@@ -8,8 +8,8 @@ Settlement_Dwarven::Settlement_Dwarven(): Settlement()
 {
 	race = DWARVEN;
 
-	nFoodStockpile=10;
-	nMetalStockpile=0;
+	//nFoodStockpile=10;
+	//nMetalStockpile=0;
 	monthlyCounter=0;
 	dailyCounter=0;
 
@@ -31,6 +31,8 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 	// I think without aid of tech, subsistence farming ratio of 1 farmer for 1 other person is reasonable.
 	// Over time, technology of course should make a huge difference until farmers become a small minority.
 	
+	// Farming equipment presence and quality should also be important.
+	
 	int maxPersonalOutput = 14+character->skillFarming;
 	if (maxPersonalOutput > 28)
 	{
@@ -38,18 +40,19 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 	}
 	int maxTotalOutput = maxPersonalOutput + technology.agricultureLevel;
 	
-	nFoodStockpile+=globalRandom.rand(maxTotalOutput);
+	resourceManager.addFood(globalRandom.rand(maxTotalOutput));
 	
 	character->skillUpFarming();
-	
-	//character->skillFarming++;
 }
 void Settlement_Dwarven::abstractMonthMine(Character* character)
 {
 	std::cout<<character->getFullName()<<": Mining\n";
 	// Character works in the mines for the month
-	nMetalStockpile+=globalRandom.rand(14+technology.miningLevel+character->skillMining);
+	//nMetalStockpile+=
 	//nMetalStockpile+=1000;
+	
+	resourceManager.addIron(globalRandom.rand(14+technology.miningLevel+character->skillMining));
+	
 	character->skillMining++;
 }
 
@@ -135,7 +138,8 @@ void Settlement_Dwarven::abstractMonthProduction(Character* character)
 		}
 	}
 	
-	nMetalStockpile-=10;
+	//nMetalStockpile-=10;
+	resourceManager.takeIron(1);
 	character->skillMetalsmithing.addExp(10);
 }
 
@@ -186,6 +190,20 @@ Character* Settlement_Dwarven::getMiner(Vector <Character*>* vExclude)
 		}
 	}
 	return currentBest;
+}
+
+bool Settlement_Dwarven::miningNeeded() // True if any more mining resources are required.
+{
+	// For now just assume we need 1 of everything for each person.
+	if ( resourceManager.getStone() < vCharacter.size() )
+	{
+		return true;
+	}
+	else if ( resourceManager.getIron() < vCharacter.size() )
+	{
+		return true;
+	}
+	return false;
 }
 
 Character* Settlement_Dwarven::getFarmer(Vector <Character*>* vExclude)
@@ -271,7 +289,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 
 	while (monthlyCounter >= TICKS_PER_MONTH)
 	{
-		std::cout<<"*** Monthly tick: "<<world->calendar.toString()<<"\n\n";
+		std::cout<<"\n*** Monthly tick: "<<world->calendar.toString()<<"\n\n";
 		technology.print();
 		
 		Vector <Character*> vMovedCharacters; // List of characters already acted.
@@ -293,7 +311,8 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 
 			// FOOD
 			// Calculate how much food we need.
-			int neededFood = ((vCharacter.size()-vMovedCharacters.size())*28) - nFoodStockpile;
+			// Progression should be foraging/hunting -> farming
+			int neededFood = ((vCharacter.size()-vMovedCharacters.size())*28) - resourceManager.getFood();
 			
 			Character * actingCharacter = nullptr;
 			
@@ -308,24 +327,24 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 				abstractMonthFood(actingCharacter);
 			}
 			// MINING
-			else if ( nMetalStockpile < 28 )
+			else if ( resourceManager.getIron() < 28 )
 			{
 				actingCharacter = getCharacter(&vMovedCharacters);
-				nFoodStockpile-=28;
+				resourceManager.takeFood(28);
 				abstractMonthMine(actingCharacter);
 			}
 			// PRODUCTION
 			else if (globalRandom.flip())
 			{
 				actingCharacter = getCharacter(&vMovedCharacters);
-				nFoodStockpile-=28;
+				resourceManager.takeFood(28);
 				abstractMonthProduction(actingCharacter);
 			}
 			// RESEARCH
 			else
 			{
 				actingCharacter = getCharacter(&vMovedCharacters);
-				nFoodStockpile-=28;
+				resourceManager.takeFood(28);
 				abstractMonthResearch(actingCharacter);
 			}
 			
