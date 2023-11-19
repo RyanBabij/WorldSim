@@ -25,14 +25,32 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 {
 	std::cout<<character->getFullName()<<": Farming\n";
 	// for now assume the Character feeds themself plus a certain surplus
-	nFoodStockpile+=globalRandom.rand8(14+technology.agricultureLevel);
+	
+	// Personal output is how much a person's personal skill can affect output.
+	// Technology can further improve the output as an independent variable.
+	// I think without aid of tech, subsistence farming ratio of 1 farmer for 1 other person is reasonable.
+	// Over time, technology of course should make a huge difference until farmers become a small minority.
+	
+	int maxPersonalOutput = 14+character->skillFarming;
+	if (maxPersonalOutput > 28)
+	{
+		maxPersonalOutput=28;
+	}
+	int maxTotalOutput = maxPersonalOutput + technology.agricultureLevel;
+	
+	nFoodStockpile+=globalRandom.rand(maxTotalOutput);
+	
+	character->skillUpFarming();
+	
+	//character->skillFarming++;
 }
 void Settlement_Dwarven::abstractMonthMine(Character* character)
 {
 	std::cout<<character->getFullName()<<": Mining\n";
 	// Character works in the mines for the month
-	nMetalStockpile+=globalRandom.rand8(14+technology.miningLevel);
+	nMetalStockpile+=globalRandom.rand(14+technology.miningLevel+character->skillMining);
 	//nMetalStockpile+=1000;
+	character->skillMining++;
 }
 
 void Settlement_Dwarven::abstractMonthProduction(Character* character)
@@ -141,6 +159,91 @@ void Settlement_Dwarven::abstractMonthSocial(Character* character)
 	character->updateSocial();
 }
 
+Character* Settlement_Dwarven::getMiner(Vector <Character*>* vExclude)
+{
+	Character* currentBest = nullptr;
+	int highestSkillMining = -1;  // Initialize with a low value
+	for (int i=0;i<vCharacter.size();++i)
+	{
+		Character * character = vCharacter(i);
+		
+		// Check if the character is in the exclusion list
+		bool isExcluded = false;
+		for (int j = 0; j < vExclude->size(); ++j)
+		{
+			if ((*vExclude)(j) == character)
+			{
+				isExcluded = true;
+				break;
+			}
+		}
+
+		// If the character is not excluded and has a higher skillFarming, update the current best
+		if (!isExcluded && (currentBest == nullptr || character->skillMining > highestSkillMining))
+		{
+			currentBest = character;
+			highestSkillMining = character->skillMining;
+		}
+	}
+	return currentBest;
+}
+
+Character* Settlement_Dwarven::getFarmer(Vector <Character*>* vExclude)
+{
+	Character* currentBest = nullptr;
+	int highestSkillFarming = -1;  // Initialize with a low value
+	for (int i=0;i<vCharacter.size();++i)
+	{
+		Character * character = vCharacter(i);
+		
+		// Check if the character is in the exclusion list
+		bool isExcluded = false;
+		for (int j = 0; j < vExclude->size(); ++j)
+		{
+			if ((*vExclude)(j) == character)
+			{
+				isExcluded = true;
+				break;
+			}
+		}
+
+		// If the character is not excluded and has a higher skillFarming, update the current best
+		if (!isExcluded && (currentBest == nullptr || character->skillFarming > highestSkillFarming))
+		{
+			currentBest = character;
+			highestSkillFarming = character->skillFarming;
+		}
+	}
+	return currentBest;
+}
+
+Character* Settlement_Dwarven::getCharacter(Vector <Character*>* vExclude)
+{
+	Character* character = nullptr;
+	for (int i=0;i<vCharacter.size();++i)
+	{
+		character = vCharacter(i);
+		
+		// Check if the character is in the exclusion list
+		bool isExcluded = false;
+		for (int j = 0; j < vExclude->size(); ++j)
+		{
+			if ((*vExclude)(j) == character)
+			{
+				isExcluded = true;
+				break;
+			}
+		}
+
+		// If the character is not excluded and has a higher skillFarming, update the current best
+		if (!isExcluded)
+		{
+			return character;
+		}
+	}
+	return nullptr;
+}
+
 
 /* SIMULATE X TURNS OF THE SETTLEMENT. */
 void Settlement_Dwarven::incrementTicks ( int nTicks )
@@ -171,7 +274,10 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		std::cout<<"*** Monthly tick: "<<world->calendar.toString()<<"\n\n";
 		technology.print();
 		
+		Vector <Character*> vMovedCharacters; // List of characters already acted.
+		
 		vCharacter.shuffle();
+		
 		
 		if (government.needsLeader())
 		{
@@ -180,37 +286,62 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		
 		government.govern();
 		
-		for (int i=0;i<vCharacter.size();++i)
+		//Character* character = vCharacter(i);
+		
+		while (vMovedCharacters.size() < vCharacter.size())
 		{
-			Character* character = vCharacter(i);
 
 			// FOOD
-			if (nFoodStockpile<28)
+			// Calculate how much food we need.
+			int neededFood = ((vCharacter.size()-vMovedCharacters.size())*28) - nFoodStockpile;
+			
+			Character * actingCharacter = nullptr;
+			
+			if ( neededFood > 0)
 			{
-				abstractMonthFood(character);
+				actingCharacter = getFarmer(&vMovedCharacters);
+				if ( actingCharacter == nullptr )
+				{
+					std::cout<<"ERROR: finding char\n";
+					return;
+				}
+				abstractMonthFood(actingCharacter);
 			}
 			// MINING
 			else if ( nMetalStockpile < 28 )
 			{
+				actingCharacter = getCharacter(&vMovedCharacters);
 				nFoodStockpile-=28;
-				abstractMonthMine(character);
+				abstractMonthMine(actingCharacter);
 			}
 			// PRODUCTION
 			else if (globalRandom.flip())
 			{
+				actingCharacter = getCharacter(&vMovedCharacters);
 				nFoodStockpile-=28;
-				abstractMonthProduction(character);
+				abstractMonthProduction(actingCharacter);
 			}
 			// RESEARCH
 			else
 			{
+				actingCharacter = getCharacter(&vMovedCharacters);
 				nFoodStockpile-=28;
-				abstractMonthResearch(character);
+				abstractMonthResearch(actingCharacter);
 			}
 			
 			// SOCIAL
-			abstractMonthSocial(character);
+			abstractMonthSocial(actingCharacter);
 			//character->social.print();
+			
+			vMovedCharacters.push(actingCharacter);
+		
+		}
+		
+
+		
+		//for (int i=0;i<vCharacter.size();++i)
+		//{
+
 			
 			// POLITICS AND OTHER COMPLEX ACTIONS
 			// Includes exploration etc.
@@ -239,7 +370,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		
 
 		
-		}
+		//}
 		
 		
 		

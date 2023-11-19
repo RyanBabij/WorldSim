@@ -164,6 +164,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	char getBaseSkill(AttributeManager::TYPE skill);
 	void setBaseSkill(AttributeManager::TYPE skill, char value);
 	
+	void skillUpFarming();
+	
 	Vector <Character*> getAllKnownCharacters();
 	
 	bool hasIdea(Idea idea);

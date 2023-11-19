@@ -20,6 +20,10 @@ class Settlement_Dwarven: public Settlement
 		void abstractMonthProduction(Character* character);
 		void abstractMonthResearch(Character* character);
 		void abstractMonthSocial(Character* character);
+		
+		Character* getFarmer(Vector <Character*>* vExclude);
+		Character* getMiner(Vector <Character*>* vExclude);
+		Character* getCharacter(Vector <Character*>* vExclude);
 
 		// WorldObjectGlobal virtual.
 		Texture* currentTexture();

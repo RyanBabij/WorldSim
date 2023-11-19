@@ -51,6 +51,7 @@ Character::Character(): social(this)
 	skillFishing=0;
 	skillMarksmanship=0;
 	skillMining=0;
+	skillFarming=0;
 	skillMetalsmithing.init("metalsmithing",100);
 
 	health=0;
@@ -145,6 +146,14 @@ char Character::getBaseSkill(AttributeManager::TYPE skill)
 void Character::setBaseSkill(AttributeManager::TYPE skill, char value)
 {
 	baseSkill.setSkillValue(skill,value);
+}
+
+void Character::skillUpFarming()
+{
+	if ( skillFarming < 100 )
+	{
+		++skillFarming;
+	}
 }
 
 char Character::getCharisma()
