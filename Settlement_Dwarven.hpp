@@ -32,7 +32,7 @@ class Settlement_Dwarven: public Settlement
 		
 		bool produceItem(ItemType type);
 		
-
+		void payCharacter(Character* character, int amount);
 
 		// WorldObjectGlobal virtual.
 		Texture* currentTexture();

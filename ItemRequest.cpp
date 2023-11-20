@@ -52,26 +52,79 @@ class ItemRequestManager
 	
 	void add(Character *requester, ItemType type, int value)
 	{
-		requests.insert(ItemRequest(requester, type, value));
+		// Check if the requester already has a request for the same type
+		for (auto it = requests.begin(); it != requests.end(); )
+		{
+			if (it->requester == requester && it->type == type)
+			{
+				// If the existing request has a lower value, erase it
+				if (it->value < value)
+				{
+					requester->giveMoney(it->value);
+					std::cout<<"Money refunded from contract: "<<it->value<<"\n";
+					it = requests.erase(it); // Erase and move to the next element
+					continue;
+				}
+				else
+				{
+					// If the existing request has a higher or equal value, do not add the new request
+					return;
+				}
+			}
+			++it;
+		}
+
+		// If the requester has enough money, add the new request
+		if (requester->takeMoney(value))
+		{
+			requests.insert(ItemRequest(requester, type, value));
+		}
 	}
 
-	std::optional<ItemRequest> pullMostValuableRequest()
+
+	std::optional<ItemRequest> pullMostValuableRequest(bool returnZeroValues)
 	{
 		if (requests.empty())
 		{
 			return std::nullopt; // Return an empty optional if there are no requests
 		}
 
-		auto it = requests.rbegin(); // Iterator to the most valuable request
-		ItemRequest mostValuableRequest = *it; // Copy the most valuable request
-		requests.erase(--it.base()); // Erase the most valuable request from the set
+		auto it = requests.begin(); // Iterator to the least valuable request
 
-		return mostValuableRequest; // Return the most valuable request
+		while (it != requests.end())
+		{
+			const ItemRequest& mostValuableRequest = *it;
+
+			if (mostValuableRequest.value > 0 || returnZeroValues)
+			{
+				requests.erase(it); // Erase the most valuable request from the set
+				return mostValuableRequest; // Return the most valuable request
+			}
+			++it; // Move to the next request
+		}
+
+		return std::nullopt; // Return an empty optional if no suitable request is found
 	}
+
+	int getTotalValue() const
+	{
+		int totalValue = 0;
+		for (const auto& request : requests)
+		{
+			totalValue += request.value;
+		}
+		return totalValue;
+	}
+
 
 	bool empty() const
 	{
 		return requests.empty();
+	}
+	
+	int size()
+	{
+		return requests.size();
 	}
 	
 };

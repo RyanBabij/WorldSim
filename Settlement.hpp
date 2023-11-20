@@ -66,6 +66,9 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		/* GETTER AND SETTER */
 		Character* getRandomCharacter();
 		Character* getCharacter(Vector <Character*>* vExclude);
+		
+		void printAllMoneyInSettlement(); // Including Character money
+		int getAllMoneyInSettlement(); // Including Character money
 				
 		/* SIMULATE X TURNS OF THE SETTLEMENT. */
 		virtual void incrementTicks ( int /* nTicks */ );

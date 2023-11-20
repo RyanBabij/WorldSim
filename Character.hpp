@@ -174,6 +174,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	
 	void giveMoney(int amount);
 	int getMoney();
+	bool takeMoney(int amount);
 	
 	// INTERACTION
 	

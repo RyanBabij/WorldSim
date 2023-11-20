@@ -26,7 +26,7 @@ Texture* Settlement_Dwarven::currentTexture()
 
 void Settlement_Dwarven::abstractMonthFood(Character* character)
 {
-	std::cout<<character->getFullName()<<": Farming\n";
+	std::cout<<character->getFullName()<<": Farming. "<<character->getMoney()<<" money.\n";
 	// for now assume the Character feeds themself plus a certain surplus
 	
 	// Personal output is how much a person's personal skill can affect output.
@@ -46,17 +46,24 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 	
 	if ( bestFarmingEquipment == nullptr )
 	{
-		bestFarmingEquipment = bestStockpileFarmingEquipment;
-		stockpile.take(bestStockpileFarmingEquipment);
-		character->giveItem(bestStockpileFarmingEquipment);
+		if ( bestStockpileFarmingEquipment == nullptr ) // There's no farming equipment anywhere
+		{
+			std::cout<<"Request for hoe: "<<character->getMoney()<<"\n";
+			requestManager.add(character,ITEM_HOE,character->getMoney());
+		}
+		else // we don't have equipment but the stockpile does
+		{
+			stockpile.take(bestStockpileFarmingEquipment);
+			character->giveItem(bestStockpileFarmingEquipment);
+		}
 	}
-	else
+	else // we have equipment and the stockpile does too
 	{
 		if (bestStockpileFarmingEquipment != nullptr &&
 			bestStockpileFarmingEquipment->farmingValue > bestFarmingEquipment->farmingValue )
 			{
 				// equip item from stockpile.
-				bestFarmingEquipment = bestStockpileFarmingEquipment;
+				//bestFarmingEquipment = bestStockpileFarmingEquipment;
 				stockpile.take(bestStockpileFarmingEquipment);
 				character->giveItem(bestStockpileFarmingEquipment);
 			}
@@ -65,19 +72,22 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 	// if (( bestFarmingEquipment != nullptr ) && bestFarmingEquipment == bestStockpileFarmingEquipment )
 	// {
 		// // take this item from the stockpile
-		// //stockpile.take(bestFarmingEquipment);
+		// stockpile.take(bestFarmingEquipment);
 	// }
 	
 	// If we don't have farming equipment, put in a request if possible.
-	if ( bestFarmingEquipment == nullptr )
-	{
-		requestManager.add(character,ITEM_HOE,character->getMoney());
-	}
+	// if ( bestFarmingEquipment == nullptr && character->getMoney() > 0)
+	// {
+		// std::cout<<"Request for hoe: "<<character->getMoney()<<"\n";
+		// requestManager.add(character,ITEM_HOE,character->getMoney());
+	// }
+	
+	Item* farmingEquipment = character->getBestFarmingEquipment();
 	
 	int farmingItemMult=1;
-	if ( bestFarmingEquipment != nullptr )
+	if ( farmingEquipment != nullptr )
 	{
-		farmingItemMult = bestFarmingEquipment->farmingValue+1;
+		farmingItemMult = farmingEquipment->farmingValue+1;
 	}
 	
 	int maxPersonalOutput = (character->getStrength()*farmingItemMult)+character->skillFarming;
@@ -96,7 +106,7 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 }
 void Settlement_Dwarven::abstractMonthMine(Character* character)
 {
-	std::cout<<character->getFullName()<<": Mining\n";
+	std::cout<<character->getFullName()<<": Mining. "<<character->getMoney()<<" money.\n";
 	// Character works in the mines for the month
 	
 	int maxPersonalOutput = 14+character->skillMining;
@@ -120,17 +130,46 @@ bool Settlement_Dwarven::produceItem(ItemType type)
 		{
 			Item_Hoe * hoe = new Item_Hoe();
 			stockpile.add(hoe);
+			return true;
 		}	
 	}
 	
 	return false;
 }
 
+void Settlement_Dwarven::payCharacter(Character* character, int amount)
+{
+	//character->giveMoney(amount);
+	
+	int moneyToReceive = amount;
+
+	if (moneyToReceive > 5)
+	{
+		// Calculate 50% of the money, rounding down for the character's share
+		int halfMoney = moneyToReceive / 2;
+
+		// Give 50% to the character
+		character->giveMoney(halfMoney);
+
+		// The remaining amount is for tax. This includes the extra coin in case of an odd number
+		int taxAmount = moneyToReceive - halfMoney;
+
+		// Assuming there's a function addToTaxFund(int amount) to handle the tax part
+		resourceManager.addMoney(taxAmount);
+	}
+	else
+	{
+		// If 5 or less, give all to the character without tax
+		character->giveMoney(moneyToReceive);
+	}
+}
+
 void Settlement_Dwarven::abstractMonthProduction(Character* character)
 {
-	std::cout<<character->getFullName()<<": Production\n";
+	std::cout<<character->getFullName()<<": Production. "<<character->getMoney()<<" money.\n";
+	std::cout<<"There are "<<requestManager.size()<<" requests.\n";
 	
-	auto mostValuableRequestOpt = requestManager.pullMostValuableRequest();
+	auto mostValuableRequestOpt = requestManager.pullMostValuableRequest(false);
 	if (mostValuableRequestOpt)
 	{
 		// If there is a most valuable request
@@ -142,13 +181,23 @@ void Settlement_Dwarven::abstractMonthProduction(Character* character)
 		{
 			std::cout<<"Produced in-demand item.\n";
 			// recieve the coins promised
+			
+			int moneyToRecieve = mostValuableRequest.value;
+			
+			payCharacter(character, mostValuableRequest.value);
+		}
+		else // Couldn't make the item, put the request back through.
+		{
+			mostValuableRequest.requester->giveMoney(mostValuableRequest.value);
+			requestManager.add(mostValuableRequest.requester,mostValuableRequest.type, mostValuableRequest.value);
+			std::cout<<"Something messed up\n";
 		}
 	}
 	else
 	{
 		std::cout<<"Making coins\n";
 		
-		for (int i=0;i<30;++i)
+		for (int i=0;i<10;++i)
 		{
 			if ( resourceManager.takeIron(1) )
 			{
@@ -266,7 +315,7 @@ void Settlement_Dwarven::abstractMonthProduction(Character* character)
 
 void Settlement_Dwarven::abstractMonthResearch(Character* character)
 {
-	std::cout<<character->getFullName()<<": Research\n";
+	std::cout<<character->getFullName()<<": Research. "<<character->getMoney()<<" money.\n";
 	// Character works in the mines for the month
 	bool breakthrough = character->abstractResearchMonth();
 }
@@ -470,6 +519,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		std::cout<<"End of month resources:\n";
 		resourceManager.print();
 		stockpile.print();
+		printAllMoneyInSettlement();
 		monthlyCounter-=TICKS_PER_MONTH;
 	}
 	

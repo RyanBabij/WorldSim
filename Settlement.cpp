@@ -36,6 +36,32 @@ Character* Settlement::getRandomCharacter()
 	return vCharacter(globalRandom.rand(vCharacter.size()-1));
 }
 
+void Settlement::printAllMoneyInSettlement()
+{
+	int characterMoney = 0;
+	for (int i=0;i<vCharacter.size();++i)
+	{
+		characterMoney+=vCharacter(i)->getMoney();
+	}
+	
+	int totalMoney=resourceManager.getMoney()+characterMoney+requestManager.getTotalValue();
+	
+	std::cout<<"All money: "<<resourceManager.getMoney()<<" treasury. "<<characterMoney<<" held by citizens. "
+	<<requestManager.getTotalValue()<<" in contracts. "<<totalMoney<<" total.\n";
+}
+
+int Settlement::getAllMoneyInSettlement()
+{
+	int totalMoney = 0;
+	for (int i=0;i<vCharacter.size();++i)
+	{
+		totalMoney+=vCharacter(i)->getMoney();
+	}
+	
+	totalMoney+=resourceManager.getMoney()+requestManager.getTotalValue();
+	return totalMoney;
+}
+
 Character* Settlement::getCharacter(Vector <Character*>* vExclude)
 {
 	Character* character = nullptr;

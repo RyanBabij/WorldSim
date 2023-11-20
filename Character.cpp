@@ -282,6 +282,24 @@ int Character::getMoney()
 	return money;
 }
 
+bool Character::takeMoney(int amount)
+{
+    // Check if the character has enough money
+    if (money >= amount)
+    {
+        // Subtract the amount from the character's money
+        money -= amount;
+        // Return true to indicate success
+        return true;
+    }
+    else
+    {
+        // Return false if the character does not have enough money
+        return false;
+    }
+}
+
+
 void Character::takeItem(Item* _item)
 {
 	if (_item==nullptr)

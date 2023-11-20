@@ -90,24 +90,42 @@ void Government_Leader::govern()
 	}
 	
 	
+	// Money distribution:
+	// The treasury aims to hold 10% of all money, any excess is given out at a rate of 10% per turn.
 	if (s != nullptr)
 	{
-		std::cout<<"King distribute money\n";
-		
-		if (s->resourceManager.getMoney() > 100 )
+		std::cout << "King distribute money\n";
+
+		// Calculate the total money in the settlement's treasury
+		int treasuryMoney = s->resourceManager.getMoney();
+		int totalSettlementMoney = s->getAllMoneyInSettlement();
+
+		// Check if the treasury holds more than 10% of total money in the settlement
+		if (static_cast<double>(treasuryMoney) / totalSettlementMoney > 0.1)
 		{
-			// distribute coins randomly
-			for (int i=0;i<30;++i)
+			// Calculate the amount to distribute (e.g., 10% of the treasury money)
+			int amountToDistribute = treasuryMoney * 0.1;
+			//int amountToDistribute = treasuryMoney;
+			std::cout<<"King distributed "<<amountToDistribute<<" coins.\n";
+
+			// Distribute the calculated amount
+			while (amountToDistribute > 0)
 			{
 				Character* c = s->getRandomCharacter();
+
 				if (s->resourceManager.takeMoney(1))
 				{
 					c->giveMoney(1);
+					amountToDistribute -= 1;
+				}
+				else
+				{
+					// Break the loop if there's not enough money left to distribute
+					break;
 				}
 			}
-			
 		}
-		
+	
 	}
 	
 }
