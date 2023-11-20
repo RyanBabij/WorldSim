@@ -172,6 +172,9 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	bool hasIdea(Idea idea);
 	void giveIdea(Idea idea);
 	
+	void giveMoney(int amount);
+	int getMoney();
+	
 	// INTERACTION
 	
 	void shareIdeas(Character* c); // Share 1 new idea per call.

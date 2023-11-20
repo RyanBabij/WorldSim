@@ -9,19 +9,28 @@
 #include "WorldObjectGlobal.hpp"
 #include "Civ.hpp"
 
+#include "ItemManager.hpp"
+#include "ItemRequest.cpp"
+
 class Settlement: public WorldObjectGlobal, public TableInterface
 {
 	private:
+
 		
 	protected:
 		RandomNonStatic random;
 
 	public:
+
+	
 		Civ* parentCiv;
 		Vector <Character*> vCharacter;
 		Vector <Character*> vDeceased;
 		
 		Government government;
+
+		ItemManager stockpile;
+		ItemRequestManager requestManager;
 		
 		Vector <Item*> vItem;
 		
@@ -56,7 +65,8 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		
 		/* GETTER AND SETTER */
 		Character* getRandomCharacter();
-
+		Character* getCharacter(Vector <Character*>* vExclude);
+				
 		/* SIMULATE X TURNS OF THE SETTLEMENT. */
 		virtual void incrementTicks ( int /* nTicks */ );
 

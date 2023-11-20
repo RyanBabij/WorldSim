@@ -36,6 +36,33 @@ Character* Settlement::getRandomCharacter()
 	return vCharacter(globalRandom.rand(vCharacter.size()-1));
 }
 
+Character* Settlement::getCharacter(Vector <Character*>* vExclude)
+{
+	Character* character = nullptr;
+	for (int i=0;i<vCharacter.size();++i)
+	{
+		character = vCharacter(i);
+		
+		// Check if the character is in the exclusion list
+		bool isExcluded = false;
+		for (int j = 0; j < vExclude->size(); ++j)
+		{
+			if ((*vExclude)(j) == character)
+			{
+				isExcluded = true;
+				break;
+			}
+		}
+
+		// If the character is not excluded and has a higher skillFarming, update the current best
+		if (!isExcluded)
+		{
+			return character;
+		}
+	}
+	return nullptr;
+}
+
 bool Settlement::removeCharacter(Character* _character)
 {
 	return vCharacter.erase(_character);

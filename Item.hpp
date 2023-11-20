@@ -71,9 +71,14 @@ class Recipe;
 class Creature;
 //class Creature_Deer;
 
-class Item: public WorldObject, public TableInterface
+
+#include "Resource.cpp"
+
+
+class Item: public WorldObject, public TableInterface /* HasResourceRequirement */
 {
 	public:
+	
 	//int x, y;
   short int count; /* How many of this object there is (for example ammo) */
   
@@ -235,6 +240,11 @@ class Item: public WorldObject, public TableInterface
   {
     return 0;
   }
+  
+ 	/* virtual */ static ResourceRequirement getResourceRequirement()
+	{
+		return ResourceRequirement(0,0);
+	}
 
   
     // Useful for checking recipe requirements.
@@ -305,6 +315,11 @@ class Item_Hand: public Item
   {
     return &TEX_PORTRAIT_SNEK;
   }
+ 
+ 	/* virtual */ static ResourceRequirement getResourceRequirement()
+	{
+		return ResourceRequirement(0,0);
+	}
 
 };
 Item_Hand itemHand;
@@ -320,7 +335,7 @@ class Item_Hoe: public Item
 	 farmingValue=1;
 	 type=ITEM_HOE;
   }
-  std::string getName() { return "Hoe"; }
+  std::string getName() override { return "Hoe"; }
   
   // virtual Vector <std::string>* getInteractNames(WorldObject* _w);
     // virtual Vector <std::string>* getInteractNames(Item* _w);
@@ -331,10 +346,20 @@ class Item_Hoe: public Item
   // virtual void interact (Creature* obj, int interactionType=0);
   // virtual void interact (Character* obj, int interactionType=0);
 
-  Texture* currentTexture()
+  Texture* currentTexture() override
   {
     return &TEX_ITEM_SWORD;
   }
+  
+	// virtual ResourceRequirement getResourceRequirement() override
+	// {
+		// return ResourceRequirement(1,0);
+	// }
+	
+ 	/* virtual */ static ResourceRequirement getResourceRequirement()
+	{
+		return ResourceRequirement(1,0);
+	}
 };
 
 class Item_Sword: public Item

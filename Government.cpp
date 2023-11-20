@@ -59,6 +59,8 @@ void Government_Leader::govern()
 	{
 		return;
 	}
+	
+	Settlement* s = government->governedSettlement;
 
 	if (empty())
 	{
@@ -72,13 +74,13 @@ void Government_Leader::govern()
 		std::cout<<"King is dead\n";
 	}
 
-	if (character->vIdea.size() > 0 && government->governedSettlement!=0)
+	if (character->vIdea.size() > 0 && s!=0)
 	{
 		for (int i=0;i<character->vIdea.size();++i)
 		{
-			if (!government->governedSettlement->hasIdea(character->vIdea(i)))
+			if (!s->hasIdea(character->vIdea(i)))
 			{
-				government->governedSettlement->giveIdea(character->vIdea(i));
+				s->giveIdea(character->vIdea(i));
 				std::cout<<"King has implemented an idea as a tech\n";
 				character->vIdea.removeSlot(i);
 				// limit 1 idea implemented per turn.
@@ -86,6 +88,28 @@ void Government_Leader::govern()
 			}
 		}
 	}
+	
+	
+	if (s != nullptr)
+	{
+		std::cout<<"King distribute money\n";
+		
+		if (s->resourceManager.getMoney() > 100 )
+		{
+			// distribute coins randomly
+			for (int i=0;i<30;++i)
+			{
+				Character* c = s->getRandomCharacter();
+				if (s->resourceManager.takeMoney(1))
+				{
+					c->giveMoney(1);
+				}
+			}
+			
+		}
+		
+	}
+	
 }
 
 // Government_Scribe definitions

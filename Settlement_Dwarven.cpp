@@ -5,6 +5,7 @@
 #include "Settlement_Dwarven.hpp"
 
 #include "ItemManager.hpp"
+#include "ItemRequest.cpp"
 
 Settlement_Dwarven::Settlement_Dwarven(): Settlement()
 {
@@ -67,6 +68,12 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 		// //stockpile.take(bestFarmingEquipment);
 	// }
 	
+	// If we don't have farming equipment, put in a request if possible.
+	if ( bestFarmingEquipment == nullptr )
+	{
+		requestManager.add(character,ITEM_HOE,character->getMoney());
+	}
+	
 	int farmingItemMult=1;
 	if ( bestFarmingEquipment != nullptr )
 	{
@@ -105,9 +112,58 @@ void Settlement_Dwarven::abstractMonthMine(Character* character)
 	character->skillUpMining();
 }
 
+bool Settlement_Dwarven::produceItem(ItemType type)
+{
+	if ( type == ITEM_HOE )
+	{
+		if ( resourceManager.canMake(Item_Hoe::getResourceRequirement()) )
+		{
+			Item_Hoe * hoe = new Item_Hoe();
+			stockpile.add(hoe);
+		}	
+	}
+	
+	return false;
+}
+
 void Settlement_Dwarven::abstractMonthProduction(Character* character)
 {
 	std::cout<<character->getFullName()<<": Production\n";
+	
+	auto mostValuableRequestOpt = requestManager.pullMostValuableRequest();
+	if (mostValuableRequestOpt)
+	{
+		// If there is a most valuable request
+		ItemRequest mostValuableRequest = *mostValuableRequestOpt;
+		// Process the most valuable request
+		std::cout << "Most valuable request value: " << mostValuableRequest.value << std::endl;
+		
+		if (produceItem(mostValuableRequest.type))
+		{
+			std::cout<<"Produced in-demand item.\n";
+			// recieve the coins promised
+		}
+	}
+	else
+	{
+		std::cout<<"Making coins\n";
+		
+		for (int i=0;i<30;++i)
+		{
+			if ( resourceManager.takeIron(1) )
+			{
+				// make coins
+				resourceManager.addMoney(10);
+			}
+			else
+			{
+				return;
+			}
+		}
+		
+		return;
+	}
+	
 	// Character spends a month in production
 	// produce an item
 	// item value is dependent on character stats and randomness.
@@ -310,32 +366,7 @@ Character* Settlement_Dwarven::getFarmer(Vector <Character*>* vExclude)
 	return currentBest;
 }
 
-Character* Settlement_Dwarven::getCharacter(Vector <Character*>* vExclude)
-{
-	Character* character = nullptr;
-	for (int i=0;i<vCharacter.size();++i)
-	{
-		character = vCharacter(i);
-		
-		// Check if the character is in the exclusion list
-		bool isExcluded = false;
-		for (int j = 0; j < vExclude->size(); ++j)
-		{
-			if ((*vExclude)(j) == character)
-			{
-				isExcluded = true;
-				break;
-			}
-		}
 
-		// If the character is not excluded and has a higher skillFarming, update the current best
-		if (!isExcluded)
-		{
-			return character;
-		}
-	}
-	return nullptr;
-}
 
 
 /* SIMULATE X TURNS OF THE SETTLEMENT. */
@@ -432,6 +463,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		
 		// POLITICS AND OTHER COMPLEX ACTIONS
 		// Includes exploration etc.
+		// Item bartering
 		
 		abstractMonthBiology();
 		abstractMonthSplit();

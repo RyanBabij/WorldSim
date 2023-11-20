@@ -16,6 +16,37 @@
 	
 */
 
+class ResourceRequirement
+{
+	public:
+		int minIron;
+		int minStone;
+
+		ResourceRequirement(int _minIron, int _minStone)
+		{
+			minIron=_minIron;
+			minStone=_minStone;
+		}
+		
+		void print ()
+		{
+			std::cout<<"minIron: "<<minIron<<". minStone: "<<minStone<<"\n";
+		}
+};
+
+class HasResourceRequirement
+{
+	public:
+	
+		HasResourceRequirement()
+		{
+		}
+		virtual ResourceRequirement getResourceRequirement()
+		{
+			return ResourceRequirement(0,0);
+		}
+};
+
 class ResourceManager
 {
 	private:
@@ -38,6 +69,7 @@ class ResourceManager
 		
 		// FOOD (Should probably be somewhere else)
 		int nFood;
+		int nMoney;
 	
 	public:
 	
@@ -61,6 +93,7 @@ class ResourceManager
 			nAdamantium=0;
 			
 			nFood=0;
+			nMoney=0;
 		}
 		
 		void addIron(int _iron)
@@ -75,6 +108,10 @@ class ResourceManager
 		{
 			nFood+=_food;
 		}
+		void addMoney(int _money)
+		{
+			nMoney+=_money;
+		}
 		
 		int getIron()
 		{
@@ -87,6 +124,10 @@ class ResourceManager
 		int getFood()
 		{
 			return nFood;
+		}
+		int getMoney()
+		{
+			return nMoney;
 		}
 		
 		bool takeIron(int _amount)
@@ -109,17 +150,32 @@ class ResourceManager
 			return false;
 		}
 		
+		bool takeMoney(int _amount)
+		{
+			if ( _amount <= nMoney )
+			{
+				nMoney-=_amount;
+				return true;
+			}
+			return false;
+		}
+		
+		bool canMake(const ResourceRequirement& requirement)
+		{
+			return nIron >= requirement.minIron && nStone >= requirement.minStone;
+		}
+
 		void print()
 		{
 			// Resource names for display
-			const std::string resources[] = { "Food", "Stone", "Iron", "Copper", "Gold", "Silver", "Gems", "Diamonds",
-			"Adamantine", "Coal", "Wood", "Magicka Crystal", "Steel", "Bronze", "Adamantium" };
+			const std::string resources[] = { "Money", "Food", "Stone", "Iron", "Copper", "Gold", "Silver", "Gems",
+			"Diamonds", "Adamantine", "Coal", "Wood", "Magicka Crystal", "Steel", "Bronze", "Adamantium" };
 
 			// Resource values for display
-			const int resourceValues[] = { nFood, nStone, nIron, nCopper, nGold, nSilver, nGems, nDiamonds, nAdamantine,
-			nCoal, nWood, nMagickaCrystal, nSteel, nBronze, nAdamantium };
+			const int resourceValues[] = { nMoney, nFood, nStone, nIron, nCopper, nGold, nSilver, nGems, nDiamonds,
+			nAdamantine, nCoal, nWood, nMagickaCrystal, nSteel, nBronze, nAdamantium };
 
-			const int totalResources = 15;  // Total number of resources
+			const int totalResources = 16;  // Total number of resources
 
 			for (int i = 0; i < totalResources; ++i)
 			{

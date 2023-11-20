@@ -272,6 +272,16 @@ void Character::giveItem(Item* _item)
 	//world(worldX,worldY)->vItem.push(_item);
 }
 
+void Character::giveMoney(int amount)
+{
+	money+=amount;
+}
+
+int Character::getMoney()
+{
+	return money;
+}
+
 void Character::takeItem(Item* _item)
 {
 	if (_item==nullptr)
