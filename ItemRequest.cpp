@@ -52,31 +52,26 @@ class ItemRequestManager
 	
 	void add(Character *requester, ItemType type, int value)
 	{
-		// Check if the requester already has a request for the same type
-		for (auto it = requests.begin(); it != requests.end(); )
+		// if ( value == 0 )
+		// {
+			// return;
+		// }
+		
+		// If the requester has enough money, add the new request
+		if (requester->takeMoney(value))
 		{
-			if (it->requester == requester && it->type == type)
+			// Check if the requester already has a request for the same type and remove them.
+			for (auto it = requests.begin(); it != requests.end(); )
 			{
-				// If the existing request has a lower value, erase it
-				if (it->value < value)
+				if (it->requester == requester && it->type == type)
 				{
 					requester->giveMoney(it->value);
 					std::cout<<"Money refunded from contract: "<<it->value<<"\n";
 					it = requests.erase(it); // Erase and move to the next element
 					continue;
 				}
-				else
-				{
-					// If the existing request has a higher or equal value, do not add the new request
-					return;
-				}
+				++it;
 			}
-			++it;
-		}
-
-		// If the requester has enough money, add the new request
-		if (requester->takeMoney(value))
-		{
 			requests.insert(ItemRequest(requester, type, value));
 		}
 	}
@@ -114,6 +109,15 @@ class ItemRequestManager
 			totalValue += request.value;
 		}
 		return totalValue;
+	}
+	int getNumContracts() const
+	{
+		int totalContracts = 0;
+		for (const auto& request : requests)
+		{
+			totalContracts++;
+		}
+		return totalContracts;
 	}
 
 

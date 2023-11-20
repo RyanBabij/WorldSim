@@ -48,8 +48,11 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 	{
 		if ( bestStockpileFarmingEquipment == nullptr ) // There's no farming equipment anywhere
 		{
-			std::cout<<"Request for hoe: "<<character->getMoney()<<"\n";
-			requestManager.add(character,ITEM_HOE,character->getMoney());
+			if ( character->getMoney() > 0 )
+			{
+				//std::cout<<"Request for hoe: "<<character->getMoney()<<"\n";
+				requestManager.add(character,ITEM_HOE,character->getMoney());
+			}
 		}
 		else // we don't have equipment but the stockpile does
 		{
@@ -167,7 +170,7 @@ void Settlement_Dwarven::payCharacter(Character* character, int amount)
 void Settlement_Dwarven::abstractMonthProduction(Character* character)
 {
 	std::cout<<character->getFullName()<<": Production. "<<character->getMoney()<<" money.\n";
-	std::cout<<"There are "<<requestManager.size()<<" requests.\n";
+	std::cout<<"There are "<<requestManager.getNumContracts()<<" requests.\n";
 	
 	auto mostValuableRequestOpt = requestManager.pullMostValuableRequest(false);
 	if (mostValuableRequestOpt)
