@@ -373,8 +373,8 @@ bool Settlement_Dwarven::abstractMonthProduction(Character* character)
 		info->creator = character;
 		info->locationMade = this;
 		info->quality = qualityLevel;
-		info->yearMade = world->calendar.year;
-		info->monthMade = world->calendar.month;
+		info->yearMade = globalCalendar.year;
+		info->monthMade = globalCalendar.month;
 		createdItem->information = info;
 		// engravings should be done seperately as it's a different skillset.
 		// Player should be able to pick the engraving if they are having it done.
@@ -531,7 +531,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 
 	while (monthlyCounter >= TICKS_PER_MONTH)
 	{
-		std::cout<<"\n*** Monthly tick: "<<world->calendar.toString()<<"\n\n";
+		std::cout<<"\n*** Monthly tick: "<<globalCalendar.toString()<<"\n\n";
 		technology.print();
 		
 		Vector <Character*> vMovedCharacters; // List of characters already acted.

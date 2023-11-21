@@ -128,7 +128,7 @@ void Character::init(const int _sex /* =0 */)
 
 	isSneaking=false;
 
-	dateOfBirth.set(&world.calendar);
+	dateOfBirth.set(&globalCalendar);
 
 	//knowledge = new Character_Knowledge;
 	//knowledge->init();
@@ -795,7 +795,7 @@ void Character::wander()
 void Character::die(enumCauseOfDeath _causeOfDeath /* =UNKNOWN */)
 {
 	isAlive = false;
-	dateOfDeath.set(&world.calendar);
+	dateOfDeath.set(&globalCalendar);
 	causeOfDeath = _causeOfDeath;
 
 	if ( tribe != 0 )
@@ -828,8 +828,8 @@ bool Character::marry(Character* c)
 		lastName = c->lastName;
 	}
 
-	dateOfMarriage.set(&world.calendar);
-	c->dateOfMarriage.set(&world.calendar);
+	dateOfMarriage.set(&globalCalendar);
+	c->dateOfMarriage.set(&globalCalendar);
 
 	// If the spouse is from a different tribe, move them to the new one.
 	if ( tribe != c->tribe )

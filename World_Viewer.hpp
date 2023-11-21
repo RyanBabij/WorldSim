@@ -848,11 +848,11 @@ class WorldViewer: public DisplayInterface, public MouseInterface
 								if ( lightValue < 127 ) { lightValue += 127; }
 								//unsigned char lightValue = 255;
 
-								int currentSecond = world->calendar.second;
+								int currentSecond = globalCalendar.second;
 								int sunsetCounter = currentSecond-50;
 
-								int currentMinute = world->calendar.minute;
-								int currentHour = world->calendar.hour;
+								int currentMinute = globalCalendar.minute;
+								int currentHour = globalCalendar.hour;
 
 								// This is a bad implementation. We should overlay a colour over the whole playfield instead.
 								glColor3ub(lightValue,lightValue,lightValue);

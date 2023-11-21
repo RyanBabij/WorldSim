@@ -776,7 +776,7 @@ class Menu_AdventureMode: public GUI_Interface
     
 		// DATE
 		//Renderer::placeColour4a(150,150,150,255,panelX2-208,panelY2-20,panelX2,panelY2-10);
-		std::string strDate = world.calendar.toString();
+		std::string strDate = globalCalendar.toString();
 		font8x8.drawText("DATE: "+strDate,panelX1,panelY1+235,panelX1+220,panelY1+245, true, true);
     
     //Draw hotbar

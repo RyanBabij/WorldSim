@@ -394,7 +394,7 @@ public:
 
 		// DATE
 		Renderer::placeColour4a(150,150,150,255,panelX2-208,panelY2-20,panelX2,panelY2-10);
-		std::string strDate = world.calendar.toString();
+		std::string strDate = globalCalendar.toString();
 		font8x8.drawText("DATE: "+strDate,panelX2-208,panelY2-20,panelX2,panelY2-10, false, true);
 
 		worldPop=0;

@@ -69,8 +69,7 @@ World::World(): SaveFileInterface(),/* mapManager(this),*/ seaLevel(0), mountain
 
 	isRaining=false;
 
-	calendar.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
-	calendar.secondsPerMinute = CALENDAR_SECONDS_PER_MINUTE;
+
 	
 	incrementContinuous=false;
 	
@@ -1023,7 +1022,7 @@ void World::incrementTicks(int nTicks)
 	dailyCounter+=nTicks;
 	monthlyCounter+=nTicks;
 
-	calendar.advanceSecond(nTicks);
+	globalCalendar.advanceSecond(nTicks);
 
 	for ( int i=0;i<vTribe.size();++i)
 	{
@@ -1263,12 +1262,12 @@ void World::idleTick()
 					HasXY * tXY = vAllTiles2(i);
 					if ( aWorldTile(tXY).active==false
 					&& aWorldTile(tXY).baseBiome != OCEAN
-					&& (aWorldTile(tXY).initialized==false || aWorldTile(tXY).localDate != calendar)
+					&& (aWorldTile(tXY).initialized==false || aWorldTile(tXY).localDate != globalCalendar)
 					)
 					{
 						generateLocal(tXY);
 						// Update and sync
-						aWorldTile(tXY).localDate.set(&calendar);
+						aWorldTile(tXY).localDate.set(&globalCalendar);
 						RENDER_NEXT_FRAME=true;
 						NO_BACKLOG=false;
 						return;

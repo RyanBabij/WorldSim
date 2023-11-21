@@ -16,6 +16,10 @@ Initialize main menus, start timers, initialise any important data.
 void init()
 {
 	std::cout<<"\n*** INIT ***\n";
+	
+	globalCalendar.set(0,0,0,CALENDAR_INITIAL_HOUR,CALENDAR_INITIAL_MINUTE,0);
+	globalCalendar.configure(SECONDS_PER_MINUTE,MINUTES_PER_HOUR,HOURS_PER_DAY,DAYS_PER_MONTH,MONTHS_PER_YEAR);
+
 	SEEDER.seed(time(NULL));
 	Random::seed();
 	globalRandom.seed(SEEDER);

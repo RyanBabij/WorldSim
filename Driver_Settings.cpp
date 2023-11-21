@@ -70,7 +70,9 @@ const unsigned short int MAX_CORES = 4; // The number of cores will never exceed
 
 std::string currentSavePath = "";
 
-#define SAVE_DATA // Program will save data to file. It saves a lot of data and it can end up taking up a lot of space, not good for your SSD.
+// Program will save data to file. It saves a lot of data and it can end up taking up a lot of space,
+// not good for your SSD.
+#define SAVE_DATA
 
 //     WINDOW        ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -108,7 +110,8 @@ Item * inventoryGrid [10][10];
 
 // MAIN MENU ENUMS
 enum enumMenu
-{ MENU_UNKNOWN, MENU_TITLE, MENU_OPTIONS, MENU_LOADGAME, MENU_WORLDGENERATOR, MENU_WORLDSIMULATOR, MENU_ADVENTUREMODE };
+{ MENU_UNKNOWN, MENU_TITLE, MENU_OPTIONS, MENU_LOADGAME, MENU_WORLDGENERATOR, MENU_WORLDSIMULATOR,
+	MENU_ADVENTUREMODE };
 // Should be MENU_TITLE but I'm bypassing it for now because the main menu has no function atm.
 enumMenu activeMenu = MENU_WORLDGENERATOR;
 
@@ -133,7 +136,7 @@ enum enumJob
 };
 
 
-//DEBUG SETTINGS
+//DEBUG SETTINGS ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool FOG_OF_WAR = true; // Enable/disable fog rendering
 bool QUICKSTART_GENERATOR = true; // Skip menu stuff and immediately generate a default world.
@@ -144,7 +147,7 @@ const bool ENABLE_BACKGROUND_SIMULATION = false; /* Can cause choppy performance
 int worldPop = 0;
 int lastline = 0;
 
-// DEFAULT WORLD SETTINGS
+// DEFAULT WORLD SETTINGS //////////////////////////////////////////////////////////////////////////////////////////////
 
 const int QUICKSTART_WORLD_SIZE = 129; /* Please set to (power of 2)+1. */
 long long int INITIAL_YEARS_SIMULATE = 0;
@@ -160,10 +163,6 @@ const int DEFAULT_NUMBER_CIVS = 0;
 const int STARTING_TRIBE_SIZE_HUMAN = 1;
 const int STARTING_TRIBE_SIZE_DWARVEN = 20;
 const int STARTING_TRIBE_SIZE_ELVEN = 1;
-
-
-
-// SCALING
 
 /* Size of each local map in tiles. Size is LOCAL_MAP_SIZE * LOCAL_MAP_SIZE.
 Should be (n^2+1).
@@ -181,25 +180,36 @@ Right now I'm thinking 1025 might be a good balanced value, making each local ma
 // 1,025 might make travelling too boring.
 const int LOCAL_MAP_SIZE = 257;
 
-	// The main time scale variable, this determines how many seconds pass per logic tick
-	// This does not alter how many seconds in a minute, only how quickly the world simulates.
+
+// TIME SCALING ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Used to determine simulation speed.
 int TIME_SCALE = 0; /* How many seconds of gametime pass per logic tick. */
 
-	// How many seconds pass per standard game turn. Realtime will be 60.
-	// Realistically it'll probably end up around 10-20.
-	// This should be the main and only way of timescaling the game.
-	// Another option is reducing the number of hours in the day, we could even make a single hour correspond to a time
-	// of day: hour 1 = dawn, hour 2 = morning, etc. And could make night 1 hour.
-	// Dawn, morning, day, afternoon, dusk, night.
-	// we could also shorten years to 4 seasons.
-int DAYS_PER_MONTH = 28;
-const int DAYS_PER_YEAR = DAYS_PER_MONTH*12;
+/*
+	How many seconds pass per standard game turn. Realtime will be 60.
+	One option is 1 second per minute, which some games go with.
+	Each month is 24 days because it breaks it up neatly into 4 weeks
+	Each year is 4 months, one month for each season. This way the player can reasonably expect to experience
+	the seasons without it dragging on too long.
+	Another option is reducing the number of hours in the day, we could even make a single hour correspond to a time
+	of day: hour 1 = dawn, hour 2 = morning, etc. And could make night 1 hour.
+	Dawn, morning, day, afternoon, dusk, night.
+*/
+const int SECONDS_PER_MINUTE = 1;
+const int MINUTES_PER_HOUR = 60;
+const int HOURS_PER_DAY = 24;
+const int DAYS_PER_MONTH = 28;
+const int MONTHS_PER_YEAR = 4;
+const int DAYS_PER_YEAR = DAYS_PER_MONTH*MONTHS_PER_YEAR;
+
+
 	
-int TICKS_PER_MINUTE = 1;
-const int TICKS_PER_HOUR = TICKS_PER_MINUTE*60;
-const int TICKS_PER_DAY = TICKS_PER_HOUR*24;
-const int TICKS_PER_MONTH = TICKS_PER_DAY*DAYS_PER_MONTH; // 4 weeks of 7 days each is neatest and best for gameplay I think.
-const int TICKS_PER_YEAR = TICKS_PER_MONTH*4; // yes there's 360 days per year in this game.
+int TICKS_PER_MINUTE = SECONDS_PER_MINUTE;
+const int TICKS_PER_HOUR = TICKS_PER_MINUTE*MINUTES_PER_HOUR;
+const int TICKS_PER_DAY = TICKS_PER_HOUR*HOURS_PER_DAY;
+const int TICKS_PER_MONTH = TICKS_PER_DAY*DAYS_PER_MONTH;
+const int TICKS_PER_YEAR = TICKS_PER_MONTH*MONTHS_PER_YEAR;
 
 /* Calendar setting when new game is started. */
 const int CALENDAR_INITIAL_HOUR = 8;
@@ -207,7 +217,7 @@ const int CALENDAR_INITIAL_MINUTE = 0;
 /* Determines speed of day/night cycle and other time scaling */
 /* In future there might just be some time speed multiplier */
 /* Or less hours in a day */
-const int CALENDAR_SECONDS_PER_MINUTE = TICKS_PER_MINUTE;
+//const int CALENDAR_SECONDS_PER_MINUTE = TICKS_PER_MINUTE;
 
 // Timescale should be based on distances between cells.
 // At 1:1 scale a cell is 5km*5km. Such a cell should take about 1 hour to walk across.
@@ -288,12 +298,7 @@ bool HOTKEYS_ENABLED = true;
 
 bool CLEAN_SAVES_ON_EXIT = true;
 
-
-
-
 bool NO_BACKLOG=false;
-
-
 
 // GLOBAL FLAGS
 
