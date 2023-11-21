@@ -351,20 +351,40 @@ bool Character::hasItemType(ItemType type)
 	return false;
 }
 
-Item* Character::getBestFarmingEquipment()
+Item* Character::getBestItemFor(enumJob job)
 {
-	Item* bestItem = nullptr;
-	int bestFarmingValue = -1;
-	
-	for (int i=0;i<vInventory.size();++i)
+	if ( job == JOB_FARMING )
 	{
-		if ( vInventory(i)->farmingValue > bestFarmingValue)
+		Item* bestItem = nullptr;
+		int bestFarmingValue = -1;
+		
+		for (int i=0;i<vInventory.size();++i)
 		{
-			bestItem=vInventory(i);
-			bestFarmingValue = bestItem->farmingValue;
+			if ( vInventory(i)->farmingValue > bestFarmingValue)
+			{
+				bestItem=vInventory(i);
+				bestFarmingValue = bestItem->farmingValue;
+			}
 		}
+		return bestItem;
 	}
-	return bestItem;
+	else if ( job == JOB_MINING )
+	{
+		Item* bestItem = nullptr;
+		int bestMiningValue = -1;
+		
+		for (int i=0;i<vInventory.size();++i)
+		{
+			if ( vInventory(i)->miningValue > bestMiningValue)
+			{
+				bestItem=vInventory(i);
+				bestMiningValue = bestItem->miningValue;
+			}
+		}
+		return bestItem;
+	}
+	
+	return nullptr;
 }
 
 std::string Character::getFullName() const

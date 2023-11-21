@@ -85,6 +85,7 @@ class Item: public WorldObject, public TableInterface /* HasResourceRequirement 
 		ItemType type; /* The type of item. */
 
 		unsigned char farmingValue; /* How well this works as a farming implement. 0 = not possible */
+		unsigned char miningValue; /* How well this works as a mining implement. 0 = not possible */
 
 		short int meleeDamage; /* Base damage if you hit someone with this. 0 = not possible. */
 		short int throwDamage; /* Base damage if you throw this at someone. 0 = not possible */
@@ -264,7 +265,7 @@ class Item_Hand: public Item
 {
 	public:
 
-		Item_Hand()
+		Item_Hand(): Item()
 		{ }
 		std::string getName() override { return "Hand"; }
 
@@ -296,6 +297,7 @@ class Item_Hoe: public Item
 		{
 			reach=1;
 			farmingValue=1;
+			miningValue=0;
 			type=ITEM_HOE;
 		}
 		std::string getName() override { return "Hoe"; }
@@ -396,7 +398,7 @@ class Item_Knife: public Item
 {
 	public:
 
-		Item_Knife()
+		Item_Knife(): Item()
 		{ }
 		std::string getName() { return "Knife"; }
 
@@ -418,7 +420,7 @@ class Item_Knife: public Item
 class Item_Longbow: public Item
 {
 	public:
-		Item_Longbow()
+		Item_Longbow(): Item()
 		{ }
 		std::string getName() override { return "Longbow"; }
 
@@ -435,8 +437,12 @@ class Item_Pickaxe: public Item
 {
 	public:
 
-		Item_Pickaxe()
-		{ }
+		Item_Pickaxe(): Item()
+		{
+			farmingValue=0;
+			miningValue=1;
+			
+		}
 		std::string getName() override { return "Pickaxe"; }
 
 

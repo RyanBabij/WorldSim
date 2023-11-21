@@ -121,6 +121,18 @@ enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
 // BASE TERRAIN ENUM (I DON'T KNOW IF THIS IS BEING USED)
 enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
 
+enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, MASSACRE=2, COMBAT=3, OLD_AGE=4, SMITED=5 };
+const std::string enumCauseOfDeathStr [5] = { "unknown", "starvation", "massacre", "combat", "old age" };
+
+enum enumJob
+{
+	JOB_UNKNOWN=0,
+	JOB_FARMING=1,
+	JOB_MINING=2,
+	JOB_PRODUCTION=3
+};
+
+
 //DEBUG SETTINGS
 
 bool FOG_OF_WAR = true; // Enable/disable fog rendering

@@ -21,6 +21,7 @@ Item::Item()
 	ammunitionType = 0;
 
 	farmingValue = 0;
+	miningValue = 0;
 
 	reach = 0;
 

@@ -39,10 +39,10 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 	// Check if we can borrow a hoe if we don't own one.
 	
 	//Item* usedItem = 0;
-	Item* bestFarmingEquipment = character->getBestFarmingEquipment();
+	Item* bestFarmingEquipment = character->getBestItemFor(JOB_FARMING);
 	
 	// // get best farming equipment from stockpile and compare
-	Item* bestStockpileFarmingEquipment = stockpile.getBestFarmingEquipment();
+	Item* bestStockpileFarmingEquipment = stockpile.getBestItemFor(JOB_FARMING);
 	
 	if ( bestFarmingEquipment == nullptr )
 	{
@@ -97,7 +97,7 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 		// requestManager.add(character,ITEM_HOE,character->getMoney());
 	// }
 	
-	Item* farmingEquipment = character->getBestFarmingEquipment();
+	Item* farmingEquipment = character->getBestItemFor(JOB_FARMING);
 	
 	int farmingItemMult=1;
 	if ( farmingEquipment != nullptr )
@@ -123,6 +123,57 @@ void Settlement_Dwarven::abstractMonthMine(Character* character)
 {
 	std::cout<<character->getFullName()<<": Mining. "<<character->getMoney()<<" money.\n";
 	// Character works in the mines for the month
+	
+	
+	
+	// Check if we can borrow a hoe if we don't own one.
+	
+	//Item* usedItem = 0;
+	Item* bestMiningEquipment = character->getBestItemFor(JOB_MINING);
+	
+	// // get best farming equipment from stockpile and compare
+	Item* bestStockpileMiningEquipment = stockpile.getBestItemFor(JOB_MINING);
+	
+	if ( bestMiningEquipment == nullptr )
+	{
+		if ( bestStockpileMiningEquipment == nullptr ) // There's no farming equipment anywhere
+		{
+			if ( character->getMoney() > 0 )
+			{
+				
+				
+				int marketValue = requestManager.getAverageValue(ITEM_HOE) + 1;
+				
+				int amountCanPay = character->getMoney();
+				if (marketValue < amountCanPay)
+				{
+					amountCanPay = marketValue;
+				}
+				
+				requestManager.removeAll(character,ITEM_HOE);
+				requestManager.add(character,ITEM_HOE,marketValue);
+				
+				std::cout<<"Request for hoe at price of "<<amountCanPay<<".\n";
+			}
+		}
+		else // we don't have equipment but the stockpile does
+		{
+			stockpile.take(bestStockpileMiningEquipment);
+			character->giveItem(bestStockpileMiningEquipment);
+		}
+	}
+	else // we have equipment and the stockpile does too
+	{
+		if (bestStockpileMiningEquipment != nullptr &&
+			bestStockpileMiningEquipment->farmingValue > bestMiningEquipment->farmingValue )
+			{
+				// equip item from stockpile.
+				//bestMiningEquipment = bestStockpileMiningEquipment;
+				stockpile.take(bestStockpileMiningEquipment);
+				character->giveItem(bestStockpileMiningEquipment);
+			}
+	}
+	
 	
 	int maxPersonalOutput = 14+character->skillMining;
 	if (maxPersonalOutput > 28)
