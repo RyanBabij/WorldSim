@@ -4,8 +4,8 @@
 
 /* Item.hpp
 	#include"Item.hpp"
-  
-  Implementation of Item.hpp
+
+	Implementation of Item.hpp
 */
 
 #include "Item.hpp"
@@ -13,23 +13,23 @@
 Item::Item()
 {
 	information=0;
-	
-  count = 0;
-  type = ITEM_NONE;
-  meleeDamage = 0;
-  throwDamage = 0;
-  ammunitionType = 0;
-  
-  farmingValue = 0;
-  
-  reach = 0;
-  
-  owner = 0;
-  
-  consumeTime=-1;
-  hungerRestore=-1;
-  
-  canCook=false;
+
+	count = 0;
+	type = ITEM_NONE;
+	meleeDamage = 0;
+	throwDamage = 0;
+	ammunitionType = 0;
+
+	farmingValue = 0;
+
+	reach = 0;
+
+	owner = 0;
+
+	consumeTime=-1;
+	hungerRestore=-1;
+
+	canCook=false;
 }
 Item::~Item() {}
 
@@ -41,15 +41,13 @@ Texture* Item::currentTexture() { return 0; }
 
 void Item::addToRecipeManager()
 {
-  recipeManager.addToRecipes(this);
+	recipeManager.addToRecipes(this);
 }
 
 std::string Item::getSaveData()
 {
-  std::string saveData = getName();
-  
-
-  return saveData;
+	std::string saveData = getName();
+	return saveData;
 }
 void Item::loadData(std::string _saveData)
 {
