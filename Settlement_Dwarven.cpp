@@ -50,8 +50,20 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 		{
 			if ( character->getMoney() > 0 )
 			{
-				//std::cout<<"Request for hoe: "<<character->getMoney()<<"\n";
-				requestManager.add(character,ITEM_HOE,character->getMoney());
+				
+				
+				int marketValue = requestManager.getAverageValue(ITEM_HOE) + 1;
+				
+				int amountCanPay = character->getMoney();
+				if (marketValue < amountCanPay)
+				{
+					amountCanPay = marketValue;
+				}
+				
+				requestManager.removeAll(character,ITEM_HOE);
+				requestManager.add(character,ITEM_HOE,marketValue);
+				
+				std::cout<<"Request for hoe at price of "<<amountCanPay<<".\n";
 			}
 		}
 		else // we don't have equipment but the stockpile does
@@ -104,7 +116,7 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 	resourceManager.addFood(globalRandom.rand(maxTotalOutput));
 	
 	character->skillUpFarming();
-	
+	payCharacterFromTreasury(character,1);
 
 }
 void Settlement_Dwarven::abstractMonthMine(Character* character)
@@ -123,6 +135,7 @@ void Settlement_Dwarven::abstractMonthMine(Character* character)
 	resourceManager.addIron(globalRandom.rand(maxTotalOutput/2));
 	
 	character->skillUpMining();
+	payCharacterFromTreasury(character,1);
 }
 
 bool Settlement_Dwarven::produceItem(ItemType type)
@@ -131,6 +144,8 @@ bool Settlement_Dwarven::produceItem(ItemType type)
 	{
 		if ( resourceManager.canMake(Item_Hoe::getResourceRequirement()) )
 		{
+			resourceManager.deductResources(Item_Hoe::getResourceRequirement());
+			
 			Item_Hoe * hoe = new Item_Hoe();
 			stockpile.add(hoe);
 			return true;
@@ -146,59 +161,67 @@ void Settlement_Dwarven::payCharacter(Character* character, int amount)
 	
 	int moneyToReceive = amount;
 
-	if (moneyToReceive > 5)
+	if (moneyToReceive > 3)
 	{
-		// Calculate 50% of the money, rounding down for the character's share
-		int halfMoney = moneyToReceive / 2;
+		// Calculate 75% of the money, rounding down for the character's share
+		int characterMoney = moneyToReceive * 0.75;
 
-		// Give 50% to the character
-		character->giveMoney(halfMoney);
+		// Give 75% to the character
+		character->giveMoney(characterMoney);
 
 		// The remaining amount is for tax. This includes the extra coin in case of an odd number
-		int taxAmount = moneyToReceive - halfMoney;
+		int taxAmount = moneyToReceive - characterMoney;
 
-		// Assuming there's a function addToTaxFund(int amount) to handle the tax part
+		// Pay the 25% tax
 		resourceManager.addMoney(taxAmount);
 	}
 	else
 	{
-		// If 5 or less, give all to the character without tax
+		// If 3 or less, give all to the character without tax
 		character->giveMoney(moneyToReceive);
 	}
 }
 
-void Settlement_Dwarven::abstractMonthProduction(Character* character)
+void Settlement_Dwarven::payCharacterFromTreasury(Character* character, int amount)
 {
-	std::cout<<character->getFullName()<<": Production. "<<character->getMoney()<<" money.\n";
-	std::cout<<"There are "<<requestManager.getNumContracts()<<" requests.\n";
-	
+	int amountToGive = resourceManager.takeMoneyUpTo(amount);
+	character->giveMoney(amountToGive);
+}
+
+bool Settlement_Dwarven::abstractMonthProduction(Character* character)
+{
 	auto mostValuableRequestOpt = requestManager.pullMostValuableRequest(false);
 	if (mostValuableRequestOpt)
 	{
 		// If there is a most valuable request
 		ItemRequest mostValuableRequest = *mostValuableRequestOpt;
 		// Process the most valuable request
-		std::cout << "Most valuable request value: " << mostValuableRequest.value << std::endl;
+		//std::cout << "Most valuable request value: " << mostValuableRequest.value << std::endl;
 		
 		if (produceItem(mostValuableRequest.type))
 		{
-			std::cout<<"Produced in-demand item.\n";
+			std::cout<<character->getFullName()<<": Producing item. "<<character->getMoney()<<" money.\n";
+			std::cout<<"There are "<<requestManager.getNumContracts()<<" contracts.\n";
 			// recieve the coins promised
 			
 			int moneyToRecieve = mostValuableRequest.value;
 			
 			payCharacter(character, mostValuableRequest.value);
+			return true;
 		}
 		else // Couldn't make the item, put the request back through.
 		{
+			// Recursive try to make something else.
+			abstractMonthProduction(character);
+			
 			mostValuableRequest.requester->giveMoney(mostValuableRequest.value);
 			requestManager.add(mostValuableRequest.requester,mostValuableRequest.type, mostValuableRequest.value);
 			std::cout<<"Something messed up\n";
 		}
 	}
-	else
+	else if (getMoneyPercentInTreasury() < 0.25 || getAverageCharacterWealth() < 100 )
 	{
-		std::cout<<"Making coins\n";
+		std::cout<<character->getFullName()<<": Producing coins. "<<character->getMoney()<<" money.\n";
 		
 		for (int i=0;i<10;++i)
 		{
@@ -207,14 +230,19 @@ void Settlement_Dwarven::abstractMonthProduction(Character* character)
 				// make coins
 				resourceManager.addMoney(10);
 			}
+			else if (i == 0) // couldn't make any coins.
+			{
+				return false;
+			}
 			else
 			{
-				return;
+				return true;
 			}
 		}
-		
-		return;
+		return true;
 	}
+	
+	return false;
 	
 	// Character spends a month in production
 	// produce an item
@@ -379,6 +407,11 @@ bool Settlement_Dwarven::miningNeeded() // True if any more mining resources are
 	return false;
 }
 
+bool Settlement_Dwarven::coinsNeeded() // True if any more coins are required for the treasury
+{
+	return false;
+}
+
 bool Settlement_Dwarven::farmingEquipmentNeeded()
 {
 	int nFarmingEquipment = stockpile.getNumOfType(ITEM_HOE);
@@ -481,26 +514,20 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			}
 			else
 			{
+				actingCharacter = getCharacter(&vMovedCharacters);
 				resourceManager.takeFood(28);
 				// MINING
 				if ( miningNeeded() )
 				{
-					actingCharacter = getCharacter(&vMovedCharacters);
-					resourceManager.takeFood(28);
 					abstractMonthMine(actingCharacter);
 				}
 				// PRODUCTION
-				else if (globalRandom.flip())
+				else if (abstractMonthProduction(actingCharacter))
 				{
-					actingCharacter = getCharacter(&vMovedCharacters);
-					resourceManager.takeFood(28);
-					abstractMonthProduction(actingCharacter);
 				}
 				// RESEARCH
 				else
 				{
-					actingCharacter = getCharacter(&vMovedCharacters);
-					resourceManager.takeFood(28);
 					abstractMonthResearch(actingCharacter);
 				}
 			}
@@ -519,7 +546,6 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		
 		abstractMonthBiology();
 		abstractMonthSplit();
-		std::cout<<"End of month resources:\n";
 		resourceManager.print();
 		stockpile.print();
 		printAllMoneyInSettlement();

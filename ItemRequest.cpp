@@ -66,13 +66,29 @@ class ItemRequestManager
 				if (it->requester == requester && it->type == type)
 				{
 					requester->giveMoney(it->value);
-					std::cout<<"Money refunded from contract: "<<it->value<<"\n";
+					//std::cout<<"Money refunded from contract: "<<it->value<<"\n";
 					it = requests.erase(it); // Erase and move to the next element
 					continue;
 				}
 				++it;
 			}
 			requests.insert(ItemRequest(requester, type, value));
+		}
+	}
+	
+	void removeAll(Character* requester, ItemType type)
+	{
+		// Remove requests of type and refund
+		for (auto it = requests.begin(); it != requests.end(); )
+		{
+			if (it->requester == requester && it->type == type)
+			{
+				requester->giveMoney(it->value);
+				//std::cout<<"Money refunded from contract: "<<it->value<<"\n";
+				it = requests.erase(it); // Erase and move to the next element
+				continue;
+			}
+			++it;
 		}
 	}
 
@@ -100,6 +116,29 @@ class ItemRequestManager
 
 		return std::nullopt; // Return an empty optional if no suitable request is found
 	}
+		
+	double getAverageValue(ItemType type) const
+	{
+		int totalValue = 0;
+		int count = 0;
+
+		for (const auto& request : requests)
+		{
+			if (request.type == type)
+			{
+				totalValue += request.value;
+				++count;
+			}
+		}
+
+		if (count == 0)
+		{
+			return 0.0; // Return 0 if there are no requests of the specified type
+		}
+
+		return static_cast<double>(totalValue) / count;
+	}
+
 
 	int getTotalValue() const
 	{

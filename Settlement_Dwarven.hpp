@@ -17,7 +17,7 @@ class Settlement_Dwarven: public Settlement
 		
 		void abstractMonthFood(Character* character);
 		void abstractMonthMine(Character* character);
-		void abstractMonthProduction(Character* character);
+		bool abstractMonthProduction(Character* character);
 		void abstractMonthResearch(Character* character);
 		void abstractMonthSocial(Character* character);
 		void abstractMonthSplit(); // Settlement split
@@ -29,10 +29,12 @@ class Settlement_Dwarven: public Settlement
 		bool miningNeeded(); // True if any more mining resources are required.
 		
 		bool farmingEquipmentNeeded();
+		bool coinsNeeded();
 		
 		bool produceItem(ItemType type);
 		
 		void payCharacter(Character* character, int amount);
+		void payCharacterFromTreasury(Character* character, int amount);
 
 		// WorldObjectGlobal virtual.
 		Texture* currentTexture();

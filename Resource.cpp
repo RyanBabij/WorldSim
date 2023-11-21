@@ -160,10 +160,35 @@ class ResourceManager
 			return false;
 		}
 		
+		int takeMoneyUpTo(int _amount)
+		{
+			if ( _amount <= nMoney )
+			{
+				nMoney-=_amount;
+				return _amount;
+			}
+			int amountCanTake = nMoney;
+			nMoney=0;
+			return amountCanTake;
+		}
+		
+		
 		bool canMake(const ResourceRequirement& requirement)
 		{
 			return nIron >= requirement.minIron && nStone >= requirement.minStone;
 		}
+		
+		bool deductResources(const ResourceRequirement& requirement)
+		{
+			if (canMake(requirement))
+			{
+				nIron -= requirement.minIron;
+				nStone -= requirement.minStone;
+				return true;
+			}
+			return false;
+		}
+
 
 		void print()
 		{

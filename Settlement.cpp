@@ -46,20 +46,42 @@ void Settlement::printAllMoneyInSettlement()
 	
 	int totalMoney=resourceManager.getMoney()+characterMoney+requestManager.getTotalValue();
 	
-	std::cout<<"All money: "<<resourceManager.getMoney()<<" treasury. "<<characterMoney<<" held by citizens. "
-	<<requestManager.getTotalValue()<<" in contracts. "<<totalMoney<<" total.\n";
+	std::cout<<"Treasury $"<<resourceManager.getMoney()<<". Cash $"<<characterMoney<<" Contracts $"
+	<<requestManager.getTotalValue()<<". Total $"<<totalMoney<<".\n"
+	<<"Avg wealth: $"<<(int)getAverageCharacterWealth()<<". "
+	<<"% in treasury: "<<getMoneyPercentInTreasury()<<".\n";
 }
 
 int Settlement::getAllMoneyInSettlement()
 {
-	int totalMoney = 0;
-	for (int i=0;i<vCharacter.size();++i)
+	// Sum up the money from the resource manager and request manager
+	int totalMoney = resourceManager.getMoney() + requestManager.getTotalValue();
+
+	// Add the money from each character
+	for (auto& character : vCharacter)
 	{
-		totalMoney+=vCharacter(i)->getMoney();
+		totalMoney += character->getMoney();
 	}
-	
-	totalMoney+=resourceManager.getMoney()+requestManager.getTotalValue();
+
 	return totalMoney;
+}
+
+double Settlement::getMoneyPercentInTreasury()
+{
+	int totalMoney = getAllMoneyInSettlement();
+	if (totalMoney == 0)
+	{
+		return 0.0;
+	}
+
+	// Calculate the percentage of money in the treasury
+	return static_cast<double>(resourceManager.getMoney()) / totalMoney;
+}
+
+double Settlement::getAverageCharacterWealth()
+{
+	double characterWealth = getAllMoneyInSettlement() - resourceManager.getMoney();
+	return characterWealth / vCharacter.size();
 }
 
 Character* Settlement::getCharacter(Vector <Character*>* vExclude)

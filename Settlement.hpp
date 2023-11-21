@@ -69,6 +69,8 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		
 		void printAllMoneyInSettlement(); // Including Character money
 		int getAllMoneyInSettlement(); // Including Character money
+		double getMoneyPercentInTreasury();
+		double getAverageCharacterWealth();
 				
 		/* SIMULATE X TURNS OF THE SETTLEMENT. */
 		virtual void incrementTicks ( int /* nTicks */ );

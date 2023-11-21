@@ -100,8 +100,8 @@ void Government_Leader::govern()
 		int treasuryMoney = s->resourceManager.getMoney();
 		int totalSettlementMoney = s->getAllMoneyInSettlement();
 
-		// Check if the treasury holds more than 10% of total money in the settlement
-		if (static_cast<double>(treasuryMoney) / totalSettlementMoney > 0.1)
+		// Check if the treasury holds more than 20% of total money in the settlement
+		if (static_cast<double>(treasuryMoney) / totalSettlementMoney > 0.2)
 		{
 			// Calculate the amount to distribute (e.g., 10% of the treasury money)
 			int amountToDistribute = treasuryMoney * 0.1;
