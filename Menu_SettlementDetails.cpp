@@ -9,6 +9,7 @@
 */
 
 #include "Menu_CharacterDetails.cpp"
+#include "Menu_Settlement_Stockpile.cpp"
 
 #include <Graphics/GUI/GUI_Table.hpp>
 #include <Container/Table/Table.hpp>
@@ -21,6 +22,7 @@ class Menu_SettlementDetails: public GUI_Interface
 	// So we can open character details if player clicks a Character link. Temporary until I can implement a
 	// MenuManager
 	Menu_CharacterDetails* menuCharacterDetails;
+	Menu_Settlement_Stockpile menuSettlementStockpile;
 	
 	/* Colours / theme. */
 	ColourRGB <unsigned char> cNormal;
@@ -31,7 +33,7 @@ class Menu_SettlementDetails: public GUI_Interface
 	Wildcat::Font* font;
 	
 	GUI_Button buttonClose;
-
+	GUI_Button buttonViewStockPile;
 	// GUI_Button buttonFavourite;
 	// GUI_Button buttonPossess;
 
@@ -59,6 +61,7 @@ class Menu_SettlementDetails: public GUI_Interface
 	{
 		font = _font;
 		guiManager.setFont(_font);
+		menuSettlementStockpile.setFont(_font);
 	}
   
 
@@ -84,6 +87,10 @@ class Menu_SettlementDetails: public GUI_Interface
 		buttonClose.text="X";
 		buttonClose.setColours(cNormal,cHighlight,0);
 		buttonClose.active=true;
+		
+		buttonViewStockPile.text="View stockpile";
+		buttonViewStockPile.setColours(cNormal,cHighlight,0);
+		buttonViewStockPile.active=true;
 
 		guiManager.clear();
 		
@@ -99,6 +106,7 @@ class Menu_SettlementDetails: public GUI_Interface
 		// }
 
 		guiManager.add(&buttonClose);
+		guiManager.add(&buttonViewStockPile);
 		// guiManager.add(&buttonFavourite);
 		// guiManager.add(&buttonPossess);
 		guiManager.add(&textLeaderLink);
@@ -109,14 +117,23 @@ class Menu_SettlementDetails: public GUI_Interface
 
 		guiManager.setFont(font);
 	
+	
+		menuSettlementStockpile.init();
+		menuSettlementStockpile.active=false;
+
 		eventResize();
+		menuSettlementStockpile.eventResize();
 	}
 	
 	void render()
 	{
 		if (selectedSettlement==0) { return; }
 		
-		if ( active )
+		if ( menuSettlementStockpile.active )
+		{
+			menuSettlementStockpile.render();
+		}
+		else if ( active )
 		{
 			Renderer::placeColour4a(150,150,150,220,panelX1,panelY1,panelX2,panelY2);
 			font8x8.drawText("Settlement details",panelX1,panelY2-20,panelX2,panelY2-5, true, true);
@@ -200,7 +217,11 @@ class Menu_SettlementDetails: public GUI_Interface
 
 	bool keyboardEvent (Keyboard* _keyboard)
 	{
-		if ( active )
+		if ( menuSettlementStockpile.active )
+		{
+			return menuSettlementStockpile.keyboardEvent(_keyboard);
+		}
+		else if ( active )
 		{
 			return guiManager.keyboardEvent(_keyboard);
 		}
@@ -209,7 +230,11 @@ class Menu_SettlementDetails: public GUI_Interface
 
 	bool mouseEvent (Mouse* _mouse)
 	{
-		if ( active )
+		if ( menuSettlementStockpile.active )
+		{
+			menuSettlementStockpile.mouseEvent(_mouse);
+		}
+		else if ( active )
 		{
 				/* If the guiManager did something with the mouse event. */
 			if(guiManager.mouseEvent(_mouse)==true)
@@ -221,6 +246,24 @@ class Menu_SettlementDetails: public GUI_Interface
 			{
 				active=false;
 				buttonClose.unclick();
+			}
+			
+			if  (buttonViewStockPile.clicked==true)
+			{
+				if ( selectedSettlement != 0 )
+				{
+					std::cout<<"Settlement stockpile details\n";
+					//active=false;
+					menuSettlementStockpile.selectedSettlement=selectedSettlement;
+					menuSettlementStockpile.init(selectedSettlement);
+					menuSettlementStockpile.active=true;
+				}
+				else
+				{
+					std::cout<<"Select a civ first.\n";
+				}
+
+				buttonViewStockPile.unclick();
 			}
 			
 			if (textLeaderLink.clicked==true)
@@ -281,6 +324,11 @@ class Menu_SettlementDetails: public GUI_Interface
 	void eventResize()
 	{
 		buttonClose.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
+		//buttonViewStockPile.setPanel(panelX2-40, panelY2-40, panelX2-20, panelY2-20);
+		buttonViewStockPile.setPanel(panelX2-140, panelY1+40, panelX2-20, panelY1+20);
+		
+		menuSettlementStockpile.setPanel(panelX1,panelY1,panelX2,panelY2);
+		menuSettlementStockpile.eventResize();
 	}
 	
 };

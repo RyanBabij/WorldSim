@@ -312,13 +312,34 @@ class Item_Hoe: public Item
 		Texture* currentTexture() override
 		{ return &TEX_ITEM_SWORD; }
 
-		// virtual ResourceRequirement getResourceRequirement() override
-		// {
-		// return ResourceRequirement(1,0);
-		// }
-
 		/* virtual */ static ResourceRequirement getResourceRequirement()
 		{ return ResourceRequirement(1,0); }
+		
+		/* TABLE INTERFACE */
+		std::string getColumn(std::string _column) override
+		{
+			if ( _column=="name" )
+			{
+				return "hoe";
+			}
+			else if ( _column=="type" )
+			{
+				return "hoe";
+			}
+			else if ( _column=="quality" )
+			{
+				return DataTools::toString(getQuality());
+			}
+			return "<?>";
+		}
+		std::string getColumnType(std::string _column) override
+		{
+			if ( _column == "quality" )
+			{
+				return "string"; // return "number"
+			}
+			return "string";
+		}
 };
 
 class Item_Sword: public Item
@@ -329,19 +350,45 @@ class Item_Sword: public Item
 		{
 			reach=1;
 		}
-		std::string getName() { return "Sword"; }
+		std::string getName() override { return "Sword"; }
 
-		virtual Vector <std::string>* getInteractNames(WorldObject* _w);
-		virtual Vector <std::string>* getInteractNames(Item* _w);
-		virtual Vector <std::string>* getInteractNames(Character* _w);
-		virtual Vector <std::string>* getInteractNames(Creature* _w);
-		virtual Vector <std::string>* getInteractNames(LocalTile* _w);
+		virtual Vector <std::string>* getInteractNames(WorldObject* _w) override;
+		virtual Vector <std::string>* getInteractNames(Item* _w) override;
+		virtual Vector <std::string>* getInteractNames(Character* _w) override;
+		virtual Vector <std::string>* getInteractNames(Creature* _w) override;
+		virtual Vector <std::string>* getInteractNames(LocalTile* _w) override;
 
-		virtual void interact (Creature* obj, int interactionType=0);
-		virtual void interact (Character* obj, int interactionType=0);
+		virtual void interact (Creature* obj, int interactionType=0) override;
+		virtual void interact (Character* obj, int interactionType=0) override;
 
-		Texture* currentTexture()
+		Texture* currentTexture() override
 		{ return &TEX_ITEM_SWORD; }
+		
+		/* TABLE INTERFACE */
+		std::string getColumn(std::string _column) override
+		{
+			if ( _column=="name" )
+			{
+				return "sword";
+			}
+			else if ( _column=="type" )
+			{
+				return "sword";
+			}
+			else if ( _column=="quality" )
+			{
+				return DataTools::toString(getQuality());
+			}
+			return "<?>";
+		}
+		std::string getColumnType(std::string _column) override
+		{
+			if ( _column == "quality" )
+			{
+				return "string"; // return "number"
+			}
+			return "string";
+		}
 
 };
 
@@ -399,6 +446,35 @@ class Item_Pickaxe: public Item
 		virtual Vector <std::string>* getInteractNames(LocalTile* _target) override;
 
 		virtual void interact(LocalTile* _target, int interactType=0) override;
+		
+		/* virtual */ static ResourceRequirement getResourceRequirement()
+		{ return ResourceRequirement(1,0); }
+		
+		/* TABLE INTERFACE */
+		std::string getColumn(std::string _column) override
+		{
+			if ( _column=="name" )
+			{
+				return "pickaxe";
+			}
+			else if ( _column=="type" )
+			{
+				return "pickaxe";
+			}
+			else if ( _column=="quality" )
+			{
+				return DataTools::toString(getQuality());
+			}
+			return "<?>";
+		}
+		std::string getColumnType(std::string _column) override
+		{
+			if ( _column == "quality" )
+			{
+				return "string"; // return "number"
+			}
+			return "string";
+		}
 
 };
 
