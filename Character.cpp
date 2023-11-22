@@ -44,7 +44,6 @@ Character::Character(): social(this)
 	pregnantCounter=0;
 
 	actionPoints = 0;
-	money=0;
 
 	father=0;
 	mother=0;
@@ -273,34 +272,6 @@ void Character::giveItem(Item* _item)
 	//world(worldX,worldY)->put(_item,x,y);
 	//world(worldX,worldY)->vItem.push(_item);
 }
-
-void Character::giveMoney(int amount)
-{
-	money+=amount;
-}
-
-int Character::getMoney()
-{
-	return money;
-}
-
-bool Character::takeMoney(int amount)
-{
-    // Check if the character has enough money
-    if (money >= amount)
-    {
-        // Subtract the amount from the character's money
-        money -= amount;
-        // Return true to indicate success
-        return true;
-    }
-    else
-    {
-        // Return false if the character does not have enough money
-        return false;
-    }
-}
-
 
 void Character::takeItem(Item* _item)
 {

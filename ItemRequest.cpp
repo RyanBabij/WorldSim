@@ -12,6 +12,7 @@
 #include <set>
 #include <optional>
 
+
 class ItemRequest
 {
 	public:
@@ -19,14 +20,15 @@ class ItemRequest
 	Character * requester;
 	ItemType type;
 	int value;
+	bool privateContract;
 	
 	ItemRequest(Character* c, ItemType t, int v) : requester(c), type(t), value(v)
 	{
+		privateContract=true;
 	}
 
 	
 };
-
 
 // Comparator for ItemRequest
 struct ItemRequestComparator
@@ -75,6 +77,11 @@ class ItemRequestManager
 			requests.insert(ItemRequest(requester, type, value));
 		}
 	}
+	
+	// void addTreasuryRequest(Character *requester, ResourceManager* money, ItemManager* stockpile, ItemType type, int value)
+	// {
+		// requests.insert(ItemRequest(requester, type, value));
+	// }
 	
 	void removeAll(Character* requester, ItemType type)
 	{

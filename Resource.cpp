@@ -47,7 +47,9 @@ class HasResourceRequirement
 		}
 };
 
-class ResourceManager
+#include "HasMoney.cpp"
+
+class ResourceManager: public HasMoney
 {
 	private:
 		// RAW
@@ -69,7 +71,6 @@ class ResourceManager
 		
 		// FOOD (Should probably be somewhere else)
 		int nFood;
-		int nMoney;
 	
 	public:
 	
@@ -93,7 +94,6 @@ class ResourceManager
 			nAdamantium=0;
 			
 			nFood=0;
-			nMoney=0;
 		}
 		
 		void addIron(int _iron)
@@ -108,11 +108,7 @@ class ResourceManager
 		{
 			nFood+=_food;
 		}
-		void addMoney(int _money)
-		{
-			nMoney+=_money;
-		}
-		
+
 		int getIron()
 		{
 			return nIron;
@@ -125,11 +121,6 @@ class ResourceManager
 		{
 			return nFood;
 		}
-		int getMoney()
-		{
-			return nMoney;
-		}
-		
 		bool takeIron(int _amount)
 		{
 			if ( _amount <= nIron )
@@ -149,29 +140,6 @@ class ResourceManager
 			}
 			return false;
 		}
-		
-		bool takeMoney(int _amount)
-		{
-			if ( _amount <= nMoney )
-			{
-				nMoney-=_amount;
-				return true;
-			}
-			return false;
-		}
-		
-		int takeMoneyUpTo(int _amount)
-		{
-			if ( _amount <= nMoney )
-			{
-				nMoney-=_amount;
-				return _amount;
-			}
-			int amountCanTake = nMoney;
-			nMoney=0;
-			return amountCanTake;
-		}
-		
 		
 		bool canMake(const ResourceRequirement& requirement)
 		{
@@ -193,14 +161,14 @@ class ResourceManager
 		void print()
 		{
 			// Resource names for display
-			const std::string resources[] = { "Money", "Food", "Stone", "Iron", "Copper", "Gold", "Silver", "Gems",
+			const std::string resources[] = { "Food", "Stone", "Iron", "Copper", "Gold", "Silver", "Gems",
 			"Diamonds", "Adamantine", "Coal", "Wood", "Magicka Crystal", "Steel", "Bronze", "Adamantium" };
 
 			// Resource values for display
-			const int resourceValues[] = { nMoney, nFood, nStone, nIron, nCopper, nGold, nSilver, nGems, nDiamonds,
+			const int resourceValues[] = { nFood, nStone, nIron, nCopper, nGold, nSilver, nGems, nDiamonds,
 			nAdamantine, nCoal, nWood, nMagickaCrystal, nSteel, nBronze, nAdamantium };
 
-			const int totalResources = 16;  // Total number of resources
+			const int totalResources = 15;  // Total number of resources
 
 			for (int i = 0; i < totalResources; ++i)
 			{

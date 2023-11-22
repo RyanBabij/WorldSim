@@ -223,6 +223,7 @@ class Item: public WorldObject, public TableInterface /* HasResourceRequirement 
 		virtual Vector <std::string>* getInteractNames(Static* _w)
 		{ return 0; }
 
+		// Resources needed to build this item
 		/* virtual */ static ResourceRequirement getResourceRequirement()
 		{ return ResourceRequirement(0,0); }
 
@@ -424,6 +425,9 @@ class Item_Longbow: public Item
 		Item_Longbow(): Item()
 		{ }
 		std::string getName() override { return "Longbow"; }
+		
+		/* virtual */ static ResourceRequirement getResourceRequirement()
+		{ return ResourceRequirement(0,0); }
 
 		Texture* currentTexture() override
 		{ return &TEX_ITEM_LONGBOW; }
@@ -557,6 +561,9 @@ class Item_Axe: public Item
 
 		}
 		std::string getName() { return "Axe"; }
+		
+		/* virtual */ static ResourceRequirement getResourceRequirement()
+		{ return ResourceRequirement(1,0); }
 
 
 		void interact(WorldObject* w, int interactType=0);

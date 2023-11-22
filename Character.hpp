@@ -24,6 +24,8 @@
 #include "WorldObject_Tree.hpp"
 #include "Item.hpp"
 
+#include "HasMoney.cpp"
+
 class Job;
 class Tribe;
 class Item;
@@ -32,7 +34,7 @@ class Settlement;
 class Character_Knowledge;
 class World_Local;
 
-class Character: public WorldObject, public TableInterface, public SaveFileInterface
+class Character: public WorldObject, public TableInterface, public SaveFileInterface, public HasMoney
 {
 	public:
 
@@ -55,8 +57,6 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	bool isMarried; /* Change to partner pointer */
 
 	//bool isUnderground; /* Is on the subterranean layer. */
-
-	int money; /* Gold coins or some shit. */
 
 	short int maxHealth;
 	short int health;
@@ -168,9 +168,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	bool hasIdea(Idea idea);
 	void giveIdea(Idea idea);
 	
-	void giveMoney(int amount);
-	int getMoney();
-	bool takeMoney(int amount);
+
 	
 	// INTERACTION
 	

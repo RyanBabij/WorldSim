@@ -16,6 +16,9 @@
 
 Item_Attributes::Item_Attributes()
 {
+	durability=100;
+	health=100;
+	
 	woodcuttingValue=0;
 	farmingValue=0;
 	miningValue=0;
@@ -65,6 +68,16 @@ int Item_Attributes::suitability(Job* job)
 	}
 
 	return score;
+}
+
+bool Item_Attributes::degrade( int amount )
+{
+	health-=amount;
+	if ( health <= 0 )
+	{
+		return true;
+	}
+	return false;
 }
 
 
