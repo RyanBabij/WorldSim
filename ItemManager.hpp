@@ -10,6 +10,7 @@
 */
 
 #include "Item.hpp"
+#include "Job.hpp"
 
 #include <map>
 #include <string>
@@ -55,39 +56,9 @@ class ItemManager
 		return num;
 	}
 	
-	Item* getBestItemFor(enumJob job)
+	Item* getBestItemFor(Job job)
 	{
-		if ( job == JOB_FARMING )
-		{
-			Item* bestItem = nullptr;
-			int bestFarmingValue = -1;
-			
-			for (int i=0;i<vItem.size();++i)
-			{
-				if ( vItem(i)->farmingValue > bestFarmingValue)
-				{
-					bestItem=vItem(i);
-					bestFarmingValue = bestItem->farmingValue;
-				}
-			}
-			return bestItem;
-		}
-		else if ( job == JOB_MINING )
-		{
-			Item* bestItem = nullptr;
-			int bestMiningValue = -1;
-			
-			for (int i=0;i<vItem.size();++i)
-			{
-				if ( vItem(i)->miningValue > bestMiningValue)
-				{
-					bestItem=vItem(i);
-					bestMiningValue = bestItem->miningValue;
-				}
-			}
-			return bestItem;
-		}
-		return nullptr;
+		return job.getBestItem(&vItem);
 	}
 	
 	void print()

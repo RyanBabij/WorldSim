@@ -24,11 +24,11 @@
 #include "WorldObject_Tree.hpp"
 #include "Item.hpp"
 
+class Job;
 class Tribe;
 class Item;
 class Civ;
 class Settlement;
-
 class Character_Knowledge;
 class World_Local;
 
@@ -210,7 +210,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   bool hasItemType(ItemType);
   
   Item* getBestFarmingEquipment();
-  Item* getBestItemFor(enumJob job);
+  //Item* getBestItemFor(enumJob job);
+  Item* getBestItemFor(Job job);
 
 	
 		/* SOCIAL FUNCTIONS

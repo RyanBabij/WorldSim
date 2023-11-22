@@ -20,9 +20,6 @@ Item::Item()
 	throwDamage = 0;
 	ammunitionType = 0;
 
-	farmingValue = 0;
-	miningValue = 0;
-
 	reach = 0;
 
 	owner = 0;

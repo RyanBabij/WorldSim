@@ -107,6 +107,7 @@ World_Local * worldLocal;
 
 #include "Item.cpp"
 #include "Recipe.cpp"
+#include "Item_Attributes.cpp"
 
 
 /* Game initialization goes here. */

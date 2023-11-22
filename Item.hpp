@@ -71,9 +71,9 @@ class Recipe;
 class Creature;
 //class Creature_Deer;
 
-
 #include "Resource.cpp"
 
+#include "Item_Attributes.hpp"
 
 class Item: public WorldObject, public TableInterface /* HasResourceRequirement */
 {
@@ -83,9 +83,11 @@ class Item: public WorldObject, public TableInterface /* HasResourceRequirement 
 		short int count; /* How many of this object there is (for example ammo) */
 
 		ItemType type; /* The type of item. */
+		
+		Item_Attributes attributes;
 
-		unsigned char farmingValue; /* How well this works as a farming implement. 0 = not possible */
-		unsigned char miningValue; /* How well this works as a mining implement. 0 = not possible */
+		//unsigned char farmingValue; /* How well this works as a farming implement. 0 = not possible */
+		//unsigned char miningValue; /* How well this works as a mining implement. 0 = not possible */
 
 		short int meleeDamage; /* Base damage if you hit someone with this. 0 = not possible. */
 		short int throwDamage; /* Base damage if you throw this at someone. 0 = not possible */
@@ -295,9 +297,8 @@ class Item_Hoe: public Item
 
 		Item_Hoe(): Item()
 		{
+			attributes.farmingValue=1;
 			reach=1;
-			farmingValue=1;
-			miningValue=0;
 			type=ITEM_HOE;
 		}
 		std::string getName() override { return "Hoe"; }
@@ -439,9 +440,7 @@ class Item_Pickaxe: public Item
 
 		Item_Pickaxe(): Item()
 		{
-			farmingValue=0;
-			miningValue=1;
-			
+			attributes.miningValue=1;
 		}
 		std::string getName() override { return "Pickaxe"; }
 

@@ -16,6 +16,8 @@
 #include "Character_Knowledge.hpp"
 #include "Tribe.hpp"
 
+#include "Job.cpp"
+
 const int MAX_CHILDREN = 5;
 
 //#include <Graphics/Texture/Texture.hpp>
@@ -351,40 +353,9 @@ bool Character::hasItemType(ItemType type)
 	return false;
 }
 
-Item* Character::getBestItemFor(enumJob job)
+Item* Character::getBestItemFor(Job job)
 {
-	if ( job == JOB_FARMING )
-	{
-		Item* bestItem = nullptr;
-		int bestFarmingValue = -1;
-		
-		for (int i=0;i<vInventory.size();++i)
-		{
-			if ( vInventory(i)->farmingValue > bestFarmingValue)
-			{
-				bestItem=vInventory(i);
-				bestFarmingValue = bestItem->farmingValue;
-			}
-		}
-		return bestItem;
-	}
-	else if ( job == JOB_MINING )
-	{
-		Item* bestItem = nullptr;
-		int bestMiningValue = -1;
-		
-		for (int i=0;i<vInventory.size();++i)
-		{
-			if ( vInventory(i)->miningValue > bestMiningValue)
-			{
-				bestItem=vInventory(i);
-				bestMiningValue = bestItem->miningValue;
-			}
-		}
-		return bestItem;
-	}
-	
-	return nullptr;
+	return job.getBestItem(&vInventory);
 }
 
 std::string Character::getFullName() const

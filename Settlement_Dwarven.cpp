@@ -7,6 +7,8 @@
 #include "ItemManager.hpp"
 #include "ItemRequest.cpp"
 
+#include "Job.cpp"
+
 Settlement_Dwarven::Settlement_Dwarven(): Settlement()
 {
 	race = DWARVEN;
@@ -24,6 +26,10 @@ Texture* Settlement_Dwarven::currentTexture()
 	return &TEX_WORLD_SETTLEMENT_DWARFFORT_01;
 }
 
+// void Settlement_Dwarven::abstractMonthJob(enumJob Job)
+// {
+// }
+
 void Settlement_Dwarven::abstractMonthFood(Character* character)
 {
 	std::cout<<character->getFullName()<<": Farming. "<<character->getMoney()<<" money.\n";
@@ -39,10 +45,11 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 	// Check if we can borrow a hoe if we don't own one.
 	
 	//Item* usedItem = 0;
-	Item* bestFarmingEquipment = character->getBestItemFor(JOB_FARMING);
+	//Item* bestFarmingEquipment = character->getBestItemFor(JOB_FARMING);
+	Item* bestFarmingEquipment = character->getBestItemFor(Job_Farming());
 	
 	// // get best farming equipment from stockpile and compare
-	Item* bestStockpileFarmingEquipment = stockpile.getBestItemFor(JOB_FARMING);
+	Item* bestStockpileFarmingEquipment = stockpile.getBestItemFor(Job_Farming());
 	
 	if ( bestFarmingEquipment == nullptr )
 	{
@@ -75,7 +82,7 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 	else // we have equipment and the stockpile does too
 	{
 		if (bestStockpileFarmingEquipment != nullptr &&
-			bestStockpileFarmingEquipment->farmingValue > bestFarmingEquipment->farmingValue )
+			bestStockpileFarmingEquipment->attributes.farmingValue > bestFarmingEquipment->attributes.farmingValue )
 			{
 				// equip item from stockpile.
 				//bestFarmingEquipment = bestStockpileFarmingEquipment;
@@ -97,12 +104,12 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 		// requestManager.add(character,ITEM_HOE,character->getMoney());
 	// }
 	
-	Item* farmingEquipment = character->getBestItemFor(JOB_FARMING);
+	Item* farmingEquipment = character->getBestItemFor(Job_Farming());
 	
 	int farmingItemMult=1;
 	if ( farmingEquipment != nullptr )
 	{
-		farmingItemMult = farmingEquipment->farmingValue+1;
+		farmingItemMult = farmingEquipment->attributes.farmingValue+1;
 	}
 	
 	int maxPersonalOutput = (character->getStrength()*farmingItemMult)+character->skillFarming;
@@ -129,10 +136,10 @@ void Settlement_Dwarven::abstractMonthMine(Character* character)
 	// Check if we can borrow a hoe if we don't own one.
 	
 	//Item* usedItem = 0;
-	Item* bestMiningEquipment = character->getBestItemFor(JOB_MINING);
+	Item* bestMiningEquipment = character->getBestItemFor(Job_Farming());
 	
 	// // get best farming equipment from stockpile and compare
-	Item* bestStockpileMiningEquipment = stockpile.getBestItemFor(JOB_MINING);
+	Item* bestStockpileMiningEquipment = stockpile.getBestItemFor(Job_Farming());
 	
 	if ( bestMiningEquipment == nullptr )
 	{
@@ -165,7 +172,7 @@ void Settlement_Dwarven::abstractMonthMine(Character* character)
 	else // we have equipment and the stockpile does too
 	{
 		if (bestStockpileMiningEquipment != nullptr &&
-			bestStockpileMiningEquipment->farmingValue > bestMiningEquipment->farmingValue )
+			bestStockpileMiningEquipment->attributes.farmingValue > bestMiningEquipment->attributes.farmingValue )
 			{
 				// equip item from stockpile.
 				//bestMiningEquipment = bestStockpileMiningEquipment;
