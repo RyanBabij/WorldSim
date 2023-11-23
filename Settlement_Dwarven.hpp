@@ -31,6 +31,7 @@ class Settlement_Dwarven: public Settlement
 		bool farmingEquipmentNeeded();
 		bool coinsNeeded();
 		
+		Item* createItem(ItemType type);
 		bool produceItem(ItemType type);
 		
 		void payCharacter(Character* character, int amount);

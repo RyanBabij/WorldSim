@@ -96,7 +96,7 @@ void Government_Leader::govern()
 	requestManager->removeAll(resourceManager,ITEM_HOE);
 	if ( resourceManager->getMoney() > 0 )
 	{
-		int hoeShortfall = s->vCharacter.size() - stockpile->getNumberOfItems(ITEM_HOE);
+		int hoeShortfall = (s->vCharacter.size()/3) - stockpile->getNumberOfItems(ITEM_HOE);
 
 		int marketValue = requestManager->getAverageValue(ITEM_HOE) + 1;
 		

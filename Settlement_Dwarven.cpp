@@ -175,32 +175,32 @@ void Settlement_Dwarven::abstractMonthMine(Character* character)
 	payCharacterFromTreasury(character,1);
 }
 
+	// Convert enum to object
+Item* Settlement_Dwarven::createItem(ItemType type)
+{
+	switch (type)
+	{
+		case ITEM_HOE:
+			return new Item_Hoe();
+		case ITEM_PICKAXE:
+			return new Item_Pickaxe();
+		// Add cases for other item types as needed
+		default:
+			return nullptr;
+	}
+}
+
 bool Settlement_Dwarven::produceItem(ItemType type)
 {
-	if ( type == ITEM_HOE )
+	Item* newItem = createItem(type);
+	if (newItem && resourceManager.canMake(newItem->getResourceRequirement()))
 	{
-		if ( resourceManager.canMake(Item_Hoe::getResourceRequirement()) )
-		{
-			resourceManager.deductResources(Item_Hoe::getResourceRequirement());
-			
-			Item_Hoe * hoe = new Item_Hoe();
-			stockpile.add(hoe);
-			return true;
-		}	
+		resourceManager.deductResources(newItem->getResourceRequirement());
+		stockpile.add(newItem);
+		return true;
 	}
-	
-	else if ( type == ITEM_PICKAXE )
-	{
-		if ( resourceManager.canMake(Item_Pickaxe::getResourceRequirement()) )
-		{
-			resourceManager.deductResources(Item_Pickaxe::getResourceRequirement());
-			
-			Item_Pickaxe * pickaxe = new Item_Pickaxe();
-			stockpile.add(pickaxe);
-			return true;
-		}	
-	}
-	
+
+	delete newItem; // Clean up if item was not added to stockpile
 	return false;
 }
 
