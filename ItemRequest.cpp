@@ -5,7 +5,8 @@
 /* WorldSim: ItemRequest
 	#include "ItemRequest.cpp"
 
-	If a Character needs an item from a Settlement they can put in a request
+	Requests for an Item to be made. Requests can be made by any entity with a HasMoney interface, typically
+	Characters or Government.
 	
 */
 
@@ -17,14 +18,35 @@ class ItemRequest
 {
 	public:
 	
-	Character * requester;
+	HasMoney * requester;
 	ItemType type;
 	int value;
 	bool privateContract;
 	
-	ItemRequest(Character* c, ItemType t, int v) : requester(c), type(t), value(v)
+	ItemRequest(HasMoney* c, ItemType t, int v) : requester(c), type(t), value(v)
 	{
 		privateContract=true;
+	}
+	
+	std::string toString() const
+	{
+		std::string itemType = "UNKNOWN";
+		
+		if ( type == ITEM_HOE )
+		{
+			itemType = "HOE";
+		}
+		else if ( type == ITEM_PICKAXE )
+		{
+			itemType = "PICKAXE";
+		}
+		else if ( type == ITEM_AXE )
+		{
+			itemType = "AXE";
+		}
+		
+		std::string str = "Request for "+itemType+" at $"+DataTools::toString(value)+".";
+		return str;
 	}
 
 	
@@ -42,17 +64,17 @@ struct ItemRequestComparator
 
 class ItemRequestManager
 {
-	public:
-	
-	//Vector <ItemRequest> vRequest;
+	private:
 	std::multiset<ItemRequest, ItemRequestComparator> requests;
+	
+	public:
 	
 	ItemRequestManager()
 	{
 		
 	}
 	
-	void add(Character *requester, ItemType type, int value)
+	void add(HasMoney *requester, ItemType type, int value, bool deleteDuplicates=true)
 	{
 		// if ( value == 0 )
 		// {
@@ -62,17 +84,20 @@ class ItemRequestManager
 		// If the requester has enough money, add the new request
 		if (requester->takeMoney(value))
 		{
-			// Check if the requester already has a request for the same type and remove them.
-			for (auto it = requests.begin(); it != requests.end(); )
+			if ( deleteDuplicates )
 			{
-				if (it->requester == requester && it->type == type)
+				// Check if the requester already has a request for the same type and remove them.
+				for (auto it = requests.begin(); it != requests.end(); )
 				{
-					requester->giveMoney(it->value);
-					//std::cout<<"Money refunded from contract: "<<it->value<<"\n";
-					it = requests.erase(it); // Erase and move to the next element
-					continue;
+					if (it->requester == requester && it->type == type)
+					{
+						requester->giveMoney(it->value);
+						//std::cout<<"Money refunded from contract: "<<it->value<<"\n";
+						it = requests.erase(it); // Erase and move to the next element
+						continue;
+					}
+					++it;
 				}
-				++it;
 			}
 			requests.insert(ItemRequest(requester, type, value));
 		}
@@ -83,7 +108,7 @@ class ItemRequestManager
 		// requests.insert(ItemRequest(requester, type, value));
 	// }
 	
-	void removeAll(Character* requester, ItemType type)
+	void removeAll(HasMoney* requester, ItemType type)
 	{
 		// Remove requests of type and refund
 		for (auto it = requests.begin(); it != requests.end(); )
@@ -175,6 +200,16 @@ class ItemRequestManager
 	int size()
 	{
 		return requests.size();
+	}
+	
+	void print()
+	{
+		// Remove requests of type and refund
+		for (auto it = requests.begin(); it != requests.end(); )
+		{
+			std::cout<<it->toString()<<"\n";
+			++it;
+		}
 	}
 	
 };

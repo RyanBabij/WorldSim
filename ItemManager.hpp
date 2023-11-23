@@ -61,6 +61,19 @@ class ItemManager
 		return job.getBestItem(&vItem);
 	}
 	
+	int getNumberOfItems(ItemType type)
+	{
+		int numItems = 0;
+		for (int i=0;i<vItem.size();++i)
+		{
+			if ( vItem(i)->type == type )
+			{
+				++numItems;
+			}
+		}
+		return numItems;
+	}
+	
 	void print()
 	{
 		std::map<std::string, int> itemCounts;

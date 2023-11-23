@@ -61,6 +61,9 @@ void Government_Leader::govern()
 	}
 	
 	Settlement* s = government->governedSettlement;
+	ItemManager* stockpile = &(s->stockpile);
+	ItemRequestManager* requestManager = &(s->requestManager);
+	ResourceManager* resourceManager = &(s->resourceManager);
 
 	if (empty())
 	{
@@ -88,6 +91,35 @@ void Government_Leader::govern()
 			}
 		}
 	}
+	
+	// Put in any public production orders
+	requestManager->removeAll(resourceManager,ITEM_HOE);
+	if ( resourceManager->getMoney() > 0 )
+	{
+		int hoeShortfall = s->vCharacter.size() - stockpile->getNumberOfItems(ITEM_HOE);
+
+		int marketValue = requestManager->getAverageValue(ITEM_HOE) + 1;
+		
+		for (int i=0;i<hoeShortfall/2;++i)
+		{
+			int amountCanPay = resourceManager->getMoney();
+			if (marketValue < amountCanPay)
+			{
+				amountCanPay = marketValue;
+			}
+			requestManager->add(resourceManager,ITEM_HOE,marketValue,false);
+			std::cout<<"Request for hoe at price of "<<amountCanPay<<".\n";
+			
+			if ( resourceManager->getMoney() == 0 )
+			{
+				break;
+			}
+		}
+	}
+	
+	// if ( stockpile->getNumberOfItems(ITEM_HOE) < s->vCharacter.size() )
+	// {
+	// }
 	
 	
 	// Money distribution:

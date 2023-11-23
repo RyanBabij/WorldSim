@@ -44,10 +44,7 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 	
 	// Check if we can borrow a hoe if we don't own one.
 	
-	//Item* usedItem = 0;
-	//Item* bestFarmingEquipment = character->getBestItemFor(JOB_FARMING);
 	Item* bestFarmingEquipment = character->getBestItemFor(Job_Farming());
-	
 	// // get best farming equipment from stockpile and compare
 	Item* bestStockpileFarmingEquipment = stockpile.getBestItemFor(Job_Farming());
 	
@@ -57,8 +54,6 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 		{
 			if ( character->getMoney() > 0 )
 			{
-				
-				
 				int marketValue = requestManager.getAverageValue(ITEM_HOE) + 1;
 				
 				int amountCanPay = character->getMoney();
@@ -69,7 +64,6 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 				
 				requestManager.removeAll(character,ITEM_HOE);
 				requestManager.add(character,ITEM_HOE,marketValue);
-				
 				std::cout<<"Request for hoe at price of "<<amountCanPay<<".\n";
 			}
 		}
@@ -90,19 +84,6 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 				character->giveItem(bestStockpileFarmingEquipment);
 			}
 	}
-	
-	// if (( bestFarmingEquipment != nullptr ) && bestFarmingEquipment == bestStockpileFarmingEquipment )
-	// {
-		// // take this item from the stockpile
-		// stockpile.take(bestFarmingEquipment);
-	// }
-	
-	// If we don't have farming equipment, put in a request if possible.
-	// if ( bestFarmingEquipment == nullptr && character->getMoney() > 0)
-	// {
-		// std::cout<<"Request for hoe: "<<character->getMoney()<<"\n";
-		// requestManager.add(character,ITEM_HOE,character->getMoney());
-	// }
 	
 	Item* farmingEquipment = character->getBestItemFor(Job_Farming());
 	
@@ -133,13 +114,13 @@ void Settlement_Dwarven::abstractMonthMine(Character* character)
 	
 	
 	
-	// Check if we can borrow a hoe if we don't own one.
+	// Check if we can borrow a pickaxe if we don't own one.
 	
 	//Item* usedItem = 0;
-	Item* bestMiningEquipment = character->getBestItemFor(Job_Farming());
+	Item* bestMiningEquipment = character->getBestItemFor(Job_Mining());
 	
 	// // get best farming equipment from stockpile and compare
-	Item* bestStockpileMiningEquipment = stockpile.getBestItemFor(Job_Farming());
+	Item* bestStockpileMiningEquipment = stockpile.getBestItemFor(Job_Mining());
 	
 	if ( bestMiningEquipment == nullptr )
 	{
@@ -147,9 +128,7 @@ void Settlement_Dwarven::abstractMonthMine(Character* character)
 		{
 			if ( character->getMoney() > 0 )
 			{
-				
-				
-				int marketValue = requestManager.getAverageValue(ITEM_HOE) + 1;
+				int marketValue = requestManager.getAverageValue(ITEM_PICKAXE) + 1;
 				
 				int amountCanPay = character->getMoney();
 				if (marketValue < amountCanPay)
@@ -157,10 +136,10 @@ void Settlement_Dwarven::abstractMonthMine(Character* character)
 					amountCanPay = marketValue;
 				}
 				
-				requestManager.removeAll(character,ITEM_HOE);
-				requestManager.add(character,ITEM_HOE,marketValue);
+				requestManager.removeAll(character,ITEM_PICKAXE);
+				requestManager.add(character,ITEM_PICKAXE,marketValue);
 				
-				std::cout<<"Request for hoe at price of "<<amountCanPay<<".\n";
+				std::cout<<"Request for pickaxe at price of "<<amountCanPay<<".\n";
 			}
 		}
 		else // we don't have equipment but the stockpile does
@@ -206,6 +185,18 @@ bool Settlement_Dwarven::produceItem(ItemType type)
 			
 			Item_Hoe * hoe = new Item_Hoe();
 			stockpile.add(hoe);
+			return true;
+		}	
+	}
+	
+	else if ( type == ITEM_PICKAXE )
+	{
+		if ( resourceManager.canMake(Item_Pickaxe::getResourceRequirement()) )
+		{
+			resourceManager.deductResources(Item_Pickaxe::getResourceRequirement());
+			
+			Item_Pickaxe * pickaxe = new Item_Pickaxe();
+			stockpile.add(pickaxe);
 			return true;
 		}	
 	}
@@ -274,28 +265,22 @@ bool Settlement_Dwarven::abstractMonthProduction(Character* character)
 			
 			mostValuableRequest.requester->giveMoney(mostValuableRequest.value);
 			requestManager.add(mostValuableRequest.requester,mostValuableRequest.type, mostValuableRequest.value);
-			std::cout<<"Something messed up\n";
+			std::cout<<"Unable to make item, trying another.\n";
 		}
 	}
-	else if (getMoneyPercentInTreasury() < 0.25 || getAverageCharacterWealth() < 100 )
+	else if (getMoneyPercentInTreasury() < 0.25 || getAverageCharacterWealth() < 10 )
 	{
 		std::cout<<character->getFullName()<<": Producing coins. "<<character->getMoney()<<" money.\n";
 		
-		for (int i=0;i<10;++i)
+		if ( resourceManager.takeIron(1) )
 		{
-			if ( resourceManager.takeIron(1) )
-			{
-				// make coins
-				resourceManager.addMoney(10);
-			}
-			else if (i == 0) // couldn't make any coins.
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+			// make coins
+			resourceManager.addMoney(100);
+		}
+		else
+		{
+			std::cout<<"Unable to make coins, doing something else.\n";
+			return false;
 		}
 		return true;
 	}
@@ -574,14 +559,14 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			{
 				actingCharacter = getCharacter(&vMovedCharacters);
 				resourceManager.takeFood(28);
+				// PRODUCTION
+				if ( abstractMonthProduction(actingCharacter))
+				{
+				}
 				// MINING
-				if ( miningNeeded() )
+				else if ( miningNeeded() )
 				{
 					abstractMonthMine(actingCharacter);
-				}
-				// PRODUCTION
-				else if (abstractMonthProduction(actingCharacter))
-				{
 				}
 				// RESEARCH
 				else
@@ -607,6 +592,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		resourceManager.print();
 		stockpile.print();
 		printAllMoneyInSettlement();
+		requestManager.print();
 		monthlyCounter-=TICKS_PER_MONTH;
 	}
 	

@@ -21,31 +21,21 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		RandomNonStatic random;
 
 	public:
-
 	
 		Civ* parentCiv;
 		Vector <Character*> vCharacter;
 		Vector <Character*> vDeceased;
+		Vector <Item*> vItem;
+		// Ideas can become technologies and also books and other things.
+		Vector <Idea> vIdea;
 		
 		Government government;
 
 		ItemManager stockpile;
 		ItemRequestManager requestManager;
-		
-		Vector <Item*> vItem;
-		
-		
-		// Ideas can become technologies and also books and other things.
-		Vector <Idea> vIdea;
-		
 		ResourceManager resourceManager;
 		Technology technology;
-
-
-		//std::string name; // WorldObjectGlobal
-
-		//World* world;
-
+		
 		int colourRed;
 		int colourGreen;
 		int colourBlue;
@@ -54,12 +44,7 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		int dailyCounter;
 		int monthlyCounter;
 
-
-		//enum enumRace { NONE=0, HUMAN=1, DWARVEN=2, ELVEN=3};
 		int race;
-
-		//int nFoodStockpile;
-		//int nMetalStockpile;
 
 		Settlement();
 		

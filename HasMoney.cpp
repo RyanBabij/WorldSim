@@ -21,19 +21,19 @@ class HasMoney
 			nMoney=0;
 		}
 		
-		void addMoney(int _money)
+		virtual void addMoney(int _money)
 		{
 			nMoney+=_money;
 		}
-		void giveMoney(int _money)
+		virtual void giveMoney(int _money)
 		{ addMoney(_money); }
 		
-		int getMoney()
+		virtual int getMoney()
 		{
 			return nMoney;
 		}
 		
-		bool takeMoney(int _amount)
+		virtual bool takeMoney(int _amount)
 		{
 			if ( _amount <= nMoney )
 			{
@@ -43,7 +43,7 @@ class HasMoney
 			return false;
 		}
 		
-		int takeMoneyUpTo(int _amount)
+		virtual int takeMoneyUpTo(int _amount)
 		{
 			if ( _amount <= nMoney )
 			{
