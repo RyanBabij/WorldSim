@@ -61,6 +61,11 @@ class ItemManager
 		return job.getBestItem(&vItem);
 	}
 	
+	Item* getBestItemFor(Job* job)
+	{
+		return job->getBestItem(&vItem);
+	}
+	
 	int getNumberOfItems(ItemType type)
 	{
 		int numItems = 0;

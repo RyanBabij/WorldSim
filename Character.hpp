@@ -210,6 +210,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
   Item* getBestFarmingEquipment();
   //Item* getBestItemFor(enumJob job);
   Item* getBestItemFor(Job job);
+  Item* getBestItemFor(Job* job);
 
 	
 		/* SOCIAL FUNCTIONS

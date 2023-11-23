@@ -325,6 +325,7 @@ class Item_Sword: public Item
 		Item_Sword(): Item()
 		{
 			reach=1;
+			type = ITEM_SWORD;
 		}
 		std::string getName() override { return "Sword"; }
 
@@ -417,6 +418,7 @@ class Item_Pickaxe: public Item
 		Item_Pickaxe(): Item()
 		{
 			attributes.miningValue=1;
+			type = ITEM_PICKAXE;
 		}
 		std::string getName() override { return "Pickaxe"; }
 
@@ -530,7 +532,7 @@ class Item_Axe: public Item
 
 		Item_Axe()
 		{
-
+			type=ITEM_AXE;
 		}
 		std::string getName() { return "Axe"; }
 		

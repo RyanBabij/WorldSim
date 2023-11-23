@@ -30,31 +30,18 @@ Texture* Settlement_Dwarven::currentTexture()
 // {
 // }
 
-void Settlement_Dwarven::abstractMonthFood(Character* character)
+void Settlement_Dwarven::checkStockpileForBestItem(Character* character, Job* job)
 {
-	std::cout<<character->getFullName()<<": Farming. "<<character->getMoney()<<" money.\n";
-	// for now assume the Character feeds themself plus a certain surplus
+	Item* bestItemOnHand = character->getBestItemFor(job);
+	Item* bestStockpileItem = stockpile.getBestItemFor(job);
 	
-	// Personal output is how much a person's personal skill can affect output.
-	// Technology can further improve the output as an independent variable.
-	// I think without aid of tech, subsistence farming ratio of 1 farmer for 1 other person is reasonable.
-	// Over time, technology of course should make a huge difference until farmers become a small minority.
-	
-	// Farming equipment presence and quality should also be important.
-	
-	// Check if we can borrow a hoe if we don't own one.
-	
-	Item* bestFarmingEquipment = character->getBestItemFor(Job_Farming());
-	// // get best farming equipment from stockpile and compare
-	Item* bestStockpileFarmingEquipment = stockpile.getBestItemFor(Job_Farming());
-	
-	if ( bestFarmingEquipment == nullptr )
+	if ( bestItemOnHand == nullptr )
 	{
-		if ( bestStockpileFarmingEquipment == nullptr ) // There's no farming equipment anywhere
+		if ( bestStockpileItem == nullptr ) // There's no farming equipment anywhere
 		{
 			if ( character->getMoney() > 0 )
 			{
-				int marketValue = requestManager.getAverageValue(ITEM_HOE) + 1;
+				int marketValue = requestManager.getAverageValue(job->requiredItem) + 1;
 				
 				int amountCanPay = character->getMoney();
 				if (marketValue < amountCanPay)
@@ -62,117 +49,99 @@ void Settlement_Dwarven::abstractMonthFood(Character* character)
 					amountCanPay = marketValue;
 				}
 				
-				requestManager.removeAll(character,ITEM_HOE);
-				requestManager.add(character,ITEM_HOE,marketValue);
+				requestManager.removeAll(character,job->requiredItem);
+				requestManager.add(character,job->requiredItem,marketValue);
 				std::cout<<"Request for hoe at price of "<<amountCanPay<<".\n";
 			}
 		}
 		else // we don't have equipment but the stockpile does
 		{
-			stockpile.take(bestStockpileFarmingEquipment);
-			character->giveItem(bestStockpileFarmingEquipment);
+			stockpile.take(bestStockpileItem);
+			character->giveItem(bestStockpileItem);
 		}
 	}
 	else // we have equipment and the stockpile does too
 	{
-		if (bestStockpileFarmingEquipment != nullptr &&
-			bestStockpileFarmingEquipment->attributes.farmingValue > bestFarmingEquipment->attributes.farmingValue )
-			{
-				// equip item from stockpile.
-				//bestFarmingEquipment = bestStockpileFarmingEquipment;
-				stockpile.take(bestStockpileFarmingEquipment);
-				character->giveItem(bestStockpileFarmingEquipment);
-			}
+		Item* bestItem = job->getBestItem(bestItemOnHand,bestStockpileItem);
+		
+		if (bestItem == bestStockpileItem)
+		{
+			stockpile.take(bestStockpileItem);
+			character->giveItem(bestStockpileItem);
+		}
 	}
-	
-	Item* farmingEquipment = character->getBestItemFor(Job_Farming());
-	
-	int farmingItemMult=1;
-	if ( farmingEquipment != nullptr )
-	{
-		farmingItemMult = farmingEquipment->attributes.farmingValue+1;
-	}
-	
-	int maxPersonalOutput = (character->getStrength()*farmingItemMult)+character->skillFarming;
-	//int maxPersonalOutput = (8+character->skillFarming)*farmingItemMult;
-	if (maxPersonalOutput > 28)
-	{
-		maxPersonalOutput=28;
-	}
-	int maxTotalOutput = maxPersonalOutput + technology.agricultureLevel;
-	
-	resourceManager.addFood(globalRandom.rand(maxTotalOutput));
-	
-	character->skillUpFarming();
-	payCharacterFromTreasury(character,1);
-
 }
-void Settlement_Dwarven::abstractMonthMine(Character* character)
+
+bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 {
-	std::cout<<character->getFullName()<<": Mining. "<<character->getMoney()<<" money.\n";
-	// Character works in the mines for the month
+	std::cout<<character->getFullName()<<" starting job "<<job->getName()<<". ($"<<character->getMoney()<<")\n";
 	
+	checkStockpileForBestItem(character, job);
 	
+	Item* item = character->getBestItemFor(job);
 	
-	// Check if we can borrow a pickaxe if we don't own one.
-	
-	//Item* usedItem = 0;
-	Item* bestMiningEquipment = character->getBestItemFor(Job_Mining());
-	
-	// // get best farming equipment from stockpile and compare
-	Item* bestStockpileMiningEquipment = stockpile.getBestItemFor(Job_Mining());
-	
-	if ( bestMiningEquipment == nullptr )
+	if (job->type == JOB_FARMING )
 	{
-		if ( bestStockpileMiningEquipment == nullptr ) // There's no farming equipment anywhere
+		// for now assume the Character feeds themself plus a certain surplus
+		
+		// Personal output is how much a person's personal skill can affect output.
+		// Technology can further improve the output as an independent variable.
+		// I think without aid of tech, subsistence farming ratio of 1 farmer for 1 other person is reasonable.
+		// Over time, technology of course should make a huge difference until farmers become a small minority.
+		
+		// Farming equipment presence and quality should also be important.
+		
+		// Check if we can borrow a hoe if we don't own one.
+		
+		int farmingItemMult=1;
+		if ( item != nullptr )
 		{
-			if ( character->getMoney() > 0 )
-			{
-				int marketValue = requestManager.getAverageValue(ITEM_PICKAXE) + 1;
-				
-				int amountCanPay = character->getMoney();
-				if (marketValue < amountCanPay)
-				{
-					amountCanPay = marketValue;
-				}
-				
-				requestManager.removeAll(character,ITEM_PICKAXE);
-				requestManager.add(character,ITEM_PICKAXE,marketValue);
-				
-				std::cout<<"Request for pickaxe at price of "<<amountCanPay<<".\n";
-			}
+			farmingItemMult = item->attributes.farmingValue+1;
 		}
-		else // we don't have equipment but the stockpile does
+		
+		int maxPersonalOutput = (character->getStrength()*farmingItemMult)+character->skillFarming;
+		//int maxPersonalOutput = (8+character->skillFarming)*farmingItemMult;
+		if (maxPersonalOutput > 28)
 		{
-			stockpile.take(bestStockpileMiningEquipment);
-			character->giveItem(bestStockpileMiningEquipment);
+			maxPersonalOutput=28;
 		}
+		int maxTotalOutput = maxPersonalOutput + technology.agricultureLevel;
+		
+		resourceManager.addFood(globalRandom.rand(maxTotalOutput));
+		
+		character->skillUpFarming();
+		payCharacterFromTreasury(character,1);
+
+		
+		
+		delete job;
+		return true;
 	}
-	else // we have equipment and the stockpile does too
+	else if (job->type == JOB_MINING)
 	{
-		if (bestStockpileMiningEquipment != nullptr &&
-			bestStockpileMiningEquipment->attributes.farmingValue > bestMiningEquipment->attributes.farmingValue )
-			{
-				// equip item from stockpile.
-				//bestMiningEquipment = bestStockpileMiningEquipment;
-				stockpile.take(bestStockpileMiningEquipment);
-				character->giveItem(bestStockpileMiningEquipment);
-			}
+		// Character works in the mines for the month
+		
+		int maxPersonalOutput = 14+character->skillMining;
+		if (maxPersonalOutput > 28)
+		{
+			maxPersonalOutput=28;
+		}
+		int maxTotalOutput = maxPersonalOutput + technology.miningLevel;
+		
+		resourceManager.addStone(globalRandom.rand(maxTotalOutput));
+		resourceManager.addIron(globalRandom.rand(maxTotalOutput/2));
+		
+		character->skillUpMining();
+		payCharacterFromTreasury(character,1);
+		
+		
+		delete job;
+		return true;
 	}
 	
-	
-	int maxPersonalOutput = 14+character->skillMining;
-	if (maxPersonalOutput > 28)
-	{
-		maxPersonalOutput=28;
-	}
-	int maxTotalOutput = maxPersonalOutput + technology.miningLevel;
-	
-	resourceManager.addStone(globalRandom.rand(maxTotalOutput));
-	resourceManager.addIron(globalRandom.rand(maxTotalOutput/2));
-	
-	character->skillUpMining();
-	payCharacterFromTreasury(character,1);
+	// if the job failed
+	delete job;
+	return false;
 }
 
 	// Convert enum to object
@@ -553,7 +522,8 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			if ( neededFood > 0)
 			{
 				actingCharacter = getFarmer(&vMovedCharacters);
-				abstractMonthFood(actingCharacter);
+				//abstractMonthFood(actingCharacter);
+				abstractMonthJob(actingCharacter, new Job_Farming());
 			}
 			else
 			{
@@ -566,7 +536,9 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 				// MINING
 				else if ( miningNeeded() )
 				{
-					abstractMonthMine(actingCharacter);
+					abstractMonthJob(actingCharacter, new Job_Mining());
+					
+					//abstractMonthMine(actingCharacter);
 				}
 				// RESEARCH
 				else

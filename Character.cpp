@@ -329,6 +329,11 @@ Item* Character::getBestItemFor(Job job)
 	return job.getBestItem(&vInventory);
 }
 
+Item* Character::getBestItemFor(Job* job)
+{
+	return job->getBestItem(&vInventory);
+}
+
 std::string Character::getFullName() const
 {
 	return firstName + " " + lastName;
