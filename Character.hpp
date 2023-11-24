@@ -108,6 +108,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	Calendar dateOfBirth;
 	Calendar dateOfMarriage;
 	Calendar dateOfDeath;
+	
+	Location* location;
 
 	HasXY birthLocation;
 	HasXY deathLocation;
@@ -254,6 +256,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	std::string getFullName() const;
 	std::string getName();
 	std::string getBestSkills();
+	
+	std::string getLocation();
   
     // LOCATION
     

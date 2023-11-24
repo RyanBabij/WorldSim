@@ -68,7 +68,7 @@ void Settlement_Dwarven::checkStockpileForBestItem(Character* character, Job* jo
 
 bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 {
-	std::cout<<character->getFullName()<<" starting job "<<job->getName()<<". ($"<<character->getMoney()<<")\n";
+	std::cout<<character->getFullName()<<" at "<<character->getLocation()<<". Starting job "<<job->getName()<<". ($"<<character->getMoney()<<")\n";
 	
 	checkStockpileForBestItem(character, job);
 	

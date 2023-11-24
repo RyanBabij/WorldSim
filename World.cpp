@@ -982,6 +982,7 @@ void World::evolveToCiv( Tribe * _tribe )
 		putObject(s, _tribe->worldX, _tribe->worldY);
 		s->government=_tribe->government;
 		s->government.governedSettlement=s;
+		s->buildDwarvenFortress();
 		removeObject(_tribe);
 		vTribe.remove(_tribe);  
 
@@ -995,7 +996,10 @@ void World::evolveToCiv( Tribe * _tribe )
 		for (int i=0;i<_tribe->vCharacter.size();++i)
 		{
 			_tribe->vCharacter(i)->settlement=s;
+			s->location.putCharacter(_tribe->vCharacter(i),LOCATION_HALL);
 		}
+		
+
 		
 	}
 }

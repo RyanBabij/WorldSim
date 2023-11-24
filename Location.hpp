@@ -11,18 +11,28 @@
 
 // Structures will require wood or stone to build.
 
-class Structure
-{
-	// FARM, SCHOOL, MINE SHAFT
-	public:
-	// ENUM TYPE
-	int capacity; // How many people can occupy the location.
-	int nIngress; // How many people can enter at once.
+// class Structure
+// {
+	// // FARM, SCHOOL, MINE SHAFT
+	// public:
+	// // ENUM TYPE
+
 	
-	Structure()
-	{
-		capacity=0;
-	}
+	// Structure()
+	// {
+		// capacity=0;
+		// nIngress=0;
+		// canBranch
+	// }
+// };
+
+enum enumLocation
+{
+	LOCATION_UNKNOWN=0,
+	LOCATION_OUTSIDE=1,
+	LOCATION_WALLS=2,
+	LOCATION_HALL=3,
+	LOCATION_COUNT=4
 };
 
 class Location
@@ -31,18 +41,41 @@ class Location
 		Vector <Character*> vCharacter; // Characters in this location.
 		Vector <Location*> vLinkedLocations; // Locations you can travel to from here.
 		
-		bool isOutside;
-		bool isWilderness;
-	
 	public:
+		enumLocation type;
+		
+		bool isOutside;
+		
+		int capacity; // How many people can occupy the location.
+		int nIngress; // How many people can enter at once.
+		int darkness; // Dark areas spawn enemies
+		
+		bool canBranch;
+	
+
 		Location()
 		{
+			isOutside=false;
+			capacity=0;
+			nIngress=0;
+			darkness=0;
+			canBranch=false;
 		}
 		
 		void link(Location* location)
 		{
 			vLinkedLocations.push(location);
 			location->vLinkedLocations.push(this);
+		}
+		
+		void putCharacter(Character* c)
+		{
+			vCharacter.push(c);
+		}
+		
+		virtual std::string getName()
+		{
+			return "unknown";
 		}
 			
 };	
@@ -52,53 +85,73 @@ class Location
 class Location_Settlement_Exterior: public Location
 {
 	public:
-	Location_Settlement_Exterior()
-	{
-	}
+		Location_Settlement_Exterior()
+		{
+			type=LOCATION_OUTSIDE;
+			isOutside=true;
+		}
+		
+		virtual std::string getName()
+		{
+			return "outside";
+		}
 };
 
 // Defensive walls or perimeter of the Settlement
 class Location_Settlement_Walls: public Location
 {
 	public:
+		
+		Location_Settlement_Walls()
+		{
+			type=LOCATION_WALLS;
+		}
 	
-	Location_Settlement_Walls()
-	{
-	}
+		virtual std::string getName()
+		{
+			return "walls";
+		}
 	
 };
 
 class Location_Main_Hall: public Location
 {
 	public:
-	Location_Main_Hall()
-	{
-	}
+		Location_Main_Hall()
+		{
+			type=LOCATION_HALL;
+			canBranch=true;
+		}
+	
+		virtual std::string getName()
+		{
+			return "main hall";
+		}
 };
 
 class Location_Dwelling: public Location
 {
 	public:
-	Location_Dwelling()
-	{
-	}
+		Location_Dwelling()
+		{
+		}
 };
 
 class Location_Mine: public Location
 {
 	public:
 	
-	int size;
-	int nIron;
-	int nCopper;
-	
-	
-	Location_Mine()
-	{
-	}
+		int size;
+		int nIron;
+		int nCopper;
+		
+		
+		Location_Mine()
+		{
+		}
 };
 
-
+#include "Character.hpp"
 
 class LocationManager
 {
@@ -127,8 +180,27 @@ class LocationManager
 		{
 			Location_Settlement_Exterior* exterior = new Location_Settlement_Exterior();
 			vLocation.push(exterior);
-			//vLocation.push(new Location_Settlement_Exterior());
-			//vLocation.push(new Location_Settlement_Exterior());
+			
+			Location_Settlement_Walls* walls = new Location_Settlement_Walls();
+			vLocation.push(walls);
+			walls->link(exterior);
+			
+			Location_Main_Hall* hall = new Location_Main_Hall();
+			vLocation.push(hall);
+			hall->link(walls);
+
+		}
+		
+		void putCharacter(Character* c, enumLocation location)
+		{
+			for (int i=0;i<vLocation.size();++i)
+			{
+				if ( vLocation(i)->type == location )
+				{
+					c->location = vLocation(i);
+				}
+			}
+			
 		}
 		
 };

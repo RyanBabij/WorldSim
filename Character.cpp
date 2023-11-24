@@ -89,6 +89,8 @@ Character::Character(): social(this)
 
 	isUnderground=false;
 	
+	location=0;
+	
 }
 
 //_sex: 0 - Roll, 1 - Male, 2 - Female.
@@ -137,6 +139,15 @@ void Character::init(const int _sex /* =0 */)
 	
 	social.setCompatibility(globalRandom.rand8(),globalRandom.rand8());
 	
+}
+
+std::string Character::getLocation()
+{
+	if ( location == 0 )
+	{
+		return "unknown";
+	}
+	return location->getName();
 }
 
 char Character::getBaseSkill(AttributeManager::TYPE skill)
