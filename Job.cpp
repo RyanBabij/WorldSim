@@ -113,4 +113,16 @@ std::string Job_Farming::getName()
 	return "farming";
 }
 
+Job_Prospecting::Job_Prospecting() : Job()
+{
+	type = JOB_PROSPECTING;
+	requiredItem = ITEM_PICKAXE;
+	desiredMiningValue = 1;
+}
+
+std::string Job_Prospecting::getName()
+{
+	return "prospecting";
+}
+
 #endif // WORLDSIM_JOB_CPP

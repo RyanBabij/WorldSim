@@ -2,7 +2,7 @@
 #ifndef WORLDSIM_SETTLEMENT_HPP
 #define WORLDSIM_SETTLEMENT_HPP
 
-//#include "Location.hpp"
+#include "Location.hpp"
 #include "Government.hpp"
 
 #include "Resource.cpp"
@@ -36,6 +36,8 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		ResourceManager resourceManager;
 		Technology technology;
 		
+		LocationManager location;
+		
 		int colourRed;
 		int colourGreen;
 		int colourBlue;
@@ -65,6 +67,8 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		bool hasIdea(Idea);
 		bool isSpecialIdea(Idea idea); // If the idea leads to a breakthrough
 		void giveIdea(Idea);
+		
+		void buildDwarvenFortress();
 		
 		virtual std::string getName() override;
 

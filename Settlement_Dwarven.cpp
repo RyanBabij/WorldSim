@@ -13,8 +13,6 @@ Settlement_Dwarven::Settlement_Dwarven(): Settlement()
 {
 	race = DWARVEN;
 
-	//nFoodStockpile=10;
-	//nMetalStockpile=0;
 	monthlyCounter=0;
 	dailyCounter=0;
 
@@ -25,10 +23,6 @@ Texture* Settlement_Dwarven::currentTexture()
 {
 	return &TEX_WORLD_SETTLEMENT_DWARFFORT_01;
 }
-
-// void Settlement_Dwarven::abstractMonthJob(enumJob Job)
-// {
-// }
 
 void Settlement_Dwarven::checkStockpileForBestItem(Character* character, Job* job)
 {
@@ -138,6 +132,36 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		delete job;
 		return true;
 	}
+	else if (job->type == JOB_PROSPECTING)
+	{
+		// Character searches the location for a mine site
+		// Prospecting is linked to mining skill
+		
+		int maxPersonalOutput = 14+character->skillMining;
+		if (maxPersonalOutput > 28)
+		{
+			maxPersonalOutput=28;
+		}
+		int maxTotalOutput = maxPersonalOutput + technology.miningLevel;
+		
+		// each month there's 50% chance of finding a mining site
+		if (globalRandom.flip())
+		{
+			std::cout<<"Mining site discovered.\n";
+			
+			
+		}
+		
+		
+		
+		character->skillUpMining();
+		payCharacterFromTreasury(character,1);
+		
+		
+		delete job;
+		return true;
+	}
+	
 	
 	// if the job failed
 	delete job;
@@ -462,8 +486,6 @@ Character* Settlement_Dwarven::getFarmer(Vector <Character*>* vExclude)
 	}
 	return currentBest;
 }
-
-
 
 
 /* SIMULATE X TURNS OF THE SETTLEMENT. */
@@ -794,7 +816,6 @@ void Settlement_Dwarven::abstractMonthSplit()
 	delete vXY;
 	
 }
-
 
 #endif
   

@@ -162,6 +162,11 @@ void Settlement::giveIdea(Idea idea)
 	technology.addIdea(idea);
 }
 
+void Settlement::buildDwarvenFortress()
+{
+	location.buildDwarvenFortress();
+}
+
 /* TABLE INTERFACE */
 
 std::string Settlement::getColumn(std::string _column)

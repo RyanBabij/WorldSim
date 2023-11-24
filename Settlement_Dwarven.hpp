@@ -14,10 +14,7 @@ class Settlement_Dwarven: public Settlement
 
 		/* SIMULATE X TURNS OF THE SETTLEMENT. */
 		void incrementTicks ( int /* nTicks */ );
-		
-		//void abstractMonthFood(Character* character);
-		//void abstractMonthMine(Character* character);
-		
+
 		bool abstractMonthJob(Character* character, Job* job);
 		
 		void checkStockpileForBestItem(Character* character, Job* job);

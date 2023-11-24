@@ -16,6 +16,13 @@
 	
 */
 
+class Resource
+{
+	public:
+	
+	// resource type
+};
+
 class ResourceRequirement
 {
 	public:
