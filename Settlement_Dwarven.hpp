@@ -28,8 +28,10 @@ class Settlement_Dwarven: public Settlement
 		Character* getFarmer(Vector <Character*>* vExclude);
 		Character* getMiner(Vector <Character*>* vExclude);
 		
-		bool miningNeeded(); // True if any more mining resources are required.
+		bool hasLocation(enumLocation _location); // True if there's an area that can be mined.
+		void buildLocation(enumLocation _location);
 		
+		bool miningNeeded(); // True if any more mining resources are required.
 		bool farmingEquipmentNeeded();
 		bool coinsNeeded();
 		

@@ -26,16 +26,11 @@
 	// }
 // };
 
-enum enumLocation
-{
-	LOCATION_UNKNOWN=0,
-	LOCATION_OUTSIDE=1,
-	LOCATION_WALLS=2,
-	LOCATION_HALL=3,
-	LOCATION_COUNT=4
-};
 
-class Location
+#include "Resource.cpp"
+
+
+class Location: public HasResourceRequirement
 {
 	private:
 		Vector <Character*> vCharacter; // Characters in this location.
@@ -50,7 +45,7 @@ class Location
 		int nIngress; // How many people can enter at once.
 		int darkness; // Dark areas spawn enemies
 		
-		bool canBranch;
+		int maxBranches;
 	
 
 		Location()
@@ -59,7 +54,7 @@ class Location
 			capacity=0;
 			nIngress=0;
 			darkness=0;
-			canBranch=false;
+			maxBranches=0;
 		}
 		
 		void link(Location* location)
@@ -77,7 +72,17 @@ class Location
 		{
 			return "unknown";
 		}
-			
+		
+		virtual ResourceRequirement getResourceRequirement()
+		{
+			return ResourceRequirement(0,0);
+		}
+		
+		int availableBranches()
+		{
+			return maxBranches - vLinkedLocations.size();
+		}
+		
 };	
 
 
@@ -89,11 +94,17 @@ class Location_Settlement_Exterior: public Location
 		{
 			type=LOCATION_OUTSIDE;
 			isOutside=true;
+			maxBranches=100;
 		}
 		
 		virtual std::string getName()
 		{
 			return "outside";
+		}
+		
+		virtual ResourceRequirement getResourceRequirement()
+		{
+			return ResourceRequirement(0,0);
 		}
 };
 
@@ -105,11 +116,17 @@ class Location_Settlement_Walls: public Location
 		Location_Settlement_Walls()
 		{
 			type=LOCATION_WALLS;
+			maxBranches=2; // Walls only branch between inside and outside the location.
 		}
 	
 		virtual std::string getName()
 		{
 			return "walls";
+		}
+		
+		virtual ResourceRequirement getResourceRequirement()
+		{
+			return ResourceRequirement(0,0);
 		}
 	
 };
@@ -119,13 +136,38 @@ class Location_Main_Hall: public Location
 	public:
 		Location_Main_Hall()
 		{
-			type=LOCATION_HALL;
-			canBranch=true;
+			type=LOCATION_MAIN_HALL;
+			maxBranches=4;
 		}
 	
 		virtual std::string getName()
 		{
 			return "main hall";
+		}
+		
+		virtual ResourceRequirement getResourceRequirement()
+		{
+			return ResourceRequirement(0,25);
+		}
+};
+
+class Location_Hall: public Location
+{
+	public:
+		Location_Hall()
+		{
+			type=LOCATION_HALL;
+			maxBranches=4;
+		}
+	
+		virtual std::string getName()
+		{
+			return "hall";
+		}
+		
+		virtual ResourceRequirement getResourceRequirement()
+		{
+			return ResourceRequirement(0,25);
 		}
 };
 
@@ -134,6 +176,14 @@ class Location_Dwelling: public Location
 	public:
 		Location_Dwelling()
 		{
+			type=LOCATION_DWELLING;
+			// Dwellings should only branch to a hall.
+			maxBranches=1;
+		}
+		
+		virtual ResourceRequirement getResourceRequirement()
+		{
+			return ResourceRequirement(0,9);
 		}
 };
 
@@ -148,6 +198,14 @@ class Location_Mine: public Location
 		
 		Location_Mine()
 		{
+			type=LOCATION_MINE;
+			// Mine shafts can only branch off from a hall.
+			maxBranches=1;
+		}
+		
+		virtual ResourceRequirement getResourceRequirement()
+		{
+			return ResourceRequirement(0,0);
 		}
 };
 
@@ -158,19 +216,19 @@ class LocationManager
 	public:
 		Vector <Location*> vLocation;
 	
-		enum LOCATION_TYPE
-		{
-			FARM,
-			FACTORY,
-			HUNTING,
-			GUARDING,
-			HALL,
-			MINES,
-			SCHOOL,
-			DUNGEON_RAID,
-			EXPLORING,	
-			ENUM_COUNT // Useful for iterating over the enum or generating random values
-		};
+		// enum LOCATION_TYPE
+		// {
+			// FARM,
+			// FACTORY,
+			// HUNTING,
+			// GUARDING,
+			// HALL,
+			// MINES,
+			// SCHOOL,
+			// DUNGEON_RAID,
+			// EXPLORING,	
+			// ENUM_COUNT // Useful for iterating over the enum or generating random values
+		// };
 	 
 		LocationManager()
 		{
@@ -202,6 +260,89 @@ class LocationManager
 			}
 			
 		}
+		
+		Vector <Location*>* getLocation(enumLocation location)
+		{
+			Vector <Location*>* vMatchLocation = new Vector <Location*>();
+			for (int i=0;i<vLocation.size();++i)
+			{
+				if ( vLocation(i)->type == location )
+				{
+					vMatchLocation->push(vLocation(i));
+				}
+			}
+			return vMatchLocation;
+		}
+		
+		
+		int totalAvailableBranches()
+		{
+			int totalFreeBranches = 0;
+			for (int i=0; i<vLocation.size(); ++i)
+			{
+				totalFreeBranches += vLocation(i)->availableBranches();
+			}
+			return totalFreeBranches;
+		}
+		
+		// Get location with a free branch to build off.
+		Location* getBuildableBranch()
+		{
+			for (int i=0; i<vLocation.size(); ++i)
+			{
+				if (vLocation(i)->availableBranches() > 0)
+				{
+					// can build here
+					return vLocation(i);
+				}
+			}
+			return nullptr;
+		}
+		
+		void addLocation(enumLocation locationType)
+		{
+			Location* buildable = getBuildableBranch();
+			if (buildable == nullptr)
+			{
+				// No buildable branch available
+				return;
+			}
+
+			Location* newLocation = nullptr;
+
+			switch (locationType)
+			{
+				case LOCATION_OUTSIDE:
+					newLocation = new Location_Settlement_Exterior();
+					break;
+				case LOCATION_WALLS:
+					newLocation = new Location_Settlement_Walls();
+					break;
+				case LOCATION_MAIN_HALL:
+					newLocation = new Location_Main_Hall();
+					break;
+				case LOCATION_HALL:
+					newLocation = new Location_Hall();
+					break;
+				case LOCATION_DWELLING:
+					newLocation = new Location_Dwelling();
+					break;
+				case LOCATION_MINE:
+					newLocation = new Location_Mine();
+					break;
+				// Add cases for other location types
+				default:
+					// Handle unknown location type
+					return;
+			}
+
+			if (newLocation != nullptr)
+			{
+				vLocation.push(newLocation);
+				buildable->link(newLocation);
+			}
+		}
+
 		
 };
 

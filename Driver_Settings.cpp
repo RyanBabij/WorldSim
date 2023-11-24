@@ -127,6 +127,18 @@ enum class eLocalTerrain { G=0, GRASS=1, WATER=2 };
 enum enumCauseOfDeath { UNKNOWN=0, STARVATION=1, MASSACRE=2, COMBAT=3, OLD_AGE=4, SMITED=5 };
 const std::string enumCauseOfDeathStr [5] = { "unknown", "starvation", "massacre", "combat", "old age" };
 
+enum enumLocation
+{
+	LOCATION_UNKNOWN=0,
+	LOCATION_OUTSIDE=1,
+	LOCATION_WALLS=2,
+	LOCATION_HALL=3,
+	LOCATION_MAIN_HALL=4,
+	LOCATION_MINE=5,
+	LOCATION_DWELLING=6,
+	LOCATION_COUNT=7
+};
+
 enum enumResource
 {
 	RESOURCE_UNKNOWN=0,

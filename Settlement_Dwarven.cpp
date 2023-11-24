@@ -66,6 +66,32 @@ void Settlement_Dwarven::checkStockpileForBestItem(Character* character, Job* jo
 	}
 }
 
+bool Settlement_Dwarven::hasLocation(enumLocation _location)
+{
+	Vector <Location*>* vMatchLocation = location.getLocation(_location);
+	bool hasLoc = vMatchLocation->empty();
+	delete vMatchLocation;
+	return !hasLoc;
+}
+
+void Settlement_Dwarven::buildLocation(enumLocation _location)
+{
+	// Find a suitable location for it.
+	// Make sure we don't run out of branches, otherwise we also need to build a hall.
+	
+	int totalFreeBranches = location.totalAvailableBranches();
+	
+	if ( totalFreeBranches==1 )
+	{
+		// we must build a hall.
+		location.addLocation(LOCATION_HALL);
+	}
+	location.addLocation(_location);
+	
+}
+
+
+
 bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 {
 	std::cout<<character->getFullName()<<" at "<<character->getLocation()<<". Starting job "<<job->getName()<<". ($"<<character->getMoney()<<")\n";
