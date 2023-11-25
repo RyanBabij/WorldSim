@@ -11,6 +11,8 @@ public:
 	ItemType requiredItem; /* The type of item. */
 	
 	Item_Attributes desiredItemAttributes;
+	
+	enumLocation requiredLocation; // Set to LOCATION_NONE if location not needed.
 
 	int desiredWoodcuttingValue;
 	int desiredFarmingValue;

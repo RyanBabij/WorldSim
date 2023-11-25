@@ -18,6 +18,8 @@
 
 #include "Job.cpp"
 
+#include "Location.hpp"
+
 const int MAX_CHILDREN = 5;
 
 //#include <Graphics/Texture/Texture.hpp>
@@ -60,6 +62,7 @@ Character::Character(): social(this)
 	hunger=0;
 	thirst=0;
 
+	location=0;
 	birthLocation.setXY(0,0);
 	deathLocation.setXY(0,0);
 
@@ -148,6 +151,28 @@ std::string Character::getLocation()
 		return "unknown";
 	}
 	return location->getName();
+}
+
+bool Character::moveToLocationType(enumLocation _location)
+{
+	if (settlement == nullptr)
+	{
+		return false;
+	}
+	
+	Vector <Location*>* vLocation = settlement->location.getLocation(_location);
+	
+	if (vLocation->empty())
+	{
+		delete vLocation;
+		return false;
+	}
+	
+	vLocation->shuffle();
+	location = (*vLocation)(0);
+	delete vLocation;
+	
+	return true;
 }
 
 char Character::getBaseSkill(AttributeManager::TYPE skill)

@@ -15,6 +15,7 @@ Job::Job()
 {
 	type = JOB_UNKNOWN;
 	requiredItem = ITEM_NONE;
+	requiredLocation = LOCATION_NONE;
 	desiredWoodcuttingValue = 0;
 	desiredFarmingValue = 0;
 	desiredMiningValue = 0;
@@ -92,6 +93,7 @@ std::string Job_Woodcutting::getName()
 Job_Mining::Job_Mining() : Job()
 {
 	type = JOB_MINING;
+	requiredLocation = LOCATION_MINE;
 	requiredItem = ITEM_PICKAXE;
 	desiredMiningValue = 1;
 }

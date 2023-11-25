@@ -146,6 +146,16 @@ bool Settlement::isSpecialIdea(Idea idea)
 	return technology.isSpecialIdea(idea);
 }
 
+int Settlement::getPopulation()
+{
+	return vCharacter.size();
+}
+
+int Settlement::getMiningCapacity()
+{
+	return location.getMiningCapacity();
+}
+
 void Settlement::giveIdea(Idea idea)
 {
 	vIdea.push(idea);

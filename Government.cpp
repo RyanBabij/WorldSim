@@ -92,6 +92,15 @@ void Government_Leader::govern()
 		}
 	}
 	
+	// BUILDING
+	
+	if ( s->getMiningCapacity() < s->getPopulation()/3 )
+	{
+		std::cout<<"Leader building a mine\n";
+		s->location.addLocation(LOCATION_MINE);
+	}
+	
+	
 	// Put in any public production orders
 	requestManager->removeAll(resourceManager,ITEM_HOE);
 	if ( resourceManager->getMoney() > 0 )
@@ -116,6 +125,9 @@ void Government_Leader::govern()
 			}
 		}
 	}
+	
+	// check mining capacity and build mines if possible
+	
 	
 	// if ( stockpile->getNumberOfItems(ITEM_HOE) < s->vCharacter.size() )
 	// {

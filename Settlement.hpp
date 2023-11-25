@@ -51,8 +51,11 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		Settlement();
 		
 		/* GETTER AND SETTER */
+		int getPopulation();
 		Character* getRandomCharacter();
 		Character* getCharacter(Vector <Character*>* vExclude);
+		
+		int getMiningCapacity();
 		
 		void printAllMoneyInSettlement(); // Including Character money
 		int getAllMoneyInSettlement(); // Including Character money

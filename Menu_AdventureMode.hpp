@@ -19,6 +19,7 @@
 
 // Stores the description, index, and interaction id
 
+#include "Character.hpp"
 
 #include "Recipe.hpp"
 

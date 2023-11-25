@@ -109,6 +109,8 @@ World_Local * worldLocal;
 #include "Recipe.cpp"
 #include "Item_Attributes.cpp"
 
+#include "Location.cpp"
+
 
 /* Game initialization goes here. */
 #include "Driver_Init.hpp"

@@ -33,6 +33,7 @@ class Civ;
 class Settlement;
 class Character_Knowledge;
 class World_Local;
+class Location;
 
 class Character: public WorldObject, public TableInterface, public SaveFileInterface, public HasMoney
 {
@@ -258,6 +259,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	std::string getBestSkills();
 	
 	std::string getLocation();
+	
+	bool moveToLocationType(enumLocation location);
   
     // LOCATION
     

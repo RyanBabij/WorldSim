@@ -996,7 +996,7 @@ void World::evolveToCiv( Tribe * _tribe )
 		for (int i=0;i<_tribe->vCharacter.size();++i)
 		{
 			_tribe->vCharacter(i)->settlement=s;
-			s->location.putCharacter(_tribe->vCharacter(i),LOCATION_HALL);
+			s->location.putCharacter(_tribe->vCharacter(i),LOCATION_MAIN_HALL);
 		}
 		
 

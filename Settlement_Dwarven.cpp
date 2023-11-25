@@ -140,6 +140,9 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 	else if (job->type == JOB_MINING)
 	{
 		// Character works in the mines for the month
+
+		// Move to the mines
+		character->moveToLocationType(LOCATION_MINE);
 		
 		int maxPersonalOutput = 14+character->skillMining;
 		if (maxPersonalOutput > 28)
@@ -613,6 +616,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		stockpile.print();
 		printAllMoneyInSettlement();
 		requestManager.print();
+		location.printAll();
 		monthlyCounter-=TICKS_PER_MONTH;
 	}
 	
