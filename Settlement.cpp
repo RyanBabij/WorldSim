@@ -21,6 +21,11 @@ Settlement::Settlement()
 	name=globalNameGen.generate();
 }
 
+void Settlement::initSimulation()
+{
+	location.biome = world->getBiome(worldX,worldY);
+}
+
 std::string Settlement::getName()
 {
 	return name;
@@ -159,6 +164,11 @@ int Settlement::getMiningCapacity()
 int Settlement::getFarmingCapacity()
 {
 	return location.getFarmingCapacity();
+}
+
+World_Biome* Settlement::getBiome()
+{
+	return location.biome;
 }
 
 void Settlement::giveIdea(Idea idea)

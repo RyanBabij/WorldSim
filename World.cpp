@@ -434,6 +434,12 @@ void World::startSimulation()
 	{
 		mapManager.addBiome(vBiome(i));
 	}
+	
+	// Now the world is fully generated, we can init the Civs.
+	for (int i=0; i<vCiv.size(); ++i)
+	{
+		vCiv(i)->initSimulation();
+	}
 
 	// launch tile caching manager
 	//mapManager.main();
@@ -982,6 +988,9 @@ void World::evolveToCiv( Tribe * _tribe )
 		putObject(s, _tribe->worldX, _tribe->worldY);
 		s->government=_tribe->government;
 		s->government.governedSettlement=s;
+		
+		
+		s->location.biome = getBiome(_tribe->worldX,_tribe->worldY);
 		s->buildDwarvenFortress();
 		removeObject(_tribe);
 		vTribe.remove(_tribe);  
@@ -2212,6 +2221,18 @@ World_Biome * World::getBiome(const int id)
 	return 0;
 }
 
+World_Biome* World::getBiome(const int _x, const int _y)
+{
+	if ( isSafe(_x,_y) )
+	{
+		if (vBiome.isSafe(aBiomeID(_x,_y)))
+		{
+			return vBiome(aBiomeID(_x,_y));
+		}
+	}
+	return nullptr;
+}
+
 std::string World::getBiomeName(const int _x, const int _y)
 {
 	if ( isSafe(_x,_y) )
@@ -2223,7 +2244,6 @@ std::string World::getBiomeName(const int _x, const int _y)
 	}
 	return "";
 }
-
 
 bool World::hasFreeTerritory(int landmassID)
 {

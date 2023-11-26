@@ -148,6 +148,25 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		delete job;
 		return true;
 	}
+	else if (job->type == JOB_HUNTING)
+	{
+		std::cout<<"HUNTING\n";
+		World_Biome* biome = getBiome();
+		
+		if (biome == nullptr)
+		{
+			std::cout<<"ERROR: No biome in Settlement\n";
+		}
+		std::cout<<"Character hunting in biome: "<<biome->name<<".\n";
+		
+		if (globalRandom.flip())
+		{
+			resourceManager.addFood(16);
+		}
+		
+		delete job;
+		return true;
+	}
 	else if (job->type == JOB_MINING)
 	{
 		// Character works in the mines for the month
@@ -593,7 +612,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 				}
 				else if (abstractMonthJob(actingCharacter, new Job_Hunting()))
 				{
-					
+					std::cout<<"Character going hunting\n";
 				}
 			}
 			else

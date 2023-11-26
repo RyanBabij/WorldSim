@@ -187,6 +187,7 @@ std::string Location_Farm::getName()
 LocationManager::LocationManager()
 {
 	// Constructor body (if needed)
+	biome=0;
 }
 
 void LocationManager::buildDwarvenFortress()

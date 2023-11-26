@@ -234,7 +234,7 @@ class Menu_WorldGenerator: public GUI_Interface
 		nTribe.setColours(cNormal,cHighlight,0);
 		nTribe.texIncrement = &TEX_GUI_INCREMENT;
 		nTribe.texDecrement = &TEX_GUI_DECREMENT;
-		guiCaptionNTribe.text="# tribes:";
+		guiCaptionNTribe.text="# human tribes:";
 		guiCaptionNTribe.setColours(cNormal);
 		guiCaptionNTribe.centeredY=true;
 		
@@ -243,7 +243,7 @@ class Menu_WorldGenerator: public GUI_Interface
 		nTribeDwarven.setColours(cNormal,cHighlight,0);
 		nTribeDwarven.texIncrement = &TEX_GUI_INCREMENT;
 		nTribeDwarven.texDecrement = &TEX_GUI_DECREMENT;
-		guiCaptionNTribeDwarven.text="# Dwarven tribes:";
+		guiCaptionNTribeDwarven.text="# Dwarven forts:";
 		guiCaptionNTribeDwarven.setColours(cNormal);
 		guiCaptionNTribeDwarven.centeredY=true;
 		
@@ -283,18 +283,23 @@ class Menu_WorldGenerator: public GUI_Interface
 		
 		textWorldSize.text="World size:";
 		textWorldSize.setColours(cNormal);
+		textWorldSize.centeredY=true;
 		
 		textFreeSteps.text="Fragmentation:";
 		textFreeSteps.setColours(cNormal);
+		textFreeSteps.centeredY=true;
 		
 		textWrapX.text="Wrap X:";
 		textWrapX.setColours(cNormal);
+		textWrapX.centeredY=true;
 		
 		textWrapY.text="Wrap Y:";
 		textWrapY.setColours(cNormal);
+		textWrapY.centeredY=true;
 		
 		textIslandMode.text="Island mode:";
 		textIslandMode.setColours(cNormal);
+		textIslandMode.centeredY=true;
 		
 		textMenuTitle.text="World Generator";
 		textMenuTitle.setColours(cNormal);
@@ -330,9 +335,9 @@ class Menu_WorldGenerator: public GUI_Interface
 		guiManager.add(&guiIslandMode);
 		guiManager.add(&guiWrapX);
 		guiManager.add(&guiWrapY);
-		guiManager.add(&guiCaptionNCiv);
+		//guiManager.add(&guiCaptionNCiv);
 		guiManager.add(&textOceanPercent);
-		guiManager.add(&nCiv);
+		//guiManager.add(&nCiv);
 		guiManager.add(&nLandPercent);
 		guiManager.add(&guiCaptionNTribe);
 		guiManager.add(&guiCaptionNTribeDwarven);
@@ -341,8 +346,8 @@ class Menu_WorldGenerator: public GUI_Interface
 		guiManager.add(&nTribeDwarven);
 		guiManager.add(&nTribeElven);
 		guiManager.add(&buttonSimWorld);
-		guiManager.add(&buttonExportData);
-		guiManager.add(&buttonLoadWorld);
+		//guiManager.add(&buttonExportData);
+		//guiManager.add(&buttonLoadWorld);
 		//guiManager.add(&buttonExpandPreviewWindow);
     
     // A TEMPORARY FIX TO STOP ACCIDENTALLY HITTING
@@ -421,12 +426,6 @@ class Menu_WorldGenerator: public GUI_Interface
 		currentY1 -= (ySize+ySpacing);
 		currentY2 -= (ySize+ySpacing);
 		
-		nTribe.setPanel(leftColumnCenterX-20, currentY1, leftColumnCenterX+120, currentY2);
-		guiCaptionNTribe.setPanel(leftColumnCenterX-120, currentY1, leftColumnCenterX-20, currentY2);
-		
-		currentY1 -= (ySize+ySpacing);
-		currentY2 -= (ySize+ySpacing);
-	
 		nTribeDwarven.setPanel(leftColumnCenterX-20, currentY1, leftColumnCenterX+120, currentY2);
 		guiCaptionNTribeDwarven.setPanel(leftColumnCenterX-180, currentY1, leftColumnCenterX-20, currentY2);
 		
@@ -439,22 +438,28 @@ class Menu_WorldGenerator: public GUI_Interface
 		currentY1 -= (ySize+ySpacing);
 		currentY2 -= (ySize+ySpacing);
 		
-		buttonGenerate.setPanel(leftColumnCenterX-120, currentY1, leftColumnCenterX+120, currentY2);
+		nTribe.setPanel(leftColumnCenterX-20, currentY1, leftColumnCenterX+120, currentY2);
+		guiCaptionNTribe.setPanel(leftColumnCenterX-180, currentY1, leftColumnCenterX-20, currentY2);
 		
 		currentY1 -= (ySize+ySpacing);
 		currentY2 -= (ySize+ySpacing);
 		
-		buttonSimWorld.setPanel(leftColumnCenterX-120, currentY1, leftColumnCenterX+120, currentY2);
+		buttonGenerate.setPanel(leftColumnCenterX-170, currentY1, leftColumnCenterX+110, currentY2);
 		
 		currentY1 -= (ySize+ySpacing);
 		currentY2 -= (ySize+ySpacing);
 		
-		buttonExportData.setPanel(leftColumnCenterX-120, currentY1, leftColumnCenterX+120, currentY2);
+		buttonSimWorld.setPanel(leftColumnCenterX-170, currentY1, leftColumnCenterX+110, currentY2);
 		
 		currentY1 -= (ySize+ySpacing);
 		currentY2 -= (ySize+ySpacing);
 		
-		buttonLoadWorld.setPanel(leftColumnCenterX-120, currentY1, leftColumnCenterX+120, currentY2);
+		buttonExportData.setPanel(leftColumnCenterX-170, currentY1, leftColumnCenterX+110, currentY2);
+		
+		currentY1 -= (ySize+ySpacing);
+		currentY2 -= (ySize+ySpacing);
+		
+		buttonLoadWorld.setPanel(leftColumnCenterX-170, currentY1, leftColumnCenterX+110, currentY2);
 		
 		buttonExpandPreviewWindow.setPanel(0,0,32,32);
 		
@@ -748,8 +753,8 @@ class Menu_WorldGenerator: public GUI_Interface
       double landPercent = (double) nLandPercent.currentValue / 100;
 
       world.generateWorld(textEntryWorldName.input,worldSizeV,worldSizeV,seed,fragmentation,islandMode,wrapX,wrapY,landPercent); /* MEMORY LEAK */
-      world.generateTribes(nTribe.currentValue,nTribeDwarven.currentValue,nTribeElven.currentValue);
       world.nameRegions();
+      world.generateTribes(nTribe.currentValue,nTribeDwarven.currentValue,nTribeElven.currentValue);
     }
   }
   

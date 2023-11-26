@@ -49,6 +49,7 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		int race;
 
 		Settlement();
+		void initSimulation(); // biomes, creatures etc have been initialised.
 		
 		/* GETTER AND SETTER */
 		int getPopulation();
@@ -57,6 +58,8 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		
 		int getMiningCapacity();
 		int getFarmingCapacity();
+		
+		World_Biome* getBiome();
 		
 		void printAllMoneyInSettlement(); // Including Character money
 		int getAllMoneyInSettlement(); // Including Character money

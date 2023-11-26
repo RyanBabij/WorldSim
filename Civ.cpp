@@ -23,6 +23,14 @@ void Civ::init(World* _world)
 	aVisible.init(world->nX,world->nY,false);
 }
 
+void Civ::initSimulation()
+{
+	for (int i=0; i<vSettlement.size(); ++i)
+	{
+		vSettlement(i)->initSimulation();
+	}
+}
+
 void Civ::addSettlement(Settlement * _settlement)
 {
 	_settlement->world = world;

@@ -65,6 +65,7 @@ class Civ: public TableInterface
     int race;
     
 		Civ();
+		void initSimulation();
 		
 			// MAKE THE CIV AWARE OF THE EXISTENCE OF THE PASSED CIV.
 		void addContact(Civ*);

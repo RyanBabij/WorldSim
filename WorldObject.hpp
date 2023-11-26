@@ -18,63 +18,63 @@
 class WorldObject: public HasTexture
 {
 	public:
-  
+
 	short int x, y;
-  
-  bool isUnderground; /* True if the object is on the subterranean layer */
-  
-  //Implementing full global coordinates to make life easier for now.
-  // This datatype should be able to hold coordinates for any reasonably-sized world.
-  long unsigned int fullX, fullY;
-  
-  
-    /* TEMPORARY WORKAROUND TO ALLOW CHARACTERS TO MOVE ACROSS MAPS.
-      CURRENTLY ONLY USED FOR CHARACTERS
-      In future World_Local should distinguish between actors and objects */
-  int worldX, worldY;
-	
+
+	bool isUnderground; /* True if the object is on the subterranean layer */
+
+	//Implementing full global coordinates to make life easier for now.
+	// This datatype should be able to hold coordinates for any reasonably-sized world.
+	long unsigned int fullX, fullY;
+
+
+	/* TEMPORARY WORKAROUND TO ALLOW CHARACTERS TO MOVE ACROSS MAPS.
+	CURRENTLY ONLY USED FOR CHARACTERS
+	In future World_Local should distinguish between actors and objects */
+	int worldX, worldY;
+
 	bool stackable; /* True if multiple objects of this class can be merged together into a single stack, sharing their data. */
-	
+
 	double weight; /* in grams */
 	double bulk; /* In cm^3 , and adjusted higher for cumbersome items.*/
-  
-  /* True if line of sight cannot pass this object.
-    Might be expanded in future. For example maybe a
-    crate will block view of people who are sneaking. */
-  bool blocksView;
-  
-  /* True if characters and creatures cannot walk into this tile. */
-  bool blocksMovement;
-  
-    // INTERACTIONS
-    // Should probably be moved down the heirarchy.
-  bool canCook; /* This object can be used for cooking. */
-  int chopAmount; /* -1 if chopping is not possible. */
-  bool canHarvest; /* Probably should be put into a Harvestable interface */
-	
+
+	/* True if line of sight cannot pass this object.
+	Might be expanded in future. For example maybe a
+	crate will block view of people who are sneaking. */
+	bool blocksView;
+
+	/* True if characters and creatures cannot walk into this tile. */
+	bool blocksMovement;
+
+	// INTERACTIONS
+	// Should probably be moved down the heirarchy.
+	bool canCook; /* This object can be used for cooking. */
+	int chopAmount; /* -1 if chopping is not possible. */
+	bool canHarvest; /* Probably should be put into a Harvestable interface */
+
 	WorldObject();
 	virtual ~WorldObject() {}
-  
-  
+
+
 	virtual std::string getName();
 	virtual std::string getExtendedInfo() { return "N/A"; }
-	
+
 	// move object 1 tile in random direction, confined to local map
 	virtual void wander();
-	
-    // DISTANCES
-    // We should add manhattan and normal
+
+	// DISTANCES
+	// We should add manhattan and normal
 	int distanceTo(WorldObject*); /* Chebyshev (this one is distances where diagonal movement is allowed.) */
-		int distanceFrom(WorldObject*); /* Alias. */
-    
-   int distanceTo(int /* _x */, int /* _y */); /* Same, using raw coordinates */
-   
-   virtual Texture* currentTexture();
+	int distanceFrom(WorldObject*); /* Alias. */
 
-   std::string getBaseData();
+	int distanceTo(int /* _x */, int /* _y */); /* Same, using raw coordinates */
 
-   std::string getSaveData();
-   void loadData(std::string);
+	virtual Texture* currentTexture();
+
+	std::string getBaseData();
+
+	std::string getSaveData();
+	void loadData(std::string);
 };
 
 

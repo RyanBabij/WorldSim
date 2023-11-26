@@ -123,6 +123,8 @@ class LocationManager
 {
 public:
 	Vector <Location*> vLocation;
+	
+	World_Biome* biome;
 
 	LocationManager();
 
