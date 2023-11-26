@@ -41,6 +41,17 @@ public:
 	int availableBranches();
 };
 
+
+// Far beyond the Settlement
+class Location_Wilderness: public Location
+{
+public:
+	Location_Wilderness();
+
+	virtual std::string getName() override;
+	virtual ResourceRequirement getResourceRequirement() override;
+};
+
 class Location_Settlement_Exterior: public Location
 {
 public:
@@ -98,6 +109,16 @@ public:
 	virtual ResourceRequirement getResourceRequirement() override;
 };
 
+class Location_Farm: public Location
+{
+public:
+
+	Location_Farm();
+
+	virtual std::string getName() override;
+	virtual ResourceRequirement getResourceRequirement() override;
+};
+
 class LocationManager
 {
 public:
@@ -111,6 +132,7 @@ public:
 	int totalAvailableBranches();
 	Location* getBuildableBranch();
 	int getMiningCapacity();
+	int getFarmingCapacity();
 	void addLocation(enumLocation locationType);
 	
 	void printAll();

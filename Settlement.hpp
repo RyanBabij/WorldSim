@@ -56,6 +56,7 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		Character* getCharacter(Vector <Character*>* vExclude);
 		
 		int getMiningCapacity();
+		int getFarmingCapacity();
 		
 		void printAllMoneyInSettlement(); // Including Character money
 		int getAllMoneyInSettlement(); // Including Character money

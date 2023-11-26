@@ -64,6 +64,24 @@ ResourceRequirement Location_Settlement_Exterior::getResourceRequirement()
 	return ResourceRequirement(0, 0);
 }
 
+Location_Wilderness::Location_Wilderness()
+{
+	type = LOCATION_WILDERNESS;
+	isOutside = true;
+	maxBranches = 4;
+}
+
+std::string Location_Wilderness::getName()
+{
+	return "wilderness";
+}
+
+
+ResourceRequirement Location_Wilderness::getResourceRequirement()
+{
+	return ResourceRequirement(0, 0);
+}
+
 // Location_Settlement_Walls class implementations
 Location_Settlement_Walls::Location_Settlement_Walls()
 {
@@ -148,6 +166,23 @@ std::string Location_Mine::getName()
 	return "mine";
 }
 
+Location_Farm::Location_Farm()
+{
+	type = LOCATION_FARM;
+	maxBranches = 1;
+	capacity=5;
+}
+
+ResourceRequirement Location_Farm::getResourceRequirement()
+{
+	return ResourceRequirement(0, 0);
+}
+
+std::string Location_Farm::getName()
+{
+	return "farm";
+}
+
 // LocationManager class implementations
 LocationManager::LocationManager()
 {
@@ -227,6 +262,19 @@ int LocationManager::getMiningCapacity()
 	return totalMiningCapacity;
 }
 
+int LocationManager::getFarmingCapacity()
+{
+	int totalFarmingCapacity = 0;
+	for (int i = 0; i < vLocation.size(); ++i)
+	{
+		if (vLocation(i)->type == LOCATION_FARM)
+		{
+			totalFarmingCapacity += static_cast<Location_Farm*>(vLocation(i))->capacity;
+		}
+	}
+	return totalFarmingCapacity;
+}
+
 void LocationManager::addLocation(enumLocation locationType)
 {
 	Location* buildable = getBuildableBranch();
@@ -257,6 +305,9 @@ void LocationManager::addLocation(enumLocation locationType)
 			break;
 		case LOCATION_MINE:
 			newLocation = new Location_Mine();
+			break;
+		case LOCATION_FARM:
+			newLocation = new Location_Farm();
 			break;
 		// Add cases for other location types
 		default:

@@ -14,7 +14,7 @@
 Job::Job()
 {
 	type = JOB_UNKNOWN;
-	requiredItem = ITEM_NONE;
+	requiredItem = ITEM_NONE; // This should become a function
 	requiredLocation = LOCATION_NONE;
 	desiredWoodcuttingValue = 0;
 	desiredFarmingValue = 0;
@@ -101,6 +101,19 @@ Job_Mining::Job_Mining() : Job()
 std::string Job_Mining::getName()
 {
 	return "mining";
+}
+
+Job_Hunting::Job_Hunting() : Job()
+{
+	type = JOB_HUNTING;
+	requiredLocation = LOCATION_WILDERNESS;
+	requiredItem = ITEM_LONGBOW;
+	desiredMiningValue = 1;
+}
+
+std::string Job_Hunting::getName()
+{
+	return "hunting";
 }
 
 Job_Farming::Job_Farming() : Job()

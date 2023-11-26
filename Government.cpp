@@ -87,7 +87,7 @@ void Government_Leader::govern()
 				std::cout<<"King has implemented an idea as a tech\n";
 				character->vIdea.removeSlot(i);
 				// limit 1 idea implemented per turn.
-				return;
+				break;
 			}
 		}
 	}
@@ -100,6 +100,13 @@ void Government_Leader::govern()
 		s->location.addLocation(LOCATION_MINE);
 	}
 	
+	if ( s->getFarmingCapacity() < s->getPopulation()/2 )
+	{
+		//std::cout<<"Leader building a farm\n";
+		//s->location.addLocation(LOCATION_FARM);
+	}
+	
+	// PRODUCTION
 	
 	// Put in any public production orders
 	requestManager->removeAll(resourceManager,ITEM_HOE);
@@ -125,13 +132,6 @@ void Government_Leader::govern()
 			}
 		}
 	}
-	
-	// check mining capacity and build mines if possible
-	
-	
-	// if ( stockpile->getNumberOfItems(ITEM_HOE) < s->vCharacter.size() )
-	// {
-	// }
 	
 	
 	// Money distribution:

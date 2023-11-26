@@ -113,6 +113,17 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		
 		// Check if we can borrow a hoe if we don't own one.
 		
+		
+		
+		// Move to farms. If not possible we will need to hunt/gather instead.
+		if (character->moveToLocationType(LOCATION_FARM) == false )
+		{
+			std::cout<<"Character unable to move to farm.\n";
+			
+			// Go hunting/gathering instead
+			return false;
+		}
+		
 		int farmingItemMult=1;
 		if ( item != nullptr )
 		{
@@ -142,7 +153,10 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		// Character works in the mines for the month
 
 		// Move to the mines
-		character->moveToLocationType(LOCATION_MINE);
+		if (character->moveToLocationType(job->requiredLocation) == false )
+		{
+			std::cout<<"Character unable to move to location.\n";
+		}
 		
 		int maxPersonalOutput = 14+character->skillMining;
 		if (maxPersonalOutput > 28)
@@ -574,7 +588,13 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			{
 				actingCharacter = getFarmer(&vMovedCharacters);
 				//abstractMonthFood(actingCharacter);
-				abstractMonthJob(actingCharacter, new Job_Farming());
+				if (abstractMonthJob(actingCharacter, new Job_Farming()))
+				{
+				}
+				else if (abstractMonthJob(actingCharacter, new Job_Hunting()))
+				{
+					
+				}
 			}
 			else
 			{

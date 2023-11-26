@@ -156,6 +156,11 @@ int Settlement::getMiningCapacity()
 	return location.getMiningCapacity();
 }
 
+int Settlement::getFarmingCapacity()
+{
+	return location.getFarmingCapacity();
+}
+
 void Settlement::giveIdea(Idea idea)
 {
 	vIdea.push(idea);

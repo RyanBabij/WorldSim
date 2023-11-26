@@ -62,3 +62,11 @@ class Job_Prospecting: public Job
 	
 	virtual std::string getName() override;
 };
+
+class Job_Hunting : public Job
+{
+public:
+	Job_Hunting();
+	
+	virtual std::string getName() override;
+};
