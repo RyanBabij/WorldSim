@@ -24,10 +24,30 @@ void Location::link(Location* location)
 	location->vLinkedLocations.push(this);
 }
 
-void Location::putCharacter(Character* c)
+bool Location::putCharacter(Character* c)
 {
+	if ( hasRoom() == false )
+	{
+		return false;
+	}
 	vCharacter.push(c);
 	c->location = this;
+	return true;
+}
+
+bool Location::hasRoom()
+{
+	if ( capacity == -1 || capacity > vCharacter.size() )
+	{
+		return true;
+	}
+	return false;
+}
+
+void Location::removeCharacter(Character* c)
+{
+	vCharacter.remove(c);
+	c->location = 0;
 }
 
 std::string Location::getName()
@@ -52,6 +72,7 @@ Location_Settlement_Exterior::Location_Settlement_Exterior()
 	type = LOCATION_OUTSIDE;
 	isOutside = true;
 	maxBranches = 100;
+	capacity = -1;
 }
 
 std::string Location_Settlement_Exterior::getName()
@@ -69,6 +90,7 @@ Location_Wilderness::Location_Wilderness()
 	type = LOCATION_WILDERNESS;
 	isOutside = true;
 	maxBranches = 4;
+	capacity = -1;
 }
 
 std::string Location_Wilderness::getName()
@@ -87,6 +109,7 @@ Location_Settlement_Walls::Location_Settlement_Walls()
 {
 	type = LOCATION_WALLS;
 	maxBranches = 2;
+	capacity = 12;
 }
 
 std::string Location_Settlement_Walls::getName()
@@ -104,6 +127,7 @@ Location_Main_Hall::Location_Main_Hall()
 {
 	type = LOCATION_MAIN_HALL;
 	maxBranches = 4;
+	capacity = 50;
 }
 
 std::string Location_Main_Hall::getName()
@@ -121,6 +145,7 @@ Location_Hall::Location_Hall()
 {
 	type = LOCATION_HALL;
 	maxBranches = 4;
+	capacity = 25;
 }
 
 std::string Location_Hall::getName()
@@ -170,7 +195,7 @@ Location_Farm::Location_Farm()
 {
 	type = LOCATION_FARM;
 	maxBranches = 1;
-	capacity=5;
+	capacity=3;
 }
 
 ResourceRequirement Location_Farm::getResourceRequirement()
@@ -202,6 +227,10 @@ void LocationManager::buildDwarvenFortress()
 	Location_Main_Hall* hall = new Location_Main_Hall();
 	vLocation.push(hall);
 	hall->link(walls);
+	
+	Location_Wilderness* wild = new Location_Wilderness();
+	vLocation.push(wild);
+	wild->link(exterior);
 }
 
 void LocationManager::putCharacter(Character* c, enumLocation location)

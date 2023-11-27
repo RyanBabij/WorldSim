@@ -25,6 +25,8 @@ class Settlement_Dwarven: public Settlement
 		void abstractMonthSplit(); // Settlement split
 		void abstractMonthBiology(); // Character biology
 		
+		void moveAllCharacterHome(); // Move all characters back to their dwelling or a hall.
+		
 		Character* getFarmer(Vector <Character*>* vExclude);
 		Character* getMiner(Vector <Character*>* vExclude);
 		

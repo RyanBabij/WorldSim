@@ -169,10 +169,19 @@ bool Character::moveToLocationType(enumLocation _location)
 	}
 	
 	vLocation->shuffle();
-	location = (*vLocation)(0);
+	
+	for (int i=0;i<vLocation->size();++i)
+	{
+		if ((*vLocation)(i)->putCharacter(this))
+		{
+			delete vLocation;
+			return true;
+		}
+	}
+
 	delete vLocation;
 	
-	return true;
+	return false;
 }
 
 char Character::getBaseSkill(AttributeManager::TYPE skill)

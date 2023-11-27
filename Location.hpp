@@ -26,7 +26,7 @@ public:
 
 	bool isOutside;
 
-	int capacity; // How many people can occupy the location.
+	int capacity; // How many people can occupy the location. -1 = unlimited
 	int nIngress; // How many people can enter at once.
 	int darkness; // Dark areas spawn enemies
 
@@ -35,10 +35,13 @@ public:
 	Location();
 
 	void link(Location* location);
-	void putCharacter(Character* c);
+	bool putCharacter(Character* c);
+	void removeCharacter(Character* c);
 	virtual std::string getName();
 	virtual ResourceRequirement getResourceRequirement();
 	int availableBranches();
+	
+	bool hasRoom(); // returns true if there is room for another character here
 };
 
 

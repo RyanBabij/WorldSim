@@ -150,14 +150,34 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 	}
 	else if (job->type == JOB_HUNTING)
 	{
-		std::cout<<"HUNTING\n";
+
+		// Move to farms. If not possible we will need to hunt/gather instead.
+		if (character->moveToLocationType(LOCATION_WILDERNESS) == false )
+		{
+			std::cout<<"Character unable to move to wilderness.\n";
+			return false;
+		}
+
 		World_Biome* biome = getBiome();
 		
 		if (biome == nullptr)
 		{
 			std::cout<<"ERROR: No biome in Settlement\n";
 		}
-		std::cout<<"Character hunting in biome: "<<biome->name<<".\n";
+		//std::cout<<"Character hunting in biome: "<<biome->name<<".\n";
+		
+		Vector <Creature_Species*>* vCreature = biome->getAllCreatureTypes();
+		
+		if ( vCreature != nullptr && vCreature->size() > 0 )
+		{
+			for (int i=0;i<vCreature->size(); ++i)
+			{
+				//std::cout<<(*vCreature)(i)->name<<"\n";
+			}
+			int iCreature = globalRandom.rand8(vCreature->size());
+			std::cout<<"Hunted a "<<(*vCreature)(iCreature)->name<<".\n";
+		}
+
 		
 		if (globalRandom.flip())
 		{
@@ -549,6 +569,38 @@ Character* Settlement_Dwarven::getFarmer(Vector <Character*>* vExclude)
 	return currentBest;
 }
 
+void Settlement_Dwarven::moveAllCharacterHome()
+{
+	const std::vector<enumLocation> preferredLocations = {
+		LOCATION_DWELLING,
+		LOCATION_MAIN_HALL,
+		LOCATION_HALL
+	};
+
+	for (auto &v : vCharacter)
+	{
+		bool moved = false;
+		for (const auto &location : preferredLocations)
+		{
+			if (v->moveToLocationType(location))
+			{
+				moved = true;
+				break;
+			}
+		}
+
+		if (!moved)
+		{
+			std::cout<<v->getFullName()<<" unable to return home due to lack of capacity.\n";
+		}
+		else
+		{
+			std::cout<<v->getFullName()<<" returned home.\n";
+		}
+	}
+}
+
+
 
 /* SIMULATE X TURNS OF THE SETTLEMENT. */
 void Settlement_Dwarven::incrementTicks ( int nTicks )
@@ -612,7 +664,6 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 				}
 				else if (abstractMonthJob(actingCharacter, new Job_Hunting()))
 				{
-					std::cout<<"Character going hunting\n";
 				}
 			}
 			else
@@ -651,6 +702,9 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		
 		abstractMonthBiology();
 		abstractMonthSplit();
+		
+		moveAllCharacterHome();
+		
 		resourceManager.print();
 		stockpile.print();
 		printAllMoneyInSettlement();

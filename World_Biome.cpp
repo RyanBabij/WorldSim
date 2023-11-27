@@ -337,13 +337,11 @@ Creature* World_Biome::getCreature()
 Vector <Flora*> * World_Biome::getAllFloraTypes()
 {
 	return &floraManager.vFlora;
-	//return 0;
 }
 
 Vector <Creature_Species*> * World_Biome::getAllCreatureTypes()
 {
 	return &creatureManager.vSpecies;
-	//return 0;
 }
 
 // Uses a safe rolling average to prevent overflow.
