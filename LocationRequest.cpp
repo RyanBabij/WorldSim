@@ -1,14 +1,12 @@
 #pragma once
-#ifndef WORLDSIM_ITEM_REQUEST_CPP
-#define WORLDSIM_ITEM_REQUEST_CPP
+#ifndef WORLDSIM_LOCATION_REQUEST_CPP
+#define WORLDSIM_LOCATION_REQUEST_CPP
 
-/* WorldSim: ItemRequest
-	#include "ItemRequest.cpp"
+/* WorldSim: LocationRequest
+	#include "LocationRequest.cpp"
 
-	Requests for an Item to be made. Requests can be made by any entity with a HasMoney interface, typically
+	Requests for an location to be built. Requests can be made by any entity with a HasMoney interface, typically
 	Characters or Government.
-	
-	Item requests should be more general, like "hunting items".
 	
 */
 
@@ -16,71 +14,71 @@
 #include <optional>
 
 
-class ItemRequest
+class LocationRequest
 {
 	public:
 	
 	HasMoney * requester;
-	ItemType type;
+	enumLocation type;
 	int value;
 	bool privateContract;
 	
-	ItemRequest(HasMoney* c, ItemType t, int v) : requester(c), type(t), value(v)
+	LocationRequest(HasMoney* c, enumLocation t, int v) : requester(c), type(t), value(v)
 	{
 		privateContract=true;
 	}
-	
+
 	std::string toString() const
 	{
-		std::string itemType = "UNKNOWN";
+		std::string locationType = "UNKNOWN";
 		
-		if ( type == ITEM_HOE )
+		if ( type == LOCATION_HALL )
 		{
-			itemType = "HOE";
+			locationType = "HALL";
 		}
-		else if ( type == ITEM_PICKAXE )
+		else if ( type == LOCATION_MINE )
 		{
-			itemType = "PICKAXE";
+			locationType = "MINE";
 		}
-		else if ( type == ITEM_AXE )
+		else if ( type == LOCATION_DWELLING )
 		{
-			itemType = "AXE";
+			locationType = "DWELLING";
 		}
-		else if ( type == ITEM_LONGBOW )
+		else if ( type == LOCATION_FARM )
 		{
-			itemType = "LONGBOW";
+			locationType = "FARM";
 		}
 		
-		std::string str = "Request for "+itemType+" at $"+DataTools::toString(value)+".";
+		std::string str = "Request for "+locationType+" at $"+DataTools::toString(value)+".";
 		return str;
 	}
 
 	
 };
 
-// Comparator for ItemRequest
-struct ItemRequestComparator
+// Comparator for LocationRequest
+struct LocationRequestComparator
 {
-	bool operator() (const ItemRequest& lhs, const ItemRequest& rhs) const
+	bool operator() (const LocationRequest& lhs, const LocationRequest& rhs) const
 	{
 		// Sort in descending order of value
 		return lhs.value > rhs.value;
 	}
 };
 
-class ItemRequestManager
+class LocationRequestManager
 {
 	private:
-	std::multiset<ItemRequest, ItemRequestComparator> requests;
+	std::multiset<LocationRequest, LocationRequestComparator> requests;
 	
 	public:
 	
-	ItemRequestManager()
+	LocationRequestManager()
 	{
 		
 	}
 	
-	void add(HasMoney *requester, ItemType type, int value, bool deleteDuplicates=true)
+	void add(HasMoney *requester, enumLocation type, int value, bool deleteDuplicates=true)
 	{
 		// if ( value == 0 )
 		// {
@@ -105,16 +103,16 @@ class ItemRequestManager
 					++it;
 				}
 			}
-			requests.insert(ItemRequest(requester, type, value));
+			requests.insert(LocationRequest(requester, type, value));
 		}
 	}
 	
-	// void addTreasuryRequest(Character *requester, ResourceManager* money, ItemManager* stockpile, ItemType type, int value)
-	// {
-		// requests.insert(ItemRequest(requester, type, value));
-	// }
+	void addTreasuryRequest(Character *requester, ResourceManager* money, ItemManager* stockpile, enumLocation type, int value)
+	{
+		requests.insert(LocationRequest(requester, type, value));
+	}
 	
-	void removeAll(HasMoney* requester, ItemType type)
+	void removeAll(HasMoney* requester, enumLocation type)
 	{
 		// Remove requests of type and refund
 		for (auto it = requests.begin(); it != requests.end(); )
@@ -131,7 +129,7 @@ class ItemRequestManager
 	}
 
 
-	std::optional<ItemRequest> pullMostValuableRequest(bool returnZeroValues)
+	std::optional<LocationRequest> pullMostValuableRequest(bool returnZeroValues)
 	{
 		if (requests.empty())
 		{
@@ -142,7 +140,7 @@ class ItemRequestManager
 
 		while (it != requests.end())
 		{
-			const ItemRequest& mostValuableRequest = *it;
+			const LocationRequest& mostValuableRequest = *it;
 
 			if (mostValuableRequest.value > 0 || returnZeroValues)
 			{
@@ -155,7 +153,7 @@ class ItemRequestManager
 		return std::nullopt; // Return an empty optional if no suitable request is found
 	}
 		
-	double getAverageValue(ItemType type) const
+	double getAverageValue(enumLocation type) const
 	{
 		int totalValue = 0;
 		int count = 0;

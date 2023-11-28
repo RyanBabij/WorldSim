@@ -6,6 +6,7 @@
 
 #include "ItemManager.hpp"
 #include "ItemRequest.cpp"
+#include "LocationRequest.cpp"
 
 #include "Job.cpp"
 
