@@ -310,13 +310,13 @@ int LocationManager::getFarmingCapacity()
 	return totalFarmingCapacity;
 }
 
-void LocationManager::addLocation(enumLocation locationType)
+Location* LocationManager::addLocation(enumLocation locationType)
 {
 	Location* buildable = getBuildableBranch();
 	if (buildable == nullptr)
 	{
 		// No buildable branch available
-		return;
+		return nullptr;
 	}
 
 	Location* newLocation = nullptr;
@@ -347,7 +347,7 @@ void LocationManager::addLocation(enumLocation locationType)
 		// Add cases for other location types
 		default:
 			// Handle unknown location type
-			return;
+			return nullptr;
 	}
 
 	if (newLocation != nullptr)
@@ -355,6 +355,7 @@ void LocationManager::addLocation(enumLocation locationType)
 		vLocation.push(newLocation);
 		buildable->link(newLocation);
 	}
+	return newLocation;
 }
 
 void LocationManager::printAll()

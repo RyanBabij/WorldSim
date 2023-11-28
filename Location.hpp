@@ -138,7 +138,7 @@ public:
 	Location* getBuildableBranch();
 	int getMiningCapacity();
 	int getFarmingCapacity();
-	void addLocation(enumLocation locationType);
+	Location* addLocation(enumLocation locationType);
 	
 	void printAll();
 	

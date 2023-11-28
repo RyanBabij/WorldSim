@@ -388,6 +388,37 @@ void Settlement_Dwarven::payCharacterFromTreasury(Character* character, int amou
 
 bool Settlement_Dwarven::abstractMonthConstruction(Character* character)
 {
+	auto mostValuableRequestOpt = locationRequestManager.pullMostValuableRequest(false);
+	if (mostValuableRequestOpt)
+	{
+		// If there is a most valuable request
+		LocationRequest mostValuableRequest = *mostValuableRequestOpt;
+		// Process the most valuable request
+
+		Location* loc = location.addLocation(mostValuableRequest.type);
+		
+		if (loc != nullptr)
+		{
+			std::cout<<character->getFullName()<<": Building "<<loc->getName()<<". "<<character->getMoney()<<" money.\n";
+			std::cout<<"There are "<<requestManager.getNumContracts()<<" contracts.\n";
+			// recieve the coins promised
+			
+			int moneyToRecieve = mostValuableRequest.value;
+			
+			payCharacter(character, mostValuableRequest.value);
+			return true;
+		}
+		else // Couldn't make the item, put the request back through.
+		{
+			// Recursive try to make something else.
+			abstractMonthConstruction(character);
+			
+			mostValuableRequest.requester->giveMoney(mostValuableRequest.value);
+			locationRequestManager.add(mostValuableRequest.requester,mostValuableRequest.type, mostValuableRequest.value);
+			std::cout<<"Unable to make item, trying another.\n";
+		}
+	}
+	
 	return false;
 }
 
