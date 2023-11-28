@@ -81,6 +81,7 @@ std::string Job::getName()
 Job_Woodcutting::Job_Woodcutting() : Job()
 {
 	type = JOB_WOODCUTTING;
+	requiredLocation = LOCATION_WILDERNESS;
 	requiredItem = ITEM_AXE;
 	desiredWoodcuttingValue = 1;
 }
@@ -119,6 +120,7 @@ std::string Job_Hunting::getName()
 Job_Farming::Job_Farming() : Job()
 {
 	type = JOB_FARMING;
+	requiredLocation = LOCATION_FARM;
 	requiredItem = ITEM_HOE;
 	desiredFarmingValue = 1;
 }

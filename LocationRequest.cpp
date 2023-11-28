@@ -30,7 +30,7 @@ class LocationRequest
 
 	std::string toString() const
 	{
-		std::string locationType = "UNKNOWN";
+		std::string locationType = "UNKNOWN_LOCATION";
 		
 		if ( type == LOCATION_HALL )
 		{

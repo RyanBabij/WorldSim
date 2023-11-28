@@ -11,6 +11,7 @@
 
 #include "ItemManager.hpp"
 #include "ItemRequest.cpp"
+#include "LocationRequest.cpp"
 
 class Settlement: public WorldObjectGlobal, public TableInterface
 {
@@ -33,6 +34,7 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 
 		ItemManager stockpile;
 		ItemRequestManager requestManager;
+		LocationRequestManager locationRequestManager;
 		ResourceManager resourceManager;
 		Technology technology;
 		

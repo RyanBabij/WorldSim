@@ -8,7 +8,7 @@
 	Requests for an Item to be made. Requests can be made by any entity with a HasMoney interface, typically
 	Characters or Government.
 	
-	Item requests should be more general, like "hunting items".
+	Item requests should be more general, like "hunting items with minimum level 1"
 	
 */
 

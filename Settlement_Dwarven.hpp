@@ -19,6 +19,7 @@ class Settlement_Dwarven: public Settlement
 		
 		void checkStockpileForBestItem(Character* character, Job* job);
 		
+		bool abstractMonthConstruction(Character* character);
 		bool abstractMonthProduction(Character* character);
 		void abstractMonthResearch(Character* character);
 		void abstractMonthSocial(Character* character);

@@ -96,8 +96,8 @@ void Government_Leader::govern()
 	
 	if ( s->getMiningCapacity() < s->getPopulation()/3 )
 	{
-		std::cout<<"Leader building a mine\n";
-		s->location.addLocation(LOCATION_MINE);
+		//std::cout<<"Leader building a mine\n";
+		//s->location.addLocation(LOCATION_MINE);
 	}
 	
 	if ( s->getFarmingCapacity() < s->getPopulation()/2 )

@@ -121,6 +121,22 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		{
 			std::cout<<"Character unable to move to farm.\n";
 			
+			if ( character->getMoney() > 0 )
+			{
+				int marketValue = locationRequestManager.getAverageValue(job->requiredLocation) + 1;
+				
+				int amountCanPay = character->getMoney();
+				if (marketValue < amountCanPay)
+				{
+					amountCanPay = marketValue;
+				}
+				
+				// put in a request for more farms
+				locationRequestManager.removeAll(character,job->requiredLocation);
+				locationRequestManager.add(character,job->requiredLocation,marketValue);
+				std::cout<<"Request for farm at price of "<<amountCanPay<<".\n";
+			}
+			
 			// Go hunting/gathering instead
 			return false;
 		}
@@ -212,7 +228,26 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		// Move to the mines
 		if (character->moveToLocationType(job->requiredLocation) == false )
 		{
-			std::cout<<"Character unable to move to location.\n";
+			std::cout<<"Character unable to move to mine.\n";
+			
+			
+			if ( character->getMoney() > 0 )
+			{
+				int marketValue = locationRequestManager.getAverageValue(job->requiredLocation) + 1;
+				
+				int amountCanPay = character->getMoney();
+				if (marketValue < amountCanPay)
+				{
+					amountCanPay = marketValue;
+				}
+				
+				// put in a request for more mines
+				locationRequestManager.removeAll(character,job->requiredLocation);
+				locationRequestManager.add(character,job->requiredLocation,marketValue);
+				std::cout<<"Request for mine at price of "<<amountCanPay<<".\n";
+			}
+			
+
 		}
 		
 		int maxPersonalOutput = 14+character->skillMining;
@@ -349,6 +384,11 @@ void Settlement_Dwarven::payCharacterFromTreasury(Character* character, int amou
 {
 	int amountToGive = resourceManager.takeMoneyUpTo(amount);
 	character->giveMoney(amountToGive);
+}
+
+bool Settlement_Dwarven::abstractMonthConstruction(Character* character)
+{
+	return false;
 }
 
 bool Settlement_Dwarven::abstractMonthProduction(Character* character)
@@ -721,22 +761,23 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			{
 				actingCharacter = getCharacter(&vMovedCharacters);
 				resourceManager.takeFood(28);
+				
+				// CONSTRUCTION
+				if ( abstractMonthConstruction(actingCharacter))
+				{
+				}
 				// PRODUCTION
-				if ( abstractMonthProduction(actingCharacter))
+				else if ( abstractMonthProduction(actingCharacter))
 				{
 				}
 				// MINING
 				else if ( miningNeeded() )
 				{
 					abstractMonthJob(actingCharacter, new Job_Mining());
-					
-					//abstractMonthMine(actingCharacter);
 				}
 				else if ( woodNeeded() )
 				{
 					abstractMonthJob(actingCharacter, new Job_Woodcutting());
-					
-					//abstractMonthMine(actingCharacter);
 				}
 				// RESEARCH
 				else
@@ -766,6 +807,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		stockpile.print();
 		printAllMoneyInSettlement();
 		requestManager.print();
+		locationRequestManager.print();
 		location.printAll();
 		monthlyCounter-=TICKS_PER_MONTH;
 	}
