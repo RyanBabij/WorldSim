@@ -34,13 +34,14 @@ class Settlement_Dwarven: public Settlement
 		void buildLocation(enumLocation _location);
 		
 		bool miningNeeded(); // True if any more mining resources are required.
+		bool woodNeeded(); // True if any more mining resources are required.
 		bool farmingEquipmentNeeded();
 		bool coinsNeeded();
 		
 
 		
 		Item* createItem(ItemType type);
-		bool produceItem(ItemType type);
+		Item* produceItem(ItemType type);
 		
 		void payCharacter(Character* character, int amount);
 		void payCharacterFromTreasury(Character* character, int amount);

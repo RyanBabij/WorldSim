@@ -44,6 +44,10 @@ class ItemRequest
 		{
 			itemType = "AXE";
 		}
+		else if ( type == ITEM_LONGBOW )
+		{
+			itemType = "LONGBOW";
+		}
 		
 		std::string str = "Request for "+itemType+" at $"+DataTools::toString(value)+".";
 		return str;

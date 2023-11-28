@@ -21,6 +21,7 @@ class Item_Attributes
 		int woodcuttingValue;
 		int farmingValue;
 		int miningValue;
+		int huntingValue;
 		
 		Item_Attributes();
 		

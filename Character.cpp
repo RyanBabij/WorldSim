@@ -210,6 +210,14 @@ void Character::skillUpMining()
 	}
 }
 
+void Character::skillUpMarksmanship()
+{
+	if ( skillMarksmanship < 100 )
+	{
+		++skillMarksmanship;
+	}
+}
+
 char Character::getCharisma()
 {
 	return baseSkill.getSkillValue(AttributeManager::CHARISMA);

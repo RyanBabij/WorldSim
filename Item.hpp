@@ -396,11 +396,14 @@ class Item_Longbow: public Item
 {
 	public:
 		Item_Longbow(): Item()
-		{ }
+		{
+			attributes.huntingValue=2;
+			type = ITEM_LONGBOW;
+		}
 		std::string getName() override { return "Longbow"; }
 		
 		/* virtual */ static ResourceRequirement getResourceRequirement()
-		{ return ResourceRequirement(0,0); }
+		{ return ResourceRequirement(0,0,2); }
 
 		Texture* currentTexture() override
 		{ return &TEX_ITEM_LONGBOW; }
@@ -408,6 +411,28 @@ class Item_Longbow: public Item
 		virtual Vector <std::string>* getInteractNames(Creature* _target) override;
 
 		virtual void interact(Creature* _target, int interactType=0) override;
+
+};
+
+class Item_Spear: public Item
+{
+	public:
+		Item_Spear(): Item()
+		{
+			attributes.huntingValue=1;
+			type = ITEM_SPEAR;
+		}
+		std::string getName() override { return "Spear"; }
+		
+		/* virtual */ static ResourceRequirement getResourceRequirement()
+		{ return ResourceRequirement(0,0,2); }
+
+		Texture* currentTexture() override
+		{ return &TEX_ITEM_LONGBOW; }
+
+		//virtual Vector <std::string>* getInteractNames(Creature* _target) override;
+
+		//virtual void interact(Creature* _target, int interactType=0) override;
 
 };
 
@@ -532,6 +557,7 @@ class Item_Axe: public Item
 
 		Item_Axe()
 		{
+			attributes.woodcuttingValue=1;
 			type=ITEM_AXE;
 		}
 		std::string getName() { return "Axe"; }

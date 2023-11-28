@@ -28,11 +28,13 @@ class ResourceRequirement
 	public:
 		int minIron;
 		int minStone;
+		int minWood;
 
-		ResourceRequirement(int _minIron, int _minStone)
+		ResourceRequirement(int _minIron=0, int _minStone=0, int _minWood=0)
 		{
 			minIron=_minIron;
 			minStone=_minStone;
+			minWood=_minWood;
 		}
 		
 		void print ()
@@ -114,6 +116,15 @@ class ResourceManager: public HasMoney
 		void addFood(int _food)
 		{
 			nFood+=_food;
+		}
+		void addWood(int _wood)
+		{
+			nWood+=_wood;
+		}
+		
+		int getWood()
+		{
+			return nWood;
 		}
 
 		int getIron()

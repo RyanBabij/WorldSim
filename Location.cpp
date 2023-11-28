@@ -30,6 +30,12 @@ bool Location::putCharacter(Character* c)
 	{
 		return false;
 	}
+	
+	if ( c->location != nullptr )
+	{
+		c->location->removeCharacter(c);
+	}
+	
 	vCharacter.push(c);
 	c->location = this;
 	return true;
@@ -237,9 +243,8 @@ void LocationManager::putCharacter(Character* c, enumLocation location)
 {
 	for (int i = 0; i < vLocation.size(); ++i)
 	{
-		if (vLocation(i)->type == location)
+		if (vLocation(i)->type == location && vLocation(i)->putCharacter(c))
 		{
-			c->location = vLocation(i);
 		}
 	}
 }

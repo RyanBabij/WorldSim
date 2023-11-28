@@ -165,6 +165,7 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 	
 	void skillUpFarming();
 	void skillUpMining();
+	void skillUpMarksmanship();
 	
 	Vector <Character*> getAllKnownCharacters();
 	

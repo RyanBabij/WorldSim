@@ -166,6 +166,23 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		}
 		//std::cout<<"Character hunting in biome: "<<biome->name<<".\n";
 		
+		int huntingItemMult=1;
+		if ( item != nullptr )
+		{
+			huntingItemMult = item->attributes.huntingValue+1;
+		}
+		
+		int maxPersonalOutput = (character->getStrength()*huntingItemMult)+character->skillMarksmanship;
+		if (maxPersonalOutput > 16)
+		{
+			maxPersonalOutput=16;
+		}
+		
+		resourceManager.addFood(globalRandom.rand(maxPersonalOutput));
+		
+		character->skillUpMarksmanship();
+		payCharacterFromTreasury(character,1);
+		
 		Vector <Creature_Species*>* vCreature = biome->getAllCreatureTypes();
 		
 		if ( vCreature != nullptr && vCreature->size() > 0 )
@@ -243,6 +260,21 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		delete job;
 		return true;
 	}
+	else if (job->type == JOB_WOODCUTTING)
+	{
+		// Character goes into wilderness to obtain wood
+		
+		if (character->moveToLocationType(LOCATION_WILDERNESS) == false )
+		{
+			std::cout<<"Character unable to move to wilderness.\n";
+			return false;
+		}
+		
+		resourceManager.addWood(globalRandom.rand(8));
+
+		delete job;
+		return true;
+	}
 	
 	
 	// if the job failed
@@ -259,24 +291,30 @@ Item* Settlement_Dwarven::createItem(ItemType type)
 			return new Item_Hoe();
 		case ITEM_PICKAXE:
 			return new Item_Pickaxe();
+		case ITEM_AXE:
+			return new Item_Axe();
+		case ITEM_LONGBOW:
+			return new Item_Longbow();
+		case ITEM_SPEAR:
+			return new Item_Spear();
 		// Add cases for other item types as needed
 		default:
 			return nullptr;
 	}
 }
 
-bool Settlement_Dwarven::produceItem(ItemType type)
+Item* Settlement_Dwarven::produceItem(ItemType type)
 {
 	Item* newItem = createItem(type);
 	if (newItem && resourceManager.canMake(newItem->getResourceRequirement()))
 	{
 		resourceManager.deductResources(newItem->getResourceRequirement());
 		stockpile.add(newItem);
-		return true;
+		return newItem;
 	}
 
 	delete newItem; // Clean up if item was not added to stockpile
-	return false;
+	return nullptr;
 }
 
 void Settlement_Dwarven::payCharacter(Character* character, int amount)
@@ -322,9 +360,11 @@ bool Settlement_Dwarven::abstractMonthProduction(Character* character)
 		// Process the most valuable request
 		//std::cout << "Most valuable request value: " << mostValuableRequest.value << std::endl;
 		
-		if (produceItem(mostValuableRequest.type))
+		Item* item = produceItem(mostValuableRequest.type);
+		
+		if (item != nullptr)
 		{
-			std::cout<<character->getFullName()<<": Producing item. "<<character->getMoney()<<" money.\n";
+			std::cout<<character->getFullName()<<": Producing "<<item->getName()<<". "<<character->getMoney()<<" money.\n";
 			std::cout<<"There are "<<requestManager.getNumContracts()<<" contracts.\n";
 			// recieve the coins promised
 			
@@ -525,6 +565,16 @@ bool Settlement_Dwarven::miningNeeded() // True if any more mining resources are
 	return false;
 }
 
+bool Settlement_Dwarven::woodNeeded() // True if any more mining resources are required.
+{
+	// For now just assume we need 1 of everything for each person.
+	if ( resourceManager.getWood() < vCharacter.size() )
+	{
+		return true;
+	}
+	return false;
+}
+
 bool Settlement_Dwarven::coinsNeeded() // True if any more coins are required for the treasury
 {
 	return false;
@@ -678,6 +728,12 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 				else if ( miningNeeded() )
 				{
 					abstractMonthJob(actingCharacter, new Job_Mining());
+					
+					//abstractMonthMine(actingCharacter);
+				}
+				else if ( woodNeeded() )
+				{
+					abstractMonthJob(actingCharacter, new Job_Woodcutting());
 					
 					//abstractMonthMine(actingCharacter);
 				}
