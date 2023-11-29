@@ -19,6 +19,10 @@ class Settlement_Dwarven: public Settlement
 		
 		void checkStockpileForBestItem(Character* character, Job* job);
 		
+		void putMarketRequest(Character* c, enumLocation type); // Put market request for location to be built.
+		void putMarketRequest(Character* c, enumResource type); // Put market request for resource to be obtained.
+		void putMarketRequest(Character* c, ItemType type); // Put market request for item to be built.
+		
 		bool abstractMonthConstruction(Character* character);
 		bool abstractMonthProduction(Character* character);
 		void abstractMonthResearch(Character* character);

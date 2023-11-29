@@ -7,6 +7,7 @@
 #include "ItemManager.hpp"
 #include "ItemRequest.cpp"
 #include "LocationRequest.cpp"
+#include "ResourceRequest.cpp"
 
 #include "Job.cpp"
 
@@ -34,20 +35,7 @@ void Settlement_Dwarven::checkStockpileForBestItem(Character* character, Job* jo
 	{
 		if ( bestStockpileItem == nullptr ) // There's no farming equipment anywhere
 		{
-			if ( character->getMoney() > 0 )
-			{
-				int marketValue = requestManager.getAverageValue(job->requiredItem) + 1;
-				
-				int amountCanPay = character->getMoney();
-				if (marketValue < amountCanPay)
-				{
-					amountCanPay = marketValue;
-				}
-				
-				requestManager.removeAll(character,job->requiredItem);
-				requestManager.add(character,job->requiredItem,marketValue);
-				std::cout<<"Request for hoe at price of "<<amountCanPay<<".\n";
-			}
+			putMarketRequest(character,job->requiredItem);
 		}
 		else // we don't have equipment but the stockpile does
 		{
@@ -64,6 +52,46 @@ void Settlement_Dwarven::checkStockpileForBestItem(Character* character, Job* jo
 			stockpile.take(bestStockpileItem);
 			character->giveItem(bestStockpileItem);
 		}
+	}
+}
+
+void Settlement_Dwarven::putMarketRequest(Character* c, enumLocation type)
+{
+	if ( c->getMoney() > 0 )
+	{
+		int marketValue = locationRequestManager.getAverageValue(type) + 1;
+		
+		int amountCanPay = c->getMoney();
+		if (marketValue < amountCanPay)
+		{
+			amountCanPay = marketValue;
+		}
+		
+		locationRequestManager.removeAll(c,type);
+		locationRequestManager.add(c,type,marketValue);
+		std::cout<<"Request for "<<enumLocationStr[type]<<" at price of "<<amountCanPay<<".\n";
+	}
+}
+
+void Settlement_Dwarven::putMarketRequest(Character* c, enumResource type)
+{
+}
+
+void Settlement_Dwarven::putMarketRequest(Character* c, ItemType type)
+{
+	if ( c->getMoney() > 0 )
+	{
+		int marketValue = requestManager.getAverageValue(type) + 1;
+		
+		int amountCanPay = c->getMoney();
+		if (marketValue < amountCanPay)
+		{
+			amountCanPay = marketValue;
+		}
+		
+		requestManager.removeAll(c,type);
+		requestManager.add(c,type,marketValue);
+		std::cout<<"Request for "<<enumItemTypeStr[type]<<" at price of "<<amountCanPay<<".\n";
 	}
 }
 
@@ -121,22 +149,8 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		{
 			std::cout<<"Character unable to move to farm.\n";
 			
-			if ( character->getMoney() > 0 )
-			{
-				int marketValue = locationRequestManager.getAverageValue(job->requiredLocation) + 1;
-				
-				int amountCanPay = character->getMoney();
-				if (marketValue < amountCanPay)
-				{
-					amountCanPay = marketValue;
-				}
-				
-				// put in a request for more farms
-				locationRequestManager.removeAll(character,job->requiredLocation);
-				locationRequestManager.add(character,job->requiredLocation,marketValue);
-				std::cout<<"Request for farm at price of "<<amountCanPay<<".\n";
-			}
-			
+			putMarketRequest(character, job->requiredLocation);
+
 			// Go hunting/gathering instead
 			return false;
 		}
@@ -230,24 +244,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		{
 			std::cout<<"Character unable to move to mine.\n";
 			
-			
-			if ( character->getMoney() > 0 )
-			{
-				int marketValue = locationRequestManager.getAverageValue(job->requiredLocation) + 1;
-				
-				int amountCanPay = character->getMoney();
-				if (marketValue < amountCanPay)
-				{
-					amountCanPay = marketValue;
-				}
-				
-				// put in a request for more mines
-				locationRequestManager.removeAll(character,job->requiredLocation);
-				locationRequestManager.add(character,job->requiredLocation,marketValue);
-				std::cout<<"Request for mine at price of "<<amountCanPay<<".\n";
-			}
-			
-
+			putMarketRequest(character, job->requiredLocation);
 		}
 		
 		int maxPersonalOutput = 14+character->skillMining;

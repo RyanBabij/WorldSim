@@ -129,48 +129,88 @@ const std::string enumCauseOfDeathStr [5] = { "unknown", "starvation", "massacre
 
 enum enumLocation
 {
-	LOCATION_UNKNOWN=0,
-	LOCATION_NONE=1,
-	LOCATION_OUTSIDE=2,
-	LOCATION_WALLS=3,
-	LOCATION_HALL=4,
-	LOCATION_MAIN_HALL=5,
-	LOCATION_MINE=6,
-	LOCATION_DWELLING=7,
-	LOCATION_FARM=8,
-	LOCATION_WILDERNESS=9,
-	LOCATION_COUNT=10
+	LOCATION_UNKNOWN,
+	LOCATION_NONE,
+	LOCATION_OUTSIDE,
+	LOCATION_WALLS,
+	LOCATION_HALL,
+	LOCATION_MAIN_HALL,
+	LOCATION_MINE,
+	LOCATION_DWELLING,
+	LOCATION_FARM,
+	LOCATION_WILDERNESS,
+	LOCATION_COUNT
+};
+
+const std::string enumLocationStr[LOCATION_COUNT] = {
+	"unknown",
+	"none",
+	"outside",
+	"walls",
+	"hall",
+	"main hall",
+	"mine",
+	"dwelling",
+	"farm",
+	"wilderness"
 };
 
 enum enumResource
 {
-	RESOURCE_UNKNOWN=0,
-	RESOURCE_IRON=1,
-	RESOURCE_GOLD=2,
-	RESOURCE_SILVER=3,
-	RESOURCE_GEM=4,
-	RESOURCE_DIAMOND=5,
-	RESOURCE_ADAMANTINE=6,
-	RESOURCE_COAL=7,
-	RESOURCE_STONE=8,
-	RESOURCE_WOOD=9,
-	RESOURCE_MAGICKA_CRYSTAL=10,
-	RESOURCE_STEEL=11,
-	RESOURCE_BRONZE=12,
-	RESOURCE_ADAMANTIUM=13,
-	RESOURCE_COUNT=13
+	RESOURCE_UNKNOWN,
+	RESOURCE_IRON,
+	RESOURCE_GOLD,
+	RESOURCE_SILVER,
+	RESOURCE_GEM,
+	RESOURCE_DIAMOND,
+	RESOURCE_ADAMANTINE,
+	RESOURCE_COAL,
+	RESOURCE_STONE,
+	RESOURCE_WOOD,
+	RESOURCE_MAGICKA_CRYSTAL,
+	RESOURCE_STEEL,
+	RESOURCE_BRONZE,
+	RESOURCE_ADAMANTIUM,
+	RESOURCE_COUNT
+};
+
+const std::string enumResourceStr[RESOURCE_COUNT] = {
+	"unknown",
+	"iron",
+	"gold",
+	"silver",
+	"gem",
+	"diamond",
+	"adamantine",
+	"coal",
+	"stone",
+	"wood",
+	"magicka crystal",
+	"steel",
+	"bronze",
+	"adamantium"
 };
 
 enum enumJob
 {
-	JOB_UNKNOWN=0,
-	JOB_FARMING=1,
-	JOB_MINING=2,
-	JOB_PRODUCTION=3,
-	JOB_WOODCUTTING=4,
-	JOB_PROSPECTING=5,
-	JOB_HUNTING=6,
-	JOB_COUNT=7
+	JOB_UNKNOWN,
+	JOB_FARMING,
+	JOB_MINING,
+	JOB_PRODUCTION,
+	JOB_WOODCUTTING,
+	JOB_PROSPECTING,
+	JOB_HUNTING,
+	JOB_COUNT
+};
+
+const std::string enumJobStr[JOB_COUNT] = {
+	"unknown",
+	"farming",
+	"mining",
+	"production",
+	"woodcutting",
+	"prospecting",
+	"hunting"
 };
 
 enum ItemType
@@ -204,6 +244,37 @@ enum ItemType
 	ITEM_MARKER_GREEN_SMALL,
 	ITEM_COUNT
 };
+
+const std::string enumItemTypeStr[ITEM_COUNT] = {
+	"none",
+	"hand",
+	"hoe",
+	"sword",
+	"knife",
+	"longbow",
+	"spear",
+	"pickaxe",
+	"fishrod",
+	"shovel",
+	"axe",
+	"log",
+	"fish",
+	"campfire",
+	"plank",
+	"wall",
+	"floor",
+	"plantfibre",
+	"deerpelt",
+	"deermeat",
+	"humanskin",
+	"humanmeat",
+	"leatherclothes",
+	"waterskin",
+	"shelter",
+	"marker_red",
+	"marker_green_small"
+};
+
 
 
 //DEBUG SETTINGS ///////////////////////////////////////////////////////////////////////////////////////////////////////
