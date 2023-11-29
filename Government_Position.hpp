@@ -25,11 +25,12 @@ class Government_Position
 		bool empty();
 };
 
-class Government_Leader : public Government_Position
+class Government_Leader : public Government_Position, public CanRequestItem
 {
 	public:
 		Government_Leader(Government* _government);
 		virtual void govern() override;
+		virtual void recieveRequestedItem(Item* item) override;
 };
 
 class Government_Scribe : public Government_Position

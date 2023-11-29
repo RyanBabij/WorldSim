@@ -336,12 +336,19 @@ Item* Settlement_Dwarven::createItem(ItemType type)
 	}
 }
 
-Item* Settlement_Dwarven::produceItem(ItemType type)
+Item* Settlement_Dwarven::produceItem(ItemType type, CanRequestItem* recipient= nullptr)
 {
 	Item* newItem = createItem(type);
 	if (newItem && resourceManager.canMake(newItem->getResourceRequirement()))
 	{
 		resourceManager.deductResources(newItem->getResourceRequirement());
+		
+		if ( recipient != nullptr )
+		{
+			recipient->recieveRequestedItem(newItem);
+			return newItem;
+		}
+		
 		stockpile.add(newItem);
 		return newItem;
 	}
@@ -429,16 +436,13 @@ bool Settlement_Dwarven::abstractMonthProduction(Character* character)
 		// Process the most valuable request
 		//std::cout << "Most valuable request value: " << mostValuableRequest.value << std::endl;
 		
-		Item* item = produceItem(mostValuableRequest.type);
+		Item* item = produceItem(mostValuableRequest.type,mostValuableRequest.requester);
 		
 		if (item != nullptr)
 		{
-			std::cout<<character->getFullName()<<": Producing "<<item->getName()<<". "<<character->getMoney()<<" money.\n";
-			std::cout<<"There are "<<requestManager.getNumContracts()<<" contracts.\n";
-			// recieve the coins promised
-			
+			std::cout<<character->getFullName()<<": Produced "<<item->getName()<<". "<<character->getMoney()<<" money.\n";
+
 			int moneyToRecieve = mostValuableRequest.value;
-			
 			payCharacter(character, mostValuableRequest.value);
 			return true;
 		}

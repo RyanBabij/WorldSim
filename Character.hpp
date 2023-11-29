@@ -35,7 +35,7 @@ class Character_Knowledge;
 class World_Local;
 class Location;
 
-class Character: public WorldObject, public TableInterface, public SaveFileInterface, public HasMoney
+class Character: public WorldObject, public TableInterface, public SaveFileInterface, public CanRequestItem
 {
 	public:
 
@@ -194,6 +194,8 @@ class Character: public WorldObject, public TableInterface, public SaveFileInter
 
   
   /* ITEM FUNCTIONS */
+  
+  virtual void recieveRequestedItem(Item* item);
   
     // For consumables or crafting/alchemy.
   void useItem(Item* item)

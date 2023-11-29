@@ -144,6 +144,7 @@ void Character::init(const int _sex /* =0 */)
 	
 }
 
+
 std::string Character::getLocation()
 {
 	if ( location == 0 )
@@ -324,6 +325,12 @@ void Character::giveItem(Item* _item)
 	vInventory.push(_item);
 	//world(worldX,worldY)->put(_item,x,y);
 	//world(worldX,worldY)->vItem.push(_item);
+}
+
+void Character::recieveRequestedItem(Item* item)
+{
+	std::cout<<getFullName()<<" recieved requested item: "<<item->getName()<<"\n";
+	giveItem(item);
 }
 
 void Character::takeItem(Item* _item)

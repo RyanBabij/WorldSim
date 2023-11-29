@@ -123,7 +123,7 @@ void Government_Leader::govern()
 			{
 				amountCanPay = marketValue;
 			}
-			requestManager->add(resourceManager,ITEM_HOE,marketValue,false);
+			requestManager->add(this,ITEM_HOE,marketValue,false);
 			std::cout<<"Request for hoe at price of "<<amountCanPay<<".\n";
 			
 			if ( resourceManager->getMoney() == 0 )
@@ -172,6 +172,22 @@ void Government_Leader::govern()
 	
 	}
 	
+}
+
+// Put requested items into stockpile
+void Government_Leader::recieveRequestedItem(Item* item)
+{
+	if (government == nullptr || government->governedSettlement == nullptr)
+	{
+		return;
+	}
+	
+	Settlement* s = government->governedSettlement;
+	ItemManager* stockpile = &(s->stockpile);
+	if (s != nullptr)
+	{
+		stockpile->add(item);
+	}
 }
 
 // Government_Scribe definitions

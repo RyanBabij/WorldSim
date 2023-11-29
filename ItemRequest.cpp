@@ -20,12 +20,12 @@ class ItemRequest
 {
 	public:
 	
-	HasMoney * requester;
+	CanRequestItem * requester;
 	ItemType type;
 	int value;
 	bool privateContract;
 	
-	ItemRequest(HasMoney* c, ItemType t, int v) : requester(c), type(t), value(v)
+	ItemRequest(CanRequestItem* c, ItemType t, int v) : requester(c), type(t), value(v)
 	{
 		privateContract=true;
 	}
@@ -80,7 +80,7 @@ class ItemRequestManager
 		
 	}
 	
-	void add(HasMoney *requester, ItemType type, int value, bool deleteDuplicates=true)
+	void add(CanRequestItem *requester, ItemType type, int value, bool deleteDuplicates=true)
 	{
 		// if ( value == 0 )
 		// {
@@ -112,6 +112,22 @@ class ItemRequestManager
 	// void addTreasuryRequest(Character *requester, ResourceManager* money, ItemManager* stockpile, ItemType type, int value)
 	// {
 		// requests.insert(ItemRequest(requester, type, value));
+	// }
+	
+	// void removeAll(CanRequestItem* requester, ItemType type)
+	// {
+		// // Remove requests of type and refund
+		// for (auto it = requests.begin(); it != requests.end(); )
+		// {
+			// if (it->requester == requester && it->type == type)
+			// {
+				// requester->giveMoney(it->value);
+				// //std::cout<<"Money refunded from contract: "<<it->value<<"\n";
+				// it = requests.erase(it); // Erase and move to the next element
+				// continue;
+			// }
+			// ++it;
+		// }
 	// }
 	
 	void removeAll(HasMoney* requester, ItemType type)

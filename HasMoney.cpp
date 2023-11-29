@@ -57,4 +57,11 @@ class HasMoney
 		
 };
 
+class CanRequestItem: public HasMoney
+{
+	public:
+	
+	virtual void recieveRequestedItem(Item* item)=0;
+};
+
 #endif // WORLDSIM_HAS_MONEY_CPP
