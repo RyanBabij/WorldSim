@@ -19,27 +19,53 @@
 class Resource
 {
 	public:
+	enumResource type;
+	int amount;
 	
-	// resource type
+	Resource (enumResource _type, int _amount)
+	{
+		type=_type;
+		amount=_amount;
+	}
+	
 };
 
 class ResourceRequirement
 {
 	public:
-		int minIron;
-		int minStone;
-		int minWood;
+		Vector <Resource> vResource;
 
-		ResourceRequirement(int _minIron=0, int _minStone=0, int _minWood=0)
+		ResourceRequirement()
 		{
-			minIron=_minIron;
-			minStone=_minStone;
-			minWood=_minWood;
 		}
 		
-		void print ()
+		// New constructor for single resource
+		ResourceRequirement(enumResource type, int amount)
 		{
-			std::cout<<"minIron: "<<minIron<<". minStone: "<<minStone<<"\n";
+			vResource.push(Resource(type, amount));
+		}
+	 
+		void add(Resource resource)
+		{
+			vResource.push(resource);
+		}
+		
+		void add (enumResource _type, int _amount)
+		{
+			// add to existing if there is one
+			for (int i=0; i<vResource.size(); ++i)
+			{
+				if (vResource(i).type == _type)
+				{
+					vResource(i).amount += _amount;
+					return;
+				}
+			}
+			vResource.push(Resource(_type, _amount));
+		}
+
+		void print()
+		{
 		}
 };
 
@@ -52,7 +78,8 @@ class HasResourceRequirement
 		}
 		virtual ResourceRequirement getResourceRequirement()
 		{
-			return ResourceRequirement(0,0);
+			// Return a blank resource requirement (no resources needed)
+			return ResourceRequirement();
 		}
 };
 
@@ -61,143 +88,95 @@ class HasResourceRequirement
 class ResourceManager: public HasMoney
 {
 	private:
-		// RAW
-		int nIron;
-		int nCopper;
-		int nGold;
-		int nSilver;
-		int nGems;
-		int nDiamonds;
-		int nAdamantine;
-		int nCoal;
-		int nStone;
-		int nWood;
-		int nMagickaCrystal;
-		// SMELTED
-		int nSteel;
-		int nBronze;
-		int nAdamantium;
+		std::unordered_map<enumResource, int> resourceMap;
 		
-		// FOOD (Should probably be somewhere else)
-		int nFood;
-	
 	public:
-	
 		ResourceManager()
 		{
-			// RAW
-			nIron=0;
-			nCopper=0;
-			nGold=0;
-			nSilver=0;
-			nGems=0;
-			nDiamonds=0;
-			nAdamantine=0;
-			nCoal=0;
-			nStone=0;
-			nWood=0;
-			nMagickaCrystal=0;
-			// SMELTED
-			nSteel=0;
-			nBronze=0;
-			nAdamantium=0;
-			
-			nFood=0;
-		}
-		
-		void addIron(int _iron)
-		{
-			nIron+=_iron;
-		}
-		void addStone(int _stone)
-		{
-			nStone+=_stone;
-		}
-		void addFood(int _food)
-		{
-			nFood+=_food;
-		}
-		void addWood(int _wood)
-		{
-			nWood+=_wood;
-		}
-		
-		int getWood()
-		{
-			return nWood;
-		}
-
-		int getIron()
-		{
-			return nIron;
-		}
-		int getStone()
-		{
-			return nStone;
-		}
-		int getFood()
-		{
-			return nFood;
-		}
-		bool takeIron(int _amount)
-		{
-			if ( _amount <= nIron )
+        // Initialize resourceMap with all resources set to 0
+			for (int i = 0; i < RESOURCE_COUNT; ++i)
 			{
-				nIron-=_amount;
+				resourceMap[static_cast<enumResource>(i)] = 0;
+			}
+		}
+		
+		void add(enumResource type, int amount)
+		{
+			resourceMap[type] += amount;
+		}
+		
+		int get(enumResource type)
+		{
+			return resourceMap[type];
+		}
+		
+		bool take (enumResource type, int amount)
+		{
+			if (resourceMap[type] >= amount)
+			{
+				resourceMap[type] -= amount;
 				return true;
 			}
 			return false;
 		}
 		
-		bool takeFood(int _amount)
+		bool hasEnough ( enumResource type, int amount )
 		{
-			if ( _amount <= nFood )
-			{
-				nFood-=_amount;
-				return true;
-			}
-			return false;
+			return resourceMap[type] >= amount;
 		}
 		
-		bool canMake(const ResourceRequirement& requirement)
+		bool hasEnough ( Resource resource )
 		{
-			return nIron >= requirement.minIron && nStone >= requirement.minStone;
+			return hasEnough (resource.type, resource.amount);
 		}
 		
-		bool deductResources(const ResourceRequirement& requirement)
+		bool hasEnough(ResourceRequirement requirement) // was canMake
 		{
-			if (canMake(requirement))
+			for (const auto& res : requirement.vResource)
 			{
-				nIron -= requirement.minIron;
-				nStone -= requirement.minStone;
-				return true;
+				if (!hasEnough(res.type, res.amount))
+				{
+					return false;
+				}
 			}
-			return false;
+			return true;
 		}
-
+		bool canMake(ResourceRequirement requirement)
+		{
+			return hasEnough(requirement);
+		}
+		
+		bool deduct(ResourceRequirement requirement)
+		{
+			if (!hasEnough(requirement))
+			{
+				return false;
+			}
+			for (const auto& res : requirement.vResource)
+			{
+				take(res.type, res.amount);
+			}
+			return true;
+		}
 
 		void print()
 		{
-			// Resource names for display
-			const std::string resources[] = { "Food", "Stone", "Iron", "Copper", "Gold", "Silver", "Gems",
-			"Diamonds", "Adamantine", "Coal", "Wood", "Magicka Crystal", "Steel", "Bronze", "Adamantium" };
-
-			// Resource values for display
-			const int resourceValues[] = { nFood, nStone, nIron, nCopper, nGold, nSilver, nGems, nDiamonds,
-			nAdamantine, nCoal, nWood, nMagickaCrystal, nSteel, nBronze, nAdamantium };
-
-			const int totalResources = 15;  // Total number of resources
-
-			for (int i = 0; i < totalResources; ++i)
+			std::cout << "Resource Inventory:\n";
+			int counter=1;
+			for (const auto& resourcePair : resourceMap)
 			{
-				std::cout << resources[i] << ": " << resourceValues[i];
-				if (i < totalResources - 1)
+				std::string resourceName = resourceToString(resourcePair.first);
+				int resourceAmount = resourcePair.second;
+				std::cout << resourceName << ": " << resourceAmount << ". ";
+				if (counter%5==0)
 				{
-					std::cout << ", ";
+					std::cout<<"\n";
 				}
+				++counter;
 			}
-			std::cout << "\n";
+			std::cout<<"\n";
 		}
+
 		
 };
 

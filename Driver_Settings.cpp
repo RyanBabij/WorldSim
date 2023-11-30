@@ -171,6 +171,7 @@ enum enumResource
 	RESOURCE_STEEL,
 	RESOURCE_BRONZE,
 	RESOURCE_ADAMANTIUM,
+	RESOURCE_FOOD,
 	RESOURCE_COUNT
 };
 
@@ -188,8 +189,31 @@ const std::string enumResourceStr[RESOURCE_COUNT] = {
 	"magicka crystal",
 	"steel",
 	"bronze",
-	"adamantium"
+	"adamantium",
+	"food"
 };
+
+const std::string resourceToString(enumResource resource)
+{
+	switch (resource)
+	{
+		case RESOURCE_FOOD: return "Food";
+		case RESOURCE_IRON: return "Iron";
+		case RESOURCE_GOLD: return "Gold";
+		case RESOURCE_SILVER: return "Silver";
+		case RESOURCE_GEM: return "Gem";
+		case RESOURCE_DIAMOND: return "Diamond";
+		case RESOURCE_ADAMANTINE: return "Adamantine";
+		case RESOURCE_COAL: return "Coal";
+		case RESOURCE_STONE: return "Stone";
+		case RESOURCE_WOOD: return "Wood";
+		case RESOURCE_MAGICKA_CRYSTAL: return "Magicka Crystal";
+		case RESOURCE_STEEL: return "Steel";
+		case RESOURCE_BRONZE: return "Bronze";
+		case RESOURCE_ADAMANTIUM: return "Adamantium";
+		default: return "Unknown";
+	}
+}
 
 enum enumJob
 {

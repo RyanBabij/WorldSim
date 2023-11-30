@@ -280,9 +280,11 @@ Government& Government::operator=(const Government& other)
 
 void Government::govern()
 {
+	std::cout<<"Government:\n";
 	leader.govern();
 	scribe.govern();
 	captain.govern();
+	std::cout<<"\n";
 }
 
 bool Government::needsLeader()

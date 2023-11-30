@@ -222,7 +222,7 @@ std::string Settlement::getColumn(std::string _column)
   
 	if (_column == "metal")
 	{
-		return DataTools::toString(resourceManager.getIron());
+		return DataTools::toString(resourceManager.get(RESOURCE_IRON));
 	}
 	if (_column == "food")
 	{

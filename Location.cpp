@@ -63,7 +63,7 @@ std::string Location::getName()
 
 ResourceRequirement Location::getResourceRequirement()
 {
-	return ResourceRequirement(0, 0);
+	return ResourceRequirement( /* NONE */ );
 }
 
 int Location::availableBranches()
@@ -88,7 +88,7 @@ std::string Location_Settlement_Exterior::getName()
 
 ResourceRequirement Location_Settlement_Exterior::getResourceRequirement()
 {
-	return ResourceRequirement(0, 0);
+	return ResourceRequirement( /* NONE */ );
 }
 
 Location_Wilderness::Location_Wilderness()
@@ -107,7 +107,7 @@ std::string Location_Wilderness::getName()
 
 ResourceRequirement Location_Wilderness::getResourceRequirement()
 {
-	return ResourceRequirement(0, 0);
+	return ResourceRequirement( /* NONE */ );
 }
 
 // Location_Settlement_Walls class implementations
@@ -125,7 +125,7 @@ std::string Location_Settlement_Walls::getName()
 
 ResourceRequirement Location_Settlement_Walls::getResourceRequirement()
 {
-	return ResourceRequirement(0, 0);
+	return ResourceRequirement( /* NONE */ );
 }
 
 // Location_Main_Hall class implementations
@@ -143,7 +143,7 @@ std::string Location_Main_Hall::getName()
 
 ResourceRequirement Location_Main_Hall::getResourceRequirement()
 {
-	return ResourceRequirement(0, 25);
+	return ResourceRequirement(RESOURCE_STONE, 25);
 }
 
 // Location_Hall class implementations
@@ -161,7 +161,7 @@ std::string Location_Hall::getName()
 
 ResourceRequirement Location_Hall::getResourceRequirement()
 {
-	return ResourceRequirement(0, 25);
+	return ResourceRequirement(RESOURCE_STONE, 25);
 }
 
 // Location_Dwelling class implementations
@@ -173,7 +173,7 @@ Location_Dwelling::Location_Dwelling()
 
 ResourceRequirement Location_Dwelling::getResourceRequirement()
 {
-	return ResourceRequirement(0, 9);
+	return ResourceRequirement(RESOURCE_STONE, 9);
 }
 
 // Location_Mine class implementations
@@ -189,7 +189,7 @@ Location_Mine::Location_Mine()
 
 ResourceRequirement Location_Mine::getResourceRequirement()
 {
-	return ResourceRequirement(0, 0);
+	return ResourceRequirement( /* NONE */ );
 }
 
 std::string Location_Mine::getName()
@@ -206,7 +206,7 @@ Location_Farm::Location_Farm()
 
 ResourceRequirement Location_Farm::getResourceRequirement()
 {
-	return ResourceRequirement(0, 0);
+	return ResourceRequirement( /* NONE */);
 }
 
 std::string Location_Farm::getName()

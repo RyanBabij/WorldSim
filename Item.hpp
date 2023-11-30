@@ -197,7 +197,7 @@ class Item: public WorldObject, public TableInterface /* HasResourceRequirement 
 
 		// Resources needed to build this item
 		/* virtual */ static ResourceRequirement getResourceRequirement()
-		{ return ResourceRequirement(0,0); }
+		{ return ResourceRequirement( /* NONE */ ); }
 
 
 		// Useful for checking recipe requirements.
@@ -258,7 +258,7 @@ class Item_Hand: public Item
 		{ return &TEX_PORTRAIT_SNEK; }
 
 		/* virtual */ static ResourceRequirement getResourceRequirement()
-		{ return ResourceRequirement(0,0); }
+		{ return ResourceRequirement( /* NONE */ ); }
 
 };
 Item_Hand itemHand;
@@ -289,7 +289,12 @@ class Item_Hoe: public Item
 		{ return &TEX_ITEM_SWORD; }
 
 		/* virtual */ static ResourceRequirement getResourceRequirement()
-		{ return ResourceRequirement(1,0); }
+		{
+			ResourceRequirement resourceRequirement;
+			resourceRequirement.add(RESOURCE_IRON,1);
+			
+			return resourceRequirement;
+		}
 		
 		/* TABLE INTERFACE */
 		std::string getColumn(std::string _column) override
@@ -403,7 +408,12 @@ class Item_Longbow: public Item
 		std::string getName() override { return "Longbow"; }
 		
 		/* virtual */ static ResourceRequirement getResourceRequirement()
-		{ return ResourceRequirement(0,0,2); }
+		{
+			ResourceRequirement resourceRequirement;
+			resourceRequirement.add(RESOURCE_WOOD,2);
+			
+			return resourceRequirement;	
+		}
 
 		Texture* currentTexture() override
 		{ return &TEX_ITEM_LONGBOW; }
@@ -425,7 +435,12 @@ class Item_Spear: public Item
 		std::string getName() override { return "Spear"; }
 		
 		/* virtual */ static ResourceRequirement getResourceRequirement()
-		{ return ResourceRequirement(0,0,2); }
+		{
+			ResourceRequirement resourceRequirement;
+			resourceRequirement.add(RESOURCE_WOOD,1);
+			
+			return resourceRequirement;	
+		}
 
 		Texture* currentTexture() override
 		{ return &TEX_ITEM_LONGBOW; }
@@ -456,7 +471,12 @@ class Item_Pickaxe: public Item
 		virtual void interact(LocalTile* _target, int interactType=0) override;
 		
 		/* virtual */ static ResourceRequirement getResourceRequirement()
-		{ return ResourceRequirement(1,0); }
+		{
+			ResourceRequirement resourceRequirement;
+			resourceRequirement.add(RESOURCE_IRON,1);
+			
+			return resourceRequirement;	
+		}
 		
 		/* TABLE INTERFACE */
 		std::string getColumn(std::string _column) override
@@ -563,7 +583,12 @@ class Item_Axe: public Item
 		std::string getName() { return "Axe"; }
 		
 		/* virtual */ static ResourceRequirement getResourceRequirement()
-		{ return ResourceRequirement(1,0); }
+		{
+			ResourceRequirement resourceRequirement;
+			resourceRequirement.add(RESOURCE_IRON,1);
+			
+			return resourceRequirement;	
+		}
 
 
 		void interact(WorldObject* w, int interactType=0);
