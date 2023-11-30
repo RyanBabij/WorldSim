@@ -16,8 +16,8 @@
 
 Item_Attributes::Item_Attributes()
 {
-	durability=100;
-	health=100;
+	durability=5;
+	health=5;
 	
 	woodcuttingValue=0;
 	farmingValue=0;

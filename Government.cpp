@@ -109,29 +109,29 @@ void Government_Leader::govern()
 	// PRODUCTION
 	
 	// Put in any public production orders
-	requestManager->removeAll(resourceManager,ITEM_HOE);
-	if ( resourceManager->getMoney() > 0 )
-	{
-		int hoeShortfall = (s->vCharacter.size()/3) - stockpile->getNumberOfItems(ITEM_HOE);
+	// requestManager->removeAll(resourceManager,ITEM_HOE);
+	// if ( resourceManager->getMoney() > 0 )
+	// {
+		// int hoeShortfall = (s->vCharacter.size()/3) - stockpile->getNumberOfItems(ITEM_HOE);
 
-		int marketValue = requestManager->getAverageValue(ITEM_HOE) + 1;
+		// int marketValue = requestManager->getAverageValue(ITEM_HOE) + 1;
 		
-		for (int i=0;i<hoeShortfall/2;++i)
-		{
-			int amountCanPay = resourceManager->getMoney();
-			if (marketValue < amountCanPay)
-			{
-				amountCanPay = marketValue;
-			}
-			requestManager->add(this,ITEM_HOE,marketValue,false);
-			std::cout<<"Request for hoe at price of "<<amountCanPay<<".\n";
+		// for (int i=0;i<hoeShortfall/2;++i)
+		// {
+			// int amountCanPay = resourceManager->getMoney();
+			// if (marketValue < amountCanPay)
+			// {
+				// amountCanPay = marketValue;
+			// }
+			// //requestManager->add(this,ITEM_HOE,marketValue,false);
+			// std::cout<<"Request for hoe at price of "<<amountCanPay<<".\n";
 			
-			if ( resourceManager->getMoney() == 0 )
-			{
-				break;
-			}
-		}
-	}
+			// if ( resourceManager->getMoney() == 0 )
+			// {
+				// break;
+			// }
+		// }
+	// }
 	
 	
 	// Money distribution:

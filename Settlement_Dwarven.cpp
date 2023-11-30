@@ -201,7 +201,14 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		if ( item != nullptr )
 		{
 			huntingItemMult = item->attributes.huntingValue+1;
+			
+			if ( item->attributes.degrade(1) )
+			{
+				std::cout<<"Item broke.\n";
+				character->takeItem(item);
+			}
 		}
+
 		
 		int maxPersonalOutput = (character->getStrength()*huntingItemMult)+character->skillMarksmanship;
 		if (maxPersonalOutput > 16)
