@@ -53,123 +53,126 @@ Government_Leader::Government_Leader(Government* _government) : Government_Posit
 {
 }
 
-void Government_Leader::govern()
+void Government_Leader::governDaily()
 {
-	if (government == nullptr || government->governedSettlement == nullptr)
+	if ( globalRandom.rand8(DAYS_PER_MONTH/4) == 0 )
 	{
-		return;
-	}
-	
-	Settlement* s = government->governedSettlement;
-	ItemManager* stockpile = &(s->stockpile);
-	ItemRequestManager* requestManager = &(s->requestManager);
-	ResourceManager* resourceManager = &(s->resourceManager);
-
-	if (empty())
-	{
-		std::cout << "There is no king\n";
-		return;
-	}
-	std::cout << "King is kinging.\n";
-	
-	if ( character->isAlive==false)
-	{
-		std::cout<<"King is dead\n";
-	}
-
-	if (character->vIdea.size() > 0 && s!=0)
-	{
-		for (int i=0;i<character->vIdea.size();++i)
+		if (government == nullptr || government->governedSettlement == nullptr)
 		{
-			if (!s->hasIdea(character->vIdea(i)))
-			{
-				s->giveIdea(character->vIdea(i));
-				std::cout<<"King has implemented an idea as a tech\n";
-				character->vIdea.removeSlot(i);
-				// limit 1 idea implemented per turn.
-				break;
-			}
+			return;
 		}
-	}
-	
-	// BUILDING
-	
-	if ( s->getMiningCapacity() < s->getPopulation()/3 )
-	{
-		//std::cout<<"Leader building a mine\n";
-		//s->location.addLocation(LOCATION_MINE);
-	}
-	
-	if ( s->getFarmingCapacity() < s->getPopulation()/2 )
-	{
-		//std::cout<<"Leader building a farm\n";
-		//s->location.addLocation(LOCATION_FARM);
-	}
-	
-	// PRODUCTION
-	
-	// Put in any public production orders
-	// requestManager->removeAll(resourceManager,ITEM_HOE);
-	// if ( resourceManager->getMoney() > 0 )
-	// {
-		// int hoeShortfall = (s->vCharacter.size()/3) - stockpile->getNumberOfItems(ITEM_HOE);
-
-		// int marketValue = requestManager->getAverageValue(ITEM_HOE) + 1;
 		
-		// for (int i=0;i<hoeShortfall/2;++i)
-		// {
-			// int amountCanPay = resourceManager->getMoney();
-			// if (marketValue < amountCanPay)
-			// {
-				// amountCanPay = marketValue;
-			// }
-			// //requestManager->add(this,ITEM_HOE,marketValue,false);
-			// std::cout<<"Request for hoe at price of "<<amountCanPay<<".\n";
-			
-			// if ( resourceManager->getMoney() == 0 )
-			// {
-				// break;
-			// }
-		// }
-	// }
-	
-	
-	// Money distribution:
-	// The treasury aims to hold 10% of all money, any excess is given out at a rate of 10% per turn.
-	if (s != nullptr)
-	{
-		std::cout << "King distribute money\n";
+		Settlement* s = government->governedSettlement;
+		ItemManager* stockpile = &(s->stockpile);
+		ItemRequestManager* requestManager = &(s->requestManager);
+		ResourceManager* resourceManager = &(s->resourceManager);
 
-		// Calculate the total money in the settlement's treasury
-		int treasuryMoney = s->resourceManager.getMoney();
-		int totalSettlementMoney = s->getAllMoneyInSettlement();
-
-		// Check if the treasury holds more than 20% of total money in the settlement
-		if (static_cast<double>(treasuryMoney) / totalSettlementMoney > 0.2)
+		if (empty())
 		{
-			// Calculate the amount to distribute (e.g., 10% of the treasury money)
-			int amountToDistribute = treasuryMoney * 0.1;
-			//int amountToDistribute = treasuryMoney;
-			std::cout<<"King distributed "<<amountToDistribute<<" coins.\n";
+			std::cout << "There is no king\n";
+			return;
+		}
+		//std::cout << "King is kinging.\n";
+		
+		if ( character->isAlive==false)
+		{
+			std::cout<<"King is dead\n";
+		}
 
-			// Distribute the calculated amount
-			while (amountToDistribute > 0)
+		if (character->vIdea.size() > 0 && s!=0)
+		{
+			for (int i=0;i<character->vIdea.size();++i)
 			{
-				Character* c = s->getRandomCharacter();
-
-				if (s->resourceManager.takeMoney(1))
+				if (!s->hasIdea(character->vIdea(i)))
 				{
-					c->giveMoney(1);
-					amountToDistribute -= 1;
-				}
-				else
-				{
-					// Break the loop if there's not enough money left to distribute
+					s->giveIdea(character->vIdea(i));
+					std::cout<<"King has implemented an idea as a tech\n";
+					character->vIdea.removeSlot(i);
+					// limit 1 idea implemented per turn.
 					break;
 				}
 			}
 		}
-	
+		
+		// BUILDING
+		
+		if ( s->getMiningCapacity() < s->getPopulation()/3 )
+		{
+			//std::cout<<"Leader building a mine\n";
+			//s->location.addLocation(LOCATION_MINE);
+		}
+		
+		if ( s->getFarmingCapacity() < s->getPopulation()/2 )
+		{
+			//std::cout<<"Leader building a farm\n";
+			//s->location.addLocation(LOCATION_FARM);
+		}
+		
+		// PRODUCTION
+		
+		// Put in any public production orders
+		// requestManager->removeAll(resourceManager,ITEM_HOE);
+		// if ( resourceManager->getMoney() > 0 )
+		// {
+			// int hoeShortfall = (s->vCharacter.size()/3) - stockpile->getNumberOfItems(ITEM_HOE);
+
+			// int marketValue = requestManager->getAverageValue(ITEM_HOE) + 1;
+			
+			// for (int i=0;i<hoeShortfall/2;++i)
+			// {
+				// int amountCanPay = resourceManager->getMoney();
+				// if (marketValue < amountCanPay)
+				// {
+					// amountCanPay = marketValue;
+				// }
+				// //requestManager->add(this,ITEM_HOE,marketValue,false);
+				// std::cout<<"Request for hoe at price of "<<amountCanPay<<".\n";
+				
+				// if ( resourceManager->getMoney() == 0 )
+				// {
+					// break;
+				// }
+			// }
+		// }
+		
+		
+		// Money distribution:
+		// The treasury aims to hold 10% of all money, any excess is given out at a rate of 10% per turn.
+		if (s != nullptr)
+		{
+			//std::cout << "King distribute money\n";
+
+			// Calculate the total money in the settlement's treasury
+			int treasuryMoney = s->resourceManager.getMoney();
+			int totalSettlementMoney = s->getAllMoneyInSettlement();
+
+			// Check if the treasury holds more than 20% of total money in the settlement
+			if (static_cast<double>(treasuryMoney) / totalSettlementMoney > 0.2)
+			{
+				// Calculate the amount to distribute (e.g., 10% of the treasury money)
+				int amountToDistribute = treasuryMoney * 0.1;
+				//int amountToDistribute = treasuryMoney;
+				//std::cout<<"King distributed "<<amountToDistribute<<" coins.\n";
+
+				// Distribute the calculated amount
+				while (amountToDistribute > 0)
+				{
+					Character* c = s->getRandomCharacter();
+
+					if (s->resourceManager.takeMoney(1))
+					{
+						c->giveMoney(1);
+						amountToDistribute -= 1;
+					}
+					else
+					{
+						// Break the loop if there's not enough money left to distribute
+						break;
+					}
+				}
+			}
+		
+		}
 	}
 	
 }
@@ -195,14 +198,14 @@ Government_Scribe::Government_Scribe(Government* _government) : Government_Posit
 {
 }
 
-void Government_Scribe::govern()
+void Government_Scribe::governDaily()
 {
 	if (empty())
 	{
 		std::cout << "There is no scribe\n";
 		return;
 	}
-	std::cout << "Scribe is scribing.\n";
+	//std::cout << "Scribe is scribing.\n";
 	
 	if (character->vIdea.size() > 0 && government->governedSettlement!=0)
 	{
@@ -227,14 +230,14 @@ Government_Captain::Government_Captain(Government* _government) : Government_Pos
 {
 }
 
-void Government_Captain::govern()
+void Government_Captain::governDaily()
 {
 	if (empty())
 	{
 		std::cout << "There is no captain\n";
 		return;
 	}
-	std::cout << "Captain is capping.\n";
+	//std::cout << "Captain is capping.\n";
 	
 	
 	if (character->vIdea.size() > 0 && government->governedSettlement!=0)
@@ -278,13 +281,16 @@ Government& Government::operator=(const Government& other)
 	return *this;
 }
 
-void Government::govern()
+void Government::governDaily()
 {
-	std::cout<<"Government:\n";
-	leader.govern();
-	scribe.govern();
-	captain.govern();
-	std::cout<<"\n";
+	if ( globalRandom.rand8(DAYS_PER_MONTH/4) == 0 )
+	{
+		//std::cout<<"Government:\n";
+		leader.governDaily();
+		scribe.governDaily();
+		captain.governDaily();
+		//std::cout<<"\n";
+	}
 }
 
 bool Government::needsLeader()

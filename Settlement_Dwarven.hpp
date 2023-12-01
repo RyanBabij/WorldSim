@@ -23,12 +23,12 @@ class Settlement_Dwarven: public Settlement
 		void putMarketRequest(Character* c, enumResource type); // Put market request for resource to be obtained.
 		void putMarketRequest(Character* c, ItemType type); // Put market request for item to be built.
 		
-		bool abstractMonthConstruction(Character* character);
-		bool abstractMonthProduction(Character* character);
-		void abstractMonthResearch(Character* character);
-		void abstractMonthSocial(Character* character);
-		void abstractMonthSplit(); // Settlement split
-		void abstractMonthBiology(); // Character biology
+		bool abstractDayConstruction(Character* character);
+		bool abstractDayProduction(Character* character);
+		void abstractDayResearch(Character* character);
+		void abstractDaySocial(Character* character);
+		void abstractDaySplit(); // Settlement split
+		void abstractDayBiology(); // Character biology
 		
 		void moveAllCharacterHome(); // Move all characters back to their dwelling or a hall.
 		

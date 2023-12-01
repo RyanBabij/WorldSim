@@ -1199,7 +1199,8 @@ bool World::handleTickBacklog()
 	// or pressing escape.
 	if (incrementContinuous)
 	{
-		incrementTicks(TICKS_PER_MONTH);
+		//for (int i=0;i<
+		incrementTicks(TICKS_PER_DAY);
 		return true;
 	}
 	

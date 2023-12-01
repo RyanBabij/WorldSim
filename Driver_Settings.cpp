@@ -39,7 +39,7 @@ const bool FAST_COUT = false;
 /* If CPU isn't relinquished, then OpenGL tends to run at 100% CPU for some reason. */
 /* This uses MsgWaitForMultipleObjects, which will let the OS do other things until any kind of input event occurs */
 const bool RELINQUISH_CPU = true;
-const unsigned int RELINQUISH_CPU_TIMEOUT = 100; /* 10-100 seems to be okay. Maximum amount of time to relinquish */
+const unsigned int RELINQUISH_CPU_TIMEOUT = 1; /* 10-100 seems to be okay. Maximum amount of time to relinquish */
 
 //      THREADING       ////////////////////////////////////////////////////////////////////////////////////////////////
 // Threading will not be optional in the future,

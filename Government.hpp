@@ -25,7 +25,7 @@ class Government
 		Government(const Government& other);
 		Government& operator=(const Government& other);
 
-		void govern();
+		void governDaily();
 		bool needsLeader();
 		void setLeader(Character* character);
 		void setScribe(Character* character);

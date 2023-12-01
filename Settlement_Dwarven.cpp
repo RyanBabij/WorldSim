@@ -69,7 +69,7 @@ void Settlement_Dwarven::putMarketRequest(Character* c, enumLocation type)
 		
 		locationRequestManager.removeAll(c,type);
 		locationRequestManager.add(c,type,marketValue);
-		std::cout<<"Request for "<<enumLocationStr[type]<<" at price of "<<amountCanPay<<".\n";
+		//std::cout<<"Request for "<<enumLocationStr[type]<<" at price of "<<amountCanPay<<".\n";
 	}
 }
 
@@ -91,7 +91,7 @@ void Settlement_Dwarven::putMarketRequest(Character* c, ItemType type)
 		
 		requestManager.removeAll(c,type);
 		requestManager.add(c,type,marketValue);
-		std::cout<<"Request for "<<enumItemTypeStr[type]<<" at price of "<<amountCanPay<<".\n";
+		//std::cout<<"Request for "<<enumItemTypeStr[type]<<" at price of "<<amountCanPay<<".\n";
 	}
 }
 
@@ -123,7 +123,7 @@ void Settlement_Dwarven::buildLocation(enumLocation _location)
 
 bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 {
-	std::cout<<character->getFullName()<<" at "<<character->getLocation()<<". Starting job "<<job->getName()<<". ($"<<character->getMoney()<<")\n";
+	//std::cout<<character->getFullName()<<" at "<<character->getLocation()<<". Starting job "<<job->getName()<<". ($"<<character->getMoney()<<")\n";
 	
 	checkStockpileForBestItem(character, job);
 	
@@ -147,7 +147,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		// Move to farms. If not possible we will need to hunt/gather instead.
 		if (character->moveToLocationType(LOCATION_FARM) == false )
 		{
-			std::cout<<"Character unable to move to farm.\n";
+			//std::cout<<"Character unable to move to farm.\n";
 			
 			putMarketRequest(character, job->requiredLocation);
 
@@ -185,7 +185,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		// Move to farms. If not possible we will need to hunt/gather instead.
 		if (character->moveToLocationType(LOCATION_WILDERNESS) == false )
 		{
-			std::cout<<"Character unable to move to wilderness.\n";
+			//std::cout<<"Character unable to move to wilderness.\n";
 			return false;
 		}
 
@@ -193,7 +193,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		
 		if (biome == nullptr)
 		{
-			std::cout<<"ERROR: No biome in Settlement\n";
+			//std::cout<<"ERROR: No biome in Settlement\n";
 		}
 		//std::cout<<"Character hunting in biome: "<<biome->name<<".\n";
 		
@@ -204,7 +204,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 			
 			if ( item->attributes.degrade(1) )
 			{
-				std::cout<<"Item broke.\n";
+				//std::cout<<"Item broke.\n";
 				character->takeItem(item);
 			}
 		}
@@ -230,7 +230,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 				//std::cout<<(*vCreature)(i)->name<<"\n";
 			}
 			int iCreature = globalRandom.rand8(vCreature->size());
-			std::cout<<"Hunted a "<<(*vCreature)(iCreature)->name<<".\n";
+			//std::cout<<"Hunted a "<<(*vCreature)(iCreature)->name<<".\n";
 		}
 
 		
@@ -249,7 +249,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		// Move to the mines
 		if (character->moveToLocationType(job->requiredLocation) == false )
 		{
-			std::cout<<"Character unable to move to mine.\n";
+			//std::cout<<"Character unable to move to mine.\n";
 			
 			putMarketRequest(character, job->requiredLocation);
 		}
@@ -286,7 +286,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		// each month there's 50% chance of finding a mining site
 		if (globalRandom.flip())
 		{
-			std::cout<<"Mining site discovered.\n";
+			//std::cout<<"Mining site discovered.\n";
 			
 			
 		}
@@ -397,209 +397,222 @@ void Settlement_Dwarven::payCharacterFromTreasury(Character* character, int amou
 	character->giveMoney(amountToGive);
 }
 
-bool Settlement_Dwarven::abstractMonthConstruction(Character* character)
+bool Settlement_Dwarven::abstractDayConstruction(Character* character)
 {
-	auto mostValuableRequestOpt = locationRequestManager.pullMostValuableRequest(false);
-	if (mostValuableRequestOpt)
+	if (globalRandom.rand8(DAYS_PER_MONTH) == 0 )
 	{
-		// If there is a most valuable request
-		LocationRequest mostValuableRequest = *mostValuableRequestOpt;
-		// Process the most valuable request
+		auto mostValuableRequestOpt = locationRequestManager.pullMostValuableRequest(false);
+		if (mostValuableRequestOpt)
+		{
+			// If there is a most valuable request
+			LocationRequest mostValuableRequest = *mostValuableRequestOpt;
+			// Process the most valuable request
 
-		Location* loc = location.addLocation(mostValuableRequest.type);
-		
-		if (loc != nullptr)
-		{
-			std::cout<<character->getFullName()<<": Building "<<loc->getName()<<". "<<character->getMoney()<<" money.\n";
-			std::cout<<"There are "<<requestManager.getNumContracts()<<" contracts.\n";
-			// recieve the coins promised
+			Location* loc = location.addLocation(mostValuableRequest.type);
 			
-			int moneyToRecieve = mostValuableRequest.value;
-			
-			payCharacter(character, mostValuableRequest.value);
-			return true;
-		}
-		else // Couldn't make the item, put the request back through.
-		{
-			// Recursive try to make something else.
-			abstractMonthConstruction(character);
-			
-			mostValuableRequest.requester->giveMoney(mostValuableRequest.value);
-			locationRequestManager.add(mostValuableRequest.requester,mostValuableRequest.type, mostValuableRequest.value);
-			std::cout<<"Unable to make item, trying another.\n";
+			if (loc != nullptr)
+			{
+				//std::cout<<character->getFullName()<<": Building "<<loc->getName()<<". "<<character->getMoney()<<" money.\n";
+				//std::cout<<"There are "<<requestManager.getNumContracts()<<" contracts.\n";
+				// recieve the coins promised
+				
+				int moneyToRecieve = mostValuableRequest.value;
+				
+				payCharacter(character, mostValuableRequest.value);
+				return true;
+			}
+			else // Couldn't make the item, put the request back through.
+			{
+				// Recursive try to make something else.
+				abstractDayConstruction(character);
+				
+				mostValuableRequest.requester->giveMoney(mostValuableRequest.value);
+				locationRequestManager.add(mostValuableRequest.requester,mostValuableRequest.type, mostValuableRequest.value);
+				//std::cout<<"Unable to make item, trying another.\n";
+			}
 		}
 	}
 	
 	return false;
 }
 
-bool Settlement_Dwarven::abstractMonthProduction(Character* character)
+bool Settlement_Dwarven::abstractDayProduction(Character* character)
 {
-	auto mostValuableRequestOpt = requestManager.pullMostValuableRequest(false);
-	if (mostValuableRequestOpt)
+	if ( globalRandom.rand8(DAYS_PER_MONTH) == 0 )
 	{
-		// If there is a most valuable request
-		ItemRequest mostValuableRequest = *mostValuableRequestOpt;
-		// Process the most valuable request
-		//std::cout << "Most valuable request value: " << mostValuableRequest.value << std::endl;
-		
-		Item* item = produceItem(mostValuableRequest.type,mostValuableRequest.requester);
-		
-		if (item != nullptr)
+		auto mostValuableRequestOpt = requestManager.pullMostValuableRequest(false);
+		if (mostValuableRequestOpt)
 		{
-			std::cout<<character->getFullName()<<": Produced "<<item->getName()<<". "<<character->getMoney()<<" money.\n";
-
-			int moneyToRecieve = mostValuableRequest.value;
-			payCharacter(character, mostValuableRequest.value);
-			return true;
-		}
-		else // Couldn't make the item, put the request back through.
-		{
-			// Recursive try to make something else.
-			abstractMonthProduction(character);
+			// If there is a most valuable request
+			ItemRequest mostValuableRequest = *mostValuableRequestOpt;
+			// Process the most valuable request
+			//std::cout << "Most valuable request value: " << mostValuableRequest.value << std::endl;
 			
-			mostValuableRequest.requester->giveMoney(mostValuableRequest.value);
-			requestManager.add(mostValuableRequest.requester,mostValuableRequest.type, mostValuableRequest.value);
-			std::cout<<"Unable to make item, trying another.\n";
-		}
-	}
-	else if (getMoneyPercentInTreasury() < 0.25 || getAverageCharacterWealth() < 10 )
-	{
-		std::cout<<character->getFullName()<<": Producing coins. "<<character->getMoney()<<" money.\n";
-		
-		if ( resourceManager.take(RESOURCE_IRON,1) )
-		{
-			// make coins
-			resourceManager.addMoney(100);
-		}
-		else
-		{
-			std::cout<<"Unable to make coins, doing something else.\n";
-			return false;
-		}
-		return true;
-	}
-	
-	return false;
-	
-	// Character spends a month in production
-	// produce an item
-	// item value is dependent on character stats and randomness.
-	
-	// determine quality
-	
-	// skill modifier 
-	// base chance of special item is 1 in 1000. 0.1%
-	// each level of metalsmithing skill can improve it by 1%
-	// which means that 100 skill means 100% chance of making special item.
-	//int specialChance = 1000;
-	// DEBUG SETTING:
-	int specialChance = 100;
-	int skillModifier = character->skillMetalsmithing.level * 10;
-	int totalChance = specialChance - skillModifier;
-	if ( totalChance < 1 )
-	{
-		totalChance = 1;
-	}
-	
-	int qualityLevel = 0;
-	
-	if (random.oneIn(totalChance) )
-	{
-		std::cout<<"SPECIAL ITEM produced by "<<character->getFullName()<<".\n";
-		
-		qualityLevel = 1;
-		
-		while (qualityLevel < 6 )
-		{
-			if ( random.flip() )
+			Item* item = produceItem(mostValuableRequest.type,mostValuableRequest.requester);
+			
+			if (item != nullptr)
 			{
-				++qualityLevel;
+				//std::cout<<character->getFullName()<<": Produced "<<item->getName()<<". "<<character->getMoney()<<" money.\n";
+
+				int moneyToRecieve = mostValuableRequest.value;
+				payCharacter(character, mostValuableRequest.value);
+				return true;
+			}
+			else // Couldn't make the item, put the request back through.
+			{
+				// Recursive try to make something else.
+				abstractDayProduction(character);
+				
+				mostValuableRequest.requester->giveMoney(mostValuableRequest.value);
+				requestManager.add(mostValuableRequest.requester,mostValuableRequest.type, mostValuableRequest.value);
+				//std::cout<<"Unable to make item, trying another.\n";
+			}
+		}
+		else if (getMoneyPercentInTreasury() < 0.25 || getAverageCharacterWealth() < 10 )
+		{
+			//std::cout<<character->getFullName()<<": Producing coins. "<<character->getMoney()<<" money.\n";
+			
+			if ( resourceManager.take(RESOURCE_IRON,1) )
+			{
+				// make coins
+				resourceManager.addMoney(100);
 			}
 			else
 			{
-				continue;
+				//std::cout<<"Unable to make coins, doing something else.\n";
+				return false;
+			}
+			return true;
+		}
+		
+		return false;
+		
+		// Character spends a month in production
+		// produce an item
+		// item value is dependent on character stats and randomness.
+		
+		// determine quality
+		
+		// skill modifier 
+		// base chance of special item is 1 in 1000. 0.1%
+		// each level of metalsmithing skill can improve it by 1%
+		// which means that 100 skill means 100% chance of making special item.
+		//int specialChance = 1000;
+		// DEBUG SETTING:
+		int specialChance = 100;
+		int skillModifier = character->skillMetalsmithing.level * 10;
+		int totalChance = specialChance - skillModifier;
+		if ( totalChance < 1 )
+		{
+			totalChance = 1;
+		}
+		
+		int qualityLevel = 0;
+		
+		if (random.oneIn(totalChance) )
+		{
+			std::cout<<"SPECIAL ITEM produced by "<<character->getFullName()<<".\n";
+			
+			qualityLevel = 1;
+			
+			while (qualityLevel < 6 )
+			{
+				if ( random.flip() )
+				{
+					++qualityLevel;
+				}
+				else
+				{
+					continue;
+				}
+			}
+			std::cout<<"Quality level is "<<qualityLevel<<"\n";
+			
+		}
+		else
+		{
+			// normal item
+			//std::cout<<"Item produced by "<<vCharacter(i)->getFullName()<<".\n";
+		}
+		
+		Item* createdItem=0;
+		
+		if (farmingEquipmentNeeded())
+		{
+			Item_Hoe * hoe = new Item_Hoe();
+			createdItem=hoe;
+			vItem.push(hoe);
+			stockpile.add(hoe);
+		}
+		else
+		{
+		
+			Item_Sword * sword = new Item_Sword();
+			createdItem=sword;
+			stockpile.add(sword);
+			vItem.push(sword);
+		
+		}
+		
+		if ( qualityLevel > 0 )
+		{				
+			// if the item is special, create an Item_Information attachment for it.
+			Item_Information* info = new Item_Information();
+			// Who created it
+			// Where it was created
+			// Any additional info
+			
+			info->creator = character;
+			info->locationMade = this;
+			info->quality = qualityLevel;
+			info->yearMade = globalCalendar.year;
+			info->monthMade = globalCalendar.month;
+			createdItem->information = info;
+			// engravings should be done seperately as it's a different skillset.
+			// Player should be able to pick the engraving if they are having it done.
+			
+		}
+		
+		if (qualityLevel == 6)
+		{
+			std::cout<<"*** ARTIFACT CREATED ***\n";
+			if (world!=0)
+			{
+				world->eventManager.addEvent("ARTIFACT",Event::EVENT_NONE);
 			}
 		}
-		std::cout<<"Quality level is "<<qualityLevel<<"\n";
 		
+		//nMetalStockpile-=10;
+		resourceManager.take(RESOURCE_IRON, 1);
+		character->skillMetalsmithing.addExp(10);
 	}
-	else
-	{
-		// normal item
-		//std::cout<<"Item produced by "<<vCharacter(i)->getFullName()<<".\n";
-	}
-	
-	Item* createdItem=0;
-	
-	if (farmingEquipmentNeeded())
-	{
-		Item_Hoe * hoe = new Item_Hoe();
-		createdItem=hoe;
-		vItem.push(hoe);
-		stockpile.add(hoe);
-	}
-	else
-	{
-	
-		Item_Sword * sword = new Item_Sword();
-		createdItem=sword;
-		stockpile.add(sword);
-		vItem.push(sword);
-	
-	}
-	
-	if ( qualityLevel > 0 )
-	{				
-		// if the item is special, create an Item_Information attachment for it.
-		Item_Information* info = new Item_Information();
-		// Who created it
-		// Where it was created
-		// Any additional info
-		
-		info->creator = character;
-		info->locationMade = this;
-		info->quality = qualityLevel;
-		info->yearMade = globalCalendar.year;
-		info->monthMade = globalCalendar.month;
-		createdItem->information = info;
-		// engravings should be done seperately as it's a different skillset.
-		// Player should be able to pick the engraving if they are having it done.
-		
-	}
-	
-	if (qualityLevel == 6)
-	{
-		std::cout<<"*** ARTIFACT CREATED ***\n";
-		if (world!=0)
-		{
-			world->eventManager.addEvent("ARTIFACT",Event::EVENT_NONE);
-		}
-	}
-	
-	//nMetalStockpile-=10;
-	resourceManager.take(RESOURCE_IRON, 1);
-	character->skillMetalsmithing.addExp(10);
+	return false;
 }
 
-void Settlement_Dwarven::abstractMonthResearch(Character* character)
+void Settlement_Dwarven::abstractDayResearch(Character* character)
 {
-	std::cout<<character->getFullName()<<": Research. "<<character->getMoney()<<" money.\n";
+	if ( globalRandom.rand8(DAYS_PER_MONTH) == 0 )
+	{
+	//std::cout<<character->getFullName()<<": Research. "<<character->getMoney()<<" money.\n";
 	// Character works in the mines for the month
-	bool breakthrough = character->abstractResearchMonth();
+		bool breakthrough = character->abstractResearchMonth();
+	}
 }
 
-void Settlement_Dwarven::abstractMonthSocial(Character* character)
+void Settlement_Dwarven::abstractDaySocial(Character* character)
 {
-	// Every month the Character does a round of socialising
-	const char cSocialSize = character->getCharisma();
-	
-	// Number of social interactions is dependant on charisma
-	for (int i2=0;i2<cSocialSize;++i2)
+	if ( globalRandom.rand8(DAYS_PER_MONTH) == 0 )
 	{
-		character->abstractSocial(getRandomCharacter());
+		// Every month the Character does a round of socialising
+		const char cSocialSize = character->getCharisma();
+		
+		// Number of social interactions is dependant on charisma
+		for (int i2=0;i2<cSocialSize;++i2)
+		{
+			character->abstractSocial(getRandomCharacter());
+		}
+		character->updateSocial();
 	}
-	character->updateSocial();
 }
 
 Character* Settlement_Dwarven::getMiner(Vector <Character*>* vExclude)
@@ -721,11 +734,11 @@ void Settlement_Dwarven::moveAllCharacterHome()
 
 		if (!moved)
 		{
-			std::cout<<v->getFullName()<<" unable to return home due to lack of capacity.\n";
+			//std::cout<<v->getFullName()<<" unable to return home due to lack of capacity.\n";
 		}
 		else
 		{
-			std::cout<<v->getFullName()<<" returned home.\n";
+			//std::cout<<v->getFullName()<<" returned home.\n";
 		}
 	}
 }
@@ -755,14 +768,14 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 	dailyCounter+=nTicks;
 	monthlyCounter+=nTicks;
 
-	while (monthlyCounter >= TICKS_PER_MONTH)
+	while (dailyCounter >= TICKS_PER_DAY)
 	{
-		std::cout<<"\n*** Monthly tick: "<<globalCalendar.toString()<<"\n\n";
+		//std::cout<<"\n*** Daily tick: "<<globalCalendar.toString()<<"\n\n";
 		moveAllCharacterHome(); // send all characters home for now to reset location capacities
-		std::cout<<"\n";
+		//std::cout<<"\n";
 		
-		technology.print();
-		std::cout<<"\n";
+		//technology.print();
+		//std::cout<<"\n";
 		
 		Vector <Character*> vMovedCharacters; // List of characters already acted.
 		
@@ -774,7 +787,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			std::cout<<"We need a leader\n";
 		}
 		
-		government.govern();
+		government.governDaily();
 		
 		//Character* character = vCharacter(i);
 		
@@ -805,11 +818,11 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 				resourceManager.take(RESOURCE_FOOD, 28);
 				
 				// CONSTRUCTION
-				if ( abstractMonthConstruction(actingCharacter))
+				if ( abstractDayConstruction(actingCharacter))
 				{
 				}
 				// PRODUCTION
-				else if ( abstractMonthProduction(actingCharacter))
+				else if ( abstractDayProduction(actingCharacter))
 				{
 				}
 				// MINING
@@ -824,12 +837,12 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 				// RESEARCH
 				else
 				{
-					abstractMonthResearch(actingCharacter);
+					abstractDayResearch(actingCharacter);
 				}
 			}
 			
 			// SOCIAL
-			abstractMonthSocial(actingCharacter);
+			abstractDaySocial(actingCharacter);
 			//character->social.print();
 			
 			vMovedCharacters.push(actingCharacter);
@@ -840,243 +853,249 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		// Includes exploration etc.
 		// Item bartering
 		
-		abstractMonthBiology();
-		abstractMonthSplit();
+		abstractDayBiology();
+		abstractDaySplit();
 		
-		resourceManager.print();
-		stockpile.print();
-		printAllMoneyInSettlement();
-		requestManager.print();
-		locationRequestManager.print();
-		location.printAll();
-		monthlyCounter-=TICKS_PER_MONTH;
+		//resourceManager.print();
+		//stockpile.print();
+		//printAllMoneyInSettlement();
+		//requestManager.print();
+		//locationRequestManager.print();
+		//location.printAll();
+		dailyCounter-=TICKS_PER_DAY;
 	}
 	
 
-	while ( dailyCounter >= TICKS_PER_DAY )
-	{
-		dailyCounter-=TICKS_PER_DAY;
-	}
+	// while ( dailyCounter >= TICKS_PER_DAY )
+	// {
+		// dailyCounter-=TICKS_PER_DAY;
+	// }
 }
 
-void Settlement_Dwarven::abstractMonthBiology()
+void Settlement_Dwarven::abstractDayBiology()
 {
 	for (int i=0; i<vCharacter.size(); ++i)
 	{
 		Character* const c = vCharacter(i);
 		
-		c->incrementTicks(TICKS_PER_MONTH);
+		c->incrementTicks(TICKS_PER_DAY);
+		
+		if (globalRandom.rand8(DAYS_PER_MONTH) == 0 )
+		{
 	
-		if (c->isMale == false && c->isMarried == true && c->age >= 18 && c->isAlive && c->spouse!=0 && c->spouse->isAlive)
-		{
-			if (c->isPregnant==false)
+			if (c->isMale == false && c->isMarried == true && c->age >= 18 && c->isAlive && c->spouse!=0 && c->spouse->isAlive)
 			{
-				if (c->vChildren.size() < 6 && c->age < 35)
+				if (c->isPregnant==false)
 				{
-					if(random.oneIn(24))
+					if (c->vChildren.size() < 6 && c->age < 35)
 					{
-						c->isPregnant = true;
-						c->pregnantCounter = 0;
+						if(random.oneIn(10))
+						{
+							c->isPregnant = true;
+							c->pregnantCounter = 0;
+						}
+					}
+					else if (c->age < 55)
+					{
+						if(random.oneIn(c->age))
+						{
+							c->isPregnant = true;
+							c->pregnantCounter = 0;
+						}
+					}
+					else
+					{
+
 					}
 				}
-				else if (c->age < 55)
+
+				else if (c->isPregnant == true && c->pregnantCounter >= 3) // 3 months of pregnancy
 				{
-					if(random.oneIn(c->age*3))
+					Character* babby = c->giveBirth();
+					if ( babby!= 0) {
+						vCharacter.push(babby);
+					}
+					c->isPregnant=false;
+					c->pregnantCounter = 0;
+					babby->settlement=this;
+				}
+				else if ( c->isPregnant == true)
+				{
+					c->pregnantCounter++;
+				}
+			}
+
+			// Marriage searching. 18+. 10% chance per month.
+			if (c->isMale == true && c->age >= 16 && c->isMarried == false && random.oneIn(12))
+			{
+				// build vector of unmarried women
+				Vector <Character*> vEligibleWomen;
+
+				// People that c can't marry
+				auto vRelatives = c->getRelatives();
+
+				//Select maxRandoms random candidates from the vector.
+				int maxRandoms = 20;
+				while ( vEligibleWomen.size() < 3 && maxRandoms-- > 0)
+				{
+					Character* c2 = vCharacter(random.randomInt(vCharacter.size()-1));
+
+					if ( c2!=c && c->canMarry(c2) && vRelatives->contains(c2)==false )
 					{
-						c->isPregnant = true;
-						c->pregnantCounter = 0;
+						vEligibleWomen.push(c2);
 					}
 				}
-				else
-				{
 
-				}
-			}
+				// If the character can't find an eligible woman in the tribe.
+				// Look through a neighboring tribe. (Sometimes check anyway.)
+				// Tribe* neighboringTribe = world->getNearestConnectedTribe(this,true /* samerace */);
 
-			else if (c->isPregnant == true && c->pregnantCounter >= 9)
-			{
-				Character* babby = c->giveBirth();
-				if ( babby!= 0) {
-					vCharacter.push(babby);
-				}
-				c->isPregnant=false;
-				c->pregnantCounter = 0;
-				babby->settlement=this;
-			}
-			else if ( c->isPregnant == true)
-			{
-				c->pregnantCounter++;
-			}
-		}
-
-		// Marriage searching. 18+. 10% chance per month.
-		if (c->isMale == true && c->age >= 16 && c->isMarried == false && random.oneIn(38))
-		{
-			// build vector of unmarried women
-			Vector <Character*> vEligibleWomen;
-
-			// People that c can't marry
-			auto vRelatives = c->getRelatives();
-
-			//Select maxRandoms random candidates from the vector.
-			int maxRandoms = 20;
-			while ( vEligibleWomen.size() < 3 && maxRandoms-- > 0)
-			{
-				Character* c2 = vCharacter(random.randomInt(vCharacter.size()-1));
-
-				if ( c2!=c && c->canMarry(c2) && vRelatives->contains(c2)==false )
-				{
-					vEligibleWomen.push(c2);
-				}
-			}
-
-			// If the character can't find an eligible woman in the tribe.
-			// Look through a neighboring tribe. (Sometimes check anyway.)
-			// Tribe* neighboringTribe = world->getNearestConnectedTribe(this,true /* samerace */);
-
-			// if ( (vEligibleWomen.size() == 0 || random.oneIn(20) ) && neighboringTribe != 0 && neighboringTribe->vCharacter.size() > 0)
-			// {
-				// //std::cout<<"Checking nearest tribe.\n";
-				// //Select maxRandoms random candidates from the vector.
-				// int maxRandoms2 = 20;
-				// while ( vEligibleWomen.size() < 3 && maxRandoms2-- > 0)
+				// if ( (vEligibleWomen.size() == 0 || random.oneIn(20) ) && neighboringTribe != 0 && neighboringTribe->vCharacter.size() > 0)
 				// {
-					// Character* c2 = neighboringTribe->vCharacter(random.randomInt(neighboringTribe->vCharacter.size()-1));
-
-					// if ( c2!=c && c->canMarry(c2) && vRelatives->contains(c2)==false )
+					// //std::cout<<"Checking nearest tribe.\n";
+					// //Select maxRandoms random candidates from the vector.
+					// int maxRandoms2 = 20;
+					// while ( vEligibleWomen.size() < 3 && maxRandoms2-- > 0)
 					// {
-						// vEligibleWomen.push(c2);
-						// //std::cout<<"Success\n";
-						// //Console("SUCC");
+						// Character* c2 = neighboringTribe->vCharacter(random.randomInt(neighboringTribe->vCharacter.size()-1));
+
+						// if ( c2!=c && c->canMarry(c2) && vRelatives->contains(c2)==false )
+						// {
+							// vEligibleWomen.push(c2);
+							// //std::cout<<"Success\n";
+							// //Console("SUCC");
+						// }
 					// }
 				// }
-			// }
 
-			if(vEligibleWomen.size()>0)
-			{
-				const int randomWoman = random.randomInt(vEligibleWomen.size()-1);
+				if(vEligibleWomen.size()>0)
+				{
+					const int randomWoman = random.randomInt(vEligibleWomen.size()-1);
 
-				// Order of marriage is randomised mostly to deal with movement between tribes.
-				if ( random.flip() )
-				{	vEligibleWomen(randomWoman)->marry(c);
-				}
-				else
-				{	c->marry(vEligibleWomen(randomWoman));
+					// Order of marriage is randomised mostly to deal with movement between tribes.
+					if ( random.flip() )
+					{	vEligibleWomen(randomWoman)->marry(c);
+					}
+					else
+					{	c->marry(vEligibleWomen(randomWoman));
+					}
 				}
 			}
-		}
-	
-		//Death calculations
-		if ( c->age < 50 && random.oneIn(2400))
-		{
-			c->die();
-		}
-		else if (c->age > 70 && random.oneIn(50))
-		{
-			c->die();
-		}
-		else if (c->age > 65 && random.oneIn(180))
-		{
-			c->die();
-		}
-		else if (c->age >= 50 && random.oneIn(600))
-		{
-			c->die();
+		
+			//Death calculations
+			if ( c->age < 50 && random.oneIn(3000))
+			{
+				c->die();
+			}
+			else if (c->age > 70 && random.oneIn(50))
+			{
+				c->die();
+			}
+			else if (c->age > 65 && random.oneIn(180))
+			{
+				c->die();
+			}
+			else if (c->age >= 50 && random.oneIn(800))
+			{
+				c->die();
+			}
 		}
 	}
 }
 
-void Settlement_Dwarven::abstractMonthSplit()
+void Settlement_Dwarven::abstractDaySplit()
 {
-	// NEW SETTLEMENT CALCULATIONS
-	// OCCURS IF: TOO MANY PEOPLE IN SETTLEMENT, THERE IS A VIABLE AMOUNT OF FREE SPACE, RANDOM ELEMENT.
-	// ONLY SPLIT INTO EMPTY TERRITORY.
-	int landmassID = world->aWorldTile(worldX,worldY).landID;
-	// WHAT LANDMASS ARE WE ON?
-	// DOES THE LANDMASS HAVE A SPARE TILE?
-	// NEW IDEA: Only split if there are at least 3 free tiles. This will reduce requirement
-	// To check entire landmass. And prevent tribes from splitting into single free tiles.
-	int nFreeTiles = 0;
-
-	Vector <HasXY*> * vXY  = world->aWorldTile.getNeighbors(worldX, worldY, false, true /* shuffle */);
-
-	if (vXY==0) {
-		return;
-	}
-
-	bool canExpand = false;
-	for (auto xy : *vXY)
+	if ( globalRandom.rand8(DAYS_PER_MONTH) && getPopulation() > 100 )
 	{
-		if (world->aWorldTile.isSafe(xy) && world->isLand(xy))
-		{
-			nFreeTiles++;
+		// NEW SETTLEMENT CALCULATIONS
+		// OCCURS IF: TOO MANY PEOPLE IN SETTLEMENT, THERE IS A VIABLE AMOUNT OF FREE SPACE, RANDOM ELEMENT.
+		// ONLY SPLIT INTO EMPTY TERRITORY.
+		int landmassID = world->aWorldTile(worldX,worldY).landID;
+		// WHAT LANDMASS ARE WE ON?
+		// DOES THE LANDMASS HAVE A SPARE TILE?
+		// NEW IDEA: Only split if there are at least 3 free tiles. This will reduce requirement
+		// To check entire landmass. And prevent tribes from splitting into single free tiles.
+		int nFreeTiles = 0;
+
+		Vector <HasXY*> * vXY  = world->aWorldTile.getNeighbors(worldX, worldY, false, true /* shuffle */);
+
+		if (vXY==0) {
+			return;
 		}
-	}
 
-	if (nFreeTiles >= 3 && landmassID >=0 && vCharacter.size() > 150 && random.oneIn(12) )
-	{
-		// CHECK TO SEE IF THERE'S A TILE TO SPLIT INTO.
+		bool canExpand = false;
 		for (auto xy : *vXY)
 		{
-			if (world->aWorldTile.isSafe(xy) && world->isLand(xy) )
+			if (world->aWorldTile.isSafe(xy) && world->isLand(xy))
 			{
-				if ( world->getHighestInfluence(xy) == 0 )
+				nFreeTiles++;
+			}
+		}
+
+		if (nFreeTiles >= 3 && landmassID >=0 && vCharacter.size() > 150 && random.oneIn(12) )
+		{
+			// CHECK TO SEE IF THERE'S A TILE TO SPLIT INTO.
+			for (auto xy : *vXY)
+			{
+				if (world->aWorldTile.isSafe(xy) && world->isLand(xy) )
 				{
-					// WHO WILL LEAVE THE TRIBE? FOR NOW LET'S RANDOMLY PICK UNMARRIED INDIVIDUALS.
-					// ONLY FORM NEW TRIBE IF THERE ARE AT LEAST 20 CANDIDATES.
-					// NOTE THAT WE MUST SHUFFLE VECTOR FOR NOW. THE VECTOR SHOULD BE SHUFFLED EXTERNALLY AT A SET TIME PERIOD.
-
-					// UPDATE. THERE IS NO LIMIT TO HOW MANY PEOPLE MAY LEAVE THE ORIGINAL TRIBE.
-					vCharacter.shuffle();
-					Vector <Character*> vNewTribeCharacter;
-
-					for (int i=0; i<vCharacter.size(); ++i)
+					if ( world->getHighestInfluence(xy) == 0 )
 					{
-						if ( vCharacter(i)->isMarried == false && Random::oneIn(3))
+						// WHO WILL LEAVE THE TRIBE? FOR NOW LET'S RANDOMLY PICK UNMARRIED INDIVIDUALS.
+						// ONLY FORM NEW TRIBE IF THERE ARE AT LEAST 20 CANDIDATES.
+						// NOTE THAT WE MUST SHUFFLE VECTOR FOR NOW. THE VECTOR SHOULD BE SHUFFLED EXTERNALLY AT A SET TIME PERIOD.
+
+						// UPDATE. THERE IS NO LIMIT TO HOW MANY PEOPLE MAY LEAVE THE ORIGINAL TRIBE.
+						vCharacter.shuffle();
+						Vector <Character*> vNewTribeCharacter;
+
+						for (int i=0; i<vCharacter.size(); ++i)
 						{
-							vNewTribeCharacter.push(vCharacter(i));
+							if ( vCharacter(i)->isMarried == false && Random::oneIn(3))
+							{
+								vNewTribeCharacter.push(vCharacter(i));
+							}
+
 						}
-
-					}
-					if (vNewTribeCharacter.size() >= 20)
-					{
-						// FORM THE NEW SETTLEMENT AND BREAK.
-						Console ("SETTLEMENT SPLIT");
-						std::cout<<"Settlement split\n";
-						
-						Tribe_Dwarven* splitTribe = new Tribe_Dwarven;
-						splitTribe->world = world;
-						splitTribe->name = globalNameGen.generate();
-						splitTribe->nFood = 10;
-						splitTribe->worldX = xy->x;
-						splitTribe->worldY = xy->y;
-						splitTribe->setColour(random.randomInt(255),random.randomInt(255),random.randomInt(255));
-						world->putObject(splitTribe);
-						world->vTribe.push(splitTribe);
-						
-						//splitTribe->generateCouples(12);
-
-						for (int i2=0; i2<vNewTribeCharacter.size(); ++i2)
+						if (vNewTribeCharacter.size() >= 20)
 						{
-							splitTribe->vCharacter.push(vNewTribeCharacter(i2));
-							removeCharacter(vNewTribeCharacter(i2));
+							// FORM THE NEW SETTLEMENT AND BREAK.
+							Console ("SETTLEMENT SPLIT");
+							std::cout<<"Settlement split\n";
+							
+							Tribe_Dwarven* splitTribe = new Tribe_Dwarven;
+							splitTribe->world = world;
+							splitTribe->name = globalNameGen.generate();
+							splitTribe->nFood = 10;
+							splitTribe->worldX = xy->x;
+							splitTribe->worldY = xy->y;
+							splitTribe->setColour(random.randomInt(255),random.randomInt(255),random.randomInt(255));
+							world->putObject(splitTribe);
+							world->vTribe.push(splitTribe);
+							
+							//splitTribe->generateCouples(12);
+
+							for (int i2=0; i2<vNewTribeCharacter.size(); ++i2)
+							{
+								splitTribe->vCharacter.push(vNewTribeCharacter(i2));
+								removeCharacter(vNewTribeCharacter(i2));
+							}
+
+
+							// Add legends event
+							Event_Settlement_Split * eventSplit = new Event_Settlement_Split("SETTLEMENT SPLIT FROM "+getName(),Event::EVENT_SETTLEMENT_SPLIT,this,splitTribe);
+							world->eventManager.addEvent(eventSplit);
+							break;
 						}
-
-
-						// Add legends event
-						Event_Settlement_Split * eventSplit = new Event_Settlement_Split("SETTLEMENT SPLIT FROM "+getName(),Event::EVENT_SETTLEMENT_SPLIT,this,splitTribe);
-						world->eventManager.addEvent(eventSplit);
 						break;
 					}
-					break;
 				}
 			}
 		}
-	}
 
-	vXY->clearData();
-	delete vXY;
-	
+		vXY->clearData();
+		delete vXY;
+	}
 }
 
 #endif

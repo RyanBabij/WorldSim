@@ -20,7 +20,7 @@ class Government_Position
 		virtual ~Government_Position() = default;
 
 		bool operator==(const Character* otherCharacter) const;
-		virtual void govern() = 0;
+		virtual void governDaily() = 0;
 		virtual void assign(Character* _character);
 		bool empty();
 };
@@ -29,7 +29,7 @@ class Government_Leader : public Government_Position, public CanRequestItem
 {
 	public:
 		Government_Leader(Government* _government);
-		virtual void govern() override;
+		virtual void governDaily() override;
 		virtual void recieveRequestedItem(Item* item) override;
 };
 
@@ -37,14 +37,14 @@ class Government_Scribe : public Government_Position
 {
 	public:
 		Government_Scribe(Government* _government);
-		virtual void govern() override;
+		virtual void governDaily() override;
 };
 
 class Government_Captain : public Government_Position
 {
 	public:
 		Government_Captain(Government* _government);
-		virtual void govern() override;
+		virtual void governDaily() override;
 };
 
 #endif // WORLDSIM_GOVERNMENT_POSITION_HPP
