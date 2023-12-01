@@ -329,7 +329,7 @@ void Character::giveItem(Item* _item)
 
 void Character::recieveRequestedItem(Item* item)
 {
-	std::cout<<getFullName()<<" recieved requested item: "<<item->getName()<<"\n";
+	//std::cout<<getFullName()<<" recieved requested item: "<<item->getName()<<"\n";
 	giveItem(item);
 }
 

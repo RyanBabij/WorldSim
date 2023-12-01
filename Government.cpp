@@ -69,14 +69,14 @@ void Government_Leader::governDaily()
 
 		if (empty())
 		{
-			std::cout << "There is no king\n";
+			//std::cout << "There is no king\n";
 			return;
 		}
 		//std::cout << "King is kinging.\n";
 		
 		if ( character->isAlive==false)
 		{
-			std::cout<<"King is dead\n";
+			//std::cout<<"King is dead\n";
 		}
 
 		if (character->vIdea.size() > 0 && s!=0)
@@ -86,7 +86,7 @@ void Government_Leader::governDaily()
 				if (!s->hasIdea(character->vIdea(i)))
 				{
 					s->giveIdea(character->vIdea(i));
-					std::cout<<"King has implemented an idea as a tech\n";
+					//std::cout<<"King has implemented an idea as a tech\n";
 					character->vIdea.removeSlot(i);
 					// limit 1 idea implemented per turn.
 					break;
@@ -202,7 +202,7 @@ void Government_Scribe::governDaily()
 {
 	if (empty())
 	{
-		std::cout << "There is no scribe\n";
+		//std::cout << "There is no scribe\n";
 		return;
 	}
 	//std::cout << "Scribe is scribing.\n";
@@ -214,7 +214,7 @@ void Government_Scribe::governDaily()
 			if (!government->governedSettlement->hasIdea(character->vIdea(i)))
 			{
 				government->governedSettlement->giveIdea(character->vIdea(i));
-				std::cout<<"Scribe has implemented an idea as a tech\n";
+				//std::cout<<"Scribe has implemented an idea as a tech\n";
 				character->vIdea.removeSlot(i);
 				// limit 1 idea implemented per turn.
 				return;
@@ -234,7 +234,7 @@ void Government_Captain::governDaily()
 {
 	if (empty())
 	{
-		std::cout << "There is no captain\n";
+		//std::cout << "There is no captain\n";
 		return;
 	}
 	//std::cout << "Captain is capping.\n";
@@ -247,7 +247,7 @@ void Government_Captain::governDaily()
 			if (!government->governedSettlement->hasIdea(character->vIdea(i)))
 			{
 				government->governedSettlement->giveIdea(character->vIdea(i));
-				std::cout<<"Captain has implemented an idea as a tech\n";
+				//std::cout<<"Captain has implemented an idea as a tech\n";
 				character->vIdea.removeSlot(i);
 				// limit 1 idea implemented per turn.
 				return;

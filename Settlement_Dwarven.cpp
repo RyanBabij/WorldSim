@@ -784,7 +784,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		
 		if (government.needsLeader())
 		{
-			std::cout<<"We need a leader\n";
+			//std::cout<<"We need a leader\n";
 		}
 		
 		government.governDaily();
@@ -1005,8 +1005,29 @@ void Settlement_Dwarven::abstractDayBiology()
 
 void Settlement_Dwarven::abstractDaySplit()
 {
-	if ( globalRandom.rand8(DAYS_PER_MONTH) && getPopulation() > 100 )
+	
+	if ( globalRandom.rand8(DAYS_PER_MONTH*8) == 0  && getPopulation() > 100 )
 	{
+		std::cout << "Split check at " << getPopulation() << "\n";
+		double splitProbability = 1;
+		
+		if (getPopulation() < 1000 )
+		{
+			splitProbability = 100 - (static_cast<double>(getPopulation()) / 1000.0) * 100;
+		}
+			std::cout<<"Split probability given as rand("<<splitProbability<<").\n";
+
+		if (globalRandom.rand(splitProbability) == 0)
+		{
+			std::cout << "Split at pop: " << getPopulation() << "\n";
+
+		}
+		else
+		{
+			return;
+		}
+
+		
 		// NEW SETTLEMENT CALCULATIONS
 		// OCCURS IF: TOO MANY PEOPLE IN SETTLEMENT, THERE IS A VIABLE AMOUNT OF FREE SPACE, RANDOM ELEMENT.
 		// ONLY SPLIT INTO EMPTY TERRITORY.
@@ -1032,7 +1053,7 @@ void Settlement_Dwarven::abstractDaySplit()
 			}
 		}
 
-		if (nFreeTiles >= 3 && landmassID >=0 && vCharacter.size() > 150 && random.oneIn(12) )
+		if (nFreeTiles >= 3 && landmassID >=0 )
 		{
 			// CHECK TO SEE IF THERE'S A TILE TO SPLIT INTO.
 			for (auto xy : *vXY)
