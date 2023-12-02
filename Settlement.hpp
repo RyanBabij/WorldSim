@@ -58,6 +58,9 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		Character* getRandomCharacter();
 		Character* getCharacter(Vector <Character*>* vExclude);
 		
+		bool has ( enumLocation loc );
+		bool canBuild ( enumLocation loc );
+		
 		int getMiningCapacity();
 		int getFarmingCapacity();
 		

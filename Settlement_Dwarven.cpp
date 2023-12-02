@@ -230,7 +230,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 				//std::cout<<(*vCreature)(i)->name<<"\n";
 			}
 			int iCreature = globalRandom.rand8(vCreature->size());
-			//std::cout<<"Hunted a "<<(*vCreature)(iCreature)->name<<".\n";
+			std::cout<<"Hunted a "<<(*vCreature)(iCreature)->name<<".\n";
 		}
 
 		
@@ -407,8 +407,13 @@ bool Settlement_Dwarven::abstractDayConstruction(Character* character)
 			// If there is a most valuable request
 			LocationRequest mostValuableRequest = *mostValuableRequestOpt;
 			// Process the most valuable request
-
-			Location* loc = location.addLocation(mostValuableRequest.type);
+			
+			Location* loc = nullptr;
+			
+			if ( canBuild(mostValuableRequest.type) )	
+			{
+				loc = location.addLocation(mostValuableRequest.type);
+			}
 			
 			if (loc != nullptr)
 			{

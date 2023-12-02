@@ -41,6 +41,16 @@ Character* Settlement::getRandomCharacter()
 	return vCharacter(globalRandom.rand(vCharacter.size()-1));
 }
 
+bool Settlement::has ( enumLocation loc )
+{
+	return location.has(loc);
+}
+
+bool Settlement::canBuild ( enumLocation loc )
+{
+	return resourceManager.hasEnough(location.getResourceRequirement(loc));
+}
+
 void Settlement::printAllMoneyInSettlement()
 {
 	int characterMoney = 0;

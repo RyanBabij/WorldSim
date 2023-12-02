@@ -52,7 +52,6 @@ public:
 	Location_Wilderness();
 
 	virtual std::string getName() override;
-	virtual ResourceRequirement getResourceRequirement() override;
 };
 
 class Location_Settlement_Exterior: public Location
@@ -61,7 +60,6 @@ public:
 	Location_Settlement_Exterior();
 
 	virtual std::string getName() override;
-	virtual ResourceRequirement getResourceRequirement() override;
 };
 
 class Location_Settlement_Walls: public Location
@@ -70,7 +68,6 @@ public:
 	Location_Settlement_Walls();
 
 	virtual std::string getName() override;
-	virtual ResourceRequirement getResourceRequirement() override;
 };
 
 class Location_Main_Hall: public Location
@@ -79,7 +76,6 @@ public:
 	Location_Main_Hall();
 
 	virtual std::string getName() override;
-	virtual ResourceRequirement getResourceRequirement() override;
 };
 
 class Location_Hall: public Location
@@ -88,7 +84,6 @@ public:
 	Location_Hall();
 
 	virtual std::string getName() override;
-	virtual ResourceRequirement getResourceRequirement() override;
 };
 
 class Location_Dwelling: public Location
@@ -96,7 +91,6 @@ class Location_Dwelling: public Location
 public:
 	Location_Dwelling();
 
-	virtual ResourceRequirement getResourceRequirement() override;
 };
 
 class Location_Mine: public Location
@@ -109,7 +103,6 @@ public:
 	Location_Mine();
 
 	virtual std::string getName() override;
-	virtual ResourceRequirement getResourceRequirement() override;
 };
 
 class Location_Farm: public Location
@@ -119,7 +112,15 @@ public:
 	Location_Farm();
 
 	virtual std::string getName() override;
-	virtual ResourceRequirement getResourceRequirement() override;
+};
+
+class Location_WeaponSmith: public Location
+{
+public:
+
+	Location_WeaponSmith();
+
+	virtual std::string getName() override;
 };
 
 class LocationManager
@@ -139,6 +140,12 @@ public:
 	int getMiningCapacity();
 	int getFarmingCapacity();
 	Location* addLocation(enumLocation locationType);
+	bool has(enumLocation locationType);
+	bool canBuild(enumLocation locationType);
+	
+	// Stores resource requirements for all locations in central location
+	// Compiler will optimize it anyway
+	static ResourceRequirement getResourceRequirement(const enumLocation locationType);
 	
 	void printAll();
 	

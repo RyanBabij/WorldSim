@@ -63,7 +63,7 @@ std::string Location::getName()
 
 ResourceRequirement Location::getResourceRequirement()
 {
-	return ResourceRequirement( /* NONE */ );
+	return LocationManager::getResourceRequirement(type);
 }
 
 int Location::availableBranches()
@@ -86,11 +86,6 @@ std::string Location_Settlement_Exterior::getName()
 	return "outside";
 }
 
-ResourceRequirement Location_Settlement_Exterior::getResourceRequirement()
-{
-	return ResourceRequirement( /* NONE */ );
-}
-
 Location_Wilderness::Location_Wilderness()
 {
 	type = LOCATION_WILDERNESS;
@@ -102,12 +97,6 @@ Location_Wilderness::Location_Wilderness()
 std::string Location_Wilderness::getName()
 {
 	return "wilderness";
-}
-
-
-ResourceRequirement Location_Wilderness::getResourceRequirement()
-{
-	return ResourceRequirement( /* NONE */ );
 }
 
 // Location_Settlement_Walls class implementations
@@ -123,11 +112,6 @@ std::string Location_Settlement_Walls::getName()
 	return "walls";
 }
 
-ResourceRequirement Location_Settlement_Walls::getResourceRequirement()
-{
-	return ResourceRequirement( /* NONE */ );
-}
-
 // Location_Main_Hall class implementations
 Location_Main_Hall::Location_Main_Hall()
 {
@@ -139,11 +123,6 @@ Location_Main_Hall::Location_Main_Hall()
 std::string Location_Main_Hall::getName()
 {
 	return "main hall";
-}
-
-ResourceRequirement Location_Main_Hall::getResourceRequirement()
-{
-	return ResourceRequirement(RESOURCE_STONE, 25);
 }
 
 // Location_Hall class implementations
@@ -159,21 +138,11 @@ std::string Location_Hall::getName()
 	return "hall";
 }
 
-ResourceRequirement Location_Hall::getResourceRequirement()
-{
-	return ResourceRequirement(RESOURCE_STONE, 25);
-}
-
 // Location_Dwelling class implementations
 Location_Dwelling::Location_Dwelling()
 {
 	type = LOCATION_DWELLING;
 	maxBranches = 1;
-}
-
-ResourceRequirement Location_Dwelling::getResourceRequirement()
-{
-	return ResourceRequirement(RESOURCE_STONE, 9);
 }
 
 // Location_Mine class implementations
@@ -185,11 +154,6 @@ Location_Mine::Location_Mine()
 	nIron = 0;
 	nCopper = 0;
 	capacity=5;
-}
-
-ResourceRequirement Location_Mine::getResourceRequirement()
-{
-	return ResourceRequirement( /* NONE */ );
 }
 
 std::string Location_Mine::getName()
@@ -204,14 +168,21 @@ Location_Farm::Location_Farm()
 	capacity=3;
 }
 
-ResourceRequirement Location_Farm::getResourceRequirement()
-{
-	return ResourceRequirement( /* NONE */);
-}
-
 std::string Location_Farm::getName()
 {
 	return "farm";
+}
+
+Location_WeaponSmith::Location_WeaponSmith()
+{
+	type = LOCATION_WEAPONSMITH;
+	maxBranches = 1;
+	capacity=3;
+}
+
+std::string Location_WeaponSmith::getName()
+{
+	return "weaponsmith";
 }
 
 // LocationManager class implementations
@@ -357,6 +328,44 @@ Location* LocationManager::addLocation(enumLocation locationType)
 	}
 	return newLocation;
 }
+
+bool LocationManager::has(enumLocation locationType)
+{
+	for (int i = 0; i < vLocation.size(); ++i)
+	{
+		if (vLocation(i)->type == locationType)
+		{
+			return true; // Location of the specified type exists
+		}
+	}
+	return false; // No location of the specified type found
+}
+
+ResourceRequirement LocationManager::getResourceRequirement(enumLocation locationType)
+{
+	switch (locationType)
+	{
+		case LOCATION_OUTSIDE:
+			return ResourceRequirement(/* Resources for LOCATION_OUTSIDE */);
+		case LOCATION_WALLS:
+			return ResourceRequirement(RESOURCE_STONE, 12); // Example requirement
+		case LOCATION_MAIN_HALL:
+			return ResourceRequirement(RESOURCE_STONE, 50); // Example requirement
+		case LOCATION_HALL:
+			return ResourceRequirement(RESOURCE_STONE, 25); // Example requirement
+		case LOCATION_DWELLING:
+			return ResourceRequirement(RESOURCE_STONE, 9); // Example requirement
+		case LOCATION_MINE:
+			return ResourceRequirement(/* Resources for LOCATION_MINE */);
+		case LOCATION_FARM:
+			return ResourceRequirement(/* Resources for LOCATION_FARM */);
+		// Add cases for other location types
+		default:
+			return ResourceRequirement( /* NONE */ ); // Return empty requirement for unknown types
+	}
+
+}
+
 
 void LocationManager::printAll()
 {

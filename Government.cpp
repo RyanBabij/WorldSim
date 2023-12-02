@@ -108,6 +108,12 @@ void Government_Leader::governDaily()
 			//s->location.addLocation(LOCATION_FARM);
 		}
 		
+		if ( s->has(LOCATION_WEAPONSMITH) == false
+		&& s->canBuild(LOCATION_WEAPONSMITH) )
+		{
+			s->location.addLocation(LOCATION_WEAPONSMITH);
+		}
+		
 		// PRODUCTION
 		
 		// Put in any public production orders

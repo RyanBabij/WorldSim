@@ -64,4 +64,18 @@ class CanRequestItem: public HasMoney
 	virtual void recieveRequestedItem(Item* item)=0;
 };
 
+class CanRequestConstruction: public HasMoney
+{
+	public:
+	
+	virtual void recieveRequestedConstruction(Item* item)=0;
+};
+
+class CanRequestResource: public HasMoney
+{
+	public:
+	
+	virtual void recieveRequestedConstruction(Item* item)=0;
+};
+
 #endif // WORLDSIM_HAS_MONEY_CPP
