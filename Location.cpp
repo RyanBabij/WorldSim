@@ -173,14 +173,14 @@ std::string Location_Farm::getName()
 	return "farm";
 }
 
-Location_WeaponSmith::Location_WeaponSmith()
+Location_Weaponsmith::Location_Weaponsmith()
 {
 	type = LOCATION_WEAPONSMITH;
 	maxBranches = 1;
 	capacity=3;
 }
 
-std::string Location_WeaponSmith::getName()
+std::string Location_Weaponsmith::getName()
 {
 	return "weaponsmith";
 }
@@ -315,6 +315,9 @@ Location* LocationManager::addLocation(enumLocation locationType)
 		case LOCATION_FARM:
 			newLocation = new Location_Farm();
 			break;
+		case LOCATION_WEAPONSMITH:
+			newLocation = new Location_Weaponsmith();
+			break;
 		// Add cases for other location types
 		default:
 			// Handle unknown location type
@@ -367,17 +370,52 @@ ResourceRequirement LocationManager::getResourceRequirement(enumLocation locatio
 }
 
 
-void LocationManager::printAll()
+std::string LocationManager::toString()
 {
+	std::map<enumLocation, int> locationCounts;
+	std::stringstream ss;
+
+	// Count the occurrences of each location type
 	for (int i = 0; i < vLocation.size(); ++i)
 	{
 		Location* loc = vLocation(i);
 		if (loc != nullptr)
 		{
-			std::cout<<"Location: "<<loc->getName()<<"\n";
+			locationCounts[loc->type]++;
 		}
 	}
+
+	// Iterate through the map and build the string
+	for (const auto& pair : locationCounts)
+	{
+		std::string locationName = locationTypeToString(pair.first);
+		ss << locationName << " x" << pair.second << "\n";
+	}
+
+	return ss.str();
 }
 
+
+void LocationManager::printAll()
+{
+	std::map<enumLocation, int> locationCounts;
+
+	// Count the occurrences of each location type
+	for (int i = 0; i < vLocation.size(); ++i)
+	{
+		Location* loc = vLocation(i);
+		if (loc != nullptr)
+		{
+			locationCounts[loc->type]++;
+		}
+	}
+
+	// Iterate through the map and print the results
+	for (const auto& pair : locationCounts)
+	{
+		std::string locationName = locationTypeToString(pair.first);
+		std::cout << locationName << " x" << pair.second << "\n";
+	}
+}
 
 #endif // WORLDSIM_LOCATION_CPP

@@ -208,7 +208,12 @@ class Menu_SettlementDetails: public GUI_Interface
 			// }
 			yOffset+=vSpacing;
 			
-
+			font8x8.drawText
+			("Buildings:" ,panelX1+leftMargin,panelY2-yOffset,panelX2,panelY2-yOffset+vSpacing);
+			yOffset+=vSpacing;
+			
+			font8x8.drawText
+			(selectedSettlement->location.toString(),panelX1+leftMargin,panelY2-yOffset,panelX2,panelY1);
 			
 			
 			guiManager.render();

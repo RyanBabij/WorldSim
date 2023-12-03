@@ -22,40 +22,37 @@
 
 #include "Creature.hpp"
 
-class Recipe2
+
+
+class Craftable
 {
+	public:
+	
 	// Required location (null if not needed)
 	bool requiresLocation; // Can only be made at a designated location (the location tracks which recipes it can make)
 	
-	Recipe2()
+	std::unordered_map<enumIntermediate, int> mIntermediate;
+	std::unordered_map<enumResource, int> mResource;
+	
+	Craftable()
 	{
+	}
+	
+	Item* produce()
+	{
+		return nullptr;
 	}
 };
 
-class RecipeManager2
+
+
+
+class CraftableManager
 {
-	Vector <Recipe2> vRecipe;
+	Vector <Craftable> vRecipe;
 	public:
 };
 
-
-class Recipe_HuntingBow
-{
-	public:
-	Recipe_HuntingBow()
-	{
-	}
-};
-
-enum enumIntermediate
-{
-	INTERMEDIATE_NONE,
-	INTERMEDIATE_FIBRE,
-	INTERMEDIATE_GUT,
-	INTERMEDIATE_MEAT,
-	INTERMEDIATE_BONE,
-	INTERMEDIATE_COUNT
-};
 
 class Intermediate
 {

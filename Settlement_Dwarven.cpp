@@ -866,7 +866,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		//printAllMoneyInSettlement();
 		//requestManager.print();
 		//locationRequestManager.print();
-		//location.printAll();
+		location.printAll();
 		dailyCounter-=TICKS_PER_DAY;
 	}
 	

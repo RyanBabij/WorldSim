@@ -194,6 +194,17 @@ const std::string enumResourceStr[RESOURCE_COUNT] = {
 	"food"
 };
 
+enum enumIntermediate
+{
+	INTERMEDIATE_NONE,
+	INTERMEDIATE_FIBRE,
+	INTERMEDIATE_GUT,
+	INTERMEDIATE_MEAT,
+	INTERMEDIATE_BONE,
+	INTERMEDIATE_COUNT
+};
+
+
 const std::string resourceToString(enumResource resource)
 {
 	switch (resource)

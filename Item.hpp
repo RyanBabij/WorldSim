@@ -47,7 +47,7 @@ class Creature;
 
 #include "Item_Attributes.hpp"
 
-class Item: public WorldObject, public TableInterface /* HasResourceRequirement */
+class Item: public WorldObject, public TableInterface, public Craftable /* HasResourceRequirement */
 {
 	public:
 
@@ -262,6 +262,17 @@ class Item_Hand: public Item
 
 };
 Item_Hand itemHand;
+
+class Recipe_HuntingBow: public Item
+{
+	public:
+	Recipe_HuntingBow()
+	{
+		requiresLocation=false;
+		mIntermediate[INTERMEDIATE_GUT] = 1;
+		mResource[RESOURCE_WOOD] = 2;
+	}
+};
 
 // Used for farming. Can also be improvised weapon.
 class Item_Hoe: public Item
