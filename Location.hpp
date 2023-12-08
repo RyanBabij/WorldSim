@@ -9,7 +9,8 @@
 
 */
 
-#include "Resource.cpp"
+#include "Stockpile.hpp"
+
 #include <string>
 #include <vector>
 

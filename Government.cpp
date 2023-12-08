@@ -63,9 +63,9 @@ void Government_Leader::governDaily()
 		}
 		
 		Settlement* s = government->governedSettlement;
-		ItemManager* stockpile = &(s->stockpile);
+		Stockpile* stockpile = &(s->stockpile);
 		ItemRequestManager* requestManager = &(s->requestManager);
-		ResourceManager* resourceManager = &(s->resourceManager);
+		Stockpile* resourceManager = &(s->stockpile);
 
 		if (empty())
 		{
@@ -149,7 +149,7 @@ void Government_Leader::governDaily()
 			//std::cout << "King distribute money\n";
 
 			// Calculate the total money in the settlement's treasury
-			int treasuryMoney = s->resourceManager.getMoney();
+			int treasuryMoney = s->stockpile.getMoney();
 			int totalSettlementMoney = s->getAllMoneyInSettlement();
 
 			// Check if the treasury holds more than 20% of total money in the settlement
@@ -165,7 +165,7 @@ void Government_Leader::governDaily()
 				{
 					Character* c = s->getRandomCharacter();
 
-					if (s->resourceManager.takeMoney(1))
+					if (s->stockpile.takeMoney(1))
 					{
 						c->giveMoney(1);
 						amountToDistribute -= 1;
@@ -192,7 +192,7 @@ void Government_Leader::recieveRequestedItem(Item* item)
 	}
 	
 	Settlement* s = government->governedSettlement;
-	ItemManager* stockpile = &(s->stockpile);
+	Stockpile* stockpile = &(s->stockpile);
 	if (s != nullptr)
 	{
 		stockpile->add(item);

@@ -110,6 +110,7 @@ World_Local * worldLocal;
 #include "Item_Attributes.cpp"
 
 #include "Location.cpp"
+#include "Stockpile.cpp"
 
 
 /* Game initialization goes here. */

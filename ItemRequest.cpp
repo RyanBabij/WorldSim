@@ -15,6 +15,28 @@
 #include <set>
 #include <optional>
 
+// class ItemRequestCategory
+// {
+	// public:
+	
+	// CanRequestItem * requester;
+	// ItemCategory category;
+	// int value;
+	// bool privateContract;
+	
+	// ItemRequest(CanRequestItem* c, ItemCategory t, int v) : requester(c), type(t), value(v)
+	// {
+		// privateContract=true;
+	// }
+	
+	// std::string toString() const
+	// {
+		// return "Unknown";
+	// }
+
+	
+// };
+
 
 class ItemRequest
 {

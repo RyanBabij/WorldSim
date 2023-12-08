@@ -5,11 +5,10 @@
 #include "Location.hpp"
 #include "Government.hpp"
 
-#include "Resource.cpp"
+#include "Stockpile.hpp"
 #include "WorldObjectGlobal.hpp"
 #include "Civ.hpp"
 
-#include "ItemManager.hpp"
 #include "ItemRequest.cpp"
 #include "LocationRequest.cpp"
 
@@ -32,10 +31,11 @@ class Settlement: public WorldObjectGlobal, public TableInterface
 		
 		Government government;
 
-		ItemManager stockpile;
+		Stockpile stockpile;
+		//IntermediateManager stockpileIntermediate;
 		ItemRequestManager requestManager;
 		LocationRequestManager locationRequestManager;
-		ResourceManager resourceManager;
+		//ResourceManager resourceManager;
 		Technology technology;
 		
 		LocationManager location;

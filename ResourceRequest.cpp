@@ -107,7 +107,7 @@ class ResourceRequestManager
 		}
 	}
 	
-	void addTreasuryRequest(Character *requester, ResourceManager* money, ItemManager* stockpile, enumResource type, int value)
+	void addTreasuryRequest(Character *requester, Stockpile* money, Stockpile* stockpile, enumResource type, int value)
 	{
 		requests.insert(ResourceRequest(requester, type, value));
 	}

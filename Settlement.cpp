@@ -48,7 +48,7 @@ bool Settlement::has ( enumLocation loc )
 
 bool Settlement::canBuild ( enumLocation loc )
 {
-	return resourceManager.hasEnough(location.getResourceRequirement(loc));
+	return stockpile.hasEnough(location.getResourceRequirement(loc));
 }
 
 void Settlement::printAllMoneyInSettlement()
@@ -59,9 +59,9 @@ void Settlement::printAllMoneyInSettlement()
 		characterMoney+=vCharacter(i)->getMoney();
 	}
 	
-	int totalMoney=resourceManager.getMoney()+characterMoney+requestManager.getTotalValue();
+	int totalMoney=stockpile.getMoney()+characterMoney+requestManager.getTotalValue();
 	
-	std::cout<<"Treasury $"<<resourceManager.getMoney()<<". Cash $"<<characterMoney<<" Contracts $"
+	std::cout<<"Treasury $"<<stockpile.getMoney()<<". Cash $"<<characterMoney<<" Contracts $"
 	<<requestManager.getTotalValue()<<". Total $"<<totalMoney<<".\n"
 	<<"Avg wealth: $"<<(int)getAverageCharacterWealth()<<". "
 	<<"% in treasury: "<<getMoneyPercentInTreasury()<<".\n";
@@ -70,7 +70,7 @@ void Settlement::printAllMoneyInSettlement()
 int Settlement::getAllMoneyInSettlement()
 {
 	// Sum up the money from the resource manager and request manager
-	int totalMoney = resourceManager.getMoney() + requestManager.getTotalValue();
+	int totalMoney = stockpile.getMoney() + requestManager.getTotalValue();
 
 	// Add the money from each character
 	for (auto& character : vCharacter)
@@ -90,12 +90,12 @@ double Settlement::getMoneyPercentInTreasury()
 	}
 
 	// Calculate the percentage of money in the treasury
-	return static_cast<double>(resourceManager.getMoney()) / totalMoney;
+	return static_cast<double>(stockpile.getMoney()) / totalMoney;
 }
 
 double Settlement::getAverageCharacterWealth()
 {
-	double characterWealth = getAllMoneyInSettlement() - resourceManager.getMoney();
+	double characterWealth = getAllMoneyInSettlement() - stockpile.getMoney();
 	return characterWealth / vCharacter.size();
 }
 
@@ -232,7 +232,7 @@ std::string Settlement::getColumn(std::string _column)
   
 	if (_column == "metal")
 	{
-		return DataTools::toString(resourceManager.get(RESOURCE_IRON));
+		return DataTools::toString(stockpile.get(RESOURCE_IRON));
 	}
 	if (_column == "food")
 	{

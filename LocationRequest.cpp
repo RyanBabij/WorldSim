@@ -107,7 +107,7 @@ class LocationRequestManager
 		}
 	}
 	
-	void addTreasuryRequest(Character *requester, ResourceManager* money, ItemManager* stockpile, enumLocation type, int value)
+	void addTreasuryRequest(Character *requester, Stockpile* money, Stockpile* stockpile, enumLocation type, int value)
 	{
 		requests.insert(LocationRequest(requester, type, value));
 	}

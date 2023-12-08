@@ -43,7 +43,7 @@ class Recipe;
 class Creature;
 //class Creature_Deer;
 
-#include "Resource.cpp"
+#include "Stockpile.hpp"
 
 #include "Item_Attributes.hpp"
 

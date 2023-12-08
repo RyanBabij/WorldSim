@@ -4,7 +4,7 @@
 
 #include "Settlement_Dwarven.hpp"
 
-#include "ItemManager.hpp"
+#include "Stockpile.hpp"
 #include "ItemRequest.cpp"
 #include "LocationRequest.cpp"
 #include "ResourceRequest.cpp"
@@ -169,7 +169,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		}
 		int maxTotalOutput = maxPersonalOutput + technology.agricultureLevel;
 		
-		resourceManager.add(RESOURCE_FOOD, globalRandom.rand(maxTotalOutput));
+		stockpile.add(RESOURCE_FOOD, globalRandom.rand(maxTotalOutput));
 		
 		character->skillUpFarming();
 		payCharacterFromTreasury(character,1);
@@ -216,7 +216,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 			maxPersonalOutput=16;
 		}
 		
-		resourceManager.add(RESOURCE_FOOD, globalRandom.rand(maxPersonalOutput));
+		stockpile.add(RESOURCE_FOOD, globalRandom.rand(maxPersonalOutput));
 		
 		character->skillUpMarksmanship();
 		payCharacterFromTreasury(character,1);
@@ -236,7 +236,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		
 		if (globalRandom.flip())
 		{
-			resourceManager.add(RESOURCE_FOOD, 16);
+			stockpile.add(RESOURCE_FOOD, 16);
 		}
 		
 		delete job;
@@ -261,8 +261,8 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		}
 		int maxTotalOutput = maxPersonalOutput + technology.miningLevel;
 		
-		resourceManager.add(RESOURCE_STONE, globalRandom.rand(maxTotalOutput));
-		resourceManager.add(RESOURCE_IRON, globalRandom.rand(maxTotalOutput/2));
+		stockpile.add(RESOURCE_STONE, globalRandom.rand(maxTotalOutput));
+		stockpile.add(RESOURCE_IRON, globalRandom.rand(maxTotalOutput/2));
 		
 		character->skillUpMining();
 		payCharacterFromTreasury(character,1);
@@ -310,7 +310,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 			return false;
 		}
 		
-		resourceManager.add(RESOURCE_WOOD, globalRandom.rand(8));
+		stockpile.add(RESOURCE_WOOD, globalRandom.rand(8));
 
 		delete job;
 		return true;
@@ -346,9 +346,9 @@ Item* Settlement_Dwarven::createItem(ItemType type)
 Item* Settlement_Dwarven::produceItem(ItemType type, CanRequestItem* recipient= nullptr)
 {
 	Item* newItem = createItem(type);
-	if (newItem && resourceManager.canMake(newItem->getResourceRequirement()))
+	if (newItem && stockpile.canMake(newItem->getResourceRequirement()))
 	{
-		resourceManager.deduct(newItem->getResourceRequirement());
+		stockpile.deduct(newItem->getResourceRequirement());
 		
 		if ( recipient != nullptr )
 		{
@@ -382,7 +382,7 @@ void Settlement_Dwarven::payCharacter(Character* character, int amount)
 		int taxAmount = moneyToReceive - characterMoney;
 
 		// Pay the 25% tax
-		resourceManager.addMoney(taxAmount);
+		stockpile.addMoney(taxAmount);
 	}
 	else
 	{
@@ -393,7 +393,7 @@ void Settlement_Dwarven::payCharacter(Character* character, int amount)
 
 void Settlement_Dwarven::payCharacterFromTreasury(Character* character, int amount)
 {
-	int amountToGive = resourceManager.takeMoneyUpTo(amount);
+	int amountToGive = stockpile.takeMoneyUpTo(amount);
 	character->giveMoney(amountToGive);
 }
 
@@ -477,10 +477,10 @@ bool Settlement_Dwarven::abstractDayProduction(Character* character)
 		{
 			//std::cout<<character->getFullName()<<": Producing coins. "<<character->getMoney()<<" money.\n";
 			
-			if ( resourceManager.take(RESOURCE_IRON,1) )
+			if ( stockpile.take(RESOURCE_IRON,1) )
 			{
 				// make coins
-				resourceManager.addMoney(100);
+				stockpile.addMoney(100);
 			}
 			else
 			{
@@ -588,7 +588,7 @@ bool Settlement_Dwarven::abstractDayProduction(Character* character)
 		}
 		
 		//nMetalStockpile-=10;
-		resourceManager.take(RESOURCE_IRON, 1);
+		stockpile.take(RESOURCE_IRON, 1);
 		character->skillMetalsmithing.addExp(10);
 	}
 	return false;
@@ -652,11 +652,11 @@ Character* Settlement_Dwarven::getMiner(Vector <Character*>* vExclude)
 bool Settlement_Dwarven::miningNeeded() // True if any more mining resources are required.
 {
 	// For now just assume we need 1 of everything for each person.
-	if ( resourceManager.get(RESOURCE_STONE) < vCharacter.size() )
+	if ( stockpile.get(RESOURCE_STONE) < vCharacter.size() )
 	{
 		return true;
 	}
-	else if ( resourceManager.get(RESOURCE_IRON) < vCharacter.size() / 2 )
+	else if ( stockpile.get(RESOURCE_IRON) < vCharacter.size() / 2 )
 	{
 		return true;
 	}
@@ -666,7 +666,7 @@ bool Settlement_Dwarven::miningNeeded() // True if any more mining resources are
 bool Settlement_Dwarven::woodNeeded() // True if any more mining resources are required.
 {
 	// For now just assume we need 1 of everything for each person.
-	if ( resourceManager.get(RESOURCE_WOOD) < vCharacter.size() )
+	if ( stockpile.get(RESOURCE_WOOD) < vCharacter.size() )
 	{
 		return true;
 	}
@@ -802,7 +802,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			// FOOD
 			// Calculate how much food we need.
 			// Progression should be foraging/hunting -> farming
-			int neededFood = ((vCharacter.size()-vMovedCharacters.size())*28) - resourceManager.get(RESOURCE_FOOD);
+			int neededFood = ((vCharacter.size()-vMovedCharacters.size())*28) - stockpile.get(RESOURCE_FOOD);
 			
 			Character * actingCharacter = nullptr;
 			
@@ -820,7 +820,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			else
 			{
 				actingCharacter = getCharacter(&vMovedCharacters);
-				resourceManager.take(RESOURCE_FOOD, 28);
+				stockpile.take(RESOURCE_FOOD, 28);
 				
 				// CONSTRUCTION
 				if ( abstractDayConstruction(actingCharacter))

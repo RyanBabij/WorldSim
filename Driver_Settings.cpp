@@ -204,6 +204,23 @@ enum enumIntermediate
 	INTERMEDIATE_COUNT
 };
 
+const std::string enumIntermediateStr[INTERMEDIATE_COUNT] = {
+	"none",
+	"fibre",
+	"gut",
+	"meat",
+	"bone"
+};
+
+const std::string intermediateToString(enumIntermediate intermediate)
+{
+	if (intermediate >= 0 && intermediate < INTERMEDIATE_COUNT)
+	{
+		return enumIntermediateStr[intermediate];
+	}
+	return "Unknown";
+}
+
 
 const std::string resourceToString(enumResource resource)
 {
@@ -247,6 +264,13 @@ const std::string enumJobStr[JOB_COUNT] = {
 	"woodcutting",
 	"prospecting",
 	"hunting"
+};
+
+enum ItemCategory
+{
+	ITEM_CATEGORY_NONE,
+	ITEM_CATEGORY_HUNTING,
+	ITEM_CATEGORY_COUNT
 };
 
 enum ItemType
