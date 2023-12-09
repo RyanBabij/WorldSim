@@ -22,6 +22,7 @@ class Settlement_Dwarven: public Settlement
 		void putMarketRequest(Character* c, enumLocation type); // Put market request for location to be built.
 		void putMarketRequest(Character* c, enumResource type); // Put market request for resource to be obtained.
 		void putMarketRequest(Character* c, ItemType type); // Put market request for item to be built.
+		void putMarketRequest(Character* c, ItemCategory category); // Put market request for a type of item.
 		
 		bool abstractDayConstruction(Character* character);
 		bool abstractDayProduction(Character* character);
@@ -40,7 +41,6 @@ class Settlement_Dwarven: public Settlement
 		
 		bool miningNeeded(); // True if any more mining resources are required.
 		bool woodNeeded(); // True if any more mining resources are required.
-		bool farmingEquipmentNeeded();
 		bool coinsNeeded();
 		
 

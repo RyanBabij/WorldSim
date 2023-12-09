@@ -10,32 +10,49 @@
 	
 	Item requests should be more general, like "hunting items with minimum level 1"
 	
+	we might prefer some kind of functionality request. Eg "An item for digging". "An item which can shoot".
+	We might need to build a table of item and functionality for different basic tasks
+	
 */
 
 #include <set>
 #include <optional>
 
-// class ItemRequestCategory
-// {
-	// public:
+class ItemRequestCategory
+{
+	public:
 	
-	// CanRequestItem * requester;
-	// ItemCategory category;
-	// int value;
-	// bool privateContract;
+	CanRequestItem * requester;
+	ItemCategory category;
+	int value;
+	int minimumLevel;
+	bool privateContract;
 	
-	// ItemRequest(CanRequestItem* c, ItemCategory t, int v) : requester(c), type(t), value(v)
-	// {
-		// privateContract=true;
-	// }
-	
-	// std::string toString() const
-	// {
-		// return "Unknown";
-	// }
 
 	
-// };
+	ItemRequestCategory(CanRequestItem* c, ItemCategory t, int v, int m) :
+	requester(c), category(t), value(v), minimumLevel(m)
+	{
+		privateContract=true;
+	}
+	
+	std::string toString() const
+	{
+		return "Unknown";
+	}
+
+	
+};
+
+// Comparator for ItemRequestCategory
+struct ItemRequestCategoryComparator
+{
+	bool operator() (const ItemRequestCategory& lhs, const ItemRequestCategory& rhs) const
+	{
+		// Sort in descending order of value
+		return lhs.value > rhs.value;
+	}
+};
 
 
 class ItemRequest
@@ -93,169 +110,170 @@ struct ItemRequestComparator
 class ItemRequestManager
 {
 	private:
-	std::multiset<ItemRequest, ItemRequestComparator> requests;
-	
+		std::multiset<ItemRequest, ItemRequestComparator> requests;
+		std::multiset<ItemRequestCategory, ItemRequestCategoryComparator> categoryRequests;
+
 	public:
-	
-	ItemRequestManager()
-	{
-		
-	}
-	
-	void add(CanRequestItem *requester, ItemType type, int value, bool deleteDuplicates=true)
-	{
-		// if ( value == 0 )
-		// {
-			// return;
-		// }
-		
-		// If the requester has enough money, add the new request
-		if (requester->takeMoney(value))
+		ItemRequestManager()
 		{
-			if ( deleteDuplicates )
+		}
+
+		void add(CanRequestItem *requester, ItemType type, int value, bool deleteDuplicates = true)
+		{
+			if (requester->takeMoney(value))
 			{
-				// Check if the requester already has a request for the same type and remove them.
-				for (auto it = requests.begin(); it != requests.end(); )
+				if (deleteDuplicates)
 				{
-					if (it->requester == requester && it->type == type)
+					for (auto it = requests.begin(); it != requests.end(); )
 					{
-						requester->giveMoney(it->value);
-						//std::cout<<"Money refunded from contract: "<<it->value<<"\n";
-						it = requests.erase(it); // Erase and move to the next element
-						continue;
+						if (it->requester == requester && it->type == type)
+						{
+							requester->giveMoney(it->value);
+							it = requests.erase(it);
+							continue;
+						}
+						++it;
 					}
-					++it;
+				}
+				requests.insert(ItemRequest(requester, type, value));
+			}
+		}
+
+		void add
+		(CanRequestItem *requester, ItemCategory category, int value, int minimumLevel, bool deleteDuplicates = true)
+		{
+			if (requester->takeMoney(value))
+			{
+				if (deleteDuplicates)
+				{
+					for (auto it = categoryRequests.begin(); it != categoryRequests.end(); )
+					{
+						if (it->requester == requester && it->category == category)
+						{
+							requester->giveMoney(it->value);
+							it = categoryRequests.erase(it);
+							continue;
+						}
+						++it;
+					}
+				}
+				categoryRequests.insert(ItemRequestCategory(requester, category, value, minimumLevel));
+			}
+		}
+
+		void removeAll(HasMoney* requester, ItemType type)
+		{
+			for (auto it = requests.begin(); it != requests.end(); )
+			{
+				if (it->requester == requester && it->type == type)
+				{
+					requester->giveMoney(it->value);
+					it = requests.erase(it);
+					continue;
+				}
+				++it;
+			}
+		}
+
+		void removeAllCategoryRequests(HasMoney* requester, ItemCategory category)
+		{
+			for (auto it = categoryRequests.begin(); it != categoryRequests.end(); )
+			{
+				if (it->requester == requester && it->category == category)
+				{
+					requester->giveMoney(it->value);
+					it = categoryRequests.erase(it);
+					continue;
+				}
+				++it;
+			}
+		}
+
+		std::optional<ItemRequest> pullMostValuableRequest(bool returnZeroValues)
+		{
+			if (requests.empty())
+			{
+				return std::nullopt;
+			}
+
+			auto it = requests.begin();
+			while (it != requests.end())
+			{
+				const ItemRequest& mostValuableRequest = *it;
+				if (mostValuableRequest.value > 0 || returnZeroValues)
+				{
+					requests.erase(it);
+					return mostValuableRequest;
+				}
+				++it;
+			}
+
+			return std::nullopt;
+		}
+
+		double getAverageValue(ItemType type) const
+		{
+			int totalValue = 0;
+			int count = 0;
+			for (const auto& request : requests)
+			{
+				if (request.type == type)
+				{
+					totalValue += request.value;
+					++count;
 				}
 			}
-			requests.insert(ItemRequest(requester, type, value));
-		}
-	}
-	
-	// void addTreasuryRequest(Character *requester, ResourceManager* money, ItemManager* stockpile, ItemType type, int value)
-	// {
-		// requests.insert(ItemRequest(requester, type, value));
-	// }
-	
-	// void removeAll(CanRequestItem* requester, ItemType type)
-	// {
-		// // Remove requests of type and refund
-		// for (auto it = requests.begin(); it != requests.end(); )
-		// {
-			// if (it->requester == requester && it->type == type)
-			// {
-				// requester->giveMoney(it->value);
-				// //std::cout<<"Money refunded from contract: "<<it->value<<"\n";
-				// it = requests.erase(it); // Erase and move to the next element
-				// continue;
-			// }
-			// ++it;
-		// }
-	// }
-	
-	void removeAll(HasMoney* requester, ItemType type)
-	{
-		// Remove requests of type and refund
-		for (auto it = requests.begin(); it != requests.end(); )
-		{
-			if (it->requester == requester && it->type == type)
+			if (count == 0)
 			{
-				requester->giveMoney(it->value);
-				//std::cout<<"Money refunded from contract: "<<it->value<<"\n";
-				it = requests.erase(it); // Erase and move to the next element
-				continue;
+				return 0.0;
 			}
-			++it;
-		}
-	}
-
-
-	std::optional<ItemRequest> pullMostValuableRequest(bool returnZeroValues)
-	{
-		if (requests.empty())
-		{
-			return std::nullopt; // Return an empty optional if there are no requests
+			return static_cast<double>(totalValue) / count;
 		}
 
-		auto it = requests.begin(); // Iterator to the least valuable request
-
-		while (it != requests.end())
+		int getTotalValue() const
 		{
-			const ItemRequest& mostValuableRequest = *it;
-
-			if (mostValuableRequest.value > 0 || returnZeroValues)
-			{
-				requests.erase(it); // Erase the most valuable request from the set
-				return mostValuableRequest; // Return the most valuable request
-			}
-			++it; // Move to the next request
-		}
-
-		return std::nullopt; // Return an empty optional if no suitable request is found
-	}
-		
-	double getAverageValue(ItemType type) const
-	{
-		int totalValue = 0;
-		int count = 0;
-
-		for (const auto& request : requests)
-		{
-			if (request.type == type)
+			int totalValue = 0;
+			for (const auto& request : requests)
 			{
 				totalValue += request.value;
-				++count;
+			}
+			return totalValue;
+		}
+
+		int getNumContracts() const
+		{
+			int totalContracts = 0;
+			for (const auto& request : requests)
+			{
+				totalContracts++;
+			}
+			return totalContracts;
+		}
+
+		bool empty() const
+		{
+			return requests.empty();
+		}
+
+		int size()
+		{
+			return requests.size();
+		}
+
+		void print()
+		{
+			std::cout << "Individual Item Requests:\n";
+			for (const auto& request : requests)
+			{
+				std::cout << request.toString() << "\n";
+			}
+
+			std::cout << "\nCategory Requests:\n";
+			for (const auto& categoryRequest : categoryRequests)
+			{
+				std::cout << categoryRequest.toString() << "\n";
 			}
 		}
-
-		if (count == 0)
-		{
-			return 0.0; // Return 0 if there are no requests of the specified type
-		}
-
-		return static_cast<double>(totalValue) / count;
-	}
-
-
-	int getTotalValue() const
-	{
-		int totalValue = 0;
-		for (const auto& request : requests)
-		{
-			totalValue += request.value;
-		}
-		return totalValue;
-	}
-	int getNumContracts() const
-	{
-		int totalContracts = 0;
-		for (const auto& request : requests)
-		{
-			totalContracts++;
-		}
-		return totalContracts;
-	}
-
-
-	bool empty() const
-	{
-		return requests.empty();
-	}
-	
-	int size()
-	{
-		return requests.size();
-	}
-	
-	void print()
-	{
-		// Remove requests of type and refund
-		for (auto it = requests.begin(); it != requests.end(); )
-		{
-			std::cout<<it->toString()<<"\n";
-			++it;
-		}
-	}
-	
 };
 
 

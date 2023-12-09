@@ -178,6 +178,9 @@ Location_Weaponsmith::Location_Weaponsmith()
 	type = LOCATION_WEAPONSMITH;
 	maxBranches = 1;
 	capacity=3;
+	vCanMake.push(ITEM_SWORD);
+	vCanMake.push(ITEM_LONGBOW);
+	vCanMake.push(ITEM_SPEAR);
 }
 
 std::string Location_Weaponsmith::getName()
@@ -368,6 +371,23 @@ ResourceRequirement LocationManager::getResourceRequirement(enumLocation locatio
 	}
 
 }
+
+Location* LocationManager::getLocationToMake(ItemType item)
+{
+	for (Location* loc : vLocation)
+	{
+		// Check if the location can make the specified item
+		for (ItemType itemType : loc->vCanMake)
+		{
+			if (itemType == item)
+			{
+				return loc; // Return the location that can make this item
+			}
+		}
+	}
+	return nullptr; // Return nullptr if no location can make the item
+}
+
 
 
 std::string LocationManager::toString()

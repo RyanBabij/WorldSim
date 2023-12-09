@@ -22,8 +22,10 @@ private:
 	Vector <Character*> vCharacter; // Characters in this location.
 	Vector <Location*> vLinkedLocations; // Locations you can travel to from here.
 
+
 public:
 	enumLocation type;
+	Vector <ItemType> vCanMake; // Items this location can make.
 
 	bool isOutside;
 
@@ -147,6 +149,8 @@ public:
 	// Stores resource requirements for all locations in central location
 	// Compiler will optimize it anyway
 	static ResourceRequirement getResourceRequirement(const enumLocation locationType);
+	
+	Location* getLocationToMake(ItemType item);
 	
 	void printAll();
 	std::string toString();

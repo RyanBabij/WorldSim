@@ -36,6 +36,15 @@ void Settlement_Dwarven::checkStockpileForBestItem(Character* character, Job* jo
 		if ( bestStockpileItem == nullptr ) // There's no farming equipment anywhere
 		{
 			putMarketRequest(character,job->requiredItem);
+			// put in a category request here by mapping the item to its category.
+			
+			ItemCategory category = getCategoryOfItem(job->requiredItem);
+
+			if (category != ITEM_CATEGORY_NONE)
+			{
+				putMarketRequest(character,category);
+			}
+			
 		}
 		else // we don't have equipment but the stockpile does
 		{
@@ -95,6 +104,12 @@ void Settlement_Dwarven::putMarketRequest(Character* c, ItemType type)
 	}
 }
 
+void Settlement_Dwarven::putMarketRequest(Character* c, ItemCategory category)
+{
+	std::cout<<"CATEGORY REQUEST\n";
+	// we might prefer some kind of functionality request. Eg "An item for digging". "An item which can shoot".
+}
+
 bool Settlement_Dwarven::hasLocation(enumLocation _location)
 {
 	Vector <Location*>* vMatchLocation = location.getLocation(_location);
@@ -149,6 +164,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		{
 			//std::cout<<"Character unable to move to farm.\n";
 			
+			// Put in market request for a farm.
 			putMarketRequest(character, job->requiredLocation);
 
 			// Go hunting/gathering instead
@@ -504,92 +520,92 @@ bool Settlement_Dwarven::abstractDayProduction(Character* character)
 		// which means that 100 skill means 100% chance of making special item.
 		//int specialChance = 1000;
 		// DEBUG SETTING:
-		int specialChance = 100;
-		int skillModifier = character->skillMetalsmithing.level * 10;
-		int totalChance = specialChance - skillModifier;
-		if ( totalChance < 1 )
-		{
-			totalChance = 1;
-		}
+		// int specialChance = 100;
+		// int skillModifier = character->skillMetalsmithing.level * 10;
+		// int totalChance = specialChance - skillModifier;
+		// if ( totalChance < 1 )
+		// {
+			// totalChance = 1;
+		// }
 		
-		int qualityLevel = 0;
+		// int qualityLevel = 0;
 		
-		if (random.oneIn(totalChance) )
-		{
-			std::cout<<"SPECIAL ITEM produced by "<<character->getFullName()<<".\n";
+		// if (random.oneIn(totalChance) )
+		// {
+			// std::cout<<"SPECIAL ITEM produced by "<<character->getFullName()<<".\n";
 			
-			qualityLevel = 1;
+			// qualityLevel = 1;
 			
-			while (qualityLevel < 6 )
-			{
-				if ( random.flip() )
-				{
-					++qualityLevel;
-				}
-				else
-				{
-					continue;
-				}
-			}
-			std::cout<<"Quality level is "<<qualityLevel<<"\n";
+			// while (qualityLevel < 6 )
+			// {
+				// if ( random.flip() )
+				// {
+					// ++qualityLevel;
+				// }
+				// else
+				// {
+					// continue;
+				// }
+			// }
+			// std::cout<<"Quality level is "<<qualityLevel<<"\n";
 			
-		}
-		else
-		{
-			// normal item
-			//std::cout<<"Item produced by "<<vCharacter(i)->getFullName()<<".\n";
-		}
+		// }
+		// else
+		// {
+			// // normal item
+			// //std::cout<<"Item produced by "<<vCharacter(i)->getFullName()<<".\n";
+		// }
 		
-		Item* createdItem=0;
+		// Item* createdItem=0;
 		
-		if (farmingEquipmentNeeded())
-		{
-			Item_Hoe * hoe = new Item_Hoe();
-			createdItem=hoe;
-			vItem.push(hoe);
-			stockpile.add(hoe);
-		}
-		else
-		{
+		// if (farmingEquipmentNeeded())
+		// {
+			// Item_Hoe * hoe = new Item_Hoe();
+			// createdItem=hoe;
+			// vItem.push(hoe);
+			// stockpile.add(hoe);
+		// }
+		// else
+		// {
 		
-			Item_Sword * sword = new Item_Sword();
-			createdItem=sword;
-			stockpile.add(sword);
-			vItem.push(sword);
+			// Item_Sword * sword = new Item_Sword();
+			// createdItem=sword;
+			// stockpile.add(sword);
+			// vItem.push(sword);
 		
-		}
+		// }
 		
-		if ( qualityLevel > 0 )
-		{				
-			// if the item is special, create an Item_Information attachment for it.
-			Item_Information* info = new Item_Information();
-			// Who created it
-			// Where it was created
-			// Any additional info
+		// if ( qualityLevel > 0 )
+		// {				
+			// // if the item is special, create an Item_Information attachment for it.
+			// Item_Information* info = new Item_Information();
+			// // Who created it
+			// // Where it was created
+			// // Any additional info
 			
-			info->creator = character;
-			info->locationMade = this;
-			info->quality = qualityLevel;
-			info->yearMade = globalCalendar.year;
-			info->monthMade = globalCalendar.month;
-			createdItem->information = info;
-			// engravings should be done seperately as it's a different skillset.
-			// Player should be able to pick the engraving if they are having it done.
+			// info->creator = character;
+			// info->locationMade = this;
+			// info->quality = qualityLevel;
+			// info->yearMade = globalCalendar.year;
+			// info->monthMade = globalCalendar.month;
+			// createdItem->information = info;
+			// // engravings should be done seperately as it's a different skillset.
+			// // Player should be able to pick the engraving if they are having it done.
 			
-		}
+		// }
 		
-		if (qualityLevel == 6)
-		{
-			std::cout<<"*** ARTIFACT CREATED ***\n";
-			if (world!=0)
-			{
-				world->eventManager.addEvent("ARTIFACT",Event::EVENT_NONE);
-			}
-		}
+		// if (qualityLevel == 6)
+		// {
+			// std::cout<<"*** ARTIFACT CREATED ***\n";
+			// if (world!=0)
+			// {
+				// world->eventManager.addEvent("ARTIFACT",Event::EVENT_NONE);
+			// }
+		// }
 		
-		//nMetalStockpile-=10;
-		stockpile.take(RESOURCE_IRON, 1);
-		character->skillMetalsmithing.addExp(10);
+		// //nMetalStockpile-=10;
+		// stockpile.take(RESOURCE_IRON, 1);
+		// character->skillMetalsmithing.addExp(10);
 	}
 	return false;
 }
@@ -675,16 +691,6 @@ bool Settlement_Dwarven::woodNeeded() // True if any more mining resources are r
 
 bool Settlement_Dwarven::coinsNeeded() // True if any more coins are required for the treasury
 {
-	return false;
-}
-
-bool Settlement_Dwarven::farmingEquipmentNeeded()
-{
-	int nFarmingEquipment = stockpile.getNumOfType(ITEM_HOE);
-	if ( nFarmingEquipment < vCharacter.size() / 2 )
-	{
-		return true;
-	}
 	return false;
 }
 
