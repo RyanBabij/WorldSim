@@ -175,7 +175,7 @@ class ItemRequestManager
 			}
 		}
 
-		void removeAllCategoryRequests(HasMoney* requester, ItemCategory category)
+		void removeAll(HasMoney* requester, ItemCategory category)
 		{
 			for (auto it = categoryRequests.begin(); it != categoryRequests.end(); )
 			{
@@ -210,6 +210,28 @@ class ItemRequestManager
 
 			return std::nullopt;
 		}
+		
+		std::optional<ItemRequestCategory> pullMostValuableRequestCategory(bool returnZeroValues)
+		{
+			if (categoryRequests.empty())
+			{
+				return std::nullopt;
+			}
+
+			auto it = categoryRequests.begin();
+			while (it != categoryRequests.end())
+			{
+				const ItemRequestCategory& mostValuableRequest = *it;
+				if (mostValuableRequest.value > 0 || returnZeroValues)
+				{
+					categoryRequests.erase(it);
+					return mostValuableRequest;
+				}
+				++it;
+			}
+
+			return std::nullopt;
+		}
 
 		double getAverageValue(ItemType type) const
 		{
@@ -229,6 +251,30 @@ class ItemRequestManager
 			}
 			return static_cast<double>(totalValue) / count;
 		}
+		
+		double getAverageValue(ItemCategory category, int minLevel) const
+		{
+			int totalValue = 0;
+			int count = 0;
+
+			for (const auto& request : categoryRequests)
+			{
+				if (request.category == category && request.minimumLevel == minLevel)
+				{
+					totalValue += request.value;
+					++count;
+				}
+			}
+
+			if (count == 0)
+			{
+				return 0.0; // Avoid division by zero
+			}
+
+			return static_cast<double>(totalValue) / count;
+		}
+
+
 
 		int getTotalValue() const
 		{

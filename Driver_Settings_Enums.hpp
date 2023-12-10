@@ -8,6 +8,10 @@
 	Lists of values go here. Functions and sets related to the enums also go here.
 */
 
+#include <Container/Vector/Vector.hpp>
+
+#include <unordered_map>
+
 
 // MAIN MENU ENUMS
 enum enumMenu
@@ -212,6 +216,9 @@ const std::string enumJobStr[JOB_COUNT] =
 	"hunting"
 };
 
+// Item Category needs to be changed to Item Action, and then Item objects need to have a table of their value at each
+// action.
+
 enum ItemCategory
 {
 	ITEM_CATEGORY_NONE,
@@ -219,6 +226,19 @@ enum ItemCategory
 	ITEM_CATEGORY_FARMING,
 	ITEM_CATEGORY_COUNT
 };
+
+const std::string categoryToString(ItemCategory category)
+{
+	switch (category)
+	{
+		case ITEM_CATEGORY_NONE: return "None";
+		case ITEM_CATEGORY_HUNTING: return "Hunting";
+		case ITEM_CATEGORY_FARMING: return "Farming";
+		// Add more cases as needed
+		default: return "Unknown";
+	}
+}
+
 
 enum ItemType
 {
@@ -283,7 +303,41 @@ const std::string enumItemTypeStr[ITEM_COUNT] =
 	"marker_green_small"
 };
 
-#include <unordered_map>
+const std::string itemToString(ItemType itemType)
+{
+	switch (itemType)
+	{
+		case ITEM_NONE: return "None";
+		case ITEM_HAND: return "Hand";
+		case ITEM_HOE: return "Hoe";
+		case ITEM_SWORD: return "Sword";
+		case ITEM_KNIFE: return "Knife";
+		case ITEM_LONGBOW: return "Longbow";
+		case ITEM_SPEAR: return "Spear";
+		case ITEM_PICKAXE: return "Pickaxe";
+		case ITEM_FISHROD: return "Fishrod";
+		case ITEM_SHOVEL: return "Shovel";
+		case ITEM_AXE: return "Axe";
+		case ITEM_LOG: return "Log";
+		case ITEM_FISH: return "Fish";
+		case ITEM_CAMPFIRE: return "Campfire";
+		case ITEM_PLANK: return "Plank";
+		case ITEM_WALL: return "Wall";
+		case ITEM_FLOOR: return "Floor";
+		case ITEM_PLANTFIBRE: return "Plantfibre";
+		case ITEM_DEERPELT: return "Deerpelt";
+		case ITEM_DEERMEAT: return "Deermeat";
+		case ITEM_HUMANSKIN: return "Humanskin";
+		case ITEM_HUMANMEAT: return "Humanmeat";
+		case ITEM_LEATHERCLOTHES: return "Leatherclothes";
+		case ITEM_WATERSKIN: return "Waterskin";
+		case ITEM_SHELTER: return "Shelter";
+		case ITEM_MARKER_RED: return "Marker Red";
+		case ITEM_MARKER_GREEN_SMALL: return "Marker Green Small";
+		// Add more cases as needed
+		default: return "Unknown";
+	}
+}
 
 // Define a mapping from ItemType to ItemCategory
 std::unordered_map<ItemType, ItemCategory> itemCategoryMap =
@@ -316,6 +370,25 @@ ItemCategory getCategoryOfItem(ItemType itemType)
 	}
 	return ITEM_CATEGORY_NONE; // Return default category if not found
 }
+
+// Assuming ItemType and ItemCategory are defined enums
+// and itemCategoryMap is a predefined map from ItemType to ItemCategory
+
+Vector <ItemType> getItemsInCategory(ItemCategory category)
+{
+	Vector<ItemType> itemsInCategory;
+
+	for (const auto& itemPair : itemCategoryMap)
+	{
+		if (itemPair.second == category)
+		{
+			itemsInCategory.push(itemPair.first);
+		}
+	}
+
+	return itemsInCategory;
+}
+
 
 
 #endif // WORLDSIM_DRIVER_SETTINGS_ENUMS_CPP

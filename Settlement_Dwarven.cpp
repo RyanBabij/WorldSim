@@ -42,7 +42,8 @@ void Settlement_Dwarven::checkStockpileForBestItem(Character* character, Job* jo
 
 			if (category != ITEM_CATEGORY_NONE)
 			{
-				putMarketRequest(character,category);
+				putMarketRequest(character,category,1);
+				// also need to add code asking for better items once we have an item
 			}
 			
 		}
@@ -104,10 +105,24 @@ void Settlement_Dwarven::putMarketRequest(Character* c, ItemType type)
 	}
 }
 
-void Settlement_Dwarven::putMarketRequest(Character* c, ItemCategory category)
+void Settlement_Dwarven::putMarketRequest(Character* c, ItemCategory category, int minLevel)
 {
-	std::cout<<"CATEGORY REQUEST\n";
 	// we might prefer some kind of functionality request. Eg "An item for digging". "An item which can shoot".
+	
+	if ( c->getMoney() > 0 )
+	{
+		int marketValue = requestManager.getAverageValue(category,minLevel) + 1;
+		
+		int amountCanPay = c->getMoney();
+		if (marketValue < amountCanPay)
+		{
+			amountCanPay = marketValue;
+		}
+		
+		requestManager.removeAll(c,category);
+		requestManager.add(c,category,marketValue,minLevel);
+		std::cout<<"Request for "<<categoryToString(category)<<" item at price of "<<amountCanPay<<".\n";
+	}
 }
 
 bool Settlement_Dwarven::hasLocation(enumLocation _location)
@@ -380,6 +395,30 @@ Item* Settlement_Dwarven::produceItem(ItemType type, CanRequestItem* recipient= 
 	return nullptr;
 }
 
+Item* Settlement_Dwarven::produceItem(ItemCategory type, CanRequestItem* recipient= nullptr, int minLevel=1)
+{
+	std::cout<<"Attempting to produce "<<categoryToString(type)<<" item.\n";
+	
+	Vector <ItemType> vItems = getItemsInCategory(type);
+	
+	// Try to make each item and see what the best one we can make is.
+	
+	Item* createdItem = nullptr;
+	
+	std::cout<<"We can try to make:\n";
+	for (int i=0;i<vItems.size();++i)
+	{
+		std::cout<<itemToString(vItems(i))<<"\n";
+		
+		//Item* createdItem = createItem(vItems(i));
+		
+	}
+	
+	// Determine the best one to make.
+	
+	return nullptr;
+}
+
 void Settlement_Dwarven::payCharacter(Character* character, int amount)
 {
 	//character->giveMoney(amount);
@@ -461,6 +500,8 @@ bool Settlement_Dwarven::abstractDayProduction(Character* character)
 {
 	if ( globalRandom.rand8(DAYS_PER_MONTH) == 0 )
 	{
+		// Attempt to make specific items first, then later attempt to make item categories.
+		// We will later fix it so that the most valuable request overall is fulfilled
 		auto mostValuableRequestOpt = requestManager.pullMostValuableRequest(false);
 		if (mostValuableRequestOpt)
 		{
@@ -505,6 +546,26 @@ bool Settlement_Dwarven::abstractDayProduction(Character* character)
 			}
 			return true;
 		}
+		
+		
+		
+		
+		auto mostValuableRequestCategoryOpt = requestManager.pullMostValuableRequestCategory(false);
+		if (mostValuableRequestCategoryOpt)
+		{
+			std::cout<<"Attempting to make item category\n";
+			ItemRequestCategory mostValuableRequest = *mostValuableRequestCategoryOpt;
+			
+			Item* item = produceItem(mostValuableRequest.category,mostValuableRequest.requester, mostValuableRequest.minimumLevel);
+			
+			
+			
+			
+			
+			requestManager.add(mostValuableRequest.requester,mostValuableRequest.category, mostValuableRequest.value,
+			mostValuableRequest.minimumLevel);
+		}
+		
 		
 		return false;
 		
