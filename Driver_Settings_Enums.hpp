@@ -219,21 +219,25 @@ const std::string enumJobStr[JOB_COUNT] =
 // Item Category needs to be changed to Item Action, and then Item objects need to have a table of their value at each
 // action.
 
-enum ItemCategory
+// Melee hunting - Can only catch certain animals which can be ambushed or will approach
+
+enum ItemAction
 {
-	ITEM_CATEGORY_NONE,
-	ITEM_CATEGORY_HUNTING,
-	ITEM_CATEGORY_FARMING,
-	ITEM_CATEGORY_COUNT
+	ITEM_ACTION_NONE,
+	ITEM_ACTION_HUNTING_MELEE,
+	ITEM_ACTION_HUNTING_RANGED,
+	ITEM_ACTION_FARMING,
+	ITEM_ACTION_COUNT
 };
 
-const std::string categoryToString(ItemCategory category)
+const std::string actionToString(ItemAction action)
 {
-	switch (category)
+	switch (action)
 	{
-		case ITEM_CATEGORY_NONE: return "None";
-		case ITEM_CATEGORY_HUNTING: return "Hunting";
-		case ITEM_CATEGORY_FARMING: return "Farming";
+		case ITEM_ACTION_NONE: return "None";
+		case ITEM_ACTION_HUNTING_MELEE: return "Hunting melee";
+		case ITEM_ACTION_HUNTING_RANGED: return "Hunting ranged";
+		case ITEM_ACTION_FARMING: return "Farming";
 		// Add more cases as needed
 		default: return "Unknown";
 	}
@@ -339,46 +343,46 @@ const std::string itemToString(ItemType itemType)
 	}
 }
 
-// Define a mapping from ItemType to ItemCategory
-std::unordered_map<ItemType, ItemCategory> itemCategoryMap =
+// Define a mapping from ItemType to ItemAction
+std::unordered_map<ItemType, ItemAction> ItemActionMap =
 {
-	{ITEM_HOE, ITEM_CATEGORY_FARMING},
-	{ITEM_SWORD, ITEM_CATEGORY_HUNTING},
-	{ITEM_KNIFE, ITEM_CATEGORY_HUNTING},
-	{ITEM_LONGBOW, ITEM_CATEGORY_HUNTING},
+	{ITEM_HOE, ITEM_ACTION_FARMING},
+	{ITEM_SWORD, ITEM_ACTION_HUNTING_MELEE},
+	{ITEM_KNIFE, ITEM_ACTION_HUNTING_MELEE},
+	{ITEM_LONGBOW, ITEM_ACTION_HUNTING_RANGED},
 	// ... Add other item to category mappings
 };
 
 // Function to determine if an item is in a particular category
-bool isItemInCategory(ItemType itemType, ItemCategory itemCategory)
+bool isItemInAction(ItemType itemType, ItemAction ItemAction)
 {
-	auto it = itemCategoryMap.find(itemType);
-	if (it != itemCategoryMap.end())
+	auto it = ItemActionMap.find(itemType);
+	if (it != ItemActionMap.end())
 	{
-		return it->second == itemCategory;
+		return it->second == ItemAction;
 	}
 	return false; // Item type not found in the map, or not associated with any category
 }
 
 // Function to determine the category of an item
-ItemCategory getCategoryOfItem(ItemType itemType)
+ItemAction getActionOfItem(ItemType itemType)
 {
-	auto it = itemCategoryMap.find(itemType);
-	if (it != itemCategoryMap.end())
+	auto it = ItemActionMap.find(itemType);
+	if (it != ItemActionMap.end())
 	{
 		return it->second; // Return the found category
 	}
-	return ITEM_CATEGORY_NONE; // Return default category if not found
+	return ITEM_ACTION_NONE; // Return default category if not found
 }
 
-// Assuming ItemType and ItemCategory are defined enums
-// and itemCategoryMap is a predefined map from ItemType to ItemCategory
+// Assuming ItemType and ItemAction are defined enums
+// and ItemActionMap is a predefined map from ItemType to ItemAction
 
-Vector <ItemType> getItemsInCategory(ItemCategory category)
+Vector <ItemType> getItemsInAction(ItemAction category)
 {
 	Vector<ItemType> itemsInCategory;
 
-	for (const auto& itemPair : itemCategoryMap)
+	for (const auto& itemPair : ItemActionMap)
 	{
 		if (itemPair.second == category)
 		{

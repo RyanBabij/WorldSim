@@ -38,9 +38,9 @@ void Settlement_Dwarven::checkStockpileForBestItem(Character* character, Job* jo
 			putMarketRequest(character,job->requiredItem);
 			// put in a category request here by mapping the item to its category.
 			
-			ItemCategory category = getCategoryOfItem(job->requiredItem);
+			ItemAction category = getActionOfItem(job->requiredItem);
 
-			if (category != ITEM_CATEGORY_NONE)
+			if (category != ITEM_ACTION_NONE)
 			{
 				putMarketRequest(character,category,1);
 				// also need to add code asking for better items once we have an item
@@ -105,7 +105,7 @@ void Settlement_Dwarven::putMarketRequest(Character* c, ItemType type)
 	}
 }
 
-void Settlement_Dwarven::putMarketRequest(Character* c, ItemCategory category, int minLevel)
+void Settlement_Dwarven::putMarketRequest(Character* c, ItemAction category, int minLevel)
 {
 	// we might prefer some kind of functionality request. Eg "An item for digging". "An item which can shoot".
 	
@@ -121,7 +121,7 @@ void Settlement_Dwarven::putMarketRequest(Character* c, ItemCategory category, i
 		
 		requestManager.removeAll(c,category);
 		requestManager.add(c,category,marketValue,minLevel);
-		std::cout<<"Request for "<<categoryToString(category)<<" item at price of "<<amountCanPay<<".\n";
+		std::cout<<"Request for "<<actionToString(category)<<" item at price of "<<amountCanPay<<".\n";
 	}
 }
 
@@ -395,11 +395,11 @@ Item* Settlement_Dwarven::produceItem(ItemType type, CanRequestItem* recipient= 
 	return nullptr;
 }
 
-Item* Settlement_Dwarven::produceItem(ItemCategory type, CanRequestItem* recipient= nullptr, int minLevel=1)
+Item* Settlement_Dwarven::produceItem(ItemAction type, CanRequestItem* recipient= nullptr, int minLevel=1)
 {
-	std::cout<<"Attempting to produce "<<categoryToString(type)<<" item.\n";
+	std::cout<<"Attempting to produce "<<actionToString(type)<<" item.\n";
 	
-	Vector <ItemType> vItems = getItemsInCategory(type);
+	Vector <ItemType> vItems = getItemsInAction(type);
 	
 	// Try to make each item and see what the best one we can make is.
 	

@@ -23,14 +23,14 @@ class ItemRequestCategory
 	public:
 	
 	CanRequestItem * requester;
-	ItemCategory category;
+	ItemAction category;
 	int value;
 	int minimumLevel;
 	bool privateContract;
 	
 
 	
-	ItemRequestCategory(CanRequestItem* c, ItemCategory t, int v, int m) :
+	ItemRequestCategory(CanRequestItem* c, ItemAction t, int v, int m) :
 	requester(c), category(t), value(v), minimumLevel(m)
 	{
 		privateContract=true;
@@ -140,7 +140,7 @@ class ItemRequestManager
 		}
 
 		void add
-		(CanRequestItem *requester, ItemCategory category, int value, int minimumLevel, bool deleteDuplicates = true)
+		(CanRequestItem *requester, ItemAction category, int value, int minimumLevel, bool deleteDuplicates = true)
 		{
 			if (requester->takeMoney(value))
 			{
@@ -175,7 +175,7 @@ class ItemRequestManager
 			}
 		}
 
-		void removeAll(HasMoney* requester, ItemCategory category)
+		void removeAll(HasMoney* requester, ItemAction category)
 		{
 			for (auto it = categoryRequests.begin(); it != categoryRequests.end(); )
 			{
@@ -252,7 +252,7 @@ class ItemRequestManager
 			return static_cast<double>(totalValue) / count;
 		}
 		
-		double getAverageValue(ItemCategory category, int minLevel) const
+		double getAverageValue(ItemAction category, int minLevel) const
 		{
 			int totalValue = 0;
 			int count = 0;

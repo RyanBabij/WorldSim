@@ -23,7 +23,7 @@ class Settlement_Dwarven: public Settlement
 		void putMarketRequest(Character* c, enumResource type); // Put market request for resource to be obtained.
 		void putMarketRequest(Character* c, ItemType type); // Put market request for item to be built.
 		void putMarketRequest
-		(Character* c, ItemCategory category, int minLevel); // Put market request for a type of item.
+		(Character* c, ItemAction category, int minLevel); // Put market request for a type of item.
 		
 		bool abstractDayConstruction(Character* character);
 		bool abstractDayProduction(Character* character);
@@ -48,7 +48,7 @@ class Settlement_Dwarven: public Settlement
 		
 		Item* createItem(ItemType type);
 		Item* produceItem(ItemType type, CanRequestItem* recipient);
-		Item* produceItem(ItemCategory type, CanRequestItem* recipient, int minimumLevel);
+		Item* produceItem(ItemAction type, CanRequestItem* recipient, int minimumLevel);
 		
 		void payCharacter(Character* character, int amount);
 		void payCharacterFromTreasury(Character* character, int amount);
