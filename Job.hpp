@@ -8,7 +8,7 @@ class Job
 {
 public:
 	bool requiresItem;
-	ItemType requiredItem; /* The type of item. */
+	ItemAction requiredAction; /* The required action(s) for the job. */
 	
 	Item_Attributes desiredItemAttributes;
 	

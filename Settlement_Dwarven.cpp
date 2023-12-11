@@ -35,14 +35,15 @@ void Settlement_Dwarven::checkStockpileForBestItem(Character* character, Job* jo
 	{
 		if ( bestStockpileItem == nullptr ) // There's no farming equipment anywhere
 		{
-			putMarketRequest(character,job->requiredItem);
+			//putMarketRequest(character,job->requiredAction);
 			// put in a category request here by mapping the item to its category.
 			
-			ItemAction category = getActionOfItem(job->requiredItem);
+			//ItemAction category = getActionOfItem(job->requiredItem);
+			ItemAction action = job->requiredAction;
 
-			if (category != ITEM_ACTION_NONE)
+			if (action != ITEM_ACTION_NONE)
 			{
-				putMarketRequest(character,category,1);
+				putMarketRequest(character,action,1);
 				// also need to add code asking for better items once we have an item
 			}
 			
@@ -403,18 +404,53 @@ Item* Settlement_Dwarven::produceItem(ItemAction type, CanRequestItem* recipient
 	
 	// Try to make each item and see what the best one we can make is.
 	
-	Item* createdItem = nullptr;
+	Item* bestItem = nullptr;
+	char bestActionValue = -1;
 	
 	std::cout<<"We can try to make:\n";
 	for (int i=0;i<vItems.size();++i)
 	{
 		std::cout<<itemToString(vItems(i))<<"\n";
 		
-		//Item* createdItem = createItem(vItems(i));
+		// Create item and see if it has the right specs.
+		Item* createdItem = createItem(vItems(i));
+		
+		if ( createdItem != nullptr && stockpile.canMake(createdItem->getResourceRequirement()) )
+		{
+			if ( createdItem->mAction[type] > bestActionValue )
+			{
+				delete bestItem;
+				bestItem = createdItem;
+				bestActionValue = createdItem->mAction[type];
+			}
+		}
 		
 	}
 	
+	if ( bestItem != nullptr )
+	{
+		std::cout<<"Best item for the job we can make is: "<<bestItem->getName()<<"\n";
+		produceItem(bestItem->type, recipient);
+		delete bestItem;
+	}
+	
+	
+	
+	
+	
 	// Determine the best one to make.
+	// for now just make a random one
+	
+	//vItems.shuffle();
+	
+	// for (int i=0;i<vItems.size();++i)
+	// {
+		// std::cout<<itemToString(vItems(i))<<"\n";
+		
+		// Item* createdItem = produceItem(vItems(i),recipient);
+		
+	// }
+	
 	
 	return nullptr;
 }
@@ -498,8 +534,20 @@ bool Settlement_Dwarven::abstractDayConstruction(Character* character)
 
 bool Settlement_Dwarven::abstractDayProduction(Character* character)
 {
+	// Current process:
+	// Step 1: Try to make an individual item request.
+	// Step 2: Try to make an item cetegory request
+	// Step 3: Try to make coins
+	// Step 1 and 2 should be decided based on value.
+	
+	
 	if ( globalRandom.rand8(DAYS_PER_MONTH) == 0 )
 	{
+		// Pull both individual item and item category and compare them here. Then push the least valuable one back on
+		// and try to make the more valuable one.
+		
+		
+		
 		// Attempt to make specific items first, then later attempt to make item categories.
 		// We will later fix it so that the most valuable request overall is fulfilled
 		auto mostValuableRequestOpt = requestManager.pullMostValuableRequest(false);
@@ -530,43 +578,38 @@ bool Settlement_Dwarven::abstractDayProduction(Character* character)
 				//std::cout<<"Unable to make item, trying another.\n";
 			}
 		}
-		else if (getMoneyPercentInTreasury() < 0.25 || getAverageCharacterWealth() < 10 )
+		else
 		{
-			//std::cout<<character->getFullName()<<": Producing coins. "<<character->getMoney()<<" money.\n";
-			
-			if ( stockpile.take(RESOURCE_IRON,1) )
+			auto mostValuableRequestCategoryOpt = requestManager.pullMostValuableRequestCategory(false);
+			if (mostValuableRequestCategoryOpt)
 			{
-				// make coins
-				stockpile.addMoney(100);
+				std::cout<<"Attempting to make item category\n";
+				ItemRequestCategory mostValuableRequest = *mostValuableRequestCategoryOpt;
+				
+				Item* item = produceItem(mostValuableRequest.category,mostValuableRequest.requester, mostValuableRequest.minimumLevel);
+
+				requestManager.add(mostValuableRequest.requester,mostValuableRequest.category, mostValuableRequest.value,
+				mostValuableRequest.minimumLevel);
 			}
-			else
+			else if (getMoneyPercentInTreasury() < 0.25 || getAverageCharacterWealth() < 10 )
 			{
-				//std::cout<<"Unable to make coins, doing something else.\n";
-				return false;
+				//std::cout<<character->getFullName()<<": Producing coins. "<<character->getMoney()<<" money.\n";
+				
+				if ( stockpile.take(RESOURCE_IRON,1) )
+				{
+					// make coins
+					stockpile.addMoney(100);
+				}
+				else
+				{
+					//std::cout<<"Unable to make coins, doing something else.\n";
+					return false;
+				}
+				return true;
 			}
-			return true;
 		}
 		
-		
-		
-		
-		auto mostValuableRequestCategoryOpt = requestManager.pullMostValuableRequestCategory(false);
-		if (mostValuableRequestCategoryOpt)
-		{
-			std::cout<<"Attempting to make item category\n";
-			ItemRequestCategory mostValuableRequest = *mostValuableRequestCategoryOpt;
-			
-			Item* item = produceItem(mostValuableRequest.category,mostValuableRequest.requester, mostValuableRequest.minimumLevel);
-			
-			
-			
-			
-			
-			requestManager.add(mostValuableRequest.requester,mostValuableRequest.category, mostValuableRequest.value,
-			mostValuableRequest.minimumLevel);
-		}
-		
-		
+
 		return false;
 		
 		// Character spends a month in production

@@ -14,7 +14,7 @@
 Job::Job()
 {
 	type = JOB_UNKNOWN;
-	requiredItem = ITEM_NONE; // This should become a function
+	requiredAction = ITEM_ACTION_NONE; // This should become a function
 	requiredLocation = LOCATION_NONE;
 	desiredWoodcuttingValue = 0;
 	desiredFarmingValue = 0;
@@ -82,7 +82,7 @@ Job_Woodcutting::Job_Woodcutting() : Job()
 {
 	type = JOB_WOODCUTTING;
 	requiredLocation = LOCATION_WILDERNESS;
-	requiredItem = ITEM_AXE;
+	requiredAction = ITEM_ACTION_WOODCUTTING;
 	desiredWoodcuttingValue = 1;
 }
 
@@ -95,7 +95,7 @@ Job_Mining::Job_Mining() : Job()
 {
 	type = JOB_MINING;
 	requiredLocation = LOCATION_MINE;
-	requiredItem = ITEM_PICKAXE;
+	requiredAction = ITEM_ACTION_MINING;
 	desiredMiningValue = 1;
 }
 
@@ -108,7 +108,7 @@ Job_Hunting::Job_Hunting() : Job()
 {
 	type = JOB_HUNTING;
 	requiredLocation = LOCATION_WILDERNESS;
-	requiredItem = ITEM_LONGBOW;
+	requiredAction = ITEM_ACTION_HUNTING_RANGED;
 	desiredMiningValue = 1;
 }
 
@@ -121,7 +121,7 @@ Job_Farming::Job_Farming() : Job()
 {
 	type = JOB_FARMING;
 	requiredLocation = LOCATION_FARM;
-	requiredItem = ITEM_HOE;
+	requiredAction = ITEM_ACTION_FARMING;
 	desiredFarmingValue = 1;
 }
 
@@ -133,7 +133,7 @@ std::string Job_Farming::getName()
 Job_Prospecting::Job_Prospecting() : Job()
 {
 	type = JOB_PROSPECTING;
-	requiredItem = ITEM_PICKAXE;
+	requiredAction = ITEM_ACTION_MINING;
 	desiredMiningValue = 1;
 }
 

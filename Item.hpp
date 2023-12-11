@@ -57,6 +57,9 @@ class Item: public WorldObject, public TableInterface, public Craftable /* HasRe
 		ItemType type; /* The type of item. */
 		
 		Item_Attributes attributes;
+		
+		std::unordered_map<ItemAction, char> mAction; // list of actions this item can be used for
+		
 
 		//unsigned char farmingValue; /* How well this works as a farming implement. 0 = not possible */
 		//unsigned char miningValue; /* How well this works as a mining implement. 0 = not possible */
@@ -271,6 +274,8 @@ class Recipe_HuntingBow: public Item
 		requiresLocation=false;
 		mIntermediate[INTERMEDIATE_GUT] = 1;
 		mResource[RESOURCE_WOOD] = 2;
+		
+		mAction[ITEM_ACTION_HUNTING_RANGED]=1;
 	}
 };
 
@@ -284,6 +289,8 @@ class Item_Hoe: public Item
 			attributes.farmingValue=1;
 			reach=1;
 			type=ITEM_HOE;
+			
+			mAction[ITEM_ACTION_FARMING]=1;
 		}
 		std::string getName() override { return "Hoe"; }
 

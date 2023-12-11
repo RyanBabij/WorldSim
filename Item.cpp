@@ -28,6 +28,13 @@ Item::Item()
 	hungerRestore=-1;
 
 	canCook=false;
+	
+	
+	for (int i = 0; i < ITEM_ACTION_COUNT; ++i)
+	{
+		mAction[static_cast<ItemAction>(i)] = 0;
+	}
+	
 }
 Item::~Item() {}
 
