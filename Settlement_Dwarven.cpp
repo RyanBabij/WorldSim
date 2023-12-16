@@ -245,31 +245,30 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		int maxPersonalOutput = (character->getStrength()*huntingItemMult)+character->skillMarksmanship;
 		if (maxPersonalOutput > 16)
 		{
-			maxPersonalOutput=16;
+			maxPersonalOutput=32;
 		}
 		
-		stockpile.add(RESOURCE_FOOD, globalRandom.rand(maxPersonalOutput));
-		
-		character->skillUpMarksmanship();
-		payCharacterFromTreasury(character,1);
-		
-		Vector <Creature_Species*>* vCreature = biome->getAllCreatureTypes();
-		
-		if ( vCreature != nullptr && vCreature->size() > 0 )
+		if ( globalRandom.flip() )
 		{
-			for (int i=0;i<vCreature->size(); ++i)
+			stockpile.add(RESOURCE_FOOD, globalRandom.rand(maxPersonalOutput));
+			stockpile.add(INTERMEDIATE_GUT, 1);
+			
+			character->skillUpMarksmanship();
+			
+			Vector <Creature_Species*>* vCreature = biome->getAllCreatureTypes();
+			
+			if ( vCreature != nullptr && vCreature->size() > 0 )
 			{
-				//std::cout<<(*vCreature)(i)->name<<"\n";
+				for (int i=0;i<vCreature->size(); ++i)
+				{
+					//std::cout<<(*vCreature)(i)->name<<"\n";
+				}
+				int iCreature = globalRandom.rand8(vCreature->size());
+				std::cout<<"Hunted a "<<(*vCreature)(iCreature)->name<<".\n";
 			}
-			int iCreature = globalRandom.rand8(vCreature->size());
-			std::cout<<"Hunted a "<<(*vCreature)(iCreature)->name<<".\n";
 		}
-
 		
-		if (globalRandom.flip())
-		{
-			stockpile.add(RESOURCE_FOOD, 16);
-		}
+		payCharacterFromTreasury(character,1);
 		
 		delete job;
 		return true;
@@ -972,7 +971,7 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 		abstractDaySplit();
 		
 		//resourceManager.print();
-		//stockpile.print();
+		stockpile.print();
 		//printAllMoneyInSettlement();
 		//requestManager.print();
 		//locationRequestManager.print();

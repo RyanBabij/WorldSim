@@ -5,11 +5,13 @@
 #include "Stockpile.hpp"
 
 // Craftable class implementation
-Craftable::Craftable() {
+Craftable::Craftable()
+{
 	requiresLocation = false;
 }
 
-Item* Craftable::produce() {
+Item* Craftable::produce()
+{
 	// Implementation of produce method
 	return nullptr;
 }
@@ -89,6 +91,17 @@ HasResourceRequirement::HasResourceRequirement() {
 
 ResourceRequirement HasResourceRequirement::getResourceRequirement() {
 	return ResourceRequirement();
+}
+
+// HasStockpileRequirement class implementation
+HasStockpileRequirement::HasStockpileRequirement()
+{
+	// Constructor body
+}
+
+StockpileRequirement HasStockpileRequirement::getStockpileRequirement()
+{
+	return StockpileRequirement();
 }
 
 // Stockpile class implementation
@@ -280,5 +293,37 @@ void Stockpile::print() {
 	}
 }
 
+StockpileRequirement::StockpileRequirement()
+{
+}
+
+
+void StockpileRequirement::add(Resource resource)
+{
+	resourceRequirement.add(resource);
+}
+
+void StockpileRequirement::add(enumResource _type, int _amount)
+{
+	resourceRequirement.add(_type, _amount);
+}
+
+void StockpileRequirement::add(Intermediate intermediate)
+{
+	intermediateRequirement.add(intermediate);
+}
+
+void StockpileRequirement::add(enumIntermediate _type, int _amount)
+{
+	intermediateRequirement.add(_type, _amount);
+}
+
+void StockpileRequirement::print()
+{
+	std::cout << "Resource Requirements:\n";
+	resourceRequirement.print();
+	std::cout << "\nIntermediate Requirements:\n";
+	intermediateRequirement.print();
+}
 
 #endif // WORLDSIM_STOCKPILE_CPP

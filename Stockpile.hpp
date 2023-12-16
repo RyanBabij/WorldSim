@@ -26,64 +26,97 @@
 #include <iostream>
 
 
-class Craftable {
-public:
-	bool requiresLocation;
-	std::unordered_map<enumIntermediate, int> mIntermediate;
-	std::unordered_map<enumResource, int> mResource;
+class Craftable
+{
+	public:
+		bool requiresLocation;
+		std::unordered_map<enumIntermediate, int> mIntermediate;
+		std::unordered_map<enumResource, int> mResource;
 
-	Craftable();
-	Item* produce();
+		Craftable();
+		Item* produce();
 };
 
-class CraftableManager {
+class CraftableManager
+{
 	Vector<Craftable> vRecipe;
-public:
-	// CraftableManager methods (if any)
+	
+	public:
+		// CraftableManager methods (if any)
 };
 
-class Intermediate {
-public:
-	enumIntermediate type;
-	int amount;
+class Intermediate
+{
+	public:
+		enumIntermediate type;
+		int amount;
 
-	Intermediate(enumIntermediate _type, int _amount);
+		Intermediate(enumIntermediate _type, int _amount);
 };
 
-class IntermediateRequirement {
-public:
-	Vector<Intermediate> vResource;
+class IntermediateRequirement
+{
+	public:
+		Vector<Intermediate> vResource;
 
-	IntermediateRequirement();
-	IntermediateRequirement(enumIntermediate type, int amount);
-	void add(Intermediate resource);
-	void add(enumIntermediate _type, int _amount);
-	void print();
+		IntermediateRequirement();
+		IntermediateRequirement(enumIntermediate type, int amount);
+		void add(Intermediate resource);
+		void add(enumIntermediate _type, int _amount);
+		void print();
 };
 
-class Resource {
-public:
-	enumResource type;
-	int amount;
+class Resource
+{
+	public:
+		enumResource type;
+		int amount;
 
-	Resource(enumResource _type, int _amount);
+		Resource(enumResource _type, int _amount);
 };
 
-class ResourceRequirement {
-public:
-	Vector<Resource> vResource;
+class ResourceRequirement
+{
+	public:
+		Vector<Resource> vResource;
 
-	ResourceRequirement();
-	ResourceRequirement(enumResource type, int amount);
-	void add(Resource resource);
-	void add(enumResource _type, int _amount);
-	void print();
+		ResourceRequirement();
+		ResourceRequirement(enumResource type, int amount);
+		void add(Resource resource);
+		void add(enumResource _type, int _amount);
+		void print();
 };
 
-class HasResourceRequirement {
-public:
-	HasResourceRequirement();
-	virtual ResourceRequirement getResourceRequirement();
+// Class for items which have resource requirements.
+
+class StockpileRequirement
+{
+	public:
+		ResourceRequirement resourceRequirement;
+		IntermediateRequirement intermediateRequirement;
+		
+		StockpileRequirement();
+		
+		void add(Resource resource);
+		void add(enumResource _type, int _amount);
+		void add(Intermediate intermediate);
+		void add(enumIntermediate _type, int _amount);
+		void print();
+	
+};
+
+class HasResourceRequirement
+{
+	public:
+		HasResourceRequirement();
+		virtual ResourceRequirement getResourceRequirement();
+};
+
+class HasStockpileRequirement
+{
+	public:
+		HasStockpileRequirement();
+		virtual StockpileRequirement getStockpileRequirement();
 };
 
 class Stockpile : public HasMoney {

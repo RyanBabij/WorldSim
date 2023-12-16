@@ -429,6 +429,7 @@ class Item_Longbow: public Item
 		{
 			ResourceRequirement resourceRequirement;
 			resourceRequirement.add(RESOURCE_WOOD,2);
+//			resourceRequirement.add(INTERMEDIATE_GUT,1);
 			
 			return resourceRequirement;	
 		}
