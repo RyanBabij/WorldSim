@@ -396,5 +396,51 @@ Vector <ItemType> getItemsInAction(ItemAction category)
 }
 
 
+// black        30         40
+// red          31         41
+// green        32         42
+// yellow       33         43
+// blue         34         44
+// magenta      35         45
+// cyan         36         46
+// white        37         47
+
+enum enumColour
+{
+	BLACK,
+	RED,
+	GREEN,
+	YELLOW,
+	BLUE,
+	MAGENTA,
+	CYAN,
+	WHITE,
+	DEFAULT
+};
+
+std::unordered_map<enumColour, std::string> colourMap =
+{
+	{BLACK,   "\033[30m"},
+	{RED,     "\033[31m"},
+	{GREEN,   "\033[32m"},
+	{YELLOW,  "\033[33m"},
+	{BLUE,    "\033[34m"},
+	{MAGENTA, "\033[35m"},
+	{CYAN,    "\033[36m"},
+	{WHITE,   "\033[37m"},
+	{DEFAULT,   "\033[0m"}
+};
+
+void colour(enumColour colour)
+{
+	auto it = colourMap.find(colour);
+	if (it != colourMap.end())
+	{
+		// Set colour
+		std::cout << it->second;
+	}
+}
+
+
 
 #endif // WORLDSIM_DRIVER_SETTINGS_ENUMS_CPP

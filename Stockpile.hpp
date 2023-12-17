@@ -30,8 +30,6 @@ class Craftable
 {
 	public:
 		bool requiresLocation;
-		std::unordered_map<enumIntermediate, int> mIntermediate;
-		std::unordered_map<enumResource, int> mResource;
 
 		Craftable();
 		Item* produce();
@@ -147,10 +145,13 @@ public:
 	bool hasEnough (Resource resource);
 	bool hasEnough(ResourceRequirement requirement);
 	bool canMake(ResourceRequirement requirement);
+	
+	bool canMake(StockpileRequirement requirement);
 
 
 	bool deduct(IntermediateRequirement requirement);
 	bool deduct(ResourceRequirement requirement);
+	bool deduct(StockpileRequirement requirement);
 
 	void add(Item* item);
 	void take(Item* item);

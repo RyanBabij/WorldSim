@@ -261,8 +261,21 @@ bool Stockpile::deduct(ResourceRequirement requirement)
 	return true;
 }
 
+bool Stockpile::canMake(StockpileRequirement requirement)
+{
+	return (hasEnough(requirement.resourceRequirement) && hasEnough(requirement.intermediateRequirement));
+}
 
-
+bool Stockpile::deduct(StockpileRequirement requirement)
+{
+	if ( hasEnough(requirement.resourceRequirement) && hasEnough(requirement.intermediateRequirement))
+	{
+		deduct(requirement.resourceRequirement);
+		deduct(requirement.intermediateRequirement);
+		return true;
+	}
+	return false;
+}
 
 void Stockpile::print() {
 	std::cout << "Resource Inventory:\n";

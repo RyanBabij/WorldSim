@@ -11,6 +11,7 @@
 
 #include "Job.cpp"
 
+
 Settlement_Dwarven::Settlement_Dwarven(): Settlement()
 {
 	race = DWARVEN;
@@ -377,9 +378,9 @@ Item* Settlement_Dwarven::createItem(ItemType type)
 Item* Settlement_Dwarven::produceItem(ItemType type, CanRequestItem* recipient= nullptr)
 {
 	Item* newItem = createItem(type);
-	if (newItem && stockpile.canMake(newItem->getResourceRequirement()))
+	if (newItem && stockpile.canMake(newItem->getStockpileRequirement()))
 	{
-		stockpile.deduct(newItem->getResourceRequirement());
+		stockpile.deduct(newItem->getStockpileRequirement());
 		
 		if ( recipient != nullptr )
 		{
@@ -414,7 +415,7 @@ Item* Settlement_Dwarven::produceItem(ItemAction type, CanRequestItem* recipient
 		// Create item and see if it has the right specs.
 		Item* createdItem = createItem(vItems(i));
 		
-		if ( createdItem != nullptr && stockpile.canMake(createdItem->getResourceRequirement()) )
+		if ( createdItem != nullptr && stockpile.canMake(createdItem->getStockpileRequirement()) )
 		{
 			if ( createdItem->mAction[type] > bestActionValue )
 			{
@@ -582,7 +583,9 @@ bool Settlement_Dwarven::abstractDayProduction(Character* character)
 			auto mostValuableRequestCategoryOpt = requestManager.pullMostValuableRequestCategory(false);
 			if (mostValuableRequestCategoryOpt)
 			{
-				std::cout<<"Attempting to make item category\n";
+				colour(GREEN);
+				std::cout << "Attempting to make item category.\n";
+				colour(DEFAULT);
 				ItemRequestCategory mostValuableRequest = *mostValuableRequestCategoryOpt;
 				
 				Item* item = produceItem(mostValuableRequest.category,mostValuableRequest.requester, mostValuableRequest.minimumLevel);

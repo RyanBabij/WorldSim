@@ -16,8 +16,33 @@
 
 	Item interaction is currently handled using double dispatch. It's possible to override this by using getName() as
 	a typeID.
+	
+	
+	I think in order to handle static resource requirements and dynamic stats, we need an ItemFactory class.
 
 */
+
+// class Item;
+
+// class ItemFactory
+// {
+	// public:
+	// ItemFactory()
+	// {
+	// }
+	
+	// Produce the item with stats relevant based on character skill, location, and tools used.
+	// Item* produce(ItemType type, Character* character, Location* location, /* TOOL */)
+	// {
+		// return nullptr;
+	// }
+	
+	// Produce worst guaranteed item with the given factors
+	// Item* produceBasic(ItemType type, Character* character, Location* location, /* TOOL */)
+	// {
+		// return nullptr;
+	// }
+// };
 
 
 
@@ -47,7 +72,7 @@ class Creature;
 
 #include "Item_Attributes.hpp"
 
-class Item: public WorldObject, public TableInterface, public Craftable /* HasResourceRequirement */
+class Item: public WorldObject, public TableInterface, public Craftable /* HasStockpileRequirement */
 {
 	public:
 
@@ -199,8 +224,11 @@ class Item: public WorldObject, public TableInterface, public Craftable /* HasRe
 		{ return 0; }
 
 		// Resources needed to build this item
-		/* virtual */ static ResourceRequirement getResourceRequirement()
-		{ return ResourceRequirement( /* NONE */ ); }
+		// /* virtual */ static ResourceRequirement getResourceRequirement()
+		// { return ResourceRequirement( /* NONE */ ); }
+		
+		/* virtual */ static StockpileRequirement getStockpileRequirement()
+		{ return StockpileRequirement( /* NONE */ ); }
 
 
 		// Useful for checking recipe requirements.
@@ -260,8 +288,8 @@ class Item_Hand: public Item
 		Texture* currentTexture() override
 		{ return &TEX_PORTRAIT_SNEK; }
 
-		/* virtual */ static ResourceRequirement getResourceRequirement()
-		{ return ResourceRequirement( /* NONE */ ); }
+		/* virtual */ static StockpileRequirement getStockpileRequirement()
+		{ return StockpileRequirement( /* NONE */ ); }
 
 };
 Item_Hand itemHand;
@@ -272,8 +300,8 @@ class Recipe_HuntingBow: public Item
 	Recipe_HuntingBow()
 	{
 		requiresLocation=false;
-		mIntermediate[INTERMEDIATE_GUT] = 1;
-		mResource[RESOURCE_WOOD] = 2;
+		//mIntermediate[INTERMEDIATE_GUT] = 1;
+		//mResource[RESOURCE_WOOD] = 2;
 		
 		mAction[ITEM_ACTION_HUNTING_RANGED]=1;
 	}
@@ -306,12 +334,12 @@ class Item_Hoe: public Item
 		Texture* currentTexture() override
 		{ return &TEX_ITEM_SWORD; }
 
-		/* virtual */ static ResourceRequirement getResourceRequirement()
+		/* virtual */ static StockpileRequirement getStockpileRequirement()
 		{
-			ResourceRequirement resourceRequirement;
-			resourceRequirement.add(RESOURCE_IRON,1);
+			StockpileRequirement stockpileRequirement;
+			stockpileRequirement.add(RESOURCE_IRON,1);
 			
-			return resourceRequirement;
+			return stockpileRequirement;
 		}
 		
 		/* TABLE INTERFACE */
@@ -361,6 +389,14 @@ class Item_Sword: public Item
 		virtual void interact (Creature* obj, int interactionType=0) override;
 		virtual void interact (Character* obj, int interactionType=0) override;
 
+		/* virtual */ static StockpileRequirement getStockpileRequirement()
+		{
+			StockpileRequirement stockpileRequirement;
+			stockpileRequirement.add(RESOURCE_IRON,1);
+			
+			return stockpileRequirement;
+		}
+
 		Texture* currentTexture() override
 		{ return &TEX_ITEM_SWORD; }
 		
@@ -409,10 +445,17 @@ class Item_Knife: public Item
 		virtual void interact (Creature* obj, int interactionType=0);
 		virtual void interact (Character* obj, int interactionType=0);
 
+		/* virtual */ static StockpileRequirement getStockpileRequirement()
+		{
+			StockpileRequirement stockpileRequirement;
+			stockpileRequirement.add(RESOURCE_IRON,1);
+			
+			return stockpileRequirement;
+		}
 
 		Texture* currentTexture()
 		{ return &TEX_ITEM_KNIFE; }
-
+		
 };
 
 class Item_Longbow: public Item
@@ -425,13 +468,13 @@ class Item_Longbow: public Item
 		}
 		std::string getName() override { return "Longbow"; }
 		
-		/* virtual */ static ResourceRequirement getResourceRequirement()
+		/* virtual */ static StockpileRequirement getStockpileRequirement()
 		{
-			ResourceRequirement resourceRequirement;
-			resourceRequirement.add(RESOURCE_WOOD,2);
-//			resourceRequirement.add(INTERMEDIATE_GUT,1);
+			StockpileRequirement stockpileRequirement;
+			stockpileRequirement.add(RESOURCE_WOOD,2);
+			stockpileRequirement.add(INTERMEDIATE_GUT,1);
 			
-			return resourceRequirement;	
+			return stockpileRequirement;
 		}
 
 		Texture* currentTexture() override
@@ -453,12 +496,12 @@ class Item_Spear: public Item
 		}
 		std::string getName() override { return "Spear"; }
 		
-		/* virtual */ static ResourceRequirement getResourceRequirement()
+		/* virtual */ static StockpileRequirement getStockpileRequirement()
 		{
-			ResourceRequirement resourceRequirement;
-			resourceRequirement.add(RESOURCE_WOOD,1);
+			StockpileRequirement stockpileRequirement;
+			stockpileRequirement.add(RESOURCE_WOOD,1);
 			
-			return resourceRequirement;	
+			return stockpileRequirement;
 		}
 
 		Texture* currentTexture() override
@@ -489,12 +532,12 @@ class Item_Pickaxe: public Item
 
 		virtual void interact(LocalTile* _target, int interactType=0) override;
 		
-		/* virtual */ static ResourceRequirement getResourceRequirement()
+		/* virtual */ static StockpileRequirement getStockpileRequirement()
 		{
-			ResourceRequirement resourceRequirement;
-			resourceRequirement.add(RESOURCE_IRON,1);
+			StockpileRequirement stockpileRequirement;
+			stockpileRequirement.add(RESOURCE_IRON,1);
 			
-			return resourceRequirement;	
+			return stockpileRequirement;
 		}
 		
 		/* TABLE INTERFACE */
@@ -564,6 +607,15 @@ class Item_Fishrod: public Item
 			}
 			return -1;
 		}
+		
+		/* virtual */ static StockpileRequirement getStockpileRequirement()
+		{
+			StockpileRequirement stockpileRequirement;
+			stockpileRequirement.add(RESOURCE_WOOD,1);
+			stockpileRequirement.add(INTERMEDIATE_GUT,2);
+			
+			return stockpileRequirement;
+		}
 
 		virtual Vector <std::string>* getInteractNames(LocalTile* _w);
 
@@ -601,12 +653,12 @@ class Item_Axe: public Item
 		}
 		std::string getName() { return "Axe"; }
 		
-		/* virtual */ static ResourceRequirement getResourceRequirement()
+		/* virtual */ static StockpileRequirement getStockpileRequirement()
 		{
-			ResourceRequirement resourceRequirement;
-			resourceRequirement.add(RESOURCE_IRON,1);
-			
-			return resourceRequirement;	
+			StockpileRequirement stockpileRequirement;
+			stockpileRequirement.add(RESOURCE_IRON,1);
+
+			return stockpileRequirement;
 		}
 
 
