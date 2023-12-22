@@ -153,9 +153,9 @@ void Settlement_Dwarven::buildLocation(enumLocation _location)
 
 
 
-bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
+bool Settlement_Dwarven::abstractDayJob( Character* character, Job* job)
 {
-	//std::cout<<character->getFullName()<<" at "<<character->getLocation()<<". Starting job "<<job->getName()<<". ($"<<character->getMoney()<<")\n";
+	//std::cout<<character->getFullName()<<" at "<<character->getLocation()<<". Attempting job "<<job->getName()<<". ($"<<character->getMoney()<<")\n";
 	
 	checkStockpileForBestItem(character, job);
 	
@@ -163,7 +163,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 	
 	if (job->type == JOB_FARMING )
 	{
-		// for now assume the Character feeds themself plus a certain surplus
+		// for now assume the Character feeds themself plus a certain surplus, as this simplifies starvation issues
 		
 		// Personal output is how much a person's personal skill can affect output.
 		// Technology can further improve the output as an independent variable.
@@ -208,7 +208,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		payCharacterFromTreasury(character,1);
 
 		
-		
+		std::cout<<character->getFullName()<<" at "<<character->getLocation()<<". Finished job "<<job->getName()<<". ($"<<character->getMoney()<<")\n";
 		delete job;
 		return true;
 	}
@@ -271,6 +271,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		
 		payCharacterFromTreasury(character,1);
 		
+		std::cout<<character->getFullName()<<" at "<<character->getLocation()<<". Finished job "<<job->getName()<<". ($"<<character->getMoney()<<")\n";
 		delete job;
 		return true;
 	}
@@ -299,7 +300,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		character->skillUpMining();
 		payCharacterFromTreasury(character,1);
 		
-		
+		std::cout<<character->getFullName()<<" at "<<character->getLocation()<<". Finished job "<<job->getName()<<". ($"<<character->getMoney()<<")\n";
 		delete job;
 		return true;
 	}
@@ -328,7 +329,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		character->skillUpMining();
 		payCharacterFromTreasury(character,1);
 		
-		
+		std::cout<<character->getFullName()<<" at "<<character->getLocation()<<". Finished job "<<job->getName()<<". ($"<<character->getMoney()<<")\n";
 		delete job;
 		return true;
 	}
@@ -344,6 +345,7 @@ bool Settlement_Dwarven::abstractMonthJob( Character* character, Job* job)
 		
 		stockpile.add(RESOURCE_WOOD, globalRandom.rand(8));
 
+		std::cout<<character->getFullName()<<" at "<<character->getLocation()<<". Finished job "<<job->getName()<<". ($"<<character->getMoney()<<")\n";
 		delete job;
 		return true;
 	}
@@ -922,10 +924,10 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 			{
 				actingCharacter = getFarmer(&vMovedCharacters);
 				//abstractMonthFood(actingCharacter);
-				if (abstractMonthJob(actingCharacter, new Job_Farming()))
+				if (abstractDayJob(actingCharacter, new Job_Farming()))
 				{
 				}
-				else if (abstractMonthJob(actingCharacter, new Job_Hunting()))
+				else if (abstractDayJob(actingCharacter, new Job_Hunting()))
 				{
 				}
 			}
@@ -945,11 +947,11 @@ void Settlement_Dwarven::incrementTicks ( int nTicks )
 				// MINING
 				else if ( miningNeeded() )
 				{
-					abstractMonthJob(actingCharacter, new Job_Mining());
+					abstractDayJob(actingCharacter, new Job_Mining());
 				}
 				else if ( woodNeeded() )
 				{
-					abstractMonthJob(actingCharacter, new Job_Woodcutting());
+					abstractDayJob(actingCharacter, new Job_Woodcutting());
 				}
 				// RESEARCH
 				else

@@ -15,7 +15,7 @@ class Settlement_Dwarven: public Settlement
 		/* SIMULATE X TURNS OF THE SETTLEMENT. */
 		void incrementTicks ( int /* nTicks */ );
 
-		bool abstractMonthJob(Character* character, Job* job);
+		
 		
 		void checkStockpileForBestItem(Character* character, Job* job);
 		
@@ -25,6 +25,7 @@ class Settlement_Dwarven: public Settlement
 		void putMarketRequest
 		(Character* c, ItemAction category, int minLevel); // Put market request for a type of item.
 		
+		bool abstractDayJob(Character* character, Job* job);
 		bool abstractDayConstruction(Character* character);
 		bool abstractDayProduction(Character* character);
 		void abstractDayResearch(Character* character);

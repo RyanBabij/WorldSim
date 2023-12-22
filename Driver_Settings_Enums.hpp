@@ -103,6 +103,25 @@ const std::string enumLocationStr[LOCATION_COUNT] =
 	"wilderness"
 };
 
+// Function to convert enumLocation to a string
+const std::string locationToString(enumLocation location)
+{
+	switch (location)
+	{
+		case LOCATION_NONE: return "None";
+		case LOCATION_OUTSIDE: return "Outside";
+		case LOCATION_WALLS: return "Walls";
+		case LOCATION_HALL: return "Hall";
+		case LOCATION_MAIN_HALL: return "Main Hall";
+		case LOCATION_MINE: return "Mine";
+		case LOCATION_DWELLING: return "Dwelling";
+		case LOCATION_FARM: return "Farm";
+		case LOCATION_WILDERNESS: return "Wilderness";
+		case LOCATION_WEAPONSMITH: return "Weaponsmith";
+		default: return "Unknown";
+	}
+}
+
 enum enumResource
 {
 	RESOURCE_UNKNOWN,
@@ -396,6 +415,9 @@ Vector <ItemType> getItemsInAction(ItemAction category)
 }
 
 
+
+#define COUT_COLOURS
+
 // black        30         40
 // red          31         41
 // green        32         42
@@ -433,12 +455,14 @@ std::unordered_map<enumColour, std::string> colourMap =
 
 void colour(enumColour colour)
 {
+	#ifdef COUT_COLOURS
 	auto it = colourMap.find(colour);
 	if (it != colourMap.end())
 	{
 		// Set colour
 		std::cout << it->second;
 	}
+	#endif
 }
 
 

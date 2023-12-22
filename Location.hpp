@@ -158,19 +158,7 @@ public:
 private:
 	std::string locationTypeToString(enumLocation type)
 	{
-		switch (type)
-		{
-			case LOCATION_OUTSIDE: return "Outside";
-			case LOCATION_WALLS: return "Walls";
-			case LOCATION_MAIN_HALL: return "Main Hall";
-			case LOCATION_HALL: return "Hall";
-			case LOCATION_DWELLING: return "Dwelling";
-			case LOCATION_MINE: return "Mine";
-			case LOCATION_FARM: return "Farm";
-			case LOCATION_WEAPONSMITH: return "Weaponsmith";
-			// Add cases for other location types
-			default: return "Unknown";
-		}
+		return locationToString(type);
 	}
 	
 };
