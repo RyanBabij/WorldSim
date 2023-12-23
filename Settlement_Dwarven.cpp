@@ -5,6 +5,8 @@
 #include "Settlement_Dwarven.hpp"
 
 #include "Stockpile.hpp"
+#include "ItemFactory.hpp"
+
 #include "ItemRequest.cpp"
 #include "LocationRequest.cpp"
 #include "ResourceRequest.cpp"
@@ -359,22 +361,8 @@ bool Settlement_Dwarven::abstractDayJob( Character* character, Job* job)
 	// Convert enum to object
 Item* Settlement_Dwarven::createItem(ItemType type)
 {
-	switch (type)
-	{
-		case ITEM_HOE:
-			return new Item_Hoe();
-		case ITEM_PICKAXE:
-			return new Item_Pickaxe();
-		case ITEM_AXE:
-			return new Item_Axe();
-		case ITEM_LONGBOW:
-			return new Item_Longbow();
-		case ITEM_SPEAR:
-			return new Item_Spear();
-		// Add cases for other item types as needed
-		default:
-			return nullptr;
-	}
+	ItemFactory itemFactory;
+	return itemFactory.produceBasic(type,0,0);
 }
 
 Item* Settlement_Dwarven::produceItem(ItemType type, CanRequestItem* recipient= nullptr)

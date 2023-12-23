@@ -108,6 +108,7 @@ World_Local * worldLocal;
 #include "Item.cpp"
 #include "Recipe.cpp"
 #include "Item_Attributes.cpp"
+#include "ItemFactory.cpp"
 
 #include "Location.cpp"
 #include "Stockpile.cpp"

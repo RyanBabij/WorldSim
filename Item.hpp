@@ -22,30 +22,6 @@
 
 */
 
-// class Item;
-
-// class ItemFactory
-// {
-	// public:
-	// ItemFactory()
-	// {
-	// }
-	
-	// Produce the item with stats relevant based on character skill, location, and tools used.
-	// Item* produce(ItemType type, Character* character, Location* location, /* TOOL */)
-	// {
-		// return nullptr;
-	// }
-	
-	// Produce worst guaranteed item with the given factors
-	// Item* produceBasic(ItemType type, Character* character, Location* location, /* TOOL */)
-	// {
-		// return nullptr;
-	// }
-// };
-
-
-
 #include <Container/Table/TableInterface.hpp>
 
 #include "Item_Information.cpp"
