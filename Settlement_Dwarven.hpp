@@ -47,9 +47,9 @@ class Settlement_Dwarven: public Settlement
 		
 
 		
-		Item* createItem(ItemType type);
-		Item* produceItem(ItemType type, CanRequestItem* recipient);
-		Item* produceItem(ItemAction type, CanRequestItem* recipient, int minimumLevel);
+		Item* createItem(ItemType type, Character* creator, Location* location);
+		Item* produceItem(ItemType type, Character* creator, Location* location, CanRequestItem* recipient);
+		Item* produceItem(ItemAction type, Character* creator, Location* location, CanRequestItem* recipient, int minimumLevel);
 		
 		void payCharacter(Character* character, int amount);
 		void payCharacterFromTreasury(Character* character, int amount);

@@ -359,15 +359,15 @@ bool Settlement_Dwarven::abstractDayJob( Character* character, Job* job)
 }
 
 	// Convert enum to object
-Item* Settlement_Dwarven::createItem(ItemType type)
+Item* Settlement_Dwarven::createItem(ItemType type, Character* creator=0, Location* location=0 /* TOOLS */)
 {
 	ItemFactory itemFactory;
-	return itemFactory.produceBasic(type,0,0);
+	return itemFactory.produceBasic(type,creator,location);
 }
 
-Item* Settlement_Dwarven::produceItem(ItemType type, CanRequestItem* recipient= nullptr)
+Item* Settlement_Dwarven::produceItem(ItemType type, Character* creator, Location* location, CanRequestItem* recipient= nullptr)
 {
-	Item* newItem = createItem(type);
+	Item* newItem = createItem(type, creator, location);
 	if (newItem && stockpile.canMake(newItem->getStockpileRequirement()))
 	{
 		stockpile.deduct(newItem->getStockpileRequirement());
@@ -386,7 +386,7 @@ Item* Settlement_Dwarven::produceItem(ItemType type, CanRequestItem* recipient= 
 	return nullptr;
 }
 
-Item* Settlement_Dwarven::produceItem(ItemAction type, CanRequestItem* recipient= nullptr, int minLevel=1)
+Item* Settlement_Dwarven::produceItem(ItemAction type, Character* creator, Location* location, CanRequestItem* recipient= nullptr, int minLevel=1)
 {
 	std::cout<<"Attempting to produce "<<actionToString(type)<<" item.\n";
 	
@@ -403,7 +403,7 @@ Item* Settlement_Dwarven::produceItem(ItemAction type, CanRequestItem* recipient
 		std::cout<<itemToString(vItems(i))<<"\n";
 		
 		// Create item and see if it has the right specs.
-		Item* createdItem = createItem(vItems(i));
+		Item* createdItem = createItem(vItems(i), creator, location);
 		
 		if ( createdItem != nullptr && stockpile.canMake(createdItem->getStockpileRequirement()) )
 		{
@@ -420,7 +420,7 @@ Item* Settlement_Dwarven::produceItem(ItemAction type, CanRequestItem* recipient
 	if ( bestItem != nullptr )
 	{
 		std::cout<<"Best item for the job we can make is: "<<bestItem->getName()<<"\n";
-		produceItem(bestItem->type, recipient);
+		produceItem(bestItem->type, creator, location, recipient);
 		delete bestItem;
 	}
 	
@@ -548,7 +548,7 @@ bool Settlement_Dwarven::abstractDayProduction(Character* character)
 			// Process the most valuable request
 			//std::cout << "Most valuable request value: " << mostValuableRequest.value << std::endl;
 			
-			Item* item = produceItem(mostValuableRequest.type,mostValuableRequest.requester);
+			Item* item = produceItem(mostValuableRequest.type, character, 0, mostValuableRequest.requester);
 			
 			if (item != nullptr)
 			{
@@ -578,7 +578,8 @@ bool Settlement_Dwarven::abstractDayProduction(Character* character)
 				colour(DEFAULT);
 				ItemRequestCategory mostValuableRequest = *mostValuableRequestCategoryOpt;
 				
-				Item* item = produceItem(mostValuableRequest.category,mostValuableRequest.requester, mostValuableRequest.minimumLevel);
+				Item* item = produceItem
+				(mostValuableRequest.category,character,0,mostValuableRequest.requester, mostValuableRequest.minimumLevel);
 
 				requestManager.add(mostValuableRequest.requester,mostValuableRequest.category, mostValuableRequest.value,
 				mostValuableRequest.minimumLevel);
