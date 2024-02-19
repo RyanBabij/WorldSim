@@ -187,13 +187,13 @@ class Menu_Biome: public GUI_Interface
 				{
 					selectedBiome = b;
 					//std::cout<<"Selectedbiome: "<<selectedBiome->name<<"\n";
+					
+					if ( b != 0 )
+					{
+						worldViewer.setCenterTile(b->centerX,b->centerY);
+					}
 				}
 				
-				
-				//if (world.vBiome.isSafe(lastRowClicked))
-				//{
-				//	selectedBiome=world.vBiome(lastRowClicked);
-				//}
 				guiTableBiome.lastClickedIndex = -1;
 			}
 		}

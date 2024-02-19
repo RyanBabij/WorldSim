@@ -748,18 +748,7 @@ public:
 			}
 			menuWorld.lastRowClicked=-1;
 		}
-		if (menuBiome.lastRowClicked != -1 )
-		{
-			if ( world.vBiome.isSafe(menuBiome.lastRowClicked) )
-			{
-				World_Biome* b = menuBiome.selectedBiome;
-				if ( b != 0 )
-				{
-					worldViewer.setCenterTile(b->centerX,b->centerY);
-				}
-			}
-			menuBiome.lastRowClicked=-1;
-		}
+
 
 		return false;
 	}

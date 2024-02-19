@@ -73,7 +73,8 @@ class Menu_Settlements: public GUI_Interface
 		buttonSettlementDetails.text="Details";
 		buttonSettlementDetails.setColours(cNormal,cHighlight,0);
 		buttonSettlementDetails.active=true;
-
+		buttonSettlementDetails.clicked=false;
+		
 		guiTableSettlements.clear();
 		guiTableSettlements.table = &tSettlements;
 		guiTableSettlements.alpha=0;
@@ -196,30 +197,31 @@ class Menu_Settlements: public GUI_Interface
 		
 		
 		
-			if ( guiTableSettlements.lastClickedIndex != -1 )
+			if (guiTableSettlements.lastClickedIndex != -1)
 			{
-				//world->worldV
-				//TableInterface
-				//worldViewer.setCenterTile();
-				lastRowClicked=guiTableSettlements.lastClickedIndex;
-				
-				int index=0;
-				
-				for (int i=0;i<world.vCiv.size();++i)
+				lastRowClicked = guiTableSettlements.lastClickedIndex;
+
+				int index = 0;
+				bool found = false; // Added flag to indicate when the settlement is found
+
+				for (int i = 0; i < world.vCiv.size() && !found; ++i)
 				{
-					for (int j=0;j<world.vCiv(i)->vSettlement.size();++j)
+					for (int j = 0; j < world.vCiv(i)->vSettlement.size() && !found; ++j)
 					{
 						if (index == lastRowClicked)
 						{
-							selectedSettlement=world.vCiv(i)->vSettlement(j);
-							
-							return true;
+							selectedSettlement = world.vCiv(i)->vSettlement(j);
+							worldViewer.setCenterTile(selectedSettlement->worldX, selectedSettlement->worldY);
+							found = true; // Set the flag to true when the settlement is found
+							break; // Break out of the inner loop
 						}
 						++index;
 					}
+					// No need for an explicit break here; the condition in the for-loop handles it
 				}
 				guiTableSettlements.lastClickedIndex = -1;
 			}
+
 		
 		}
 		
