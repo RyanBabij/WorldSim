@@ -32,7 +32,9 @@ GlobalSettings globalSettings;
 
 /* Instead of having a global worldViewer, I think it would be better to have lots of local worldviewers, as currently I have a problem with the various menus interfering with the global worldViewer. */
 #include "World_Viewer.hpp"
+WorldViewer worldViewer;
 #include "World_Viewer_Minimap.hpp"
+#include "World_Viewer_Rain_Manager.cpp"
 
 #include <Graphics/Render/Renderer.cpp>
 #include <Graphics/Texture/Texture.hpp>
