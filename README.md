@@ -75,6 +75,8 @@ https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32
 
 Install for i686 POSIX. Install to C:/mingw-w64. Add C:/mingw-w64/mingw32/bin to PATH. This should allow LLVM to access the libstdc++ libraries and compile correctly.
 
+Note that I've tried a more convenient method, which is using https://github.com/mstorsjo/llvm-mingw/releases to install both clang++ and g++, but this for some reason gives linker errors for freeglut.
+
 7. Compilation
 
 With any luck, both clang++ and g++ should now correctly compile the project. Here are my compilation commands:
