@@ -57,25 +57,11 @@ I have tested these instructions on a fresh Windows 10 install, so hopefully the
 
 4. Create an environment variable called WILDCAT which points to wherever you put the Wildcat code libraries.
 
-5. clang++:
+5. clang++ and g++
 
-Install LLVM Clang Windows 64 bit binary from https://releases.llvm.org/download.html
+Install https://github.com/mstorsjo/llvm-mingw/releases to get both clang++ and g++ on Windows.
 
-Make sure you set the PATH for the current user. You should be able to call clang++ from this point. The PATH should be something like C:\Program Files\LLVM\bin
-
-NOTE: LLVM Clang is not a complete port and doesn't come with the basic libstdc++ libraries. Normally it searches for Visual Studio's libraries to compile, however in my case I use MingW-W64.
-
-If you're getting some "unable to find a Visual Studio installation" error I think you bypass this by specifying a target platform, for example: clang++ -target i686-pc-windows-gnu Driver.cpp
-
-6. g++
-
-Using standard MinGW will cause problems because it lacks threading support. mingw-w64 is required instead. mingw-w64 is an updated MinGW with support for new APIs which this program uses, mostly just threading. Despite the name, it's for both 32 and 64 bit Windows.
-
-https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download
-
-Install for i686 POSIX. Install to C:/mingw-w64. Add C:/mingw-w64/mingw32/bin to PATH. This should allow LLVM to access the libstdc++ libraries and compile correctly.
-
-7. Compilation
+6. Compilation
 
 With any luck, both clang++ and g++ should now correctly compile the project. Here are my compilation commands:
 
