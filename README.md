@@ -69,11 +69,9 @@ If you're getting some "unable to find a Visual Studio installation" error I thi
 
 6. g++
 
-Using standard MinGW will cause problems because it lacks threading support. mingw-w64 is required instead. mingw-w64 is an updated MinGW with support for new APIs which this program uses, mostly just threading. Despite the name, it's for both 32 and 64 bit Windows.
+I use MinGW from the following location: https://github.com/niXman/mingw-builds/releases
 
-https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download
-
-Install for i686 POSIX. Install to C:/mingw-w64. Add C:/mingw-w64/mingw32/bin to PATH. This should allow LLVM to access the libstdc++ libraries and compile correctly.
+Add the bin folder to path. Apparently LLVM also will make use of these files, so you need to install this even if you are just using clang++.
 
 Note that I've tried a more convenient method, which is using https://github.com/mstorsjo/llvm-mingw/releases to install both clang++ and g++, but this for some reason gives linker errors for freeglut.
 
